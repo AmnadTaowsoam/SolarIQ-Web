@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context'
 import { AppLayout } from '@/components/layout'
 import { Card, CardHeader, CardBody, Button, Input } from '@/components/ui'
 import { useToast } from '@/components/ui/Toast'
 import { useSolarAnalysis } from '@/hooks'
-import { ROUTES, DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from '@/lib/constants'
+import { ROUTES, DEFAULT_MAP_CENTER } from '@/lib/constants'
 import { SolarAnalysisResult } from '@/types'
 
 // Format currency
@@ -206,7 +206,7 @@ export default function AnalyzePage() {
         setLongitude(position.coords.longitude.toFixed(6))
         addToast('success', 'Location retrieved successfully')
       },
-      (error) => {
+      (_error) => {
         addToast('error', 'Failed to get your location. Please enter manually.')
       }
     )

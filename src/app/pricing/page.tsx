@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context'
 import { AppLayout } from '@/components/layout'
-import { Card, CardHeader, CardBody, Button, Input, Badge, Modal, ModalFooter } from '@/components/ui'
+import { Card, CardBody, Button, Input, Badge, Modal, ModalFooter } from '@/components/ui'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, EmptyState, TableSkeleton } from '@/components/ui/Table'
 import { useToast } from '@/components/ui/Toast'
 import {
@@ -14,7 +14,6 @@ import {
   useCreateElectricityRate,
 } from '@/hooks'
 import { ROUTES } from '@/lib/constants'
-import { InstallationCost, ElectricityRate } from '@/types'
 import { format } from 'date-fns'
 
 // Format currency

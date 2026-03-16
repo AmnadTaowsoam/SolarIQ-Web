@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
-import { User, UserRole } from '@/types'
-import { ADMIN_ROUTES, ROUTES } from '@/lib/constants'
+import { User } from '@/types'
+import { ROUTES } from '@/lib/constants'
 
 interface SidebarProps {
   user: User | null

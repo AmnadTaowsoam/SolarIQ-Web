@@ -193,10 +193,10 @@ function TopLocationsChart({ data }: { data: { location: string; count: number }
 export default function DashboardPage() {
   const router = useRouter()
   const { user, isLoading: authLoading } = useAuth()
-  const { data: statsData, isLoading: statsLoading } = useDashboardStats()
-  const { data: recentLeads = [], isLoading: leadsLoading } = useRecentLeads(5)
-  const { data: leadsOverTime = [], isLoading: timeLoading } = useLeadsOverTime(30)
-  const { data: topLocations = [], isLoading: locationsLoading } = useTopLocations(5)
+  const { data: statsData } = useDashboardStats()
+  const { data: recentLeads = [] } = useRecentLeads(5)
+  const { data: leadsOverTime = [] } = useLeadsOverTime(30)
+  const { data: topLocations = [] } = useTopLocations(5)
 
   useEffect(() => {
     if (!authLoading && !user) {

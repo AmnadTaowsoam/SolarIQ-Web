@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context'
 import { AppLayout } from '@/components/layout'
-import { Card, CardHeader, CardBody, Button, Badge, Modal, ModalFooter } from '@/components/ui'
+import { Card, CardBody, Button, Badge, Modal, ModalFooter } from '@/components/ui'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, EmptyState, TableSkeleton } from '@/components/ui/Table'
 import { useToast } from '@/components/ui/Toast'
 import { useDocuments, useUploadDocument, useDeleteDocument } from '@/hooks'
@@ -40,7 +40,6 @@ export default function KnowledgePage() {
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [uploadProgress, setUploadProgress] = useState(0)
   const [deleteConfirm, setDeleteConfirm] = useState<KnowledgeDocument | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -73,7 +72,6 @@ export default function KnowledgePage() {
       addToast('success', 'Document uploaded successfully')
       setIsUploadModalOpen(false)
       setSelectedFile(null)
-      setUploadProgress(0)
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
@@ -212,7 +210,6 @@ export default function KnowledgePage() {
           onClose={() => {
             setIsUploadModalOpen(false)
             setSelectedFile(null)
-            setUploadProgress(0)
           }}
           title="Upload Document"
           description="Upload a PDF or DOCX file to add to the knowledge base"

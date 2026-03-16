@@ -1,6 +1,6 @@
 'use client'
 
-import { SelectHTMLAttributes, forwardRef, ReactNode } from 'react'
+import { SelectHTMLAttributes, forwardRef } from 'react'
 import clsx from 'clsx'
 
 export interface SelectOption {

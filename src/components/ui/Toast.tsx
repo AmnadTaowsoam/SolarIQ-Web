@@ -28,6 +28,10 @@ interface ToastProviderProps {
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastType[]>([])
 
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id))
+  }, [])
+
   const addToast = useCallback((type: ToastVariant, message: string, duration = 5000) => {
     const id = uuidv4()
     const toast: ToastType = { id, type, message, duration }
@@ -39,11 +43,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
         removeToast(id)
       }, duration)
     }
-  }, [])
-
-  const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id))
-  }, [])
+  }, [removeToast])
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
