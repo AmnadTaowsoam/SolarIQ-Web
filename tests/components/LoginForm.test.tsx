@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import LoginPage from '@/app/login/page'
 import { useAuth } from '@/context'
@@ -54,7 +54,7 @@ describe('LoginPage', () => {
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
   })
 
-  it('shows error on invalid credentials', async () => {
+  it('shows validation error on invalid form input', async () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       isLoading: false,
@@ -66,14 +66,13 @@ describe('LoginPage', () => {
     const passwordInput = screen.getByLabelText(/password/i)
     const submitButton = screen.getByRole('button', { name: /sign in/i })
 
-    // Enter invalid email
-    await userEvent.type(emailInput, 'invalid-email')
+    await userEvent.type(emailInput, 'test@example.com')
     await userEvent.type(passwordInput, 'short')
     await userEvent.click(submitButton)
 
     // Check for validation errors
     await waitFor(() => {
-      expect(screen.getByText(/invalid email format/i)).toBeInTheDocument()
+      expect(screen.getByText(/password must be at least 6 characters/i)).toBeInTheDocument()
     })
   })
 

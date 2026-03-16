@@ -20,7 +20,14 @@ jest.mock('next/navigation', () => ({
     push: jest.fn(),
     replace: jest.fn(),
   })),
+  usePathname: jest.fn(() => '/dashboard'),
 }))
+
+jest.mock('@/lib/firebase', () => ({
+  auth: {},
+}))
+
+jest.mock('uuid', () => ({ v4: () => 'test-uuid' }))
 
 const mockUseAuth = useAuth as jest.Mock
 const mockUseDashboardStats = useDashboardStats as jest.Mock
