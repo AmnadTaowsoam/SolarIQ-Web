@@ -3,10 +3,39 @@ name: CI
 on:
   push:
     branches: [main]
+    paths:
+      - '**'
+      - '.github/workflows/**'
   pull_request:
     branches: [main]
+    paths:
+      - '**'
+      - '.github/workflows/**'
 
 jobs:
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: npm audit
+        run: pnpm audit --audit-level=high
+        continue-on-error: false
+
   lint-and-typecheck:
     name: Lint & Type Check
     runs-on: ubuntu-latest

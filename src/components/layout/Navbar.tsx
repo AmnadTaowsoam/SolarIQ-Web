@@ -33,8 +33,9 @@ export function Navbar({ user, onMenuClick }: NavbarProps) {
     try {
       await signOut(auth)
       router.push(ROUTES.LOGIN)
-    } catch (error) {
-      console.error('Error signing out:', error)
+    } catch {
+      // Sign-out failed — force redirect to login anyway
+      router.push(ROUTES.LOGIN)
     }
   }
 

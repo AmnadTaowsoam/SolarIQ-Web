@@ -11,13 +11,17 @@ import { ROUTES } from '@/lib/constants'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading, isDevLoginEnabled, loginWithDevCredentials } = useAuth()
   const { addToast } = useToast()
+  const devLoginEmail = process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || 'admin@solariq.local'
+  const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || 'Solariq123!'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
+  const [failedAttempts, setFailedAttempts] = useState(0)
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null)
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -28,16 +32,23 @@ export default function LoginPage() {
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {}
 
-    if (!email) {
+    const sanitizedEmail = email.trim()
+    const sanitizedPassword = password.trim()
+
+    if (!sanitizedEmail) {
       newErrors.email = 'Email is required'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitizedEmail)) {
       newErrors.email = 'Invalid email format'
+    } else if (sanitizedEmail.length > 255) {
+      newErrors.email = 'Email is too long'
     }
 
-    if (!password) {
+    if (!sanitizedPassword) {
       newErrors.password = 'Password is required'
-    } else if (password.length < 6) {
+    } else if (sanitizedPassword.length < 6) {
       newErrors.password = 'Password must be at least 6 characters'
+    } else if (sanitizedPassword.length > 128) {
+      newErrors.password = 'Password is too long'
     }
 
     setErrors(newErrors)
@@ -47,17 +58,38 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!validateForm()) return
+    if (lockoutUntil && Date.now() < lockoutUntil) {
+      const remainingTime = Math.ceil((lockoutUntil - Date.now()) / 1000)
+      addToast('error', `Too many attempts. Please try again in ${remainingTime} seconds.`)
+      return
+    }
+
+    if (!validateForm()) {
+      return
+    }
 
     setIsSubmitting(true)
+    const normalizedEmail = email.trim()
+    const normalizedPassword = password.trim()
 
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      if (isDevLoginEnabled) {
+        const success = await loginWithDevCredentials(normalizedEmail, normalizedPassword)
+        if (!success) {
+          throw { code: 'auth/invalid-credential' }
+        }
+      } else {
+        await signInWithEmailAndPassword(auth, normalizedEmail, normalizedPassword)
+      }
+
+      setFailedAttempts(0)
+      setLockoutUntil(null)
       addToast('success', 'Login successful!')
       router.push(ROUTES.DASHBOARD)
     } catch (error: unknown) {
-      console.error('Login error:', error)
+      void error // Acknowledge error for type safety
       let message = 'Failed to login. Please try again.'
+      let isRateLimit = false
 
       if (error && typeof error === 'object' && 'code' in error) {
         const errorCode = (error as { code: string }).code
@@ -73,22 +105,23 @@ export default function LoginPage() {
             break
           case 'auth/too-many-requests':
             message = 'Too many failed attempts. Please try again later'
+            isRateLimit = true
             break
         }
+      }
+
+      const newFailedAttempts = failedAttempts + 1
+      setFailedAttempts(newFailedAttempts)
+
+      if (isRateLimit || newFailedAttempts >= 5) {
+        setLockoutUntil(Date.now() + 60 * 1000) // 60 seconds lockout
+        message = 'Too many failed attempts. Please try again in 60 seconds.'
       }
 
       addToast('error', message)
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      </div>
-    )
   }
 
   return (
@@ -105,6 +138,12 @@ export default function LoginPage() {
           <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
         </div>
 
+        {isDevLoginEnabled && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+            Dev login: <strong>{devLoginEmail}</strong> / <strong>{devLoginPassword}</strong>
+          </div>
+        )}
+
         {/* Login form */}
         <Card>
           <CardBody className="p-8">
@@ -117,7 +156,8 @@ export default function LoginPage() {
                 error={errors.email}
                 placeholder="you@example.com"
                 autoComplete="email"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (lockoutUntil !== null && Date.now() < lockoutUntil)}
+                maxLength={255}
               />
 
               <Input
@@ -128,7 +168,8 @@ export default function LoginPage() {
                 error={errors.password}
                 placeholder="••••••••"
                 autoComplete="current-password"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (lockoutUntil !== null && Date.now() < lockoutUntil)}
+                maxLength={128}
               />
 
               <div className="flex items-center justify-between">
@@ -149,6 +190,7 @@ export default function LoginPage() {
                 className="w-full"
                 size="lg"
                 isLoading={isSubmitting}
+                disabled={lockoutUntil !== null && Date.now() < lockoutUntil}
               >
                 Sign in
               </Button>

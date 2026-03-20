@@ -186,3 +186,6 @@ export interface Toast {
   message: string
   duration?: number
 }
+
+// Privacy types (WK-018)
+export * from './privacy'

@@ -6,3 +6,4 @@ export {
   useElectricityRates, useCreateElectricityRate, useUpdateElectricityRate, useDeleteElectricityRate,
   useEquipmentPricing, useCreateEquipmentPricing, useUpdateEquipmentPricing, useDeleteEquipmentPricing
 } from './usePricing'
+export { usePrivacy } from './usePrivacy'

@@ -180,12 +180,14 @@ export default function AnalyzePage() {
       return
     }
 
+    const sanitizedAddress = address ? address.replace(/[^\w\s,.\u0E00-\u0E7F-]/gi, '').trim() : undefined;
+
     try {
       const response = await analysisMutation.mutateAsync({
         latitude: lat,
         longitude: lng,
         monthlyBill: bill,
-        address: address || undefined,
+        address: sanitizedAddress,
       })
       setResult(response)
       addToast('success', 'Solar analysis completed successfully!')

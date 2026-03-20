@@ -4,6 +4,8 @@ import { getIdToken, User } from 'firebase/auth'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
+const isServer = typeof window === 'undefined'
+
 class ApiClient {
   private client: AxiosInstance
   private refreshingToken: Promise<string> | null = null
@@ -27,10 +29,18 @@ class ApiClient {
         const user = auth.currentUser as User | null
         if (user) {
           try {
-            const token = await getIdToken(user)
+            // Deduplicate concurrent token refresh calls
+            if (!this.refreshingToken) {
+              this.refreshingToken = getIdToken(user)
+              this.refreshingToken.finally(() => {
+                this.refreshingToken = null
+              })
+            }
+            const token = await this.refreshingToken
             config.headers.Authorization = `Bearer ${token}`
-          } catch (error) {
-            console.error('Error getting auth token:', error)
+          } catch {
+            // Token fetch failed — request proceeds without auth header
+            // The backend will return 401 if auth is required
           }
         }
         return config
@@ -44,30 +54,24 @@ class ApiClient {
       async (error: AxiosError) => {
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
-        // Handle 401 Unauthorized - try to refresh token
+        // Handle 401 Unauthorized - try to refresh token once
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true
 
           try {
             const user = auth.currentUser as User | null
             if (user) {
-              // Force refresh token
               const newToken = await getIdToken(user, true)
               originalRequest.headers.Authorization = `Bearer ${newToken}`
               return this.client(originalRequest)
             }
-          } catch (refreshError) {
-            // Redirect to login on refresh failure
-            if (typeof window !== 'undefined') {
+          } catch {
+            // Token refresh failed — redirect to login
+            if (!isServer) {
               window.location.href = '/login'
             }
-            return Promise.reject(refreshError)
+            return Promise.reject(error)
           }
-        }
-
-        // Handle network errors
-        if (!error.response) {
-          console.error('Network error:', error.message)
         }
 
         return Promise.reject(error)

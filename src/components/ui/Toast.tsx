@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useCallback, ReactNode } from 'rea
 import { v4 as uuidv4 } from 'uuid'
 import clsx from 'clsx'
 import { Toast as ToastType, ToastType as ToastVariant } from '@/types'
+import { sanitizeErrorMessage } from '@/lib/security'
 
 interface ToastContextType {
   toasts: ToastType[]
@@ -34,7 +35,9 @@ export function ToastProvider({ children }: ToastProviderProps) {
 
   const addToast = useCallback((type: ToastVariant, message: string, duration = 5000) => {
     const id = uuidv4()
-    const toast: ToastType = { id, type, message, duration }
+    // Sanitize error messages to prevent sensitive info leakage
+    const sanitizedMessage = type === 'error' ? sanitizeErrorMessage(message) : message
+    const toast: ToastType = { id, type, message: sanitizedMessage, duration }
 
     setToasts((prev) => [...prev, toast])
 
@@ -59,10 +62,17 @@ interface ToastContainerProps {
 }
 
 function ToastContainer({ toasts, removeToast }: ToastContainerProps) {
-  if (toasts.length === 0) return null
+  if (toasts.length === 0) {
+    return null
+  }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+    <div
+      className="fixed bottom-4 right-4 z-50 flex flex-col gap-2"
+      aria-live="polite"
+      aria-label="Notifications"
+      role="region"
+    >
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onClose={() => removeToast(toast.id)} />
       ))}

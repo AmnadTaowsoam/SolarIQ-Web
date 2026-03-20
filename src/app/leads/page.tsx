@@ -43,9 +43,9 @@ export default function LeadsPage() {
       router.replace(ROUTES.LOGIN)
     }
   }, [user, authLoading, router])
-
   const handleSearch = () => {
-    setFilters((prev) => ({ ...prev, search }))
+    const sanitizedSearch = search.replace(/[^\w\s@.-]/gi, '').trim()
+    setFilters((prev) => ({ ...prev, search: sanitizedSearch }))
     setPage(1)
   }
 
@@ -64,7 +64,9 @@ export default function LeadsPage() {
   }
 
   const handleUpdateStatus = async () => {
-    if (!selectedLead) return
+    if (!selectedLead) {
+      return
+    }
 
     try {
       await updateStatusMutation.mutateAsync({

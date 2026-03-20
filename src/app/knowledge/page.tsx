@@ -26,11 +26,13 @@ const statusLabels: Record<DocumentStatus, string> = {
 
 // Format file size
 const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes'
+  if (bytes === 0) {
+    return '0 Bytes'
+  }
   const k = 1024
   const sizes = ['Bytes', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
 }
 
 export default function KnowledgePage() {
@@ -57,15 +59,59 @@ export default function KnowledgePage() {
     }
   }, [user, authLoading, router, addToast])
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const validateFile = async (file: File): Promise<boolean> => {
+    if (file.size > 10 * 1024 * 1024) {
+      addToast('error', 'File size exceeds 10MB limit')
+      return false
+    }
+
+    const validMimes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ]
+    if (!validMimes.includes(file.type)) {
+      addToast('error', 'Invalid file type. Only PDF and DOCX are allowed.')
+      return false
+    }
+
+    try {
+      const buffer = await file.slice(0, 4).arrayBuffer()
+      const arr = new Uint8Array(buffer)
+      const header = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase()
+      
+      const isPdf = header === '25504446'
+      const isDocx = header === '504B0304'
+      const isDoc = header === 'D0CF11E0'
+
+      if (!isPdf && !isDocx && !isDoc) {
+        addToast('error', 'File content does not match its extension.')
+        return false
+      }
+      
+      return true
+    } catch (e) {
+      addToast('error', 'Failed to validate file')
+      return false
+    }
+  }
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      setSelectedFile(file)
+      const isValid = await validateFile(file)
+      if (isValid) {
+        setSelectedFile(file)
+      } else if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
     }
   }
 
   const handleUpload = async () => {
-    if (!selectedFile) return
+    if (!selectedFile) {
+      return
+    }
 
     try {
       await uploadMutation.mutateAsync(selectedFile)
@@ -82,7 +128,9 @@ export default function KnowledgePage() {
   }
 
   const handleDelete = async () => {
-    if (!deleteConfirm) return
+    if (!deleteConfirm) {
+      return
+    }
 
     try {
       await deleteMutation.mutateAsync(deleteConfirm.id)
