@@ -50,3 +50,5 @@ export {
 } from './useAnalytics'
 export { useCurrency } from './useCurrency'
 export { useDateTime } from './useDateTime'
+export { useAuditLogs, useAuditStats, useExportAuditLogs } from './useAuditLogs'
+export { useActiveSessions, useTerminateSession, useTerminateOthers, useLoginHistory } from './useSessions'
