@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /dashboard
+Disallow: /leads
+Disallow: /billing
+Disallow: /knowledge
+Disallow: /pricing
+Disallow: /analyze
+Disallow: /api/
+
+Allow: /login
+Allow: /privacy
+Allow: /liff/about
+
+Sitemap: https://solariq.app/sitemap.xml

@@ -3,8 +3,12 @@ FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml* ./
-RUN corepack enable pnpm && pnpm install --no-frozen-lockfile
+COPY package.json package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --no-frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  else npm install; \
+  fi
 
 # Stage 2: Build the application
 FROM node:18-alpine AS builder
@@ -15,7 +19,10 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN corepack enable pnpm && pnpm build
+RUN \
+  if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm build; \
+  else npm run build; \
+  fi
 
 # Stage 3: Production runner
 FROM node:18-alpine AS runner

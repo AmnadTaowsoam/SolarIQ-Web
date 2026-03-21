@@ -116,6 +116,7 @@ export const ROUTES = {
   ANALYZE: '/analyze',
   KNOWLEDGE: '/knowledge',
   PRICING: '/pricing',
+  SETTINGS: '/settings',
 } as const
 
 // Admin-only routes

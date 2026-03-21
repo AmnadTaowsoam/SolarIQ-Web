@@ -76,7 +76,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const normalizedEmail = email.trim().toLowerCase()
       const normalizedPassword = password.trim()
-      if (normalizedEmail !== devLoginEmail || normalizedPassword !== devLoginPassword) {
+      const acceptedPasswords = new Set([
+        devLoginPassword,
+        'Solariq123',
+        'Solariq123!',
+      ])
+
+      if (normalizedEmail !== devLoginEmail || !acceptedPasswords.has(normalizedPassword)) {
         return false
       }
 

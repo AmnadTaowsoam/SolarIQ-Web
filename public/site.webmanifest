@@ -1,0 +1,22 @@
+{
+  "name": "SolarIQ - Solar Energy Analysis Portal",
+  "short_name": "SolarIQ",
+  "description": "B2B Portal for solar energy analysis and lead management",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ea580c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

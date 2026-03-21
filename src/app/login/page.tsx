@@ -14,7 +14,8 @@ export default function LoginPage() {
   const { isAuthenticated, isLoading, isDevLoginEnabled, loginWithDevCredentials } = useAuth()
   const { addToast } = useToast()
   const devLoginEmail = process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || 'admin@solariq.local'
-  const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || 'Solariq123!'
+  const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || 'Solariq123'
+  const devLoginRole = process.env.NEXT_PUBLIC_DEV_LOGIN_ROLE === 'contractor' ? 'contractor' : 'admin'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -78,6 +79,12 @@ export default function LoginPage() {
         if (!success) {
           throw { code: 'auth/invalid-credential' }
         }
+
+        // Force-set middleware cookies and perform full navigation so redirect is reliable.
+        document.cookie = '__session=1; path=/; max-age=1800; SameSite=Lax'
+        document.cookie = `user-role=${devLoginRole}; path=/; max-age=1800; SameSite=Lax`
+        window.location.assign(ROUTES.DASHBOARD)
+        return
       } else {
         await signInWithEmailAndPassword(auth, normalizedEmail, normalizedPassword)
       }

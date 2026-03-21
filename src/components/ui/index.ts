@@ -20,3 +20,5 @@ export { Badge } from './Badge'
 export type { BadgeProps } from './Badge'
 
 export { ToastProvider, useToast } from './Toast'
+
+export { Skeleton, CardSkeleton, ChartSkeleton, TableSkeleton as TableSkeletonFull } from './Skeleton'

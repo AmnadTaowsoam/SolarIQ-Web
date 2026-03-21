@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // Routes that don't require authentication
-const publicRoutes = ['/', '/login']
+const publicRoutes = ['/', '/login', '/landing']
 
 // Admin-only routes
 const adminRoutes = ['/knowledge', '/pricing']
@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
   // Resolve the root path server-side to avoid client-side loading loops.
   if (pathname === '/') {
     const hasSession = request.cookies.get('__session') ?? request.cookies.get('firebase-auth-token')
-    const target = hasSession ? '/dashboard' : '/login'
+    const target = hasSession ? '/dashboard' : '/landing'
     return NextResponse.redirect(new URL(target, request.url))
   }
 

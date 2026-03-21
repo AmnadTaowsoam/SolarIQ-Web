@@ -14,20 +14,22 @@ export function AppLayout({ children, user }: AppLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50/50 flex">
+      {/* Sidebar — fixed width on desktop */}
       <Sidebar
         user={user}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
 
-      <div className="lg:pl-64">
+      {/* Main content area — takes remaining width */}
+      <div className="flex-1 flex flex-col min-w-0">
         <Navbar
           user={user}
           onMenuClick={() => setIsSidebarOpen(true)}
         />
 
-        <main className="p-4 lg:p-6">
+        <main className="flex-1 p-4 lg:p-6 xl:p-8">
           {children}
         </main>
       </div>

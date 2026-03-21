@@ -23,10 +23,10 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@line/liff": "^2.27.3",
-    "@stripe/react-stripe-js": "^2.4.0",
-    "@stripe/stripe-js": "^2.4.0",
     "@react-google-maps/api": "^2.19.3",
     "@sentry/nextjs": "^8.0.0",
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.4.0",
     "@tanstack/react-query": "^5.28.0",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",

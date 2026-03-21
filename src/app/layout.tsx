@@ -1,10 +1,21 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Noto_Sans_Thai } from 'next/font/google'
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const notoSansThai = Noto_Sans_Thai({
+  subsets: ['thai'],
+  variable: '--font-noto-thai',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+})
 
 export const metadata: Metadata = {
   title: {
@@ -14,6 +25,13 @@ export const metadata: Metadata = {
   description: 'B2B Web Portal for solar energy analysis, lead management, and ROI calculations',
   keywords: ['solar', 'energy', 'ROI', 'solar analysis', 'lead management', 'Thailand'],
   authors: [{ name: 'SolarIQ Team' }],
+  manifest: '/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/favicon.svg',
+  },
   openGraph: {
     type: 'website',
     locale: 'th_TH',
@@ -40,7 +58,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="th">
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${notoSansThai.variable} font-sans`}>
         <ErrorBoundary>
           <Providers>{children}</Providers>
         </ErrorBoundary>
