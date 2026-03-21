@@ -91,7 +91,7 @@ const TYPE_CONFIG: Record<Notification['type'], { bg: string; icon: React.ReactN
     ),
   },
   proposal: {
-    bg: 'bg-orange-50 text-orange-600',
+    bg: 'bg-[var(--brand-primary-light)] text-[var(--brand-primary)]',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
@@ -177,7 +177,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
           <div className="flex items-center gap-3">
             <h2 className="text-base font-bold text-gray-900">{tNotifications('panelTitle')}</h2>
             {unreadCount > 0 && (
-              <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-bold text-white bg-orange-500 rounded-full">
+              <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-bold text-white bg-[var(--brand-primary)] rounded-full">
                 {unreadCount}
               </span>
             )}
@@ -186,7 +186,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="text-xs font-medium text-orange-600 hover:text-orange-700 px-2.5 py-1.5 hover:bg-orange-50 rounded-lg transition-colors"
+                className="text-xs font-medium text-[var(--brand-primary)] hover:text-[var(--brand-primary)] px-2.5 py-1.5 hover:bg-[var(--brand-primary-light)] rounded-lg transition-colors"
               >
                 {tNotifications('markAllRead')}
               </button>
@@ -225,7 +225,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
                     onClick={() => markAsRead(notification.id)}
                     className={clsx(
                       'w-full flex items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-gray-50/80',
-                      !notification.read && 'bg-orange-50/30'
+                      !notification.read && 'bg-[var(--brand-primary-light)]'
                     )}
                   >
                     {/* Icon */}
@@ -243,7 +243,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
                           {notification.title}
                         </p>
                         {!notification.read && (
-                          <span className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0 mt-1.5" />
+                          <span className="w-2 h-2 bg-[var(--brand-primary)] rounded-full flex-shrink-0 mt-1.5" />
                         )}
                       </div>
                       <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 leading-relaxed">

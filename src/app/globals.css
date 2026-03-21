@@ -3,16 +3,50 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* WK-030: Theme engine canonical variables */
+    --color-primary: #f97316;
+    --color-primary-hover: #ea6304;
+    --color-secondary: #1e40af;
+    --font-brand: 'Inter';
+    --radius-brand: 0.5rem;
+
+    --brand-primary: #f97316;
+    --brand-primary-hover: #ea580c;
+    --brand-primary-light: #fff7ed;
+    --brand-secondary: #1a1a2e;
+    --brand-accent: #ffb800;
+    --brand-background: #f9fafb;
+    --brand-surface: #ffffff;
+    --brand-sidebar: #0f172a;
+    --brand-sidebar-text: #f8fafc;
+    --brand-text: #111827;
+    --brand-text-secondary: #6b7280;
+    --brand-border: #e5e7eb;
+    --brand-success: #10b981;
+    --brand-warning: #f59e0b;
+    --brand-error: #ef4444;
+    --brand-font-heading: 'Prompt', sans-serif;
+    --brand-font-body: 'Sarabun', sans-serif;
+    --brand-font-mono: 'JetBrains Mono', monospace;
+    --brand-radius: 8px;
+    --brand-radius-sm: 6px;
+    --brand-radius-lg: 12px;
+    --brand-radius-full: 9999px;
+  }
+
   html {
-    font-family: var(--font-inter), var(--font-noto-thai), system-ui, sans-serif;
+    font-family: var(--brand-font-body), var(--font-inter), var(--font-noto-thai), system-ui, sans-serif;
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    background-color: var(--brand-background);
+    color: var(--brand-text);
+    @apply antialiased;
   }
 
   * {
-    @apply border-gray-200;
+    border-color: var(--brand-border);
   }
 }
 

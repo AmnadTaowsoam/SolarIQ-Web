@@ -11,7 +11,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({ className, children
   return (
     <div
       ref={ref}
-      className={clsx('bg-white rounded-xl shadow-sm border border-gray-200', className)}
+      className={clsx('bg-[var(--brand-surface)] rounded-[var(--brand-radius-lg)] shadow-sm border border-[var(--brand-border)]', className)}
       {...props}
     >
       {children}
@@ -32,14 +32,14 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
     return (
       <div
         ref={ref}
-        className={clsx('px-6 py-4 border-b border-gray-200', className)}
+        className={clsx('px-6 py-4 border-b border-[var(--brand-border)]', className)}
         {...props}
       >
         {(title || subtitle || action) ? (
           <div className="flex items-center justify-between">
             <div>
-              {title && <h3 className="text-lg font-semibold text-gray-900">{title}</h3>}
-              {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+              {title && <h3 className="text-lg font-semibold text-[var(--brand-text)]">{title}</h3>}
+              {subtitle && <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{subtitle}</p>}
             </div>
             {action && <div>{action}</div>}
           </div>
@@ -78,7 +78,7 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
     return (
       <div
         ref={ref}
-        className={clsx('px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl', className)}
+        className={clsx('px-6 py-4 border-t border-[var(--brand-border)] bg-[var(--brand-background)] rounded-b-[var(--brand-radius-lg)]', className)}
         {...props}
       >
         {children}

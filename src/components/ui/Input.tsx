@@ -32,14 +32,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={clsx(
-              'block w-full rounded-lg border shadow-sm transition-colors',
+              'block w-full rounded-[var(--brand-radius)] border shadow-sm transition-colors',
               'focus:outline-none focus:ring-2 focus:ring-offset-0',
               error
                 ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500',
+                : 'border-[var(--brand-border)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]',
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
-              'px-4 py-2.5 text-gray-900 placeholder-gray-400',
+              'px-4 py-2.5 text-[var(--brand-text)] placeholder-[var(--brand-text-secondary)]',
               'disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed',
               className
             )}

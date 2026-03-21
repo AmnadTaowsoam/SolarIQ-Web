@@ -9,6 +9,7 @@ import { auth } from '@/lib/firebase'
 import { User } from '@/types'
 import { ROUTES } from '@/lib/constants'
 import { extractLocaleFromPath } from '@/lib/locale'
+import { useBrand } from '@/context'
 
 interface SidebarProps {
   user: User | null
@@ -33,8 +34,11 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
   const router = useRouter()
   const tNav = useTranslations('nav')
   const tNavbar = useTranslations('navbar')
+  const { brand } = useBrand()
   const isAdmin = user?.role === 'admin'
   const { pathname: cleanPath } = extractLocaleFromPath(pathname)
+  const brandName = brand && 'company_name' in brand ? brand.company_name : 'SolarIQ'
+  const brandLogo = brand && 'logo' in brand ? brand.logo?.light : brand?.logo_light_url
 
   const navGroups: NavGroup[] = [
     {
@@ -153,6 +157,25 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
             </svg>
           ),
         },
+        {
+          name: 'พื้นที่บริการ',
+          href: '/settings/service-area',
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+            </svg>
+          ),
+        },
+        {
+          name: 'Developer API',
+          href: '/developers',
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+            </svg>
+          ),
+        },
       ],
     },
   ]
@@ -177,23 +200,28 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
 
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200/80',
+          'fixed inset-y-0 left-0 z-50 w-[260px] bg-[var(--brand-sidebar)] border-r border-[var(--brand-border)]',
           'transform transition-transform duration-200 ease-out',
           'lg:translate-x-0 lg:static lg:z-auto',
           'flex flex-col',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="flex items-center justify-between h-16 px-5 border-b border-gray-100 flex-shrink-0">
+        <div className="flex items-center justify-between h-16 px-5 border-b border-[var(--brand-border)] flex-shrink-0">
           <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-sm shadow-orange-200">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-              </svg>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm bg-[var(--brand-primary)]">
+              {brandLogo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={brandLogo} alt={brandName} className="w-6 h-6 object-contain" />
+              ) : (
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+              )}
             </div>
             <div>
-              <span className="text-lg font-bold text-gray-900 tracking-tight">SolarIQ</span>
-              <span className="text-[10px] text-orange-600 font-semibold ml-1.5 px-1.5 py-0.5 bg-orange-50 rounded-full">PRO</span>
+              <span className="text-lg font-bold text-[var(--brand-sidebar-text)] tracking-tight">{brandName}</span>
+              <span className="text-[10px] text-[var(--brand-primary)] font-semibold ml-1.5 px-1.5 py-0.5 bg-[var(--brand-primary-light)] rounded-full">PRO</span>
             </div>
           </Link>
           <button
@@ -210,7 +238,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
           {navGroups.map((group) => (
             <div key={group.label}>
-              <p className="px-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+              <p className="px-3 text-[11px] font-semibold text-[var(--brand-sidebar-text)] uppercase tracking-wider opacity-70">
                 {group.label}
               </p>
               <div className="mt-2 space-y-1">
@@ -225,11 +253,11 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
                         className={clsx(
                           'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                           isActive
-                            ? 'bg-orange-50 text-orange-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            ? 'bg-[var(--brand-primary-light)] text-[var(--brand-primary)]'
+                            : 'text-[var(--brand-sidebar-text)] opacity-80 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)]'
                         )}
                       >
-                        <span className={clsx('text-gray-400', isActive && 'text-orange-600')}>
+                        <span className={clsx('text-[var(--brand-sidebar-text)] opacity-70', isActive && 'text-[var(--brand-primary)] opacity-100')}>
                           {item.icon}
                         </span>
                         {item.name}
@@ -241,12 +269,12 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="border-t border-gray-100 p-4">
+        <div className="border-t border-[var(--brand-border)] p-4">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-[var(--brand-sidebar-text)] opacity-80 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)] rounded-lg transition-colors"
           >
-            <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-[var(--brand-sidebar-text)] opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
             </svg>
             {tNavbar('signOut')}

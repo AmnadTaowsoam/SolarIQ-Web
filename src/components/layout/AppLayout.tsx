@@ -14,7 +14,7 @@ export function AppLayout({ children, user }: AppLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50/50 flex">
+    <div className="min-h-screen bg-[var(--brand-background)] flex">
       {/* Sidebar — fixed width on desktop */}
       <Sidebar
         user={user}

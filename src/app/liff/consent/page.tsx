@@ -300,6 +300,34 @@ export default function ConsentPage(): React.ReactElement {
         <p className="text-xs text-gray-500 text-center">
           การให้ความยินยอมเป็นไปตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)
         </p>
+
+        {/* WK-021: PDPA data rights link & DPO contact */}
+        <div className="mt-4 bg-white rounded-xl shadow-sm p-4 space-y-3">
+          <a
+            href="/liff/data-rights"
+            className="flex items-center justify-between text-sm font-medium text-green-700 hover:text-green-800 transition-colors"
+          >
+            <span>สิทธิของคุณตาม PDPA</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+          <div className="border-t border-gray-100 pt-3 text-xs text-gray-500 space-y-0.5">
+            <p className="font-medium text-gray-600">ติดต่อ DPO (เจ้าหน้าที่คุ้มครองข้อมูล)</p>
+            <p>
+              อีเมล:{' '}
+              <a href="mailto:dpo@solariq.app" className="text-green-600 hover:underline">
+                dpo@solariq.app
+              </a>
+            </p>
+            <p>
+              โทร:{' '}
+              <a href="tel:02-XXX-XXXX" className="text-green-600 hover:underline">
+                02-XXX-XXXX
+              </a>
+            </p>
+          </div>
+        </div>
       </main>
     </div>
   );

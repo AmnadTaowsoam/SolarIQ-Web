@@ -1,12 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
-import { useAuth } from '@/context'
+import { useAuth, useBrand } from '@/context'
+import { addBrandDomain, createBrand, setDefaultBrand, updateBrand, verifyBrandDomain } from '@/hooks/useBranding'
+import apiClient from '@/lib/api'
+import type { BrandDomain } from '@/types/branding'
 import clsx from 'clsx'
+
+const FONT_OPTIONS = [
+  { value: 'Inter', label: 'Inter' },
+  { value: 'Noto Sans Thai', label: 'Noto Sans Thai' },
+  { value: 'Sarabun', label: 'Sarabun' },
+  { value: 'Prompt', label: 'Prompt' },
+]
 
 // ---------------------------------------------------------------------------
 // Types
@@ -136,8 +146,8 @@ function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean
       aria-checked={enabled}
       onClick={() => onChange(!enabled)}
       className={clsx(
-        'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2',
-        enabled ? 'bg-orange-500' : 'bg-gray-200'
+        'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:ring-offset-2',
+        enabled ? 'bg-[var(--brand-primary)]' : 'bg-gray-200'
       )}
     >
       <span
@@ -743,84 +753,357 @@ function ApiKeysSection() {
 // ---------------------------------------------------------------------------
 
 function WhiteLabelSection() {
-  const [primaryColor, setPrimaryColor] = useState('#f97316')
-  const [customDomain, setCustomDomain] = useState('solar.mycompany.co.th')
-  const [proposalFooter, setProposalFooter] = useState('ขอบคุณที่ไว้วางใจ SolarIQ Thailand - พลังงานสะอาดเพื่ออนาคตที่ยั่งยืน')
+  const { brand, brands, switchBrand, refresh } = useBrand()
+  const manageableBrand = brand && 'id' in brand ? brand : null
+  const [activeBrandId, setActiveBrandId] = useState(manageableBrand?.id ?? '')
+  const [brandName, setBrandName] = useState(manageableBrand?.name ?? '')
+  const [companyName, setCompanyName] = useState(manageableBrand?.company_name ?? '')
+  const [logoLightUrl, setLogoLightUrl] = useState(manageableBrand?.logo_light_url ?? '')
+  const [logoDarkUrl, setLogoDarkUrl] = useState(manageableBrand?.logo_dark_url ?? '')
+  const [faviconUrl, setFaviconUrl] = useState(manageableBrand?.favicon_ico_url ?? '')
+  const [primaryColor, setPrimaryColor] = useState(manageableBrand?.colors?.primary ?? '#f97316')
+  const [secondaryColor, setSecondaryColor] = useState(manageableBrand?.colors?.secondary ?? '#1A1A2E')
+  const [accentColor, setAccentColor] = useState(manageableBrand?.colors?.accent ?? '#FFB800')
+  const [fontBody, setFontBody] = useState(manageableBrand?.fonts?.body ?? 'Sarabun')
+  const [fontHeading, setFontHeading] = useState(manageableBrand?.fonts?.heading ?? 'Prompt')
+  const [borderRadius, setBorderRadius] = useState(manageableBrand?.border_radius ?? 8)
+  const logoUploadRef = useRef<HTMLInputElement>(null)
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false)
+
+  // Live preview: inject CSS vars when colors change
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const root = document.documentElement
+    root.style.setProperty('--color-primary', primaryColor)
+    root.style.setProperty('--brand-primary', primaryColor)
+    const darkened = primaryColor.replace('#', '')
+    if (darkened.length === 6) {
+      const factor = 0.88
+      const r = Math.round(parseInt(darkened.slice(0, 2), 16) * factor)
+      const g = Math.round(parseInt(darkened.slice(2, 4), 16) * factor)
+      const b = Math.round(parseInt(darkened.slice(4, 6), 16) * factor)
+      const hov = `#${[r, g, b].map((c) => Math.min(255, Math.max(0, c)).toString(16).padStart(2, '0')).join('')}`
+      root.style.setProperty('--color-primary-hover', hov)
+      root.style.setProperty('--brand-primary-hover', hov)
+    }
+  }, [primaryColor])
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    document.documentElement.style.setProperty('--color-secondary', secondaryColor)
+    document.documentElement.style.setProperty('--brand-secondary', secondaryColor)
+  }, [secondaryColor])
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    document.documentElement.style.setProperty('--font-brand', fontBody)
+  }, [fontBody])
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !manageableBrand) return
+    setIsUploadingLogo(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await apiClient.post<{ url: string }>(`/brands/${manageableBrand.id}/logo`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      setLogoLightUrl(res.data.url)
+      await refresh()
+    } catch {
+      // silent fail — user can still enter URL manually
+    } finally {
+      setIsUploadingLogo(false)
+    }
+  }
+  const [customDomain, setCustomDomain] = useState(manageableBrand?.domain ?? '')
+  const [domainInfo, setDomainInfo] = useState<BrandDomain | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [isCreating, setIsCreating] = useState(false)
+  const [newBrandName, setNewBrandName] = useState('')
+  const [newCompanyName, setNewCompanyName] = useState('')
+
+  useEffect(() => {
+    if (!manageableBrand) return
+    setActiveBrandId(manageableBrand.id)
+    setBrandName(manageableBrand.name)
+    setCompanyName(manageableBrand.company_name)
+    setLogoLightUrl(manageableBrand.logo_light_url ?? '')
+    setLogoDarkUrl(manageableBrand.logo_dark_url ?? '')
+    setFaviconUrl(manageableBrand.favicon_ico_url ?? '')
+    setPrimaryColor(manageableBrand.colors?.primary ?? '#f97316')
+    setSecondaryColor(manageableBrand.colors?.secondary ?? '#1A1A2E')
+    setAccentColor(manageableBrand.colors?.accent ?? '#FFB800')
+    setFontHeading(manageableBrand.fonts?.heading ?? 'Prompt')
+    setFontBody(manageableBrand.fonts?.body ?? 'Sarabun')
+    setBorderRadius(manageableBrand.border_radius ?? 8)
+    setCustomDomain(manageableBrand.domain ?? '')
+  }, [manageableBrand?.id])
+
+  const handleSwitchBrand = (id: string) => {
+    setActiveBrandId(id)
+    switchBrand(id)
+  }
+
+  const handleSave = async () => {
+    if (!manageableBrand) return
+    setIsSaving(true)
+    try {
+      await updateBrand(manageableBrand.id, {
+        name: brandName,
+        company_name: companyName,
+        logo: { light: logoLightUrl || null, dark: logoDarkUrl || null },
+        favicon: { ico: faviconUrl || null },
+        colors: { primary: primaryColor, secondary: secondaryColor, accent: accentColor },
+        fonts: { heading: fontHeading, body: fontBody },
+        border_radius: borderRadius,
+      })
+      await refresh()
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleCreateBrand = async () => {
+    if (!newBrandName || !newCompanyName) return
+    setIsCreating(true)
+    try {
+      await createBrand({
+        name: newBrandName,
+        company_name: newCompanyName,
+        colors: { primary: primaryColor, secondary: secondaryColor, accent: accentColor },
+        fonts: { heading: fontHeading, body: fontBody },
+      })
+      setNewBrandName('')
+      setNewCompanyName('')
+      await refresh()
+    } finally {
+      setIsCreating(false)
+    }
+  }
+
+  const handleSetDefault = async () => {
+    if (!manageableBrand) return
+    setIsSaving(true)
+    try {
+      await setDefaultBrand(manageableBrand.id)
+      await refresh()
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleDomainSave = async () => {
+    if (!manageableBrand || !customDomain) return
+    setIsSaving(true)
+    try {
+      const info = await addBrandDomain(manageableBrand.id, customDomain)
+      setDomainInfo(info)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleVerifyDomain = async () => {
+    if (!manageableBrand) return
+    setIsSaving(true)
+    try {
+      const result = await verifyBrandDomain(manageableBrand.id)
+      setDomainInfo((prev) => prev ? { ...prev, status: result.status, ssl_status: result.ssl_status, dns_verified: result.verified } : prev)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  if (!manageableBrand) {
+    return (
+      <Card>
+        <CardHeader title="White-Label Branding" subtitle="ปรับแต่งแบรนด์สำหรับ Proposal และหน้าลูกค้า" />
+        <CardBody>
+          <p className="text-sm text-[var(--brand-text-secondary)]">White-label branding ใช้งานได้เฉพาะบัญชีที่เป็นสมาชิกองค์กรเท่านั้น</p>
+        </CardBody>
+      </Card>
+    )
+  }
 
   return (
     <Card>
       <CardHeader title="White-Label Branding" subtitle="ปรับแต่งแบรนด์สำหรับ Proposal และหน้าลูกค้า" />
-      <CardBody className="space-y-5">
+      <CardBody className="space-y-6">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="min-w-[200px]">
+            <label className="block text-xs font-medium text-[var(--brand-text-secondary)] mb-1">เลือกแบรนด์</label>
+            <select
+              value={activeBrandId}
+              onChange={(e) => handleSwitchBrand(e.target.value)}
+              className="w-full rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 py-2 text-sm"
+            >
+              {brands.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Button variant="outline" size="sm" onClick={handleSetDefault} disabled={isSaving}>
+            ตั้งเป็น Default
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <Input label="ชื่อแบรนด์" value={brandName} onChange={(e) => setBrandName(e.target.value)} />
+          <Input label="ชื่อบริษัทที่แสดง" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">สีหลัก (Primary Color)</label>
+            <Input label="Logo (Light URL)" value={logoLightUrl} onChange={(e) => setLogoLightUrl(e.target.value)} />
+            <div className="mt-2 flex items-center gap-2">
+              <input
+                type="file"
+                ref={logoUploadRef}
+                accept="image/png,image/jpeg,image/svg+xml"
+                className="hidden"
+                onChange={handleLogoUpload}
+              />
+              <button
+                type="button"
+                onClick={() => logoUploadRef.current?.click()}
+                disabled={isUploadingLogo}
+                className="text-xs text-[var(--brand-primary)] hover:underline disabled:opacity-50"
+              >
+                {isUploadingLogo ? 'กำลังอัปโหลด...' : 'อัปโหลดโลโก้ (PNG/JPG/SVG)'}
+              </button>
+              {logoLightUrl && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={logoLightUrl} alt="logo preview" className="h-8 object-contain rounded" />
+              )}
+            </div>
+          </div>
+          <Input label="Logo (Dark URL)" value={logoDarkUrl} onChange={(e) => setLogoDarkUrl(e.target.value)} />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <Input label="Favicon URL" value={faviconUrl} onChange={(e) => setFaviconUrl(e.target.value)} />
+          <Input
+            label="Border Radius"
+            value={borderRadius.toString()}
+            onChange={(e) => setBorderRadius(Number(e.target.value) || 0)}
+            type="number"
+            min={0}
+            max={16}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Primary Color</label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
                 value={primaryColor}
                 onChange={(e) => setPrimaryColor(e.target.value)}
-                className="w-10 h-10 rounded-lg border border-gray-300 cursor-pointer p-0.5"
+                className="w-10 h-10 rounded-lg border border-[var(--brand-border)] cursor-pointer p-0.5"
               />
-              <Input
-                value={primaryColor}
-                onChange={(e) => setPrimaryColor(e.target.value)}
-                className="flex-1 font-mono"
-                placeholder="#000000"
-              />
+              <Input value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="flex-1 font-mono" />
             </div>
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">โลโก้สำหรับ Proposal</label>
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center text-gray-400">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
-                </svg>
-              </div>
-              <button
-                type="button"
-                className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors"
-              >
-                อัปโหลดโลโก้
-              </button>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Secondary Color</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={secondaryColor}
+                onChange={(e) => setSecondaryColor(e.target.value)}
+                className="w-10 h-10 rounded-lg border border-[var(--brand-border)] cursor-pointer p-0.5"
+              />
+              <Input value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} className="flex-1 font-mono" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Accent Color</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={accentColor}
+                onChange={(e) => setAccentColor(e.target.value)}
+                className="w-10 h-10 rounded-lg border border-[var(--brand-border)] cursor-pointer p-0.5"
+              />
+              <Input value={accentColor} onChange={(e) => setAccentColor(e.target.value)} className="flex-1 font-mono" />
             </div>
           </div>
         </div>
 
-        <Input
-          label="Custom Domain"
-          value={customDomain}
-          onChange={(e) => setCustomDomain(e.target.value)}
-          placeholder="solar.yourdomain.com"
-          hint="ชี้ CNAME record มาที่ cname.solariq.co"
-        />
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">ข้อความท้าย Proposal</label>
-          <textarea
-            value={proposalFooter}
-            onChange={(e) => setProposalFooter(e.target.value)}
-            rows={3}
-            className="block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
-            placeholder="ข้อความที่จะแสดงท้ายใบเสนอราคา"
-          />
-          <p className="mt-1 text-xs text-gray-400">ข้อความนี้จะแสดงที่ส่วนท้ายของใบเสนอราคาทุกฉบับ</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Font Heading</label>
+            <select
+              value={fontHeading}
+              onChange={(e) => setFontHeading(e.target.value)}
+              className="w-full rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 py-2.5 text-sm text-[var(--brand-text)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]"
+            >
+              {FONT_OPTIONS.map((f) => (
+                <option key={f.value} value={f.value}>{f.label}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Font Body (Live Preview)</label>
+            <select
+              value={fontBody}
+              onChange={(e) => setFontBody(e.target.value)}
+              className="w-full rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 py-2.5 text-sm text-[var(--brand-text)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]"
+            >
+              {FONT_OPTIONS.map((f) => (
+                <option key={f.value} value={f.value}>{f.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        {/* Preview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
+          <Input
+            label="Custom Domain"
+            value={customDomain}
+            onChange={(e) => setCustomDomain(e.target.value)}
+            placeholder="solar.yourdomain.com"
+            hint="ชี้ CNAME record มาที่ custom.solariq.app"
+          />
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handleDomainSave} disabled={isSaving}>
+              ตั้งค่า Domain
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleVerifyDomain} disabled={isSaving}>
+              ตรวจสอบ DNS
+            </Button>
+          </div>
+        </div>
+
+        {domainInfo && (
+          <div className="rounded-xl border border-[var(--brand-border)] p-4 text-sm">
+            <p className="font-semibold text-[var(--brand-text)] mb-2">DNS Records</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[var(--brand-text-secondary)]">
+              <div>Type: {domainInfo.dns_record_type}</div>
+              <div>Name: {domainInfo.dns_record_name}</div>
+              <div>Value: {domainInfo.dns_record_value}</div>
+              <div>Status: {domainInfo.status}</div>
+              <div>SSL: {domainInfo.ssl_status}</div>
+              <div>Verified: {domainInfo.dns_verified ? 'Yes' : 'No'}</div>
+            </div>
+          </div>
+        )}
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">ตัวอย่าง</label>
-          <div className="p-6 border border-gray-200 rounded-xl">
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">ตัวอย่าง</label>
+          <div className="p-6 border border-[var(--brand-border)] rounded-xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: primaryColor }}>
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                </svg>
+                <span className="text-white text-sm font-bold">{companyName.charAt(0) || 'B'}</span>
               </div>
               <div>
-                <p className="text-sm font-bold" style={{ color: primaryColor }}>Your Solar Company</p>
-                <p className="text-xs text-gray-400">{customDomain || 'solar.yourdomain.com'}</p>
+                <p className="text-sm font-bold" style={{ color: primaryColor }}>{companyName || 'Your Company'}</p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">{customDomain || 'solar.yourdomain.com'}</p>
               </div>
             </div>
             <div className="h-2 rounded-full" style={{ backgroundColor: primaryColor, opacity: 0.2 }}>
@@ -828,11 +1111,26 @@ function WhiteLabelSection() {
             </div>
           </div>
         </div>
+
+        <div className="rounded-xl border border-[var(--brand-border)] p-4">
+          <p className="text-sm font-semibold text-[var(--brand-text)] mb-3">สร้างแบรนด์ใหม่</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input label="ชื่อแบรนด์ใหม่" value={newBrandName} onChange={(e) => setNewBrandName(e.target.value)} />
+            <Input label="ชื่อบริษัท" value={newCompanyName} onChange={(e) => setNewCompanyName(e.target.value)} />
+          </div>
+          <div className="flex justify-end mt-3">
+            <Button variant="outline" size="sm" onClick={handleCreateBrand} disabled={isCreating}>
+              {isCreating ? 'กำลังสร้าง...' : 'สร้างแบรนด์'}
+            </Button>
+          </div>
+        </div>
       </CardBody>
       <CardFooter>
-        <div className="flex justify-between items-center">
-          <Button variant="outline" size="sm">ดูตัวอย่าง Proposal</Button>
-          <Button variant="primary" size="sm">บันทึกการตั้งค่า</Button>
+        <div className="flex justify-between items-center w-full">
+          <div className="text-xs text-[var(--brand-text-secondary)]">การปรับแต่งมีผลกับ UI, Proposal, และอีเมล</div>
+          <Button variant="primary" size="sm" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'กำลังบันทึก...' : 'บันทึกการตั้งค่า'}
+          </Button>
         </div>
       </CardFooter>
     </Card>

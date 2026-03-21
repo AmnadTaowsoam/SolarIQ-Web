@@ -35,8 +35,8 @@ export function LanguageSwitcher() {
             onClick={() => switchLocale(lang.code)}
             className={`px-2.5 py-1 text-xs font-semibold rounded-full border transition-colors ${
               isActive
-                ? 'bg-orange-500 text-white border-orange-500'
-                : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                ? 'bg-[var(--brand-primary)] text-white border-[var(--brand-primary)]'
+                : 'bg-[var(--brand-surface)] text-[var(--brand-text-secondary)] border-[var(--brand-border)] hover:bg-[var(--brand-primary-light)]'
             }`}
             aria-pressed={isActive}
           >
