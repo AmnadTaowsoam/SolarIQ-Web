@@ -1,130 +1,120 @@
-import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
-import { auth } from './firebase'
-import { getIdToken, User } from 'firebase/auth'
+/**
+ * API Client for SolarIQ-Web
+ * Configured axios instance with auth interceptors and402 quota handling (WK-020)
+ */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import { getIdToken } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
-const isServer = typeof window === 'undefined'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
 
-class ApiClient {
-  private client: AxiosInstance
-  private refreshingToken: Promise<string> | null = null
+// Custom error class for quota exceeded errors
+export class QuotaExceededError extends Error {
+  featureKey: string;
+  current: number;
+  limit: number;
+  planId: string;
+  recommendedPlan?: string;
 
-  constructor() {
-    this.client = axios.create({
-      baseURL: API_URL,
-      timeout: 30000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    this.setupInterceptors()
-  }
-
-  private setupInterceptors() {
-    // Request interceptor to add auth token
-    this.client.interceptors.request.use(
-      async (config: InternalAxiosRequestConfig) => {
-        const user = auth.currentUser as User | null
-        if (user) {
-          try {
-            // Deduplicate concurrent token refresh calls
-            if (!this.refreshingToken) {
-              this.refreshingToken = getIdToken(user)
-              this.refreshingToken.finally(() => {
-                this.refreshingToken = null
-              })
-            }
-            const token = await this.refreshingToken
-            config.headers.Authorization = `Bearer ${token}`
-          } catch {
-            // Token fetch failed — request proceeds without auth header
-            // The backend will return 401 if auth is required
-          }
-        }
-        return config
-      },
-      (error) => Promise.reject(error)
-    )
-
-    // Response interceptor for error handling
-    this.client.interceptors.response.use(
-      (response) => response,
-      async (error: AxiosError) => {
-        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
-
-        // Handle 401 Unauthorized - try to refresh token once
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true
-
-          try {
-            const user = auth.currentUser as User | null
-            if (user) {
-              const newToken = await getIdToken(user, true)
-              originalRequest.headers.Authorization = `Bearer ${newToken}`
-              return this.client(originalRequest)
-            }
-          } catch {
-            // Token refresh failed — redirect to login
-            if (!isServer) {
-              window.location.href = '/login'
-            }
-            return Promise.reject(error)
-          }
-        }
-
-        return Promise.reject(error)
-      }
-    )
-  }
-
-  // Generic HTTP methods
-  async get<T>(url: string, params?: Record<string, unknown>) {
-    const response = await this.client.get<T>(url, { params })
-    return response.data
-  }
-
-  async post<T>(url: string, data?: unknown) {
-    const response = await this.client.post<T>(url, data)
-    return response.data
-  }
-
-  async put<T>(url: string, data?: unknown) {
-    const response = await this.client.put<T>(url, data)
-    return response.data
-  }
-
-  async patch<T>(url: string, data?: unknown) {
-    const response = await this.client.patch<T>(url, data)
-    return response.data
-  }
-
-  async delete<T>(url: string) {
-    const response = await this.client.delete<T>(url)
-    return response.data
-  }
-
-  // File upload method
-  async uploadFile<T>(url: string, file: File, onProgress?: (progress: number) => void) {
-    const formData = new FormData()
-    formData.append('file', file)
-
-    const response = await this.client.post<T>(url, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      onUploadProgress: (progressEvent) => {
-        if (onProgress && progressEvent.total) {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-          onProgress(progress)
-        }
-      },
-    })
-    return response.data
+  constructor(
+    featureKey: string,
+    current: number,
+    limit: number,
+    planId: string,
+    recommendedPlan?: string
+  ) {
+    super(`Quota exceeded for ${featureKey}: ${current}/${limit}`);
+    this.name = 'QuotaExceededError';
+    this.featureKey = featureKey;
+    this.current = current;
+    this.limit = limit;
+    this.planId = planId;
+    this.recommendedPlan = recommendedPlan;
   }
 }
 
-// Export singleton instance
-export const api = new ApiClient()
-export default api
+// Type for quota error response from backend
+interface QuotaErrorResponse {
+  detail: string;
+  feature_key: string;
+  current: number;
+  limit: number;
+  plan_id: string;
+  recommended_plan?: string;
+}
+
+// Create axios instance
+const apiClient: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor to add auth token
+apiClient.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig) => {
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        const token = await getIdToken(user, false);
+        config.headers.Authorization = `Bearer ${token}`;
+      } catch (error) {
+        console.error('Failed to get auth token:', error);
+      }
+    }
+    return config;
+  },
+  (error: AxiosError) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor to handle errors including 402 Quota Exceeded
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<QuotaErrorResponse>) => {
+    // Handle 402 Payment Required (Quota Exceeded)
+    if (error.response?.status === 402 && error.response?.data) {
+      const errorData = error.response.data;
+      const quotaError = new QuotaExceededError(
+        errorData.feature_key,
+        errorData.current,
+        errorData.limit,
+        errorData.plan_id,
+        errorData.recommended_plan
+      );
+      
+      // Dispatch custom event for UI components to listen to
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('quotaExceeded', {
+            detail: quotaError,
+          })
+        );
+      }
+      
+      return Promise.reject(quotaError);
+    }
+    
+    // Handle 401 Unauthorized - redirect to login
+    if (error.response?.status === 401) {
+      if (typeof window !== 'undefined') {
+        // Clear any cached auth state
+        localStorage.removeItem('auth_state');
+        // Redirect to login
+        window.location.href = '/login';
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
+export { apiClient };
+export default apiClient;
+
+// Alias for backward compatibility
+export const api = apiClient;

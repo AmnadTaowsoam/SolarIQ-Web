@@ -111,13 +111,22 @@ export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   DASHBOARD: '/dashboard',
+  ANALYTICS: '/analytics',
+  ANALYTICS_PIPELINE: '/analytics/pipeline',
+  ANALYTICS_LEADS: '/analytics/leads',
+  ANALYTICS_REVENUE: '/analytics/revenue',
+  ANALYTICS_MARKET: '/analytics/market',
+  ANALYTICS_REPORTS: '/analytics/reports',
+  ANALYTICS_SCORECARD: '/analytics/scorecard',
   LEADS: '/leads',
   LEAD_DETAIL: (id: string) => `/leads/${id}`,
   ANALYZE: '/analyze',
   KNOWLEDGE: '/knowledge',
   PRICING: '/pricing',
+  COMMISSIONS: '/commissions',
+  INVOICES: '/invoices',
   SETTINGS: '/settings',
 } as const
 
 // Admin-only routes
-export const ADMIN_ROUTES = [ROUTES.KNOWLEDGE, ROUTES.PRICING]
+export const ADMIN_ROUTES = [ROUTES.KNOWLEDGE, ROUTES.PRICING, '/admin/revenue', ROUTES.ANALYTICS_REVENUE]

@@ -1,0 +1,167 @@
+{
+  "common": {
+    "appName": "SolarIQ",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "confirm": "Confirm",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "success": "Success",
+    "required": "Required",
+    "viewAll": "View all"
+  },
+  "nav": {
+    "overview": "Overview",
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "leads": "Leads",
+    "tools": "Tools",
+    "solarAnalysis": "Solar Analysis",
+    "management": "Management",
+    "knowledgeBase": "Knowledge Base",
+    "pricing": "Pricing",
+    "billing": "Billing",
+    "commissions": "Commissions",
+    "invoices": "Invoices",
+    "revenue": "Revenue",
+    "settings": "Settings"
+  },
+  "navbar": {
+    "openMenu": "Open menu",
+    "searchPlaceholder": "Search...",
+    "profileSettings": "Profile settings",
+    "signOut": "Sign out",
+    "notifications": "Notifications"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Overview of your solar business"
+    },
+    "leads": {
+      "title": "Lead Management",
+      "description": "Track and manage your leads"
+    },
+    "analyze": {
+      "title": "Solar Analysis",
+      "description": "Analyze solar potential for any location"
+    },
+    "knowledge": {
+      "title": "Knowledge Base",
+      "description": "Manage documents and data sources"
+    },
+    "pricing": {
+      "title": "Pricing Management",
+      "description": "Configure installation costs and rates"
+    },
+    "billing": {
+      "title": "Billing & Subscription",
+      "description": "Manage your plan and invoices"
+    },
+    "privacy": {
+      "title": "Privacy Settings",
+      "description": "Manage consent and data privacy"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Manage company info, integrations, and access"
+    }
+  },
+  "auth": {
+    "login": "Log In",
+    "logout": "Log Out",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Log In",
+    "loginError": "Invalid email or password"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your solar business",
+    "totalLeads": "Total Leads",
+    "newLeads": "New Leads",
+    "conversionRate": "Conversion Rate",
+    "revenue": "Revenue",
+    "leadsOverTime": "Leads Over Time",
+    "leadsOverTimeSubtitle": "Last 30 days",
+    "topLocations": "Top Locations",
+    "recentLeads": "Recent Leads",
+    "noLeads": "No leads yet",
+    "noLeadsDesc": "New leads will appear here",
+    "topLocationsSubtitle": "By lead volume",
+    "welcomeBack": "Welcome back, {name}",
+    "demoMode": "Demo Mode — Showing sample data. Connect your backend API to see real data.",
+    "changeFromLastMonth": "{value} from last month"
+  },
+  "leads": {
+    "title": "Lead Management",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "status": "Status",
+    "location": "Location",
+    "monthlyBill": "Monthly Bill",
+    "createdAt": "Created",
+    "statusOptions": {
+      "new": "New",
+      "contacted": "Contacted",
+      "quoted": "Quoted",
+      "won": "Won",
+      "lost": "Lost"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "company": "Company",
+    "language": "Language",
+    "currency": "Currency",
+    "notifications": "Notifications",
+    "billing": "Billing"
+  },
+  "notifications": {
+    "newLead": "New lead!",
+    "leadAssigned": "Lead assigned to you",
+    "proposalViewed": "Proposal viewed",
+    "proposalAccepted": "Proposal accepted",
+    "paymentReceived": "Payment received",
+    "panelTitle": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications yet"
+  },
+  "errors": {
+    "networkError": "Unable to connect to server",
+    "unauthorized": "Please sign in again",
+    "forbidden": "You do not have access",
+    "notFound": "Not found",
+    "serverError": "Server error, please try again",
+    "validationError": "Please check the information"
+  },
+  "units": {
+    "kw": "kW",
+    "kwh": "kWh",
+    "kwp": "kWp",
+    "bahtPerMonth": "THB/month",
+    "bahtPerYear": "THB/year",
+    "years": "years",
+    "months": "months",
+    "tonsCO2": "tons CO₂"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "contractor": "Contractor"
+  }
+}

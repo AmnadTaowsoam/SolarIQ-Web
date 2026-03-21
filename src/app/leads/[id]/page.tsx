@@ -202,10 +202,10 @@ function formatNumber(n: number, decimals = 0): string {
 
 const DEMO_LEAD: Lead = {
   id: 'demo-001',
-  name: 'Somchai Prasert',
+  name: 'คุณสมชาย ประเสริฐ',
   phone: '081-234-5678',
-  email: 'somchai@example.com',
-  address: '123/45 Sukhumvit Soi 55, Klongton Nua, Wattana, Bangkok 10110',
+  email: 'somchai@thaisun.co.th',
+  address: '123/45 ซอยสุขุมวิท 55 แขวงคลองตันเหนือ เขตวัฒนา กรุงเทพฯ 10110',
   latitude: 13.7363,
   longitude: 100.5618,
   monthlyBill: 8500,
@@ -240,7 +240,7 @@ const DEMO_LEAD: Lead = {
 
 // Extended demo fields that the Lead type does not carry
 const DEMO_EXTENDED = {
-  company: 'Prasert Trading Co., Ltd.',
+  company: 'บริษัท ไทยซัน เอ็นเนอร์ยี่ จำกัด',
   lineId: '@somchai_prasert',
   peakUsageKwh: 1200,
   offPeakUsageKwh: 690,
@@ -637,28 +637,8 @@ export default function LeadDetailPage() {
     )
   }
 
-  // ---------- Error state (only when API fails and no fallback) ----------
-  if (error && !apiLead) {
-    // Still show the demo page if in demo mode — only show error if API was expected
-    if (id !== 'demo-001') {
-      return (
-        <AppLayout user={user}>
-          <div className="max-w-2xl mx-auto mt-20 text-center">
-            <ExclamationTriangleIcon className="w-16 h-16 text-gray-300 mx-auto" />
-            <h2 className="mt-4 text-xl font-semibold text-gray-900">Lead not found</h2>
-            <p className="mt-2 text-gray-500">The lead you are looking for does not exist or has been removed.</p>
-            <div className="mt-6 flex justify-center gap-3">
-              <Button variant="outline" onClick={() => router.push(ROUTES.LEADS)}>
-                <ArrowLeftIcon className="w-4 h-4 mr-2" />
-                Back to Leads
-              </Button>
-              <Button onClick={() => refetch()}>Retry</Button>
-            </div>
-          </div>
-        </AppLayout>
-      )
-    }
-  }
+  // ---------- Error state ----------
+  // When API fails, fall back to demo data instead of showing error
 
   return (
     <AppLayout user={user}>

@@ -1,55 +1,96 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { defaultLocale, isSupportedLocale, type Locale } from '@/i18n/config'
+import { buildLocalizedPath, extractLocaleFromPath, normalizePathname } from '@/lib/locale'
+
+const LOCALE_COOKIE = 'NEXT_LOCALE'
 
 // Routes that don't require authentication
 const publicRoutes = ['/', '/login', '/landing']
 
 // Admin-only routes
-const adminRoutes = ['/knowledge', '/pricing']
+const adminRoutes = ['/knowledge', '/pricing', '/admin/revenue']
+
+function getLocaleFromHeader(header: string | null): Locale | null {
+  if (!header) {
+    return null
+  }
+  const value = header.split(',')[0]?.trim()?.toLowerCase() ?? ''
+  const base = value.split('-')[0]
+  return isSupportedLocale(base) ? base : null
+}
+
+function resolvePreferredLocale(request: NextRequest): Locale {
+  const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value
+  if (isSupportedLocale(cookieLocale)) {
+    return cookieLocale
+  }
+  const headerLocale = getLocaleFromHeader(request.headers.get('accept-language'))
+  return headerLocale ?? defaultLocale
+}
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const response = NextResponse.next()
+  const pathname = normalizePathname(request.nextUrl.pathname)
+  const { locale: pathLocale, pathname: strippedPath } = extractLocaleFromPath(pathname)
+  const preferredLocale = pathLocale ?? resolvePreferredLocale(request)
 
-  // Resolve the root path server-side to avoid client-side loading loops.
-  if (pathname === '/') {
+  // Handle root path first
+  if (strippedPath === '/') {
     const hasSession = request.cookies.get('__session') ?? request.cookies.get('firebase-auth-token')
     const target = hasSession ? '/dashboard' : '/landing'
-    return NextResponse.redirect(new URL(target, request.url))
+    const localizedTarget = buildLocalizedPath(target, preferredLocale)
+    const redirectUrl = new URL(localizedTarget, request.url)
+    const response = NextResponse.redirect(redirectUrl)
+    response.cookies.set(LOCALE_COOKIE, preferredLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
+    response.headers.set('x-locale', preferredLocale)
+    return response
   }
+
+  // Redirect to locale-prefixed route when user prefers non-default locale
+  if (!pathLocale && preferredLocale !== defaultLocale) {
+    const redirectUrl = new URL(buildLocalizedPath(pathname, preferredLocale), request.url)
+    const response = NextResponse.redirect(redirectUrl)
+    response.cookies.set(LOCALE_COOKIE, preferredLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
+    response.headers.set('x-locale', preferredLocale)
+    return response
+  }
+
+  const effectivePath = pathLocale ? strippedPath : pathname
 
   // Check if route is public
   const isPublicRoute = publicRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
+    (route) => effectivePath === route || effectivePath.startsWith(`${route}/`)
   )
+
+  // Prepare base response (rewrite if locale prefix was present)
+  const response = pathLocale
+    ? NextResponse.rewrite(new URL(effectivePath, request.url))
+    : NextResponse.next()
+
+  response.cookies.set(LOCALE_COOKIE, preferredLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
+  response.headers.set('x-locale', preferredLocale)
 
   if (isPublicRoute) {
     return response
   }
 
   // Check for Firebase auth session cookie/token
-  // Firebase Auth uses client-side tokens, so we check for the session indicator
   const hasSession = request.cookies.get('__session') ?? request.cookies.get('firebase-auth-token')
 
   if (!hasSession) {
-    // No session found — redirect to login for protected routes
-    // Note: This is a lightweight check. Full token verification happens client-side
-    // via Firebase Auth and server-side in the backend API.
-    const loginUrl = new URL('/login', request.url)
-    loginUrl.searchParams.set('redirect', pathname)
+    const loginUrl = new URL(buildLocalizedPath('/login', preferredLocale), request.url)
+    loginUrl.searchParams.set('redirect', effectivePath)
     return NextResponse.redirect(loginUrl)
   }
 
-  // Check admin routes — role enforcement is done client-side via AuthContext
-  // This is a defense-in-depth layer; the backend API also enforces roles
   const isAdminRoute = adminRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
+    (route) => effectivePath === route || effectivePath.startsWith(`${route}/`)
   )
 
   if (isAdminRoute) {
     const userRole = request.cookies.get('user-role')?.value
     if (userRole && userRole !== 'admin') {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+      return NextResponse.redirect(new URL(buildLocalizedPath('/dashboard', preferredLocale), request.url))
     }
   }
 
@@ -58,14 +99,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public assets
-     */
     '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
   ],
 }

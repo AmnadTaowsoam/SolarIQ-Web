@@ -1,0 +1,167 @@
+{
+  "common": {
+    "appName": "SolarIQ",
+    "loading": "กำลังโหลด...",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "delete": "ลบ",
+    "edit": "แก้ไข",
+    "create": "สร้าง",
+    "search": "ค้นหา",
+    "filter": "กรอง",
+    "export": "ส่งออก",
+    "back": "กลับ",
+    "next": "ถัดไป",
+    "previous": "ก่อนหน้า",
+    "confirm": "ยืนยัน",
+    "close": "ปิด",
+    "yes": "ใช่",
+    "no": "ไม่",
+    "noData": "ไม่มีข้อมูล",
+    "error": "เกิดข้อผิดพลาด",
+    "success": "สำเร็จ",
+    "required": "จำเป็น",
+    "viewAll": "ดูทั้งหมด"
+  },
+  "nav": {
+    "overview": "ภาพรวม",
+    "dashboard": "แดชบอร์ด",
+    "analytics": "วิเคราะห์",
+    "leads": "ลีด",
+    "tools": "เครื่องมือ",
+    "solarAnalysis": "วิเคราะห์พลังงานแสงอาทิตย์",
+    "management": "การจัดการ",
+    "knowledgeBase": "คลังความรู้",
+    "pricing": "ราคา",
+    "billing": "การเรียกเก็บเงิน",
+    "commissions": "คอมมิชชัน",
+    "invoices": "ใบแจ้งหนี้",
+    "revenue": "รายได้",
+    "settings": "ตั้งค่า"
+  },
+  "navbar": {
+    "openMenu": "เปิดเมนู",
+    "searchPlaceholder": "ค้นหา...",
+    "profileSettings": "ตั้งค่าโปรไฟล์",
+    "signOut": "ออกจากระบบ",
+    "notifications": "การแจ้งเตือน"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "แดชบอร์ด",
+      "description": "ภาพรวมธุรกิจพลังงานแสงอาทิตย์ของคุณ"
+    },
+    "leads": {
+      "title": "จัดการลีด",
+      "description": "ติดตามและจัดการลีดของคุณ"
+    },
+    "analyze": {
+      "title": "วิเคราะห์พลังงานแสงอาทิตย์",
+      "description": "วิเคราะห์ศักยภาพพลังงานแสงอาทิตย์ในทุกพื้นที่"
+    },
+    "knowledge": {
+      "title": "คลังความรู้",
+      "description": "จัดการเอกสารและข้อมูลอ้างอิง"
+    },
+    "pricing": {
+      "title": "การจัดการราคา",
+      "description": "ตั้งค่าต้นทุนการติดตั้งและอัตราค่าไฟ"
+    },
+    "billing": {
+      "title": "การเรียกเก็บเงินและแพ็กเกจ",
+      "description": "จัดการแผนการใช้งานและใบแจ้งหนี้"
+    },
+    "privacy": {
+      "title": "ตั้งค่าความเป็นส่วนตัว",
+      "description": "จัดการความยินยอมและข้อมูลส่วนบุคคล"
+    },
+    "settings": {
+      "title": "ตั้งค่า",
+      "description": "จัดการข้อมูลบริษัท การเชื่อมต่อ และสิทธิ์การใช้งาน"
+    }
+  },
+  "auth": {
+    "login": "เข้าสู่ระบบ",
+    "logout": "ออกจากระบบ",
+    "email": "อีเมล",
+    "password": "รหัสผ่าน",
+    "loginButton": "เข้าสู่ระบบ",
+    "loginError": "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
+  },
+  "dashboard": {
+    "title": "แดชบอร์ด",
+    "subtitle": "ภาพรวมธุรกิจพลังงานแสงอาทิตย์ของคุณ",
+    "totalLeads": "ลีดทั้งหมด",
+    "newLeads": "ลีดใหม่",
+    "conversionRate": "อัตราแปลง",
+    "revenue": "รายได้",
+    "leadsOverTime": "ลีดตามช่วงเวลา",
+    "leadsOverTimeSubtitle": "30 วันที่ผ่านมา",
+    "topLocations": "พื้นที่ยอดนิยม",
+    "recentLeads": "ลีดล่าสุด",
+    "noLeads": "ยังไม่มีลีด",
+    "noLeadsDesc": "ลีดใหม่จะปรากฏที่นี่",
+    "topLocationsSubtitle": "ตามจำนวนลีด",
+    "welcomeBack": "ยินดีต้อนรับกลับ, {name}",
+    "demoMode": "โหมดเดโม — แสดงข้อมูลตัวอย่าง เชื่อมต่อ API เพื่อดูข้อมูลจริง",
+    "changeFromLastMonth": "{value} จากเดือนที่แล้ว"
+  },
+  "leads": {
+    "title": "จัดการลีด",
+    "name": "ชื่อ",
+    "phone": "เบอร์โทร",
+    "email": "อีเมล",
+    "status": "สถานะ",
+    "location": "ที่อยู่",
+    "monthlyBill": "ค่าไฟต่อเดือน",
+    "createdAt": "สร้างเมื่อ",
+    "statusOptions": {
+      "new": "ใหม่",
+      "contacted": "ติดต่อแล้ว",
+      "quoted": "เสนอราคาแล้ว",
+      "won": "ปิดการขาย",
+      "lost": "ไม่สำเร็จ"
+    }
+  },
+  "settings": {
+    "title": "ตั้งค่า",
+    "profile": "โปรไฟล์",
+    "company": "บริษัท",
+    "language": "ภาษา",
+    "currency": "สกุลเงิน",
+    "notifications": "การแจ้งเตือน",
+    "billing": "การเรียกเก็บเงิน"
+  },
+  "notifications": {
+    "newLead": "ลีดใหม่!",
+    "leadAssigned": "ลีดถูกมอบหมายให้คุณ",
+    "proposalViewed": "ใบเสนอราคาถูกเปิดดู",
+    "proposalAccepted": "ใบเสนอราคาถูกยอมรับ",
+    "paymentReceived": "ได้รับชำระเงินแล้ว",
+    "panelTitle": "การแจ้งเตือน",
+    "markAllRead": "อ่านทั้งหมด",
+    "empty": "ยังไม่มีการแจ้งเตือน"
+  },
+  "errors": {
+    "networkError": "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้",
+    "unauthorized": "กรุณาเข้าสู่ระบบใหม่",
+    "forbidden": "คุณไม่มีสิทธิ์เข้าถึง",
+    "notFound": "ไม่พบข้อมูล",
+    "serverError": "เกิดข้อผิดพลาดภายใน กรุณาลองใหม่",
+    "validationError": "กรุณาตรวจสอบข้อมูล"
+  },
+  "units": {
+    "kw": "kW",
+    "kwh": "kWh",
+    "kwp": "kWp",
+    "bahtPerMonth": "บาท/เดือน",
+    "bahtPerYear": "บาท/ปี",
+    "years": "ปี",
+    "months": "เดือน",
+    "tonsCO2": "ตัน CO₂"
+  },
+  "roles": {
+    "admin": "ผู้ดูแลระบบ",
+    "contractor": "ผู้รับเหมา"
+  }
+}

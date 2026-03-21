@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 
 // ---------------------------------------------------------------------------
@@ -139,6 +140,7 @@ export function useNotificationCount() {
 
 export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
   const [notifications, setNotifications] = useState<Notification[]>(DEMO_NOTIFICATIONS)
+  const tNotifications = useTranslations('notifications')
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
@@ -173,7 +175,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-gray-100 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <h2 className="text-base font-bold text-gray-900">การแจ้งเตือน</h2>
+            <h2 className="text-base font-bold text-gray-900">{tNotifications('panelTitle')}</h2>
             {unreadCount > 0 && (
               <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-bold text-white bg-orange-500 rounded-full">
                 {unreadCount}
@@ -186,7 +188,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
                 onClick={markAllAsRead}
                 className="text-xs font-medium text-orange-600 hover:text-orange-700 px-2.5 py-1.5 hover:bg-orange-50 rounded-lg transition-colors"
               >
-                อ่านทั้งหมด
+                {tNotifications('markAllRead')}
               </button>
             )}
             <button

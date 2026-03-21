@@ -2,11 +2,12 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useFormatter, useTranslations } from 'next-intl'
 import { useAuth } from '@/context'
 import { AppLayout } from '@/components/layout'
 import { Card, CardHeader, CardBody, Badge } from '@/components/ui'
-import { useDashboardStats, useRecentLeads, useLeadsOverTime, useTopLocations } from '@/hooks'
-import { ROUTES, LEAD_STATUS_COLORS, LEAD_STATUS_LABELS } from '@/lib/constants'
+import { useDashboardStats, useRecentLeads, useLeadsOverTime, useTopLocations, useCurrency, useDateTime } from '@/hooks'
+import { ROUTES, LEAD_STATUS_COLORS } from '@/lib/constants'
 import { DEMO_STATS, DEMO_RECENT_LEADS, DEMO_LEADS_OVER_TIME, DEMO_TOP_LOCATIONS } from '@/lib/demo-data'
 import { Lead, LeadStatus } from '@/types'
 import {
@@ -21,16 +22,6 @@ import {
   AreaChart,
 } from 'recharts'
 import { format } from 'date-fns'
-
-/** Format number as Thai Baht — hardcode ฿ to avoid locale issues in Docker Alpine */
-function formatThb(value: number): string {
-  return `฿${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-}
-
-/** Format large numbers with commas */
-function formatNumber(value: number): string {
-  return new Intl.NumberFormat('th-TH').format(value)
-}
 
 // Stat Card Component
 function StatCard({
@@ -91,18 +82,24 @@ function StatCard({
 // Recent Leads Table
 function RecentLeadsTable({ leads }: { leads: Lead[] }) {
   const router = useRouter()
+  const tDashboard = useTranslations('dashboard')
+  const tLeads = useTranslations('leads')
+  const tCommon = useTranslations('common')
+  const tStatus = useTranslations('leads.statusOptions')
+  const { formatCurrency } = useCurrency()
+  const { formatDate } = useDateTime()
 
   if (leads.length === 0) {
     return (
       <Card>
         <CardHeader
-          title="Recent Leads"
+          title={tDashboard('recentLeads')}
           action={
             <button
               onClick={() => router.push(ROUTES.LEADS)}
               className="text-xs font-semibold text-orange-600 hover:text-orange-700 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors"
             >
-              View all
+              {tCommon('viewAll')}
             </button>
           }
         />
@@ -111,8 +108,8 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
             <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
             </svg>
-            <p className="text-sm font-medium text-gray-500">No leads yet</p>
-            <p className="text-xs text-gray-400 mt-1">New leads will appear here</p>
+            <p className="text-sm font-medium text-gray-500">{tDashboard('noLeads')}</p>
+            <p className="text-xs text-gray-400 mt-1">{tDashboard('noLeadsDesc')}</p>
           </div>
         </CardBody>
       </Card>
@@ -122,13 +119,13 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
   return (
     <Card>
       <CardHeader
-        title="Recent Leads"
+        title={tDashboard('recentLeads')}
         action={
           <button
             onClick={() => router.push(ROUTES.LEADS)}
             className="text-xs font-semibold text-orange-600 hover:text-orange-700 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors"
           >
-            View all
+            {tCommon('viewAll')}
           </button>
         }
       />
@@ -138,16 +135,16 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
             <thead>
               <tr className="border-b border-gray-100">
                 <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                  Name
+                  {tLeads('name')}
                 </th>
                 <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                  Status
+                  {tLeads('status')}
                 </th>
                 <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                  Monthly Bill
+                  {tLeads('monthlyBill')}
                 </th>
                 <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                  Created
+                  {tLeads('createdAt')}
                 </th>
               </tr>
             </thead>
@@ -173,14 +170,14 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
                   </td>
                   <td className="px-6 py-3.5 whitespace-nowrap">
                     <Badge className={LEAD_STATUS_COLORS[lead.status as LeadStatus]}>
-                      {LEAD_STATUS_LABELS[lead.status as LeadStatus]}
+                      {tStatus(lead.status as LeadStatus)}
                     </Badge>
                   </td>
                   <td className="px-6 py-3.5 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {formatThb(lead.monthlyBill)}
+                    {formatCurrency(lead.monthlyBill)}
                   </td>
                   <td className="px-6 py-3.5 whitespace-nowrap text-xs text-gray-500">
-                    {format(new Date(lead.createdAt), 'dd MMM yyyy')}
+                    {formatDate(lead.createdAt)}
                   </td>
                 </tr>
               ))}
@@ -194,9 +191,12 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
 
 // Leads Over Time Chart
 function LeadsOverTimeChart({ data }: { data: { date: string; count: number }[] }) {
+  const tDashboard = useTranslations('dashboard')
+  const tNav = useTranslations('nav')
+  const formatNumber = useFormatter()
   return (
     <Card>
-      <CardHeader title="Leads Over Time" subtitle="Last 30 days" />
+      <CardHeader title={tDashboard('leadsOverTime')} subtitle={tDashboard('leadsOverTimeSubtitle')} />
       <CardBody>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -229,7 +229,7 @@ function LeadsOverTimeChart({ data }: { data: { date: string; count: number }[] 
                   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)',
                 }}
                 labelFormatter={(value) => format(new Date(value), 'dd MMM yyyy')}
-                formatter={(value: number) => [formatNumber(value), 'Leads']}
+                formatter={(value: number) => [formatNumber.number(value), tNav('leads')]}
               />
               <Area
                 type="monotone"
@@ -250,9 +250,12 @@ function LeadsOverTimeChart({ data }: { data: { date: string; count: number }[] 
 
 // Top Locations Chart
 function TopLocationsChart({ data }: { data: { location: string; count: number }[] }) {
+  const tDashboard = useTranslations('dashboard')
+  const tNav = useTranslations('nav')
+  const formatNumber = useFormatter()
   return (
     <Card>
-      <CardHeader title="Top Locations" subtitle="By lead volume" />
+      <CardHeader title={tDashboard('topLocations')} subtitle={tDashboard('topLocationsSubtitle')} />
       <CardBody>
         <div className="h-64">
           {data.length === 0 ? (
@@ -286,7 +289,7 @@ function TopLocationsChart({ data }: { data: { location: string; count: number }
                     fontSize: '12px',
                     boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)',
                   }}
-                  formatter={(value: number) => [formatNumber(value), 'Leads']}
+                  formatter={(value: number) => [formatNumber.number(value), tNav('leads')]}
                 />
                 <Bar dataKey="count" fill="#22c55e" radius={[0, 6, 6, 0]} barSize={20} />
               </BarChart>
@@ -305,6 +308,10 @@ export default function DashboardPage() {
   const { data: recentLeads = [] } = useRecentLeads(5)
   const { data: leadsOverTime = [] } = useLeadsOverTime(30)
   const { data: topLocations = [] } = useTopLocations(5)
+  const tDashboard = useTranslations('dashboard')
+  const tCommon = useTranslations('common')
+  const format = useFormatter()
+  const { formatCurrency } = useCurrency()
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -317,7 +324,7 @@ export default function DashboardPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-3 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
-          <p className="text-sm text-gray-400">Loading...</p>
+          <p className="text-sm text-gray-400">{tCommon('loading')}</p>
         </div>
       </div>
     )
@@ -332,6 +339,7 @@ export default function DashboardPage() {
   const displayLeads = recentLeads.length > 0 ? recentLeads : DEMO_RECENT_LEADS.slice(0, 5)
   const displayLeadsOverTime = leadsOverTime.length > 0 ? leadsOverTime : DEMO_LEADS_OVER_TIME
   const displayTopLocations = topLocations.length > 0 ? topLocations : DEMO_TOP_LOCATIONS
+  const formatNumber = (value: number) => format.number(value)
 
   return (
     <AppLayout user={user}>
@@ -339,14 +347,14 @@ export default function DashboardPage() {
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Dashboard</h1>
+            <h1 className="text-xl font-bold text-gray-900 tracking-tight">{tDashboard('title')}</h1>
             <p className="text-sm text-gray-500 mt-0.5">
-              Welcome back, {user.displayName || 'User'}
+              {tDashboard('welcomeBack', { name: user.displayName || 'User' })}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400">
-              {format(new Date(), 'EEEE, dd MMMM yyyy')}
+              {format.dateTime(new Date(), { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
             </span>
           </div>
         </div>
@@ -357,14 +365,14 @@ export default function DashboardPage() {
             <svg className="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-amber-800">Demo Mode — Showing sample data. Connect your backend API to see real data.</span>
+            <span className="text-amber-800">{tDashboard('demoMode')}</span>
           </div>
         )}
 
         {/* Stats cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
-            title="Total Leads"
+            title={tDashboard('totalLeads')}
             value={formatNumber(stats.totalLeads)}
             iconBg="bg-blue-50"
             icon={
@@ -374,9 +382,9 @@ export default function DashboardPage() {
             }
           />
           <StatCard
-            title="New Leads"
+            title={tDashboard('newLeads')}
             value={formatNumber(stats.newLeads)}
-            change="+12% from last month"
+            change={tDashboard('changeFromLastMonth', { value: '+12%' })}
             changeType="positive"
             iconBg="bg-emerald-50"
             icon={
@@ -386,9 +394,9 @@ export default function DashboardPage() {
             }
           />
           <StatCard
-            title="Conversion Rate"
+            title={tDashboard('conversionRate')}
             value={`${stats.conversionRate}%`}
-            change="+5% from last month"
+            change={tDashboard('changeFromLastMonth', { value: '+5%' })}
             changeType="positive"
             iconBg="bg-purple-50"
             icon={
@@ -398,9 +406,9 @@ export default function DashboardPage() {
             }
           />
           <StatCard
-            title="Revenue"
-            value={formatThb(stats.revenue)}
-            change="+8% from last month"
+            title={tDashboard('revenue')}
+            value={formatCurrency(stats.revenue)}
+            change={tDashboard('changeFromLastMonth', { value: '+8%' })}
             changeType="positive"
             iconBg="bg-orange-50"
             icon={

@@ -19,6 +19,9 @@ export type { SelectProps, SelectOption } from './Select'
 export { Badge } from './Badge'
 export type { BadgeProps } from './Badge'
 
+export { LanguageSwitcher } from './LanguageSwitcher'
+export { CurrencyDisplay } from './CurrencyDisplay'
+
 export { ToastProvider, useToast } from './Toast'
 
 export { Skeleton, CardSkeleton, ChartSkeleton, TableSkeleton as TableSkeletonFull } from './Skeleton'

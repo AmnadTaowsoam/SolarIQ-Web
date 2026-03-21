@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarIQ - Offline</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #0F172A;
+            color: #F59E0B;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, -apple-system, sans-serif;
+            font-size: 16px;
+        }
+
+        .offline-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 8px;
+        }
+
+        .offline-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .retry-button {
+            display: block;
+            margin-top: 16px;
+            padding: 8px 24px;
+            background-color: #F59E0B;
+            border: 1px solid #ddd border-radius: 8px;
+        }
+
+        .retry-count {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        }
+    </style>
+</head>
+
+<body>
+    <div className="min-h-screen flex items-center justify-center bg-slate-900">
+        <div className="flex-1 items-center gap-2">
+            <h2 className="text-lg font-medium text-white">You're offline</h2>
+            <div className="flex items-center gap-3">
+                <h3 className="text-lg font-medium text-gray-500">You're offline</h3>
+                <p className="text-sm text-gray-400">You are offline. changes will sync when you reconnect.</p>
+            </div>
+        </div>
+        </aside>
+        </main>
+</body>
+
+</html>
