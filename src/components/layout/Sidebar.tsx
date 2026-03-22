@@ -322,6 +322,46 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           ))}
         </nav>
 
+        {/* Marketing Links */}
+        <div className="border-t border-[var(--brand-border)] px-3 py-3">
+          <p className="px-3 text-[10px] font-bold text-[var(--brand-sidebar-text)]/40 uppercase tracking-[0.1em] mb-2">
+            SolarIQ
+          </p>
+          <div className="space-y-0.5">
+            <Link
+              href="/pricing-plans"
+              target="_blank"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-[var(--brand-sidebar-text)] opacity-80 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)] transition-colors"
+            >
+              <svg className="w-5 h-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 6h.008v.008H6V6z" />
+              </svg>
+              แพ็กเกจราคา
+            </Link>
+            <Link
+              href="/about"
+              target="_blank"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-[var(--brand-sidebar-text)] opacity-80 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)] transition-colors"
+            >
+              <svg className="w-5 h-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+              </svg>
+              เกี่ยวกับเรา
+            </Link>
+            <Link
+              href="/contact"
+              target="_blank"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-[var(--brand-sidebar-text)] opacity-80 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)] transition-colors"
+            >
+              <svg className="w-5 h-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+              ติดต่อเรา
+            </Link>
+          </div>
+        </div>
+
         <div className="border-t border-[var(--brand-border)] p-4">
           <div className="flex items-center justify-between">
             <button
@@ -333,7 +373,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
               </svg>
               {tNavbar('signOut')}
             </button>
-            <span className="text-[10px] text-[var(--brand-sidebar-text)]/40 font-mono px-2">v2.0</span>
+            <span className="text-[10px] text-[var(--brand-sidebar-text)]/40 font-mono px-2">v2.3</span>
           </div>
         </div>
       </aside>
