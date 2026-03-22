@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import type { Metadata, Viewport } from 'next'
 import { Inter, Noto_Sans_Thai } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
@@ -93,11 +95,7 @@ export const viewport: Viewport = {
   themeColor: '#ea580c',
 }
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   const messages = await getMessages()
 

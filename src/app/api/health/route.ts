@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
@@ -8,7 +9,7 @@ export async function GET() {
       status: 'healthy',
       timestamp: new Date().toISOString(),
       version: process.env.npm_package_version || '0.1.0',
-      uptime: process.uptime(),
+      uptime: 0,
     },
     {
       status: 200,

@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { NextRequest, NextResponse } from 'next/server'
 
 /**
@@ -15,7 +17,7 @@ export async function POST(request: NextRequest) {
     const _violationInfo = {
       timestamp: new Date().toISOString(),
       'document-uri': cspReport['document-uri'] || 'unknown',
-      'referrer': cspReport['referrer'] || 'unknown',
+      referrer: cspReport['referrer'] || 'unknown',
       'violated-directive': cspReport['violated-directive'] || 'unknown',
       'effective-directive': cspReport['effective-directive'] || 'unknown',
       'original-policy': cspReport['original-policy'] ? '[truncated]' : 'unknown',
