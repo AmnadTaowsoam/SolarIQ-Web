@@ -125,6 +125,7 @@ export const ROUTES = {
   PRICING: '/pricing',
   COMMISSIONS: '/commissions',
   INVOICES: '/invoices',
+  PROFILE: '/profile',
   SETTINGS: '/settings',
   DEALS: '/deals',
   MESSAGES: '/messages',

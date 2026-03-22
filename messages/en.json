@@ -81,6 +81,10 @@
       "title": "Privacy Settings",
       "description": "Manage consent and data privacy"
     },
+    "profile": {
+      "title": "Profile",
+      "description": "Manage your personal information and account settings"
+    },
     "settings": {
       "title": "Settings",
       "description": "Manage company info, integrations, and access"
