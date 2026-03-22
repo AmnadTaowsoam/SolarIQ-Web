@@ -187,6 +187,9 @@ export interface Toast {
   duration?: number
 }
 
+// Solar Advanced types
+export * from './solar'
+
 // Privacy types (WK-018)
 export * from './privacy'
 

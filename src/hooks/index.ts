@@ -1,5 +1,16 @@
 export { useLeads, useLead, useUpdateLeadStatus, useAssignLead, useCreateLead, useUpdateLead, useDeleteLead } from './useLeads'
 export { useSolarAnalysis, useSolarHistory, useDashboardStats, useLeadsOverTime, useTopLocations, useRecentLeads } from './useSolar'
+export {
+  useSolarAnalysisAdvanced,
+  useShadeAnalysis,
+  useHourlyIrradiance,
+  useDataLayers,
+  useIncentives,
+  usePanelSpecs,
+  useMonthlyProduction,
+  useSystemOptions,
+  useEnvironmentalImpact,
+} from './useSolarAdvanced'
 export { useDocuments, useDocument, useUploadDocument, useDeleteDocument, useDocumentPreview } from './useKnowledge'
 export { 
   useInstallationCosts, useCreateInstallationCost, useUpdateInstallationCost, useDeleteInstallationCost,

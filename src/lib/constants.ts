@@ -18,7 +18,16 @@ export const API_ENDPOINTS = {
   // Solar Analysis
   SOLAR: {
     ANALYZE: '/api/v1/solar/analyze',
+    ANALYZE_ADVANCED: '/api/v1/solar/analyze-advanced',
     HISTORY: '/api/v1/solar/history',
+    DATA_LAYERS: '/api/v1/solar/data-layers',
+    SHADE_ANALYSIS: '/api/v1/solar/shade-analysis',
+    HOURLY_IRRADIANCE: '/api/v1/solar/hourly-irradiance',
+    INCENTIVES: '/api/v1/solar/incentives',
+    PANELS: '/api/v1/solar/panels',
+    MONTHLY_PRODUCTION: '/api/v1/solar/monthly-production',
+    SYSTEM_OPTIONS: '/api/v1/solar/system-options',
+    ENVIRONMENTAL_IMPACT: '/api/v1/solar/environmental-impact',
   },
   // Dashboard
   DASHBOARD: {
