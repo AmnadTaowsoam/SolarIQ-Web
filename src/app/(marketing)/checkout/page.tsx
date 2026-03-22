@@ -1,0 +1,466 @@
+'use client'
+
+import { useState, useEffect, useMemo } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import {
+  ArrowLeft,
+  Check,
+  Shield,
+  Lock,
+  CreditCard,
+  Tag,
+  Loader2,
+  Zap,
+  Rocket,
+  Building2,
+  Gift,
+} from 'lucide-react'
+import { api } from '@/lib/api'
+import { API_ENDPOINTS } from '@/lib/constants'
+
+/* ------------------------------------------------------------------ */
+/*  Plan Data                                                          */
+/* ------------------------------------------------------------------ */
+type PlanId = 'trial' | 'starter' | 'professional' | 'enterprise'
+type BillingCycle = 'monthly' | 'annual'
+
+interface PlanInfo {
+  id: PlanId
+  name: string
+  subtitle: string
+  icon: React.ElementType
+  monthlyPrice: number
+  annualPrice: number
+  features: string[]
+}
+
+const PLANS: Record<string, PlanInfo> = {
+  trial: {
+    id: 'trial',
+    name: 'ทดลองฟรี',
+    subtitle: 'Free Trial - 14 วัน',
+    icon: Gift,
+    monthlyPrice: 0,
+    annualPrice: 0,
+    features: [
+      'วิเคราะห์โซลาร์: 5 ครั้ง',
+      'ROI Calculator พื้นฐาน',
+      '1 ผู้ใช้',
+      'Community Support',
+    ],
+  },
+  starter: {
+    id: 'starter',
+    name: 'Starter',
+    subtitle: 'สำหรับทีมขนาดเล็ก',
+    icon: Zap,
+    monthlyPrice: 1490,
+    annualPrice: 1190,
+    features: [
+      'วิเคราะห์โซลาร์: 50 ครั้ง/เดือน',
+      'ROI + Financial Analysis เต็มรูปแบบ',
+      'พยากรณ์อากาศ 7 วัน',
+      'PM2.5 Impact Analysis',
+      'จำลองค่าไฟ Before/After',
+      'PDF Export: 20 ครั้ง/เดือน',
+      '3 ผู้ใช้',
+      'Email Support',
+    ],
+  },
+  professional: {
+    id: 'professional',
+    name: 'Professional',
+    subtitle: 'สำหรับทีมที่ต้องการเติบโต',
+    icon: Rocket,
+    monthlyPrice: 3990,
+    annualPrice: 3190,
+    features: [
+      'วิเคราะห์โซลาร์: 300 ครั้ง/เดือน',
+      'ทุกอย่างใน Starter +',
+      'Climate Reliability Score',
+      'เปรียบเทียบการลงทุน (เงินสด/สินเชื่อ/เช่า)',
+      'Energy Independence Score',
+      'Smart Alerts อัจฉริยะ',
+      'PDF Export: ไม่จำกัด',
+      'API Access',
+      '10 ผู้ใช้',
+      'Lead Management',
+      'Priority Support',
+    ],
+  },
+  enterprise: {
+    id: 'enterprise',
+    name: 'Enterprise',
+    subtitle: 'สำหรับองค์กรขนาดใหญ่',
+    icon: Building2,
+    monthlyPrice: 9990,
+    annualPrice: 7990,
+    features: [
+      'วิเคราะห์โซลาร์: ไม่จำกัด',
+      'ทุกอย่างใน Professional +',
+      'White-label Branding',
+      'Custom API Integration',
+      'ผู้ใช้ไม่จำกัด',
+      'Dedicated Account Manager',
+      'SLA 99.9% Uptime',
+      'Custom Report Templates',
+    ],
+  },
+}
+
+/* ------------------------------------------------------------------ */
+/*  Component                                                          */
+/* ------------------------------------------------------------------ */
+export default function CheckoutPage() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const planId = (searchParams.get('plan') ?? 'starter') as PlanId
+  const initialBilling = (searchParams.get('billing') ?? 'monthly') as BillingCycle
+
+  const [billing, setBilling] = useState<BillingCycle>(initialBilling)
+  const [promoCode, setPromoCode] = useState('')
+  const [promoApplied, setPromoApplied] = useState(false)
+  const [promoError, setPromoError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const plan = PLANS[planId]
+
+  // Redirect trial to signup
+  useEffect(() => {
+    if (planId === 'trial') {
+      router.replace('/signup?trial=true')
+    }
+  }, [planId, router])
+
+  const price = useMemo(() => {
+    if (!plan) return 0
+    return billing === 'annual' ? plan.annualPrice : plan.monthlyPrice
+  }, [plan, billing])
+
+  const savings = useMemo(() => {
+    if (!plan || billing !== 'annual') return 0
+    return (plan.monthlyPrice - plan.annualPrice) * 12
+  }, [plan, billing])
+
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) return
+    setPromoError('')
+    // Placeholder: validate promo code via API
+    try {
+      // await api.post('/api/v1/billing/validate-promo', { code: promoCode })
+      setPromoApplied(true)
+    } catch {
+      setPromoError('รหัสโปรโมชั่นไม่ถูกต้อง')
+      setPromoApplied(false)
+    }
+  }
+
+  const handleCheckout = async () => {
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const response = await api.post<{ url: string }>(
+        API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ??
+          '/api/v1/billing/create-checkout-session',
+        {
+          plan_id: planId,
+          billing_cycle: billing,
+          promo_code: promoApplied ? promoCode : undefined,
+          success_url: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${window.location.origin}/checkout/cancel`,
+        }
+      )
+
+      if (response.url) {
+        window.location.href = response.url
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'เกิดข้อผิดพลาดในการสร้างรายการชำระเงิน กรุณาลองใหม่อีกครั้ง'
+      )
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (!plan || planId === 'trial') {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
+      </div>
+    )
+  }
+
+  const Icon = plan.icon
+
+  return (
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-[calc(100vh-4rem)]">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        {/* Back link */}
+        <Link
+          href="/pricing-plans"
+          className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors mb-8"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          ย้อนกลับ
+        </Link>
+
+        <div className="grid gap-8 lg:grid-cols-5">
+          {/* -------------------------------------------------------- */}
+          {/*  Left: Order Summary                                      */}
+          {/* -------------------------------------------------------- */}
+          <div className="lg:col-span-2 order-2 lg:order-1">
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 lg:p-8 shadow-sm sticky top-24">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
+                สรุปคำสั่งซื้อ
+              </h2>
+
+              {/* Plan card */}
+              <div className="flex items-start gap-4 mb-6">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-50 to-amber-50 dark:from-primary-900/30 dark:to-amber-900/30">
+                  <Icon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">
+                    {plan.name}
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {plan.subtitle}
+                  </p>
+                </div>
+              </div>
+
+              {/* Features */}
+              <ul className="space-y-2.5 mb-6">
+                {plan.features.map((feature, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-2.5 text-sm text-gray-700 dark:text-gray-300"
+                  >
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <hr className="border-gray-200 dark:border-gray-700 my-6" />
+
+              {/* Pricing breakdown */}
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">
+                    แพ็กเกจ {plan.name} ({billing === 'annual' ? 'รายปี' : 'รายเดือน'})
+                  </span>
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    ฿{price.toLocaleString('th-TH')}
+                  </span>
+                </div>
+
+                {billing === 'annual' && savings > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>ส่วนลดรายปี</span>
+                    <span className="font-medium">
+                      ประหยัด ฿{savings.toLocaleString('th-TH')}/ปี
+                    </span>
+                  </div>
+                )}
+
+                {promoApplied && (
+                  <div className="flex justify-between text-green-600">
+                    <span>โปรโมชั่น ({promoCode})</span>
+                    <span className="font-medium">ใช้แล้ว</span>
+                  </div>
+                )}
+
+                <hr className="border-gray-200 dark:border-gray-700" />
+
+                <div className="flex justify-between text-base font-bold">
+                  <span className="text-gray-900 dark:text-white">ยอดรวม</span>
+                  <span className="text-gray-900 dark:text-white">
+                    ฿{price.toLocaleString('th-TH')}/เดือน
+                  </span>
+                </div>
+
+                {billing === 'annual' && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    เรียกเก็บ ฿{(price * 12).toLocaleString('th-TH')} ต่อปี
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* -------------------------------------------------------- */}
+          {/*  Right: Checkout Form                                     */}
+          {/* -------------------------------------------------------- */}
+          <div className="lg:col-span-3 order-1 lg:order-2">
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 lg:p-8 shadow-sm">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                ชำระเงิน
+              </h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+                เลือกรอบการชำระเงินและดำเนินการต่อ
+              </p>
+
+              {/* Billing toggle */}
+              <div className="mb-8">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
+                  รอบการชำระเงิน
+                </label>
+                <div className="inline-flex rounded-xl bg-gray-100 dark:bg-gray-700 p-1">
+                  <button
+                    onClick={() => setBilling('monthly')}
+                    className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
+                      billing === 'monthly'
+                        ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                    }`}
+                  >
+                    รายเดือน
+                  </button>
+                  <button
+                    onClick={() => setBilling('annual')}
+                    className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
+                      billing === 'annual'
+                        ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                    }`}
+                  >
+                    รายปี
+                    <span className="ml-2 inline-block rounded-full bg-green-500 px-2 py-0.5 text-xs text-white">
+                      -20%
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Promo code */}
+              <div className="mb-8">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
+                  รหัสโปรโมชั่น (ถ้ามี)
+                </label>
+                <div className="flex gap-3">
+                  <div className="relative flex-1">
+                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <input
+                      type="text"
+                      value={promoCode}
+                      onChange={(e) => {
+                        setPromoCode(e.target.value.toUpperCase())
+                        setPromoApplied(false)
+                        setPromoError('')
+                      }}
+                      placeholder="กรอกรหัสโปรโมชั่น"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 pl-10 pr-4 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
+                    />
+                  </div>
+                  <button
+                    onClick={handleApplyPromo}
+                    disabled={!promoCode.trim() || promoApplied}
+                    className="rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {promoApplied ? 'ใช้แล้ว' : 'ใช้รหัส'}
+                  </button>
+                </div>
+                {promoError && (
+                  <p className="mt-2 text-sm text-red-500">{promoError}</p>
+                )}
+                {promoApplied && (
+                  <p className="mt-2 text-sm text-green-600">
+                    ใช้รหัสโปรโมชั่นสำเร็จ
+                  </p>
+                )}
+              </div>
+
+              {/* Error message */}
+              {error && (
+                <div className="mb-6 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800 p-4 text-sm text-red-600 dark:text-red-400">
+                  {error}
+                </div>
+              )}
+
+              {/* Checkout button */}
+              <button
+                onClick={handleCheckout}
+                disabled={isLoading}
+                className="w-full rounded-xl bg-gradient-to-r from-primary-600 to-amber-500 py-4 text-base font-bold text-white shadow-lg hover:shadow-xl hover:from-primary-700 hover:to-amber-600 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    กำลังดำเนินการ...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="h-5 w-5" />
+                    ชำระเงิน ฿{price.toLocaleString('th-TH')}/เดือน
+                  </>
+                )}
+              </button>
+
+              <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+                คุณจะถูกเปลี่ยนเส้นทางไปยังหน้าชำระเงินที่ปลอดภัยของ Stripe
+              </p>
+
+              {/* Trust badges */}
+              <div className="mt-8 grid grid-cols-3 gap-4">
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 dark:bg-green-900/20">
+                    <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    SSL Secure
+                  </span>
+                </div>
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
+                    <Lock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    Secure Payment
+                  </span>
+                </div>
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-50 dark:bg-purple-900/20">
+                    <CreditCard className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    Stripe Checkout
+                  </span>
+                </div>
+              </div>
+
+              {/* Payment method logos */}
+              <div className="mt-6 flex items-center justify-center gap-4 text-gray-400">
+                <span className="text-xs font-medium">รองรับ:</span>
+                <span className="text-xs">Visa</span>
+                <span className="text-xs">Mastercard</span>
+                <span className="text-xs">JCB</span>
+                <span className="text-xs">PromptPay</span>
+              </div>
+
+              {/* Policy info */}
+              <div className="mt-8 rounded-lg bg-gray-50 dark:bg-gray-700/50 p-4 text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                <p>
+                  ยกเลิกได้ตลอดเวลา ไม่มีค่าใช้จ่ายในการยกเลิก
+                </p>
+                <p>
+                  เมื่อยกเลิก คุณจะยังใช้งานได้จนจบรอบบิลปัจจุบัน
+                </p>
+                <p>
+                  รับใบเสร็จรับเงินอิเล็กทรอนิกส์ทุกรอบบิลทาง Email
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

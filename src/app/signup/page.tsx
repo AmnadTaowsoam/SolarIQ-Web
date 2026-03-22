@@ -1,97 +1,18 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card } from '@/components/ui/Card'
-
-// Thai provinces list (77 provinces)
-const THAI_PROVINCES = [
-  'กรุงเทพมหานคร',
-  'เชียงใหม่',
-  'ชลบุรี',
-  'อุบลราชธานี',
-  'อุดรธานี',
-  'นครราชสีมา',
-  'ขอนแก่น',
-  'หาดใหญ่',
-  'นครศรีธรรมราช',
-  'สุราษฎร์ธานี',
-  'พิษณุโลก',
-  'สุโขทัย',
-  'อยุธยา',
-  'ปทุมธานี',
-  'นนทบุรี',
-  'สมุทรปราการ',
-  'สมุทรสาคร',
-  'ฉะเชิงเทรา',
-  'ระยอง',
-  'จันทบุรี',
-  'ตราด',
-  'ชัยนาท',
-  'ลพบุรี',
-  'สิงห์บุรี',
-  'อ่างทอง',
-  'สระบุรี',
-  'นครนายก',
-  'ปราจีนบุรี',
-  'สระแก้ว',
-  'กาญจนบุรี',
-  'สุพรรณบุรี',
-  'นครปฐม',
-  'ราชบุรี',
-  'เพชรบุรี',
-  'ประจวบคีรีขันธ์',
-  'ชุมพร',
-  'นครศรีธรรมราช',
-  'พัทลุง',
-  'สงขลา',
-  'ปัตตานี',
-  'ยะลา',
-  'นราธิวาส',
-  'สตูล',
-  'ตรัง',
-  'พังงา',
-  'กระบี่',
-  'ภูเก็ต',
-  'ระนอง',
-  'ชัยภูมิ',
-  'เลย',
-  'หนองคาย',
-  'หนองบัวลำภู',
-  'มุกดาหาร',
-  'ยโสธร',
-  'อำนาจเจริญ',
-  'บึงกาฬ',
-  'นครพนม',
-  'สกลนคร',
-  'กาฬสินธุ์',
-  'มหาสารคาม',
-  'ร้อยเอ็ด',
-  'ศรีสะเกษ',
-  'สุรินทร์',
-  'บุรีรัมย์',
-  'ปราจีนบุรี',
-  'สระแก้ว',
-  'นครสวรรค์',
-  'อุทัยธานี',
-  'กำแพงเพชร',
-  'ตาก',
-  'พิจิตร',
-  'เพชรบูรณ์',
-  'แพร่',
-  'น่าน',
-  'พะเยา',
-  'เชียงราย',
-  'แม่ฮ่องสอน',
-  'ลำปาง',
-  'ลำพูน',
-  'แม่ฮ่องสอน',
-].sort()
+import { defaultLocale } from '@/i18n/config'
+import { buildLocalizedPath, extractLocaleFromPath } from '@/lib/locale'
+import { ROUTES } from '@/lib/constants'
+import { useTranslations } from 'next-intl'
+import { THAI_PROVINCES, getProvinceLabel } from '@/lib/provinces'
 
 // Password strength calculation
 function calculatePasswordStrength(password: string): number {
@@ -105,17 +26,17 @@ function calculatePasswordStrength(password: string): number {
   return Math.min(strength, 4)
 }
 
-function getPasswordStrengthLabel(strength: number): string {
+function getPasswordStrengthLabel(strength: number, labels: { weak: string; medium: string; good: string; strong: string }): string {
   switch (strength) {
     case 0:
     case 1:
-      return 'อ่อนแอ'
+      return labels.weak
     case 2:
-      return 'ปานกลาง'
+      return labels.medium
     case 3:
-      return 'ดี'
+      return labels.good
     case 4:
-      return 'แข็งแกร่ง'
+      return labels.strong
     default:
       return ''
   }
@@ -160,51 +81,54 @@ interface FormErrors {
   acceptPdpa?: string
 }
 
-function validateForm(data: FormData): FormErrors {
+function validateForm(
+  data: FormData,
+  t: (key: string) => string
+): FormErrors {
   const errors: FormErrors = {}
 
   if (!data.email) {
-    errors.email = 'กรุณากรอกอีเมล'
+    errors.email = t('validation.emailRequired')
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.email = 'รูปแบบอีเมลไม่ถูกต้อง'
+    errors.email = t('validation.emailInvalid')
   }
 
   if (!data.password) {
-    errors.password = 'กรุณากรอกรหัสผ่าน'
+    errors.password = t('validation.passwordRequired')
   } else if (data.password.length < 8) {
-    errors.password = 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร'
+    errors.password = t('validation.passwordMin')
   } else if (calculatePasswordStrength(data.password) < 2) {
-    errors.password = 'รหัสผ่านไม่แข็งแกร่งพอ'
+    errors.password = t('validation.passwordWeak')
   }
 
   if (!data.confirmPassword) {
-    errors.confirmPassword = 'กรุณายืนยันรหัสผ่าน'
+    errors.confirmPassword = t('validation.confirmPasswordRequired')
   } else if (data.password !== data.confirmPassword) {
-    errors.confirmPassword = 'รหัสผ่านไม่ตรงกัน'
+    errors.confirmPassword = t('validation.confirmPasswordMismatch')
   }
 
   if (!data.companyName) {
-    errors.companyName = 'กรุณากรอกชื่อบริษัท'
+    errors.companyName = t('validation.companyRequired')
   } else if (data.companyName.length < 2) {
-    errors.companyName = 'ชื่อบริษัทต้องมีอย่างน้อย 2 ตัวอักษร'
+    errors.companyName = t('validation.companyMin')
   }
 
   if (!data.province) {
-    errors.province = 'กรุณาเลือกจังหวัด'
+    errors.province = t('validation.provinceRequired')
   }
 
   if (!data.phone) {
-    errors.phone = 'กรุณากรอกเบอร์โทรศัพท์'
+    errors.phone = t('validation.phoneRequired')
   } else if (!/^[0-9]{9,10}$/.test(data.phone.replace(/-/g, ''))) {
-    errors.phone = 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
+    errors.phone = t('validation.phoneInvalid')
   }
 
   if (!data.acceptTerms) {
-    errors.acceptTerms = 'กรุณายอมรับข้อกำหนดและเงื่อนไข'
+    errors.acceptTerms = t('validation.acceptTerms')
   }
 
   if (!data.acceptPdpa) {
-    errors.acceptPdpa = 'กรุณายอมรับนโยบายความเป็นส่วนตัว'
+    errors.acceptPdpa = t('validation.acceptPdpa')
   }
 
   return errors
@@ -212,7 +136,17 @@ function validateForm(data: FormData): FormErrors {
 
 export default function SignupPage() {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const { user } = useAuth()
+  const isTrial = searchParams.get('trial') === 'true'
+  const locale = extractLocaleFromPath(pathname).locale ?? defaultLocale
+  const t = useTranslations('authPages.signup')
+  const loginPath = buildLocalizedPath(ROUTES.LOGIN, locale)
+  const verifyEmailPath = buildLocalizedPath(ROUTES.VERIFY_EMAIL, locale)
+  const dashboardPath = buildLocalizedPath(ROUTES.DASHBOARD, locale)
+  const homePath = buildLocalizedPath(ROUTES.HOME, locale)
+  const privacyPath = buildLocalizedPath('/privacy', locale)
   const [isLoading, setIsLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -233,13 +167,23 @@ export default function SignupPage() {
   })
 
   const passwordStrength = calculatePasswordStrength(formData.password)
+  const passwordStrengthLabel = getPasswordStrengthLabel(passwordStrength, {
+    weak: t('strength.weak'),
+    medium: t('strength.medium'),
+    good: t('strength.good'),
+    strong: t('strength.strong'),
+  })
+  const provinceOptions = useMemo(
+    () => [...THAI_PROVINCES].sort((a, b) => getProvinceLabel(a, locale).localeCompare(getProvinceLabel(b, locale), locale)),
+    [locale]
+  )
 
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      router.push('/dashboard')
+      router.push(dashboardPath)
     }
-  }, [user, router])
+  }, [dashboardPath, router, user])
 
   const handleInputChange = useCallback(
     (field: keyof FormData, value: string | boolean) => {
@@ -254,7 +198,7 @@ export default function SignupPage() {
   const handleBlur = useCallback(
     (field: keyof FormData) => {
       setTouched((prev) => ({ ...prev, [field]: true }))
-      const errors = validateForm(formData)
+      const errors = validateForm(formData, t)
       setFormErrors((prev) => ({ ...prev, [field]: errors[field] }))
     },
     [formData]
@@ -265,7 +209,7 @@ export default function SignupPage() {
     setError(null)
 
     // Validate all fields
-    const errors = validateForm(formData)
+      const errors = validateForm(formData, t)
     setFormErrors(errors)
     setTouched({
       email: true,
@@ -293,17 +237,18 @@ export default function SignupPage() {
         phone: formData.phone,
         accept_terms: formData.acceptTerms,
         accept_pdpa: formData.acceptPdpa,
+        start_trial: isTrial,
       })
 
       if (response.success) {
         // Redirect to email verification page
-        router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`)
+        router.push(`${verifyEmailPath}?email=${encodeURIComponent(formData.email)}`)
       }
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : 'เกิดข้อผิดพลาดในการสมัครสมาชิก กรุณาลองใหม่อีกครั้ง'
+          : t('errors.signupFailed')
       )
     } finally {
       setIsLoading(false)
@@ -340,16 +285,16 @@ export default function SignupPage() {
 
       if (response.success) {
         if (response.requires_onboarding) {
-          router.push('/onboarding')
+          router.push(buildLocalizedPath('/onboarding', locale))
         } else {
-          router.push('/dashboard')
+          router.push(dashboardPath)
         }
       }
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : 'เกิดข้อผิดพลาดในการสมัครด้วย Google กรุณาลองใหม่อีกครั้ง'
+          : t('errors.googleSignupFailed')
       )
     } finally {
       setGoogleLoading(false)
@@ -361,10 +306,18 @@ export default function SignupPage() {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block">
+          <Link href={homePath} className="inline-block">
             <h1 className="text-3xl font-bold text-blue-600">SolarIQ</h1>
           </Link>
-          <p className="mt-2 text-gray-600">สร้างบัญชีของคุณฟรี 14 วัน</p>
+          <p className="mt-2 text-gray-600">{t('subtitle')}</p>
+          {isTrial && (
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2">
+              <span className="flex h-2 w-2 rounded-full bg-green-500" />
+              <span className="text-sm font-semibold text-green-700">
+                ทดลองฟรี 14 วัน
+              </span>
+            </div>
+          )}
         </div>
 
         <Card className="p-8">
@@ -394,7 +347,7 @@ export default function SignupPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            {googleLoading ? 'กำลังดำเนินการ...' : 'สมัครด้วย Google'}
+            {googleLoading ? t('processing') : t('googleSignup')}
           </Button>
 
           {/* Divider */}
@@ -403,7 +356,7 @@ export default function SignupPage() {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">หรือ</span>
+              <span className="px-2 bg-white text-gray-500">{t('or')}</span>
             </div>
           </div>
 
@@ -422,7 +375,7 @@ export default function SignupPage() {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                อีเมล <span className="text-red-500">*</span>
+                {t('emailLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
                 id="email"
@@ -442,13 +395,13 @@ export default function SignupPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                รหัสผ่าน <span className="text-red-500">*</span>
+                {t('passwordLabel')} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="อย่างน้อย 8 ตัวอักษร"
+                  placeholder={t('passwordPlaceholder')}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
                   onBlur={() => handleBlur('password')}
@@ -513,7 +466,7 @@ export default function SignupPage() {
                     ))}
                   </div>
                   <p className="text-xs text-gray-500">
-                    ความแข็งแกร่ง:{' '}
+                    {t('strength.label')}{' '}
                     <span
                       className={`font-medium ${
                         passwordStrength <= 1
@@ -525,7 +478,7 @@ export default function SignupPage() {
                           : 'text-green-500'
                       }`}
                     >
-                      {getPasswordStrengthLabel(passwordStrength)}
+                      {passwordStrengthLabel}
                     </span>
                   </p>
                 </div>
@@ -538,13 +491,13 @@ export default function SignupPage() {
                 htmlFor="confirmPassword"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                ยืนยันรหัสผ่าน <span className="text-red-500">*</span>
+                {t('confirmPasswordLabel')} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
-                  placeholder="กรอกรหัสผ่านอีกครั้ง"
+                  placeholder={t('confirmPasswordPlaceholder')}
                   value={formData.confirmPassword}
                   onChange={(e) =>
                     handleInputChange('confirmPassword', e.target.value)
@@ -607,12 +560,12 @@ export default function SignupPage() {
                 htmlFor="companyName"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                ชื่อบริษัท/องค์กร <span className="text-red-500">*</span>
+                {t('companyLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
                 id="companyName"
                 type="text"
-                placeholder="ชื่อบริษัทของคุณ"
+                placeholder={t('companyPlaceholder')}
                 value={formData.companyName}
                 onChange={(e) => handleInputChange('companyName', e.target.value)}
                 onBlur={() => handleBlur('companyName')}
@@ -627,7 +580,7 @@ export default function SignupPage() {
                 htmlFor="province"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                จังหวัด <span className="text-red-500">*</span>
+                {t('provinceLabel')} <span className="text-red-500">*</span>
               </label>
               <select
                 id="province"
@@ -641,10 +594,10 @@ export default function SignupPage() {
                     : 'border-gray-300'
                 }`}
               >
-                <option value="">-- เลือกจังหวัด --</option>
-                {THAI_PROVINCES.map((province) => (
-                  <option key={province} value={province}>
-                    {province}
+                <option value="">{t('provincePlaceholder')}</option>
+                {provinceOptions.map((province) => (
+                  <option key={province.th} value={province.th}>
+                    {getProvinceLabel(province, locale)}
                   </option>
                 ))}
               </select>
@@ -661,7 +614,7 @@ export default function SignupPage() {
                 htmlFor="phone"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                เบอร์โทรศัพท์ <span className="text-red-500">*</span>
+                {t('phoneLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
                 id="phone"
@@ -688,13 +641,13 @@ export default function SignupPage() {
                   className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-600">
-                  ฉันยอมรับ{' '}
+                  {t('acceptPrefix')}{' '}
                   <Link
                     href="/terms"
                     className="text-blue-600 hover:underline"
                     target="_blank"
                   >
-                    ข้อกำหนดและเงื่อนไข
+                    {t('termsLink')}
                   </Link>{' '}
                   <span className="text-red-500">*</span>
                 </span>
@@ -716,13 +669,13 @@ export default function SignupPage() {
                   className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-600">
-                  ฉันยอมรับ{' '}
+                  {t('acceptPrefix')}{' '}
                   <Link
-                    href="/privacy"
+                    href={privacyPath}
                     className="text-blue-600 hover:underline"
                     target="_blank"
                   >
-                    นโยบายความเป็นส่วนตัว (PDPA)
+                    {t('privacyLink')}
                   </Link>{' '}
                   <span className="text-red-500">*</span>
                 </span>
@@ -740,27 +693,40 @@ export default function SignupPage() {
               disabled={isLoading || googleLoading}
               className="w-full mt-6"
             >
-              {isLoading ? 'กำลังสมัครสมาชิก...' : 'สมัครสมาชิก'}
+              {isLoading ? t('submitting') : t('submit')}
             </Button>
           </form>
 
           {/* Login Link */}
           <p className="mt-6 text-center text-sm text-gray-600">
-            มีบัญชีอยู่แล้ว?{' '}
-            <Link href="/login" className="text-blue-600 hover:underline">
-              เข้าสู่ระบบ
+            {t('haveAccount')}{' '}
+            <Link href={loginPath} className="text-blue-600 hover:underline">
+              {t('loginLink')}
             </Link>
           </p>
         </Card>
 
         {/* Trial Info */}
         <div className="mt-6 text-center text-sm text-gray-500">
-          <p>
-            🎉 ทดลองใช้ฟรี 14 วัน • ไม่ต้องใช้บัตรเครดิต
-          </p>
-          <p className="mt-1">
-            หลังจากทดลองใช้: ฟรี 5 leads/เดือน หรืออัปเกรดเพื่อรับฟีเจอร์เต็มรูปแบบ
-          </p>
+          {isTrial ? (
+            <>
+              <p className="font-medium text-green-700">
+                บัญชีทดลองใช้ฟรี 14 วัน จะเริ่มต้นหลังสมัคร
+              </p>
+              <p className="mt-1">
+                ไม่ต้องใช้บัตรเครดิต ยกเลิกได้ตลอดเวลา
+              </p>
+            </>
+          ) : (
+            <>
+              <p>
+                {t('trialHeadline')}
+              </p>
+              <p className="mt-1">
+                {t('trialDetail')}
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>

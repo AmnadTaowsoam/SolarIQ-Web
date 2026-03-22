@@ -92,10 +92,10 @@ function Navbar() {
   }, [])
 
   const links = [
-    { label: 'ปัญหา', href: '#pain-points' },
-    { label: 'วิธีใช้งาน', href: '#how-it-works' },
     { label: 'ฟีเจอร์', href: '#features' },
-    { label: 'ราคา', href: '#pricing' },
+    { label: 'แพ็กเกจ', href: '/pricing-plans' },
+    { label: 'เกี่ยวกับเรา', href: '/about' },
+    { label: 'ติดต่อ', href: '/contact' },
     { label: 'คำนวณ ROI', href: '#roi' },
   ]
 
@@ -749,12 +749,12 @@ function CTAFooter() {
             เริ่มใช้งานฟรี
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Link>
-          <a
-            href="#pricing"
+          <Link
+            href="/pricing-plans"
             className="inline-flex items-center gap-2 rounded-xl border-2 border-gray-300 px-8 py-4 text-base font-bold text-gray-700 hover:border-primary-400 hover:text-primary-600 transition-all"
           >
             ดูแพ็กเกจราคา
-          </a>
+          </Link>
         </div>
       </div>
     </Section>
@@ -776,15 +776,21 @@ function Footer() {
             <span className="text-lg font-bold text-gray-900">SolarIQ</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500">
-            <a href="#features" className="hover:text-primary-600 transition-colors">
-              ฟีเจอร์
-            </a>
-            <a href="#pricing" className="hover:text-primary-600 transition-colors">
-              ราคา
-            </a>
-            <a href="#roi" className="hover:text-primary-600 transition-colors">
-              ROI Calculator
-            </a>
+            <Link href="/pricing-plans" className="hover:text-primary-600 transition-colors">
+              แพ็กเกจ
+            </Link>
+            <Link href="/about" className="hover:text-primary-600 transition-colors">
+              เกี่ยวกับเรา
+            </Link>
+            <Link href="/contact" className="hover:text-primary-600 transition-colors">
+              ติดต่อ
+            </Link>
+            <Link href="/privacy" className="hover:text-primary-600 transition-colors">
+              นโยบาย
+            </Link>
+            <Link href="/terms" className="hover:text-primary-600 transition-colors">
+              ข้อกำหนด
+            </Link>
             <Link href="/login" className="hover:text-primary-600 transition-colors">
               เข้าสู่ระบบ
             </Link>

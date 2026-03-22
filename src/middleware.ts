@@ -6,7 +6,7 @@ import { buildLocalizedPath, extractLocaleFromPath, normalizePathname } from '@/
 const LOCALE_COOKIE = 'NEXT_LOCALE'
 
 // Routes that don't require authentication
-const publicRoutes = ['/', '/login', '/landing']
+const publicRoutes = ['/', '/login', '/signup', '/forgot-password', '/verify-email', '/landing', '/pricing-plans', '/about', '/terms', '/contact', '/checkout', '/checkout/success', '/checkout/cancel']
 
 // Admin-only routes
 const adminRoutes = ['/knowledge', '/pricing', '/admin/revenue']

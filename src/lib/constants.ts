@@ -61,6 +61,17 @@ export const API_ENDPOINTS = {
     ELECTRICITY_RATES: '/api/v1/pricing/electricity-rates',
     EQUIPMENT: '/api/v1/pricing/equipment',
   },
+  // Billing
+  BILLING: {
+    STATUS: '/api/v1/billing/status',
+    PLANS: '/api/v1/billing/plans',
+    SUBSCRIBE: '/api/v1/billing/subscribe',
+    CANCEL: '/api/v1/billing/cancel',
+    INVOICES: '/api/v1/billing/invoices',
+    USAGE: '/api/v1/billing/usage',
+    CREATE_CHECKOUT_SESSION: '/api/v1/billing/create-checkout-session',
+    CUSTOMER_PORTAL: '/api/v1/billing/customer-portal',
+  },
 } as const
 
 // Lead Status Labels
@@ -158,6 +169,13 @@ export const ROUTES = {
   SERVICE_AREA: '/settings/service-area',
   DEVELOPERS: '/developers',
   ADMIN_REVENUE: '/admin/revenue',
+  PRICING_PLANS: '/pricing-plans',
+  ABOUT: '/about',
+  TERMS: '/terms',
+  CONTACT: '/contact',
+  CHECKOUT: '/checkout',
+  CHECKOUT_SUCCESS: '/checkout/success',
+  CHECKOUT_CANCEL: '/checkout/cancel',
 } as const
 
 // Admin-only routes

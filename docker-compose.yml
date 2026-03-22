@@ -6,6 +6,6 @@ services:
     container_name: solariq-web
     restart: unless-stopped
     ports:
-      - "3002:3000"
+      - "127.0.0.1:3002:3000"
     env_file:
       - .env.local
