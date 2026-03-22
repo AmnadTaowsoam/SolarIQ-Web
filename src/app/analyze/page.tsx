@@ -22,6 +22,8 @@ import {
   MonthlyProductionChart,
   SystemSizeOptimizer,
   EnvironmentalImpact,
+  SelfConsumptionSlider,
+  AnalysisReportExport,
 } from '@/components/solar'
 import {
   Sun,
@@ -36,6 +38,7 @@ import {
   Leaf,
   Building,
   Calendar,
+  Wrench,
 } from 'lucide-react'
 
 // ---- Helpers ----
@@ -340,6 +343,9 @@ function SolarPotentialTab({ result }: { result: SolarAnalysisAdvanced }) {
 }
 
 function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; monthlyBill: number }) {
+  const annualMaintenance = result.annualMaintenanceCost || 0
+  const netYearlySavings = result.financialAnalysis.yearlySavings - annualMaintenance
+
   return (
     <div className="space-y-6 transition-opacity duration-300">
       {result.yearlyCashflow && result.yearlyCashflow.length > 0 && (
@@ -357,6 +363,43 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
           currentBillThb={monthlyBill}
         />
       )}
+
+      {/* Self-Consumption & Maintenance Summary */}
+      <Card>
+        <CardHeader title="ข้อมูลการใช้ไฟและค่าบำรุงรักษา" subtitle="Consumption & Maintenance" />
+        <CardBody>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">อัตราใช้เอง</div>
+              <div className="text-lg font-semibold text-[var(--brand-primary)]">
+                {result.selfConsumptionRate ? `${(result.selfConsumptionRate * 100).toFixed(0)}%` : 'N/A'}
+              </div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">Self-Consumption Rate</div>
+            </div>
+            <div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">ราคาขายคืน</div>
+              <div className="text-lg font-semibold text-[var(--brand-text)]">
+                {result.netBillingRate ? `฿${result.netBillingRate.toFixed(1)}/kWh` : 'N/A'}
+              </div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">Net Billing Rate</div>
+            </div>
+            <div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">ค่าบำรุงรักษา/ปี</div>
+              <div className="text-lg font-semibold text-[var(--brand-text)]">
+                {annualMaintenance > 0 ? formatCurrency(annualMaintenance) : 'N/A'}
+              </div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">Annual Maintenance</div>
+            </div>
+            <div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">ผลประหยัดรวม (หลังหักค่าบำรุง)</div>
+              <div className="text-lg font-semibold text-green-600">
+                {formatCurrency(netYearlySavings)}/ปี
+              </div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">Net Savings After Maintenance</div>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
 
       {/* Detailed financial breakdown */}
       <Card>
@@ -387,6 +430,17 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
                     {formatCurrency(result.financialAnalysis.installationCost / Math.max(result.panelConfig.capacityKw, 0.01))}
                   </span>
                 </div>
+                {annualMaintenance > 0 && (
+                  <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
+                    <span className="text-sm text-[var(--brand-text-secondary)] flex items-center gap-1">
+                      <Wrench className="w-3.5 h-3.5" />
+                      ค่าบำรุงรักษา/ปี
+                    </span>
+                    <span className="text-sm font-medium text-[var(--brand-text)]">
+                      {formatCurrency(annualMaintenance)}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="space-y-4">
@@ -407,6 +461,14 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
                     {formatCurrency(result.financialAnalysis.yearlySavings)}
                   </span>
                 </div>
+                {annualMaintenance > 0 && (
+                  <div className="flex justify-between py-2 border-b border-[var(--brand-border)] bg-green-50/50">
+                    <span className="text-sm font-medium text-[var(--brand-text)]">ผลประหยัดรวม (หลังหักค่าบำรุง)</span>
+                    <span className="text-sm font-bold text-green-600">
+                      {formatCurrency(netYearlySavings)}/ปี
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                   <span className="text-sm text-[var(--brand-text-secondary)]">NPV (25-Year)</span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
@@ -451,19 +513,27 @@ function IncentivesTab({ result }: { result: SolarAnalysisAdvanced }) {
 }
 
 function DataExportTab({ result }: { result: SolarAnalysisAdvanced }) {
-  if (!result.dataLayers) {
-    return (
-      <Card>
-        <CardBody className="p-8 text-center text-[var(--brand-text-secondary)]">
-          <Database className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p>No data layers available for download.</p>
-        </CardBody>
-      </Card>
-    )
-  }
   return (
     <div className="space-y-6 transition-opacity duration-300">
-      <GeoTIFFDownload dataLayers={result.dataLayers} />
+      {/* Report Export */}
+      <Card>
+        <CardHeader title="Analysis Report" subtitle="ดาวน์โหลดหรือคัดลอกรายงาน" />
+        <CardBody>
+          <AnalysisReportExport result={result} />
+        </CardBody>
+      </Card>
+
+      {/* GeoTIFF Downloads */}
+      {result.dataLayers ? (
+        <GeoTIFFDownload dataLayers={result.dataLayers} />
+      ) : (
+        <Card>
+          <CardBody className="p-8 text-center text-[var(--brand-text-secondary)]">
+            <Database className="w-12 h-12 mx-auto mb-3 opacity-30" />
+            <p>No data layers available for download.</p>
+          </CardBody>
+        </Card>
+      )}
     </div>
   )
 }
@@ -512,6 +582,8 @@ export default function AnalyzePage() {
   const [longitude, setLongitude] = useState('')
   const [address, setAddress] = useState('')
   const [monthlyBill, setMonthlyBill] = useState('')
+  const [selfConsumptionRate, setSelfConsumptionRate] = useState(0.7)
+  const [netBillingRate, setNetBillingRate] = useState(2.2)
   const [result, setResult] = useState<SolarAnalysisAdvanced | null>(null)
   const [activeTab, setActiveTab] = useState<TabId>('overview')
 
@@ -558,6 +630,8 @@ export default function AnalyzePage() {
         longitude: lng,
         monthlyBill: bill,
         address: sanitizedAddress,
+        selfConsumptionRate,
+        netBillingRate,
       })
       setResult(response as unknown as SolarAnalysisAdvanced)
       setActiveTab('overview')
@@ -687,25 +761,41 @@ export default function AnalyzePage() {
                 placeholder="e.g., 5000"
                 hint="Enter your average monthly electricity bill in Thai Baht"
               />
-
-              {/* Submit Button */}
-              <div className="pt-4">
-                <Button
-                  onClick={handleAnalyze}
-                  isLoading={analysisMutation.isPending}
-                  size="lg"
-                >
-                  <Sun className="w-5 h-5 mr-2" />
-                  Analyze Solar Potential
-                </Button>
-              </div>
             </div>
           </CardBody>
         </Card>
 
+        {/* Self-Consumption Slider */}
+        <SelfConsumptionSlider
+          value={selfConsumptionRate}
+          onChange={setSelfConsumptionRate}
+          netBillingRate={netBillingRate}
+          onNetBillingRateChange={setNetBillingRate}
+        />
+
+        {/* Analyze Button */}
+        <div>
+          <Button
+            onClick={handleAnalyze}
+            isLoading={analysisMutation.isPending}
+            size="lg"
+          >
+            <Sun className="w-5 h-5 mr-2" />
+            Analyze Solar Potential
+          </Button>
+        </div>
+
         {/* Results */}
         {result && (
-          <div className="space-y-0">
+          <div className="space-y-4">
+            {/* Results Header with Export */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <h2 className="text-xl font-bold text-[var(--brand-text)]">
+                Analysis Results
+              </h2>
+              <AnalysisReportExport result={result} />
+            </div>
+
             <Card className="overflow-hidden">
               <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
               <div className="p-6">

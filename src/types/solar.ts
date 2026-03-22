@@ -168,6 +168,9 @@ export interface SolarAnalysisAdvanced {
   }
 
   electricityRate: number
+  selfConsumptionRate: number
+  netBillingRate: number
+  annualMaintenanceCost: number
 
   // Advanced features — all solarPanelConfigs from API (1 panel, 2 panels, ..., max)
   panelConfigs: PanelConfigOption[]
@@ -192,4 +195,6 @@ export interface SolarAnalysisAdvancedRequest {
   longitude: number
   monthlyBill: number
   address?: string
+  selfConsumptionRate?: number
+  netBillingRate?: number
 }
