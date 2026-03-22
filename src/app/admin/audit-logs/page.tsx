@@ -2,6 +2,8 @@
 
 import React, { useState, useCallback } from 'react'
 import clsx from 'clsx'
+import { AppLayout } from '@/components/layout'
+import { useAuth } from '@/context'
 import {
   useAuditLogs,
   useAuditStats,
@@ -175,6 +177,8 @@ function ExpandableRow({ entry }: { entry: AuditLogEntry }) {
 // ---------------------------------------------------------------------------
 
 export default function AdminAuditLogsPage() {
+  const { user, isLoading: authLoading } = useAuth()
+
   // Filter state
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
@@ -239,28 +243,39 @@ export default function AdminAuditLogsPage() {
   // Last 20 events for timeline sidebar
   const timelineEvents = logs.slice(0, 20)
 
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">บันทึกการตรวจสอบ</h1>
-          <p className="text-sm text-gray-500 mt-1">ดูกิจกรรมทั้งหมดในระบบ</p>
-        </div>
-        <button
-          onClick={handleExport}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition-colors"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          ส่งออก CSV
-        </button>
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-10 h-10 border-2 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
       </div>
+    )
+  }
 
-      {/* Filter Bar */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+  if (!user) return null
+
+  return (
+    <AppLayout user={user}>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">บันทึกการตรวจสอบ</h1>
+            <p className="text-sm text-gray-500 mt-1">ดูกิจกรรมทั้งหมดในระบบ</p>
+          </div>
+          <button
+            onClick={handleExport}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            ส่งออก CSV
+          </button>
+        </div>
+
+        {/* Filter Bar */}
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">จากวันที่</label>
             <input
@@ -331,11 +346,11 @@ export default function AdminAuditLogsPage() {
               รีเซ็ต
             </button>
           </div>
+          </div>
         </div>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statsLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
@@ -383,10 +398,10 @@ export default function AdminAuditLogsPage() {
             />
           </>
         )}
-      </div>
+        </div>
 
-      {/* Main content with timeline sidebar */}
-      <div className="flex gap-6">
+        {/* Main content with timeline sidebar */}
+        <div className="flex gap-6">
         {/* Table */}
         <div className="flex-1 min-w-0">
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -522,7 +537,8 @@ export default function AdminAuditLogsPage() {
             </div>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </AppLayout>
   )
 }

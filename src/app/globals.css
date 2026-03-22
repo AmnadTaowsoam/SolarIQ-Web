@@ -35,6 +35,18 @@
     --brand-radius-full: 9999px;
   }
 
+  .dark {
+    --brand-background: #0f172a;
+    --brand-surface: #1e293b;
+    --brand-text: #f8fafc;
+    --brand-text-secondary: #94a3b8;
+    --brand-border: #334155;
+    --brand-sidebar: #020617;
+    --brand-sidebar-text: #f8fafc;
+    --brand-primary-light: rgba(249, 115, 22, 0.15);
+    --color-primary: #f97316;
+  }
+
   html {
     font-family: var(--brand-font-body), var(--font-inter), var(--font-noto-thai), system-ui, sans-serif;
   }

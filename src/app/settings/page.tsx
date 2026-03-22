@@ -1173,7 +1173,7 @@ export default function SettingsPage() {
 
   return (
     <AppLayout user={user}>
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-5xl space-y-6">
         {/* Page header */}
         <div>
           <h1 className="text-xl font-bold text-gray-900">ตั้งค่า</h1>

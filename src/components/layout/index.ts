@@ -1,4 +1,5 @@
 export { Sidebar } from './Sidebar'
 export { Navbar } from './Navbar'
 export { AppLayout } from './AppLayout'
+export { Breadcrumbs } from './Breadcrumbs'
 export { NotificationPanel, useNotificationCount } from './NotificationPanel'

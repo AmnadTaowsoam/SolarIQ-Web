@@ -1,11 +1,9 @@
 import type { Metadata, Viewport } from 'next'
-import { headers } from 'next/headers'
 import { Inter, Noto_Sans_Thai } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { defaultLocale, isSupportedLocale } from '@/i18n/config'
-import { getMessages } from '@/i18n/messages'
 import './globals.css'
 
 const inter = Inter({
@@ -55,18 +53,13 @@ export const viewport: Viewport = {
   themeColor: '#ea580c',
 }
 
-function resolveLocale(): string {
-  const headerLocale = headers().get('x-locale')
-  return isSupportedLocale(headerLocale) ? headerLocale : defaultLocale
-}
-
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const locale = resolveLocale()
-  const messages = await getMessages(locale)
+  const locale = await getLocale()
+  const messages = await getMessages()
 
   return (
     <html lang={locale} suppressHydrationWarning>

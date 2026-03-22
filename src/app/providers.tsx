@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ThemeProvider } from 'next-themes'
 import { AuthProvider, BrandProvider } from '@/context'
 import { ToastProvider } from '@/components/ui'
 import { initWebVitals } from '@/lib/webVitals'
@@ -46,13 +47,15 @@ export function Providers({ children }: ProvidersProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrandProvider>
-          <ToastProvider>
-            {children}
-          </ToastProvider>
-        </BrandProvider>
-      </AuthProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <AuthProvider>
+          <BrandProvider>
+            <ToastProvider>
+              {children}
+            </ToastProvider>
+          </BrandProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }

@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react'
 import clsx from 'clsx'
+import { AppLayout } from '@/components/layout'
+import { useAuth } from '@/context'
 import {
   useActiveSessions,
   useTerminateSession,
@@ -152,6 +154,7 @@ function SessionCard({
 // ---------------------------------------------------------------------------
 
 export default function SessionsPage() {
+  const { user, isLoading: authLoading } = useAuth()
   const { data: sessions, isLoading: sessionsLoading } = useActiveSessions()
   const { data: loginHistory, isLoading: historyLoading } = useLoginHistory()
   const terminateSession = useTerminateSession()
@@ -180,146 +183,158 @@ export default function SessionsPage() {
   const currentSession = sessions?.find((s) => s.is_current)
   const otherSessions = sessions?.filter((s) => !s.is_current) ?? []
 
-  return (
-    <div className="space-y-8 max-w-4xl">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">เซสชันที่ใช้งาน</h1>
-        <p className="text-sm text-gray-500 mt-1">จัดการเซสชันที่เข้าสู่ระบบและดูประวัติการเข้าสู่ระบบ</p>
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="w-10 h-10 border-2 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
       </div>
+    )
+  }
 
-      {/* Current Session */}
-      <section>
-        <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">เซสชันปัจจุบัน</h2>
-        {sessionsLoading ? (
-          <div className="bg-white rounded-xl border-2 border-gray-200 p-5">
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 bg-gray-200 rounded-lg animate-pulse" />
-              <div className="flex-1 space-y-2">
-                <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
-                <div className="h-3 w-32 bg-gray-200 rounded animate-pulse" />
-                <div className="h-3 w-64 bg-gray-200 rounded animate-pulse" />
-              </div>
-            </div>
-          </div>
-        ) : currentSession ? (
-          <SessionCard session={currentSession} onTerminate={handleTerminate} terminating={false} />
-        ) : (
-          <p className="text-sm text-gray-500">ไม่พบเซสชันปัจจุบัน</p>
-        )}
-      </section>
+  if (!user) return null
 
-      {/* Other Sessions */}
-      <section>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">เซสชันอื่น ๆ</h2>
-          {otherSessions.length > 0 && (
-            <button
-              onClick={handleTerminateOthers}
-              disabled={terminatingAll}
-              className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 disabled:opacity-50 transition-colors"
-            >
-              {terminatingAll ? 'กำลังดำเนินการ...' : 'ออกจากระบบทุกอุปกรณ์อื่น'}
-            </button>
-          )}
+  return (
+    <AppLayout user={user}>
+      <div className="space-y-8 max-w-4xl">
+        {/* Header */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">เซสชันที่ใช้งาน</h1>
+          <p className="text-sm text-gray-500 mt-1">จัดการเซสชันที่เข้าสู่ระบบและดูประวัติการเข้าสู่ระบบ</p>
         </div>
 
-        {sessionsLoading ? (
-          <div className="space-y-3">
-            {Array.from({ length: 2 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-gray-200 rounded-lg animate-pulse" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
-                    <div className="h-3 w-32 bg-gray-200 rounded animate-pulse" />
-                    <div className="h-3 w-64 bg-gray-200 rounded animate-pulse" />
-                  </div>
+        {/* Current Session */}
+        <section>
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">เซสชันปัจจุบัน</h2>
+          {sessionsLoading ? (
+            <div className="bg-white rounded-xl border-2 border-gray-200 p-5">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-gray-200 rounded-lg animate-pulse" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-3 w-32 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-3 w-64 bg-gray-200 rounded animate-pulse" />
                 </div>
               </div>
-            ))}
-          </div>
-        ) : otherSessions.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
-            <svg className="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-            </svg>
-            <p className="text-sm text-gray-500">ไม่มีเซสชันอื่นที่ใช้งานอยู่</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {otherSessions.map((session) => (
-              <SessionCard
-                key={session.id}
-                session={session}
-                onTerminate={handleTerminate}
-                terminating={terminatingId === session.id}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+            </div>
+          ) : currentSession ? (
+            <SessionCard session={currentSession} onTerminate={handleTerminate} terminating={false} />
+          ) : (
+            <p className="text-sm text-gray-500">ไม่พบเซสชันปัจจุบัน</p>
+          )}
+        </section>
 
-      {/* Login History */}
-      <section>
-        <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">ประวัติการเข้าสู่ระบบ</h2>
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/60">
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">เวลา</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">IP</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">อุปกรณ์</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">สถานะ</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">เหตุผล</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {historyLoading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <tr key={i}>
-                      {Array.from({ length: 5 }).map((__, j) => (
-                        <td key={j} className="px-4 py-3">
-                          <div className="h-4 bg-gray-200 rounded animate-pulse" style={{ width: `${50 + Math.random() * 40}%` }} />
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                ) : !loginHistory || loginHistory.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center text-gray-500 text-sm">
-                      ไม่พบประวัติการเข้าสู่ระบบ
-                    </td>
-                  </tr>
-                ) : (
-                  loginHistory.map((entry) => (
-                    <tr key={entry.id} className="hover:bg-gray-50/40 transition-colors">
-                      <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{formatDateTime(entry.timestamp)}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600 font-mono text-xs">{entry.ip_address}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">
-                        <div>{entry.browser}</div>
-                        <div className="text-xs text-gray-400">{entry.device}</div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={clsx(
-                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold',
-                            entry.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                          )}
-                        >
-                          {entry.success ? 'สำเร็จ' : 'ล้มเหลว'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-500">{entry.failure_reason || '-'}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+        {/* Other Sessions */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">เซสชันอื่น ๆ</h2>
+            {otherSessions.length > 0 && (
+              <button
+                onClick={handleTerminateOthers}
+                disabled={terminatingAll}
+                className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 disabled:opacity-50 transition-colors"
+              >
+                {terminatingAll ? 'กำลังดำเนินการ...' : 'ออกจากระบบทุกอุปกรณ์อื่น'}
+              </button>
+            )}
           </div>
-        </div>
-      </section>
-    </div>
+
+          {sessionsLoading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-gray-200 rounded-lg animate-pulse" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
+                      <div className="h-3 w-32 bg-gray-200 rounded animate-pulse" />
+                      <div className="h-3 w-64 bg-gray-200 rounded animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : otherSessions.length === 0 ? (
+            <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
+              <svg className="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              </svg>
+              <p className="text-sm text-gray-500">ไม่มีเซสชันอื่นที่ใช้งานอยู่</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {otherSessions.map((session) => (
+                <SessionCard
+                  key={session.id}
+                  session={session}
+                  onTerminate={handleTerminate}
+                  terminating={terminatingId === session.id}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Login History */}
+        <section>
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">ประวัติการเข้าสู่ระบบ</h2>
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-200 bg-gray-50/60">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">เวลา</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">IP</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">อุปกรณ์</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">สถานะ</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">เหตุผล</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {historyLoading ? (
+                    Array.from({ length: 5 }).map((_, i) => (
+                      <tr key={i}>
+                        {Array.from({ length: 5 }).map((__, j) => (
+                          <td key={j} className="px-4 py-3">
+                            <div className="h-4 bg-gray-200 rounded animate-pulse" style={{ width: `${50 + Math.random() * 40}%` }} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : !loginHistory || loginHistory.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-8 text-center text-gray-500 text-sm">
+                        ไม่พบประวัติการเข้าสู่ระบบ
+                      </td>
+                    </tr>
+                  ) : (
+                    loginHistory.map((entry) => (
+                      <tr key={entry.id} className="hover:bg-gray-50/40 transition-colors">
+                        <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{formatDateTime(entry.timestamp)}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 font-mono text-xs">{entry.ip_address}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600">
+                          <div>{entry.browser}</div>
+                          <div className="text-xs text-gray-400">{entry.device}</div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={clsx(
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold',
+                              entry.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                            )}
+                          >
+                            {entry.success ? 'สำเร็จ' : 'ล้มเหลว'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">{entry.failure_reason || '-'}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </AppLayout>
   )
 }

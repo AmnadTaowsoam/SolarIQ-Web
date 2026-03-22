@@ -37,7 +37,13 @@
     "commissions": "คอมมิชชัน",
     "invoices": "ใบแจ้งหนี้",
     "revenue": "รายได้",
-    "settings": "ตั้งค่า"
+    "settings": "ตั้งค่า",
+    "deals": "ดีล",
+    "messages": "ข้อความ",
+    "serviceArea": "พื้นที่บริการ",
+    "sessions": "เซสชัน",
+    "admin": "ผู้ดูแล",
+    "auditLogs": "บันทึกตรวจสอบ"
   },
   "navbar": {
     "openMenu": "เปิดเมนู",
@@ -163,5 +169,38 @@
   "roles": {
     "admin": "ผู้ดูแลระบบ",
     "contractor": "ผู้รับเหมา"
+  },
+  "billingPage": {
+    "title": "การเรียกเก็บเงินและแพ็กเกจ",
+    "subtitle": "จัดการแพ็กเกจการใช้งาน ดูใบแจ้งหนี้ และติดตามการใช้งาน",
+    "tabs": {
+      "overview": "ภาพรวม",
+      "plans": "แพ็กเกจ",
+      "invoices": "ใบแจ้งหนี้",
+      "usage": "การใช้งาน"
+    },
+    "quickActions": {
+      "title": "การดำเนินการด่วน",
+      "changePlanTitle": "เปลี่ยนแพ็กเกจ",
+      "changePlanDescription": "อัปเกรดหรือดาวน์เกรดแพ็กเกจ",
+      "managePaymentTitle": "จัดการการชำระเงิน",
+      "managePaymentDescription": "อัปเดตวิธีชำระเงินผ่าน Stripe"
+    },
+    "usage": {
+      "title": "การใช้งานปัจจุบัน",
+      "detailsTitle": "รายละเอียดการใช้งาน",
+      "detailsSubtitle": "รอบบิล: {start} - {end}"
+    },
+    "plans": {
+      "title": "เลือกแพ็กเกจที่เหมาะกับคุณ",
+      "subtitle": "เลือกแพ็กเกจที่เหมาะสมกับความต้องการของธุรกิจ"
+    },
+    "invoices": {
+      "title": "ประวัติใบแจ้งหนี้",
+      "subtitle": "ดูและดาวน์โหลดใบแจ้งหนี้ย้อนหลัง"
+    },
+    "actions": {
+      "cancelConfirm": "ยืนยันการยกเลิกแพ็กเกจใช่หรือไม่?"
+    }
   }
 }

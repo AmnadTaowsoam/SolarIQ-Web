@@ -46,6 +46,15 @@ export function middleware(request: NextRequest) {
     return response
   }
 
+  // Strip default locale prefix from URL (e.g. /th/billing → /billing)
+  if (pathLocale === defaultLocale) {
+    const redirectUrl = new URL(strippedPath, request.url)
+    const response = NextResponse.redirect(redirectUrl)
+    response.cookies.set(LOCALE_COOKIE, defaultLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
+    response.headers.set('x-locale', defaultLocale)
+    return response
+  }
+
   // Redirect to locale-prefixed route when user prefers non-default locale
   if (!pathLocale && preferredLocale !== defaultLocale) {
     const redirectUrl = new URL(buildLocalizedPath(pathname, preferredLocale), request.url)

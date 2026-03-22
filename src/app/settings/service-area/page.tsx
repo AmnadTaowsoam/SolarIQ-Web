@@ -95,7 +95,7 @@ export default function ServiceAreaPage() {
 
   return (
     <AppLayout user={user}>
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-3xl space-y-6">
         <div>
           <h1 className="text-xl font-bold text-gray-900">พื้นที่ให้บริการ</h1>
           <p className="text-sm text-gray-500 mt-1">กำหนดพื้นที่และกฎการรับ Lead อัตโนมัติ</p>

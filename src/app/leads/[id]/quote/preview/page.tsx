@@ -100,7 +100,7 @@ export default function QuotePreviewPage() {
 
   return (
     <AppLayout user={user}>
-      <div className="max-w-3xl mx-auto space-y-4">
+      <div className="max-w-3xl space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <div className="text-sm text-gray-500 mb-1">

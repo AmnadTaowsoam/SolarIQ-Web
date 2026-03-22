@@ -1,7 +1,7 @@
 'use client'
 
 import { useLocale } from 'next-intl'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { buildLocalizedPath } from '@/lib/locale'
 import { defaultLocale, type Locale } from '@/i18n/config'
 
@@ -13,16 +13,15 @@ const LANGUAGES: { code: Locale; label: string }[] = [
 export function LanguageSwitcher() {
   const locale = useLocale() as Locale
   const pathname = usePathname()
-  const router = useRouter()
 
   function switchLocale(newLocale: Locale) {
     const target = buildLocalizedPath(pathname, newLocale)
     if (typeof document !== 'undefined') {
       const isSecure = window.location.protocol === 'https:' ? '; Secure' : ''
       document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax${isSecure}`
+      // Force full navigation so all server/client trees render with the same locale state.
+      window.location.assign(target)
     }
-    router.push(target)
-    router.refresh()
   }
 
   return (

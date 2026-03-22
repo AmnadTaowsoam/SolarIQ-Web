@@ -642,7 +642,7 @@ export default function LeadDetailPage() {
 
   return (
     <AppLayout user={user}>
-      <div className="space-y-6 max-w-[1400px] mx-auto">
+      <div className="space-y-6 max-w-[1400px]">
         {/* ============================================================== */}
         {/* DEMO MODE BANNER */}
         {/* ============================================================== */}
@@ -1144,7 +1144,7 @@ export default function LeadDetailPage() {
 
 function LeadDetailSkeleton() {
   return (
-    <div className="space-y-6 max-w-[1400px] mx-auto">
+    <div className="space-y-6 max-w-[1400px]">
       {/* Top bar skeleton */}
       <div>
         <Skeleton className="h-4 w-28 mb-3" />

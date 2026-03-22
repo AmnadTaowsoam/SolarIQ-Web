@@ -86,7 +86,7 @@ export default function QuotePage() {
 
   return (
     <AppLayout user={user}>
-      <div className="max-w-3xl mx-auto space-y-4">
+      <div className="max-w-3xl space-y-4">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>

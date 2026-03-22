@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import { buildLocalizedPath, extractLocaleFromPath } from '@/lib/locale'
+import { defaultLocale } from '@/i18n/config'
 
 interface ErrorPageProps {
   error: Error & { digest?: string }
@@ -8,6 +11,10 @@ interface ErrorPageProps {
 }
 
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
+  const pathname = usePathname()
+  const { locale } = extractLocaleFromPath(pathname)
+  const dashboardPath = buildLocalizedPath('/dashboard', locale ?? defaultLocale)
+
   useEffect(() => {
     // Log error to monitoring service in production
     if (process.env.NODE_ENV === 'production') {
@@ -45,7 +52,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
             Try Again
           </button>
           <a
-            href="/dashboard"
+            href={dashboardPath}
             className="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
           >
             Go to Dashboard

@@ -6,8 +6,10 @@
  */
 
 import React, { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
 import { CreditCard, FileText, BarChart3, Settings, ExternalLink } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { AppLayout } from '@/components/layout';
+import { useAuth } from '@/context';
 import { PlanSelector } from '@/components/billing/PlanSelector';
 import { UsageBar } from '@/components/billing/UsageBar';
 import { InvoiceTable } from '@/components/billing/InvoiceTable';
@@ -22,11 +24,13 @@ import {
   useCancelSubscription,
   useCustomerPortal,
 } from '@/hooks/useBilling';
-import { type PlanType, getStatusColor, getStatusText } from '@/types/billing';
+import { type PlanType } from '@/types/billing';
 
 type TabType = 'overview' | 'plans' | 'invoices' | 'usage';
 
 export default function BillingPage() {
+  const { user, isLoading: authLoading } = useAuth();
+  const t = useTranslations('billingPage');
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -60,7 +64,7 @@ export default function BillingPage() {
   };
 
   const handleCancelSubscription = async () => {
-    if (confirm('Are you sure you want to cancel your subscription?')) {
+    if (confirm(t('actions.cancelConfirm'))) {
       setIsProcessing(true);
       try {
         await cancelSubscriptionMutation.mutateAsync();
@@ -81,7 +85,7 @@ export default function BillingPage() {
     }
   };
 
-  if (isLoadingStatus) {
+  if (authLoading || isLoadingStatus) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -89,22 +93,22 @@ export default function BillingPage() {
     );
   }
 
+  if (!user) return null;
+
   const tabs = [
-    { id: 'overview' as TabType, label: 'Overview', icon: CreditCard },
-    { id: 'plans' as TabType, label: 'Plans', icon: Settings },
-    { id: 'invoices' as TabType, label: 'Invoices', icon: FileText },
-    { id: 'usage' as TabType, label: 'Usage', icon: BarChart3 },
+    { id: 'overview' as TabType, label: t('tabs.overview'), icon: CreditCard },
+    { id: 'plans' as TabType, label: t('tabs.plans'), icon: Settings },
+    { id: 'invoices' as TabType, label: t('tabs.invoices'), icon: FileText },
+    { id: 'usage' as TabType, label: t('tabs.usage'), icon: BarChart3 },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <AppLayout user={user}>
+      <div className="max-w-7xl py-2">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Billing & Subscription</h1>
-          <p className="mt-2 text-gray-600">
-            Manage your subscription, view invoices, and track usage
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="mt-2 text-gray-600">{t('subtitle')}</p>
         </div>
 
         {/* Tabs */}
@@ -144,7 +148,7 @@ export default function BillingPage() {
             {usageData && (
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Current Usage
+                  {t('usage.title')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {usageData.usage.map((item, index) => (
@@ -163,7 +167,7 @@ export default function BillingPage() {
             {/* Quick Actions */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Quick Actions
+                {t('quickActions.title')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
@@ -172,9 +176,9 @@ export default function BillingPage() {
                 >
                   <Settings className="w-6 h-6 text-blue-600" />
                   <div className="text-left">
-                    <div className="font-medium">Change Plan</div>
+                    <div className="font-medium">{t('quickActions.changePlanTitle')}</div>
                     <div className="text-sm text-gray-500">
-                      Upgrade or downgrade your subscription
+                      {t('quickActions.changePlanDescription')}
                     </div>
                   </div>
                 </button>
@@ -184,9 +188,9 @@ export default function BillingPage() {
                 >
                   <CreditCard className="w-6 h-6 text-blue-600" />
                   <div className="text-left">
-                    <div className="font-medium">Manage Payment</div>
+                    <div className="font-medium">{t('quickActions.managePaymentTitle')}</div>
                     <div className="text-sm text-gray-500">
-                      Update payment method via Stripe
+                      {t('quickActions.managePaymentDescription')}
                     </div>
                   </div>
                   <ExternalLink className="w-4 h-4 text-gray-400 ml-auto" />
@@ -200,10 +204,10 @@ export default function BillingPage() {
           <div>
             <div className="mb-6">
               <h2 className="text-xl font-semibold text-gray-900">
-                Choose Your Plan
+                {t('plans.title')}
               </h2>
               <p className="text-gray-600 mt-1">
-                Select the plan that best fits your business needs
+                {t('plans.subtitle')}
               </p>
             </div>
             <PlanSelector
@@ -217,9 +221,9 @@ export default function BillingPage() {
         {activeTab === 'invoices' && (
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold text-gray-900">Invoice History</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t('invoices.title')}</h2>
               <p className="text-gray-600 mt-1">
-                View and download your past invoices
+                {t('invoices.subtitle')}
               </p>
             </div>
             {isLoadingInvoices ? (
@@ -236,11 +240,13 @@ export default function BillingPage() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                Usage Details
+                {t('usage.detailsTitle')}
               </h2>
               <p className="text-gray-600 mb-6">
-                Billing period: {new Date(usageData.period_start).toLocaleDateString()} -{' '}
-                {new Date(usageData.period_end).toLocaleDateString()}
+                {t('usage.detailsSubtitle', {
+                  start: new Date(usageData.period_start).toLocaleDateString(),
+                  end: new Date(usageData.period_end).toLocaleDateString(),
+                })}
               </p>
               <div className="space-y-6">
                 {usageData.usage.map((item, index) => (
@@ -266,6 +272,6 @@ export default function BillingPage() {
           </div>
         )}
       </div>
-    </div>
+    </AppLayout>
   );
 }

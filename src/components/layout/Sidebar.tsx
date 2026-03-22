@@ -27,6 +27,7 @@ interface NavItem {
 interface NavGroup {
   label: string
   items: NavItem[]
+  adminOnly?: boolean
 }
 
 export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
@@ -71,6 +72,24 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
             </svg>
           ),
         },
+        {
+          name: tNav('deals'),
+          href: ROUTES.DEALS,
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.05 4.575a1.575 1.575 0 10-3.15 0v3.15h-3.15a1.575 1.575 0 000 3.15h3.15v3.15a1.575 1.575 0 003.15 0v-3.15h3.15a1.575 1.575 0 000-3.15h-3.15v-3.15zM15 12a3 3 0 110 6 3 3 0 010-6zm6.75 3a.75.75 0 01-.75.75H18a.75.75 0 010-1.5h3a.75.75 0 01.75.75z" />
+            </svg>
+          ),
+        },
+        {
+          name: tNav('messages'),
+          href: ROUTES.MESSAGES,
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+            </svg>
+          ),
+        },
       ],
     },
     {
@@ -91,35 +110,6 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
       label: tNav('management'),
       items: [
         {
-          name: tNav('knowledgeBase'),
-          href: ROUTES.KNOWLEDGE,
-          icon: (
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-            </svg>
-          ),
-          adminOnly: true,
-        },
-        {
-          name: tNav('pricing'),
-          href: ROUTES.PRICING,
-          icon: (
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-            </svg>
-          ),
-          adminOnly: true,
-        },
-        {
-          name: tNav('billing'),
-          href: '/billing',
-          icon: (
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-            </svg>
-          ),
-        },
-        {
           name: tNav('commissions'),
           href: ROUTES.COMMISSIONS,
           icon: (
@@ -138,15 +128,19 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           ),
         },
         {
-          name: tNav('revenue'),
-          href: '/admin/revenue',
-          adminOnly: true,
+          name: tNav('billing'),
+          href: '/billing',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3v18h18M7.5 15l3-3 3 3 4.5-6" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
             </svg>
           ),
         },
+      ],
+    },
+    {
+      label: tNav('settings'),
+      items: [
         {
           name: tNav('settings'),
           href: ROUTES.SETTINGS,
@@ -158,8 +152,8 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           ),
         },
         {
-          name: 'พื้นที่บริการ',
-          href: '/settings/service-area',
+          name: tNav('serviceArea'),
+          href: ROUTES.SERVICE_AREA,
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -168,16 +162,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           ),
         },
         {
-          name: 'Developer API',
-          href: '/developers',
-          icon: (
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-            </svg>
-          ),
-        },
-        {
-          name: 'เซสชัน',
+          name: tNav('sessions'),
           href: ROUTES.SESSIONS,
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -185,13 +170,60 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
             </svg>
           ),
         },
+      ],
+    },
+    {
+      label: tNav('admin'),
+      adminOnly: true,
+      items: [
         {
-          name: 'บันทึกตรวจสอบ',
+          name: tNav('knowledgeBase'),
+          href: ROUTES.KNOWLEDGE,
+          adminOnly: true,
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+            </svg>
+          ),
+        },
+        {
+          name: tNav('pricing'),
+          href: ROUTES.PRICING,
+          adminOnly: true,
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 6h.008v.008H6V6z" />
+            </svg>
+          ),
+        },
+        {
+          name: tNav('revenue'),
+          href: ROUTES.ADMIN_REVENUE,
+          adminOnly: true,
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+            </svg>
+          ),
+        },
+        {
+          name: tNav('auditLogs'),
           href: ROUTES.AUDIT_LOGS,
           adminOnly: true,
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+          ),
+        },
+        {
+          name: 'Developer API',
+          href: ROUTES.DEVELOPERS,
+          adminOnly: true,
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
             </svg>
           ),
         },
@@ -255,12 +287,14 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
-          {navGroups.map((group) => (
+          {navGroups
+            .filter((group) => !group.adminOnly || isAdmin)
+            .map((group) => (
             <div key={group.label}>
-              <p className="px-3 text-[11px] font-semibold text-[var(--brand-sidebar-text)] uppercase tracking-wider opacity-70">
+              <p className="px-3 text-[10px] font-bold text-[var(--brand-sidebar-text)]/40 uppercase tracking-[0.1em] mb-2">
                 {group.label}
               </p>
-              <div className="mt-2 space-y-1">
+              <div className="space-y-0.5">
                 {group.items
                   .filter((item) => !item.adminOnly || isAdmin)
                   .map((item) => {
@@ -270,9 +304,9 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
                         key={item.href}
                         href={item.href}
                         className={clsx(
-                          'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                          'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors relative',
                           isActive
-                            ? 'bg-[var(--brand-primary-light)] text-[var(--brand-primary)]'
+                            ? 'bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] border-l-[3px] border-[var(--brand-primary)] ml-0 pl-[9px]'
                             : 'text-[var(--brand-sidebar-text)] opacity-80 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)]'
                         )}
                       >
@@ -289,15 +323,18 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
         </nav>
 
         <div className="border-t border-[var(--brand-border)] p-4">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-[var(--brand-sidebar-text)] opacity-80 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)] rounded-lg transition-colors"
-          >
-            <svg className="w-5 h-5 text-[var(--brand-sidebar-text)] opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-            </svg>
-            {tNavbar('signOut')}
-          </button>
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handleLogout}
+              className="flex-1 flex items-center gap-3 px-3 py-2 text-sm font-medium text-[var(--brand-sidebar-text)] opacity-80 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)] rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5 text-[var(--brand-sidebar-text)] opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+              </svg>
+              {tNavbar('signOut')}
+            </button>
+            <span className="text-[10px] text-[var(--brand-sidebar-text)]/40 font-mono px-2">v2.0</span>
+          </div>
         </div>
       </aside>
     </>

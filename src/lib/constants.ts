@@ -126,9 +126,14 @@ export const ROUTES = {
   COMMISSIONS: '/commissions',
   INVOICES: '/invoices',
   SETTINGS: '/settings',
+  DEALS: '/deals',
+  MESSAGES: '/messages',
   AUDIT_LOGS: '/admin/audit-logs',
   SESSIONS: '/settings/sessions',
+  SERVICE_AREA: '/settings/service-area',
+  DEVELOPERS: '/developers',
+  ADMIN_REVENUE: '/admin/revenue',
 } as const
 
 // Admin-only routes
-export const ADMIN_ROUTES = [ROUTES.KNOWLEDGE, ROUTES.PRICING, '/admin/revenue', ROUTES.ANALYTICS_REVENUE, '/admin/audit-logs']
+export const ADMIN_ROUTES = [ROUTES.KNOWLEDGE, ROUTES.PRICING, ROUTES.ADMIN_REVENUE, ROUTES.ANALYTICS_REVENUE, ROUTES.AUDIT_LOGS]

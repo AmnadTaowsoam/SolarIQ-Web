@@ -94,7 +94,7 @@ export default function DealDetailPage() {
 
   return (
     <AppLayout user={user}>
-      <div className="max-w-3xl mx-auto space-y-5">
+      <div className="max-w-3xl space-y-5">
         {/* Back navigation */}
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <button onClick={() => router.push('/deals')} className="hover:text-orange-500">

@@ -37,7 +37,13 @@
     "commissions": "Commissions",
     "invoices": "Invoices",
     "revenue": "Revenue",
-    "settings": "Settings"
+    "settings": "Settings",
+    "deals": "Deals",
+    "messages": "Messages",
+    "serviceArea": "Service Area",
+    "sessions": "Sessions",
+    "admin": "Admin",
+    "auditLogs": "Audit Logs"
   },
   "navbar": {
     "openMenu": "Open menu",
@@ -163,5 +169,38 @@
   "roles": {
     "admin": "Administrator",
     "contractor": "Contractor"
+  },
+  "billingPage": {
+    "title": "Billing & Subscription",
+    "subtitle": "Manage your subscription, view invoices, and track usage",
+    "tabs": {
+      "overview": "Overview",
+      "plans": "Plans",
+      "invoices": "Invoices",
+      "usage": "Usage"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "changePlanTitle": "Change Plan",
+      "changePlanDescription": "Upgrade or downgrade your subscription",
+      "managePaymentTitle": "Manage Payment",
+      "managePaymentDescription": "Update payment method via Stripe"
+    },
+    "usage": {
+      "title": "Current Usage",
+      "detailsTitle": "Usage Details",
+      "detailsSubtitle": "Billing period: {start} - {end}"
+    },
+    "plans": {
+      "title": "Choose Your Plan",
+      "subtitle": "Select the plan that best fits your business needs"
+    },
+    "invoices": {
+      "title": "Invoice History",
+      "subtitle": "View and download your past invoices"
+    },
+    "actions": {
+      "cancelConfirm": "Are you sure you want to cancel your subscription?"
+    }
   }
 }

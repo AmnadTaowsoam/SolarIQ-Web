@@ -1,6 +1,7 @@
 'use client'
 
-import { useQuery, useCallback } from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
 
 // ---------------------------------------------------------------------------
