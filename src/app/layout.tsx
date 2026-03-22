@@ -19,31 +19,71 @@ const notoSansThai = Noto_Sans_Thai({
   weight: ['300', '400', '500', '600', '700'],
 })
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://solariq.co.th'
+
 export const metadata: Metadata = {
   title: {
-    default: 'SolarIQ - Solar Energy Analysis Portal',
+    default: 'SolarIQ - แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ',
     template: '%s | SolarIQ',
   },
-  description: 'B2B Web Portal for solar energy analysis, lead management, and ROI calculations',
-  keywords: ['solar', 'energy', 'ROI', 'solar analysis', 'lead management', 'Thailand'],
+  description:
+    'SolarIQ แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะสำหรับธุรกิจ คำนวณ ROI ติดตั้งโซลาร์เซลล์ บริหารลูกค้าเป้าหมาย วิเคราะห์ผลตอบแทนการลงทุนอย่างแม่นยำ สำหรับผู้ติดตั้งและตัวแทนจำหน่ายโซลาร์ในประเทศไทย',
+  keywords: [
+    'โซลาร์เซลล์',
+    'พลังงานแสงอาทิตย์',
+    'solar energy',
+    'ROI',
+    'solar analysis',
+    'วิเคราะห์โซลาร์',
+    'ติดตั้งโซลาร์',
+    'lead management',
+    'Thailand',
+    'SolarIQ',
+  ],
   authors: [{ name: 'SolarIQ Team' }],
   manifest: '/site.webmanifest',
+  metadataBase: new URL(appUrl),
+  alternates: {
+    canonical: '/',
+  },
   icons: {
-    icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-    ],
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
     apple: '/favicon.svg',
   },
   openGraph: {
     type: 'website',
     locale: 'th_TH',
+    url: appUrl,
     siteName: 'SolarIQ',
-    title: 'SolarIQ - Solar Energy Analysis Portal',
-    description: 'B2B Web Portal for solar energy analysis, lead management, and ROI calculations',
+    title: 'SolarIQ - แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ',
+    description:
+      'แพลตฟอร์มวิเคราะห์โซลาร์เซลล์สำหรับธุรกิจ คำนวณ ROI วิเคราะห์ผลตอบแทน บริหารลูกค้าเป้าหมาย',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'SolarIQ - Solar Energy Analysis Platform',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SolarIQ - แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ',
+    description:
+      'แพลตฟอร์มวิเคราะห์โซลาร์เซลล์สำหรับธุรกิจ คำนวณ ROI วิเคราะห์ผลตอบแทน บริหารลูกค้าเป้าหมาย',
+    images: ['/og-image.png'],
   },
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 }
 
