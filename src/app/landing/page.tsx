@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import {
   Zap,
   FileText,
   BarChart3,
-  Users,
   MessageCircle,
   LayoutDashboard,
   Clock,
@@ -20,9 +19,11 @@ import {
   Menu,
   X,
   ChevronDown,
-  Calculator,
+  CloudSun,
+  BatteryCharging,
+  Wind,
   AlertTriangle,
-  Search,
+  Bell,
   FileWarning,
 } from 'lucide-react'
 
@@ -35,7 +36,9 @@ function useReveal() {
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el) {
+      return
+    }
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -43,7 +46,7 @@ function useReveal() {
           obs.disconnect()
         }
       },
-      { threshold: 0.12 },
+      { threshold: 0.12 }
     )
     obs.observe(el)
     return () => obs.disconnect()
@@ -102,9 +105,7 @@ function Navbar() {
   return (
     <nav
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-white/95 backdrop-blur shadow-md'
-          : 'bg-transparent'
+        scrolled ? 'bg-white/95 backdrop-blur shadow-md' : 'bg-transparent'
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -238,9 +239,7 @@ function Hero() {
             { value: '3x', label: 'ปิดการขายเร็วขึ้น' },
           ].map((s) => (
             <div key={s.label} className="text-center">
-              <div className="text-3xl sm:text-4xl font-extrabold text-white">
-                {s.value}
-              </div>
+              <div className="text-3xl sm:text-4xl font-extrabold text-white">{s.value}</div>
               <div className="mt-1 text-sm text-white/70">{s.label}</div>
             </div>
           ))}
@@ -288,7 +287,8 @@ function PainPoints() {
             ปัญหาที่ธุรกิจโซลาร์กำลังเผชิญ
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-            หลายธุรกิจโซลาร์เซลล์ยังคงใช้วิธีดั้งเดิมที่ไม่มีประสิทธิภาพ ทำให้สูญเสียโอกาสในการเติบโต
+            หลายธุรกิจโซลาร์เซลล์ยังคงใช้วิธีดั้งเดิมที่ไม่มีประสิทธิภาพ
+            ทำให้สูญเสียโอกาสในการเติบโต
           </p>
         </div>
 
@@ -343,9 +343,7 @@ function HowItWorks() {
           <span className="inline-block rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-600 mb-4">
             ง่ายใน 3 ขั้นตอน
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            ใช้งานง่าย ได้ผลจริง
-          </h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">ใช้งานง่าย ได้ผลจริง</h2>
         </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
@@ -382,39 +380,51 @@ function HowItWorks() {
 const features = [
   {
     icon: Brain,
-    title: 'AI Bill Analysis',
-    thai: 'วิเคราะห์บิลค่าไฟด้วย AI',
-    desc: 'อัพโหลดบิลค่าไฟ ระบบ AI จะอ่านและวิเคราะห์ข้อมูลการใช้ไฟฟ้าอัตโนมัติ',
+    title: 'AI Solar Analysis',
+    thai: 'วิเคราะห์โซลาร์ด้วย AI',
+    desc: 'วิเคราะห์ศักยภาพพลังงานแสงอาทิตย์ด้วย Google Solar API + AI คำนวณขนาดระบบ, ROI, และระยะเวลาคืนทุนอัตโนมัติ',
   },
   {
-    icon: Calculator,
-    title: 'Solar ROI Calculator',
-    thai: 'คำนวณผลตอบแทนโซลาร์',
-    desc: 'คำนวณ ROI, ระยะเวลาคืนทุน, และประหยัดค่าไฟได้เท่าไหร่อย่างแม่นยำ',
+    icon: CloudSun,
+    title: 'Climate Reliability Score',
+    thai: 'คะแนนความน่าเชื่อถือสภาพอากาศ',
+    desc: 'วิเคราะห์ข้อมูลอากาศ 10 ปี ย้อนหลัง คำนวณความเสถียรของแสงแดดเฉพาะพื้นที่ ให้คะแนน A-F เพื่อประกอบการตัดสินใจ',
+  },
+  {
+    icon: BatteryCharging,
+    title: 'Energy Independence Score',
+    thai: 'คะแนนอิสระด้านพลังงาน',
+    desc: 'คำนวณ % ที่โซลาร์จะทดแทนค่าไฟได้จริง พร้อมแนะนำขนาดแบตเตอรี่สำรองที่เหมาะสม',
+  },
+  {
+    icon: Wind,
+    title: 'PM2.5 Impact Analysis',
+    thai: 'วิเคราะห์ผลกระทบ PM2.5',
+    desc: 'คำนวณผลกระทบของฝุ่น PM2.5 ต่อประสิทธิภาพแผงโซลาร์ ปรับ ROI ให้สะท้อนสภาพจริงในไทย',
   },
   {
     icon: FileText,
     title: 'Auto Proposal Generator',
     thai: 'สร้างใบเสนอราคาอัตโนมัติ',
-    desc: 'สร้างใบเสนอราคาที่สวยงามและเป็นมืออาชีพใน 30 วินาที',
+    desc: 'สร้างใบเสนอราคา PDF ที่สวยงามและเป็นมืออาชีพใน 30 วินาที พร้อมกราฟและตาราง ROI',
   },
   {
-    icon: Users,
-    title: 'Lead Management',
-    thai: 'จัดการลูกค้า',
-    desc: 'ติดตามสถานะลูกค้าทุกราย ตั้งแต่สนใจจนถึงปิดการขาย',
+    icon: Bell,
+    title: 'Smart Alerts',
+    thai: 'แจ้งเตือนอัจฉริยะ',
+    desc: 'แจ้งเตือนอัตโนมัติเมื่อราคาแผงโซลาร์เปลี่ยน, สภาพอากาศเหมาะสม, หรือลูกค้าต้องติดตาม',
   },
   {
     icon: MessageCircle,
-    title: 'LINE Integration',
-    thai: 'เชื่อมต่อ LINE',
-    desc: 'ส่งใบเสนอราคาและติดตามลูกค้าผ่าน LINE OA ได้โดยตรง',
+    title: 'LINE OA Integration',
+    thai: 'เชื่อมต่อ LINE Official',
+    desc: 'ลูกค้าวิเคราะห์โซลาร์ผ่าน LINE ได้เลย ส่งใบเสนอราคา ติดตามสถานะ และแชทกับทีมขายอัตโนมัติ',
   },
   {
     icon: LayoutDashboard,
-    title: 'Real-time Dashboard',
-    thai: 'แดชบอร์ดเรียลไทม์',
-    desc: 'ดูภาพรวมยอดขาย อัตราการปิดการขาย และ KPI ทั้งหมดแบบเรียลไทม์',
+    title: 'Investment Comparison',
+    thai: 'เปรียบเทียบการลงทุน',
+    desc: 'เปรียบเทียบ ROI โซลาร์กับการลงทุนอื่น (ฝากธนาคาร, กองทุน, หุ้น) ช่วยลูกค้าตัดสินใจได้ง่ายขึ้น',
   },
 ]
 
@@ -426,15 +436,14 @@ function Features() {
           <span className="inline-block rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-600 mb-4">
             ฟีเจอร์ทั้งหมด
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            ทุกเครื่องมือที่คุณต้องการ
-          </h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">ฟีเจอร์ที่ไม่เหมือนใคร</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-            ครบจบในแพลตฟอร์มเดียว ตั้งแต่วิเคราะห์บิลค่าไฟจนถึงปิดการขาย
+            เทคโนโลยี AI ขั้นสูง ผสาน Google Solar API, ข้อมูลอากาศ 10 ปี, และ PM2.5
+            เพื่อการวิเคราะห์ที่แม่นยำที่สุดในไทย
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f, i) => (
             <div
               key={i}
@@ -463,10 +472,11 @@ const tiers = [
     price: '2,900',
     desc: 'สำหรับทีมขนาดเล็กที่เริ่มต้น',
     features: [
-      'วิเคราะห์บิลค่าไฟ 50 ครั้ง/เดือน',
-      'สร้างใบเสนอราคาอัตโนมัติ',
-      'จัดการลูกค้าสูงสุด 100 ราย',
+      'วิเคราะห์โซลาร์ 20 ครั้ง/เดือน',
+      'AI วิเคราะห์ + คำนวณ ROI',
+      'สร้างใบเสนอราคา PDF',
       'แดชบอร์ดพื้นฐาน',
+      'ผู้ใช้งาน 1 คน',
       'อีเมลซัพพอร์ต',
     ],
     cta: 'เริ่มทดลองใช้ฟรี',
@@ -477,29 +487,33 @@ const tiers = [
     price: '7,900',
     desc: 'สำหรับทีมที่ต้องการเติบโต',
     features: [
-      'วิเคราะห์บิลค่าไฟไม่จำกัด',
-      'สร้างใบเสนอราคาแบบกำหนดเอง',
-      'จัดการลูกค้าไม่จำกัด',
-      'LINE OA Integration',
-      'แดชบอร์ดขั้นสูง + รายงาน',
-      'ซัพพอร์ตทาง LINE ภายใน 2 ชม.',
+      'วิเคราะห์โซลาร์ 100 ครั้ง/เดือน',
+      'Climate Reliability Score',
+      'Energy Independence Score',
+      'PM2.5 Impact Analysis',
+      'Smart Alerts แจ้งเตือนอัจฉริยะ',
+      'Investment Comparison',
+      'แดชบอร์ดขั้นสูง + Export CSV',
+      'ผู้ใช้งาน 5 คน',
       'API Access',
+      'Priority Support',
     ],
     cta: 'เริ่มทดลองใช้ฟรี',
     popular: true,
   },
   {
     name: 'Enterprise',
-    price: 'ติดต่อเรา',
+    price: '15,000',
     desc: 'สำหรับองค์กรขนาดใหญ่',
     features: [
+      'วิเคราะห์โซลาร์ไม่จำกัด',
       'ทุกฟีเจอร์ใน Professional',
       'White-label branding',
-      'Custom AI model training',
-      'Dedicated account manager',
+      'Custom API integration',
+      'ผู้ใช้งานไม่จำกัด',
+      'Dedicated Account Manager',
       'SLA 99.9% uptime',
-      'On-premise deployment option',
-      'Priority support 24/7',
+      'Dedicated Support 24/7',
     ],
     cta: 'ติดต่อฝ่ายขาย',
     popular: false,
@@ -597,15 +611,16 @@ function ROICalculator() {
   const formatNumber = (n: number) => n.toLocaleString('th-TH')
 
   return (
-    <Section id="roi" className="py-20 sm:py-28 bg-gradient-to-br from-primary-600 via-primary-500 to-amber-500">
+    <Section
+      id="roi"
+      className="py-20 sm:py-28 bg-gradient-to-br from-primary-600 via-primary-500 to-amber-500"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <span className="inline-block rounded-full bg-white/20 backdrop-blur px-4 py-1 text-sm font-semibold text-white mb-4">
             ROI Calculator
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            คำนวณผลตอบแทนของคุณ
-          </h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white">คำนวณผลตอบแทนของคุณ</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
             ดูว่า SolarIQ จะช่วยธุรกิจของคุณประหยัดเวลาและเพิ่มรายได้ได้เท่าไหร่
           </p>
@@ -689,9 +704,7 @@ function Testimonials() {
           <span className="inline-block rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-600 mb-4">
             ลูกค้าของเรา
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            เสียงจากผู้ใช้จริง
-          </h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">เสียงจากผู้ใช้จริง</h2>
         </div>
 
         <div className="mt-14 grid gap-8 md:grid-cols-3">
@@ -702,10 +715,7 @@ function Testimonials() {
             >
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: t.rating }).map((_, si) => (
-                  <Star
-                    key={si}
-                    className="h-5 w-5 fill-amber-400 text-amber-400"
-                  />
+                  <Star key={si} className="h-5 w-5 fill-amber-400 text-amber-400" />
                 ))}
               </div>
               <p className="text-sm leading-relaxed text-gray-700">&ldquo;{t.text}&rdquo;</p>

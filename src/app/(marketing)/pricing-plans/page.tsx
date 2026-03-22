@@ -66,16 +66,14 @@ const plans: Plan[] = [
     icon: Zap,
     name: 'Starter',
     subtitle: 'สำหรับทีมขนาดเล็ก',
-    monthlyPrice: 1490,
-    annualPrice: 1190,
+    monthlyPrice: 2900,
+    annualPrice: 2320,
     features: [
-      { text: 'วิเคราะห์โซลาร์: 50 ครั้ง/เดือน' },
-      { text: 'ROI + Financial Analysis เต็มรูปแบบ' },
-      { text: 'พยากรณ์อากาศ 7 วัน' },
-      { text: 'PM2.5 Impact Analysis' },
-      { text: 'จำลองค่าไฟ Before/After' },
-      { text: 'PDF Export: 20 ครั้ง/เดือน' },
-      { text: '3 ผู้ใช้' },
+      { text: 'วิเคราะห์โซลาร์: 20 ครั้ง/เดือน' },
+      { text: 'ROI Calculator พื้นฐาน' },
+      { text: 'PDF Proposal Generation' },
+      { text: 'Basic Dashboard' },
+      { text: '1 ผู้ใช้' },
       { text: 'Email Support' },
     ],
     cta: 'เลือกแพ็กเกจนี้',
@@ -87,19 +85,18 @@ const plans: Plan[] = [
     icon: Rocket,
     name: 'Professional',
     subtitle: 'สำหรับทีมที่ต้องการเติบโต',
-    monthlyPrice: 3990,
-    annualPrice: 3190,
+    monthlyPrice: 7900,
+    annualPrice: 6320,
     features: [
-      { text: 'วิเคราะห์โซลาร์: 300 ครั้ง/เดือน' },
-      { text: 'ทุกอย่างใน Starter +' },
+      { text: 'วิเคราะห์โซลาร์: 100 ครั้ง/เดือน' },
       { text: 'Climate Reliability Score' },
-      { text: 'เปรียบเทียบการลงทุน (เงินสด/สินเชื่อ/เช่า)' },
       { text: 'Energy Independence Score' },
+      { text: 'PM2.5 Impact Analysis' },
+      { text: 'เปรียบเทียบการลงทุน (เงินสด/สินเชื่อ/เช่า)' },
       { text: 'Smart Alerts อัจฉริยะ' },
-      { text: 'PDF Export: ไม่จำกัด' },
+      { text: 'Full Dashboard + CSV Export' },
       { text: 'API Access' },
-      { text: '10 ผู้ใช้' },
-      { text: 'Lead Management' },
+      { text: '5 ผู้ใช้' },
       { text: 'Priority Support' },
     ],
     cta: 'เลือกแพ็กเกจนี้',
@@ -112,9 +109,8 @@ const plans: Plan[] = [
     icon: Building2,
     name: 'Enterprise',
     subtitle: 'สำหรับองค์กรขนาดใหญ่',
-    monthlyPrice: 9990,
-    annualPrice: null,
-    priceLabel: 'หรือติดต่อเรา',
+    monthlyPrice: 15000,
+    annualPrice: 12000,
     features: [
       { text: 'วิเคราะห์โซลาร์: ไม่จำกัด' },
       { text: 'ทุกอย่างใน Professional +' },
@@ -123,7 +119,6 @@ const plans: Plan[] = [
       { text: 'ผู้ใช้ไม่จำกัด' },
       { text: 'Dedicated Account Manager' },
       { text: 'SLA 99.9% Uptime' },
-      { text: 'Custom Report Templates' },
     ],
     cta: 'ติดต่อฝ่ายขาย',
     ctaHref: '/contact',
@@ -143,26 +138,89 @@ interface ComparisonRow {
 }
 
 const comparisonData: ComparisonRow[] = [
-  { feature: 'วิเคราะห์โซลาร์', free: '5 ครั้ง', starter: '50 ครั้ง/เดือน', professional: '300 ครั้ง/เดือน', enterprise: 'ไม่จำกัด' },
-  { feature: 'ROI Calculator', free: 'พื้นฐาน', starter: true, professional: true, enterprise: true },
-  { feature: 'Financial Analysis', free: false, starter: true, professional: true, enterprise: true },
-  { feature: 'พยากรณ์อากาศ', free: false, starter: '7 วัน', professional: '14 วัน', enterprise: '30 วัน' },
-  { feature: 'PM2.5 Impact Analysis', free: false, starter: true, professional: true, enterprise: true },
-  { feature: 'จำลองค่าไฟ Before/After', free: false, starter: true, professional: true, enterprise: true },
-  { feature: 'Climate Reliability Score', free: false, starter: false, professional: true, enterprise: true },
-  { feature: 'เปรียบเทียบการลงทุน', free: false, starter: false, professional: true, enterprise: true },
-  { feature: 'Energy Independence Score', free: false, starter: false, professional: true, enterprise: true },
+  {
+    feature: 'วิเคราะห์โซลาร์',
+    free: '5 ครั้ง',
+    starter: '20 ครั้ง/เดือน',
+    professional: '100 ครั้ง/เดือน',
+    enterprise: 'ไม่จำกัด',
+  },
+  {
+    feature: 'ROI Calculator',
+    free: 'พื้นฐาน',
+    starter: 'พื้นฐาน',
+    professional: true,
+    enterprise: true,
+  },
+  {
+    feature: 'PDF Proposal Generation',
+    free: false,
+    starter: true,
+    professional: true,
+    enterprise: true,
+  },
+  { feature: 'Dashboard', free: false, starter: 'Basic', professional: 'Full', enterprise: 'Full' },
+  {
+    feature: 'PM2.5 Impact Analysis',
+    free: false,
+    starter: false,
+    professional: true,
+    enterprise: true,
+  },
+  {
+    feature: 'Climate Reliability Score',
+    free: false,
+    starter: false,
+    professional: true,
+    enterprise: true,
+  },
+  {
+    feature: 'Energy Independence Score',
+    free: false,
+    starter: false,
+    professional: true,
+    enterprise: true,
+  },
+  {
+    feature: 'เปรียบเทียบการลงทุน',
+    free: false,
+    starter: false,
+    professional: true,
+    enterprise: true,
+  },
   { feature: 'Smart Alerts', free: false, starter: false, professional: true, enterprise: true },
-  { feature: 'PDF Export', free: false, starter: '20 ครั้ง/เดือน', professional: 'ไม่จำกัด', enterprise: 'ไม่จำกัด' },
+  { feature: 'CSV Export', free: false, starter: false, professional: true, enterprise: true },
   { feature: 'API Access', free: false, starter: false, professional: true, enterprise: true },
-  { feature: 'Lead Management', free: false, starter: false, professional: true, enterprise: true },
-  { feature: 'จำนวนผู้ใช้', free: '1', starter: '3', professional: '10', enterprise: 'ไม่จำกัด' },
-  { feature: 'White-label Branding', free: false, starter: false, professional: false, enterprise: true },
-  { feature: 'Custom API Integration', free: false, starter: false, professional: false, enterprise: true },
-  { feature: 'Dedicated Account Manager', free: false, starter: false, professional: false, enterprise: true },
-  { feature: 'SLA Uptime', free: false, starter: false, professional: '99.5%', enterprise: '99.9%' },
-  { feature: 'Custom Report Templates', free: false, starter: false, professional: false, enterprise: true },
-  { feature: 'Support', free: 'Community', starter: 'Email', professional: 'Priority', enterprise: 'Dedicated 24/7' },
+  { feature: 'จำนวนผู้ใช้', free: '1', starter: '1', professional: '5', enterprise: 'ไม่จำกัด' },
+  {
+    feature: 'White-label Branding',
+    free: false,
+    starter: false,
+    professional: false,
+    enterprise: true,
+  },
+  {
+    feature: 'Custom API Integration',
+    free: false,
+    starter: false,
+    professional: false,
+    enterprise: true,
+  },
+  {
+    feature: 'Dedicated Account Manager',
+    free: false,
+    starter: false,
+    professional: false,
+    enterprise: true,
+  },
+  { feature: 'SLA Uptime', free: false, starter: false, professional: false, enterprise: '99.9%' },
+  {
+    feature: 'Support',
+    free: 'Community',
+    starter: 'Email',
+    professional: 'Priority',
+    enterprise: 'Dedicated',
+  },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -215,9 +273,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         )}
       </button>
       {isOpen && (
-        <div className="pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-          {a}
-        </div>
+        <div className="pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{a}</div>
       )}
     </div>
   )
@@ -240,8 +296,12 @@ function CellValue({ value }: { value: string | boolean }) {
 /*  Page                                                                */
 /* ------------------------------------------------------------------ */
 function getCtaHref(plan: Plan, annual: boolean): string {
-  if (plan.id === 'free') return '/signup?trial=true'
-  if (plan.id === 'enterprise') return '/contact?subject=enterprise'
+  if (plan.id === 'free') {
+    return '/signup?trial=true'
+  }
+  if (plan.id === 'enterprise') {
+    return '/contact?subject=enterprise'
+  }
   return `/checkout?plan=${plan.id}&billing=${annual ? 'annual' : 'monthly'}`
 }
 
@@ -292,7 +352,8 @@ export default function PricingPlansPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {plans.map((plan) => {
-              const price = annual && plan.annualPrice !== null ? plan.annualPrice : plan.monthlyPrice
+              const price =
+                annual && plan.annualPrice !== null ? plan.annualPrice : plan.monthlyPrice
               const Icon = plan.icon
 
               return (
@@ -320,7 +381,9 @@ export default function PricingPlansPage() {
                   <div className="mt-6">
                     {price === 0 ? (
                       <div>
-                        <span className="text-3xl font-extrabold text-gray-900 dark:text-white">ฟรี</span>
+                        <span className="text-3xl font-extrabold text-gray-900 dark:text-white">
+                          ฟรี
+                        </span>
                         <span className="ml-2 text-sm text-gray-500">14 วัน</span>
                       </div>
                     ) : price !== null ? (
@@ -332,21 +395,29 @@ export default function PricingPlansPage() {
                         <span className="text-sm text-gray-500">/เดือน</span>
                       </div>
                     ) : (
-                      <span className="text-2xl font-extrabold text-gray-900 dark:text-white">ติดต่อเรา</span>
+                      <span className="text-2xl font-extrabold text-gray-900 dark:text-white">
+                        ติดต่อเรา
+                      </span>
                     )}
                     {plan.priceLabel && price !== 0 && (
                       <p className="mt-1 text-xs text-gray-500">{plan.priceLabel}</p>
                     )}
-                    {annual && plan.annualPrice !== null && plan.monthlyPrice !== null && plan.monthlyPrice > 0 && (
-                      <p className="mt-1 text-xs text-gray-400 line-through">
-                        ฿{plan.monthlyPrice.toLocaleString('th-TH')}/เดือน
-                      </p>
-                    )}
+                    {annual &&
+                      plan.annualPrice !== null &&
+                      plan.monthlyPrice !== null &&
+                      plan.monthlyPrice > 0 && (
+                        <p className="mt-1 text-xs text-gray-400 line-through">
+                          ฿{plan.monthlyPrice.toLocaleString('th-TH')}/เดือน
+                        </p>
+                      )}
                   </div>
 
                   <ul className="mt-6 flex-1 space-y-3">
                     {plan.features.map((f, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700 dark:text-gray-300">
+                      <li
+                        key={i}
+                        className="flex items-start gap-2.5 text-sm text-gray-700 dark:text-gray-300"
+                      >
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
                         {f.text}
                       </li>
@@ -408,7 +479,9 @@ export default function PricingPlansPage() {
                   <tr
                     key={row.feature}
                     className={`border-b border-gray-100 dark:border-gray-700/50 ${
-                      i % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50/50 dark:bg-gray-800/50'
+                      i % 2 === 0
+                        ? 'bg-white dark:bg-gray-800'
+                        : 'bg-gray-50/50 dark:bg-gray-800/50'
                     }`}
                   >
                     <td className="px-6 py-3.5 text-sm text-gray-700 dark:text-gray-300 font-medium">
@@ -438,9 +511,7 @@ export default function PricingPlansPage() {
       <section className="py-20 bg-white dark:bg-gray-950">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              คำถามที่พบบ่อย
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">คำถามที่พบบ่อย</h2>
             <p className="mt-4 text-gray-600 dark:text-gray-400">
               หากมีคำถามเพิ่มเติม สามารถติดต่อเราได้ตลอดเวลา
             </p>
@@ -481,9 +552,7 @@ export default function PricingPlansPage() {
       {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-primary-600 via-primary-500 to-amber-500">
         <div className="mx-auto max-w-4xl px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            พร้อมเริ่มต้นแล้วหรือยัง?
-          </h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-white">พร้อมเริ่มต้นแล้วหรือยัง?</h2>
           <p className="mt-4 text-lg text-white/85">
             เริ่มทดลองใช้ฟรี 14 วัน ไม่ต้องใช้บัตรเครดิต ยกเลิกได้ตลอดเวลา
           </p>
