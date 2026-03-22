@@ -1,21 +1,36 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuth } from '@/context'
 import { useToast } from '@/components/ui'
 import { Button, Input, Card, CardBody } from '@/components/ui'
 import { ROUTES } from '@/lib/constants'
+import { defaultLocale } from '@/i18n/config'
+import { buildLocalizedPath, extractLocaleFromPath } from '@/lib/locale'
+import { useTranslations } from 'next-intl'
 
 export default function LoginPage() {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const { isAuthenticated, isLoading, isDevLoginEnabled, loginWithDevCredentials } = useAuth()
   const { addToast } = useToast()
   const devLoginEmail = process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || 'admin@solariq.local'
   const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || 'Solariq123'
   const devLoginRole = process.env.NEXT_PUBLIC_DEV_LOGIN_ROLE === 'contractor' ? 'contractor' : 'admin'
+  const locale = extractLocaleFromPath(pathname).locale ?? defaultLocale
+  const t = useTranslations('authPages.login')
+  const requestedRedirect = searchParams.get('redirect')
+  const targetPath = requestedRedirect && requestedRedirect.startsWith('/')
+    ? requestedRedirect
+    : ROUTES.DASHBOARD
+  const signupPath = buildLocalizedPath(ROUTES.SIGNUP, locale)
+  const forgotPasswordPath = buildLocalizedPath(ROUTES.FORGOT_PASSWORD, locale)
+  const redirectAfterAuth = buildLocalizedPath(targetPath, locale)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,9 +41,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.replace(ROUTES.DASHBOARD)
+      router.replace(redirectAfterAuth)
     }
-  }, [isAuthenticated, isLoading, router])
+  }, [isAuthenticated, isLoading, redirectAfterAuth, router])
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {}
@@ -37,19 +52,19 @@ export default function LoginPage() {
     const sanitizedPassword = password.trim()
 
     if (!sanitizedEmail) {
-      newErrors.email = 'Email is required'
+      newErrors.email = t('errors.emailRequired')
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitizedEmail)) {
-      newErrors.email = 'Invalid email format'
+      newErrors.email = t('errors.invalidEmail')
     } else if (sanitizedEmail.length > 255) {
-      newErrors.email = 'Email is too long'
+      newErrors.email = t('errors.emailTooLong')
     }
 
     if (!sanitizedPassword) {
-      newErrors.password = 'Password is required'
+      newErrors.password = t('errors.passwordRequired')
     } else if (sanitizedPassword.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+      newErrors.password = t('errors.passwordMin')
     } else if (sanitizedPassword.length > 128) {
-      newErrors.password = 'Password is too long'
+      newErrors.password = t('errors.passwordTooLong')
     }
 
     setErrors(newErrors)
@@ -61,7 +76,7 @@ export default function LoginPage() {
 
     if (lockoutUntil && Date.now() < lockoutUntil) {
       const remainingTime = Math.ceil((lockoutUntil - Date.now()) / 1000)
-      addToast('error', `Too many attempts. Please try again in ${remainingTime} seconds.`)
+      addToast('error', t('errors.tooManyAttemptsDynamic', { seconds: remainingTime }))
       return
     }
 
@@ -83,7 +98,7 @@ export default function LoginPage() {
         // Force-set middleware cookies and perform full navigation so redirect is reliable.
         document.cookie = '__session=1; path=/; max-age=1800; SameSite=Lax'
         document.cookie = `user-role=${devLoginRole}; path=/; max-age=1800; SameSite=Lax`
-        window.location.assign(ROUTES.DASHBOARD)
+        window.location.assign(redirectAfterAuth)
         return
       } else {
         await signInWithEmailAndPassword(auth, normalizedEmail, normalizedPassword)
@@ -91,27 +106,26 @@ export default function LoginPage() {
 
       setFailedAttempts(0)
       setLockoutUntil(null)
-      addToast('success', 'Login successful!')
-      router.push(ROUTES.DASHBOARD)
+      addToast('success', t('messages.success'))
+      router.push(redirectAfterAuth)
     } catch (error: unknown) {
-      void error // Acknowledge error for type safety
-      let message = 'Failed to login. Please try again.'
+      let message = t('errors.failed')
       let isRateLimit = false
 
       if (error && typeof error === 'object' && 'code' in error) {
         const errorCode = (error as { code: string }).code
         switch (errorCode) {
           case 'auth/user-not-found':
-            message = 'No account found with this email'
+            message = t('errors.userNotFound')
             break
           case 'auth/wrong-password':
-            message = 'Incorrect password'
+            message = t('errors.wrongPassword')
             break
           case 'auth/invalid-credential':
-            message = 'Invalid email or password'
+            message = t('errors.invalidCredential')
             break
           case 'auth/too-many-requests':
-            message = 'Too many failed attempts. Please try again later'
+            message = t('errors.tooManyAttempts')
             isRateLimit = true
             break
         }
@@ -122,7 +136,7 @@ export default function LoginPage() {
 
       if (isRateLimit || newFailedAttempts >= 5) {
         setLockoutUntil(Date.now() + 60 * 1000) // 60 seconds lockout
-        message = 'Too many failed attempts. Please try again in 60 seconds.'
+        message = t('errors.tooManyAttemptsDynamic', { seconds: 60 })
       }
 
       addToast('error', message)
@@ -142,12 +156,12 @@ export default function LoginPage() {
             </svg>
           </div>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">SolarIQ</h2>
-          <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
+          <p className="mt-2 text-sm text-gray-600">{t('subtitle')}</p>
         </div>
 
         {isDevLoginEnabled && (
           <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
-            Dev login: <strong>{devLoginEmail}</strong> / <strong>{devLoginPassword}</strong>
+            {t('devLogin')}: <strong>{devLoginEmail}</strong> / <strong>{devLoginPassword}</strong>
           </div>
         )}
 
@@ -156,19 +170,19 @@ export default function LoginPage() {
           <CardBody className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <Input
-                label="Email address"
+                label={t('emailLabel')}
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 error={errors.email}
-                placeholder="you@example.com"
+                placeholder={t('emailPlaceholder')}
                 autoComplete="email"
                 disabled={isSubmitting || (lockoutUntil !== null && Date.now() < lockoutUntil)}
                 maxLength={255}
               />
 
               <Input
-                label="Password"
+                label={t('passwordLabel')}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -185,11 +199,11 @@ export default function LoginPage() {
                     type="checkbox"
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-600">Remember me</span>
+                  <span className="ml-2 text-sm text-gray-600">{t('rememberMe')}</span>
                 </label>
-                <a href="#" className="text-sm font-medium text-primary-600 hover:text-primary-500">
-                  Forgot password?
-                </a>
+                <Link href={forgotPasswordPath} className="text-sm font-medium text-primary-600 hover:text-primary-500">
+                  {t('forgotPassword')}
+                </Link>
               </div>
 
               <Button
@@ -199,7 +213,7 @@ export default function LoginPage() {
                 isLoading={isSubmitting}
                 disabled={lockoutUntil !== null && Date.now() < lockoutUntil}
               >
-                Sign in
+                {t('submit')}
               </Button>
             </form>
           </CardBody>
@@ -207,10 +221,14 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-500">
-          Don't have an account?{' '}
-          <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
-            Contact administrator
-          </a>
+          {t('noAccount')}{' '}
+          <Link href={signupPath} className="font-medium text-primary-600 hover:text-primary-500">
+            {t('createAccount')}
+          </Link>
+        </p>
+
+        <p className="text-center text-xs text-gray-400">
+          {t('provisionedAccountsHint')}
         </p>
       </div>
     </div>

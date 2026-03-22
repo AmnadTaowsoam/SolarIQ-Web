@@ -98,6 +98,231 @@
     "loginButton": "เข้าสู่ระบบ",
     "loginError": "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
   },
+  "authPages": {
+    "login": {
+      "subtitle": "เข้าสู่ระบบบัญชีของคุณ",
+      "devLogin": "บัญชีทดสอบ",
+      "emailLabel": "อีเมล",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "รหัสผ่าน",
+      "rememberMe": "จดจำฉัน",
+      "forgotPassword": "ลืมรหัสผ่าน?",
+      "submit": "เข้าสู่ระบบ",
+      "noAccount": "ยังไม่มีบัญชี?",
+      "createAccount": "สมัครสมาชิก",
+      "provisionedAccountsHint": "หากองค์กรของคุณสร้างบัญชีให้จากส่วนกลาง คุณยังสามารถเข้าสู่ระบบได้หลังผู้ดูแลเปิดสิทธิ์ให้แล้ว",
+      "messages": {
+        "success": "เข้าสู่ระบบสำเร็จ"
+      },
+      "errors": {
+        "emailRequired": "กรุณากรอกอีเมล",
+        "invalidEmail": "รูปแบบอีเมลไม่ถูกต้อง",
+        "emailTooLong": "อีเมลยาวเกินไป",
+        "passwordRequired": "กรุณากรอกรหัสผ่าน",
+        "passwordMin": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+        "passwordTooLong": "รหัสผ่านยาวเกินไป",
+        "failed": "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่",
+        "userNotFound": "ไม่พบบัญชีผู้ใช้นี้",
+        "wrongPassword": "รหัสผ่านไม่ถูกต้อง",
+        "invalidCredential": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+        "tooManyAttempts": "พยายามเข้าสู่ระบบหลายครั้งเกินไป กรุณาลองใหม่ภายหลัง",
+        "tooManyAttemptsDynamic": "พยายามเข้าสู่ระบบหลายครั้งเกินไป กรุณาลองใหม่อีกครั้งใน {seconds} วินาที"
+      }
+    },
+    "forgotPassword": {
+      "title": "รีเซ็ตรหัสผ่าน",
+      "subtitle": "กรอกอีเมลของคุณ แล้วระบบจะส่งขั้นตอนถัดไปให้",
+      "emailLabel": "อีเมล",
+      "emailPlaceholder": "you@example.com",
+      "submit": "ส่งลิงก์รีเซ็ต",
+      "successMessage": "หากมีบัญชีนี้อยู่ในระบบ ระบบได้ส่งลิงก์รีเซ็ตรหัสผ่านให้แล้ว",
+      "devHint": "environment นี้เปิด dev login อยู่ หากยังไม่ได้ตั้งค่าอีเมลรีเซ็ต กรุณาติดต่อ",
+      "backToSignIn": "กลับไปเข้าสู่ระบบ",
+      "needAccount": "ต้องการบัญชี?",
+      "createAccount": "สมัครสมาชิก",
+      "errors": {
+        "emailRequired": "กรุณากรอกอีเมล",
+        "invalidEmail": "รูปแบบอีเมลไม่ถูกต้อง",
+        "sendFailed": "ยังไม่สามารถส่งอีเมลรีเซ็ตได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง"
+      }
+    },
+    "signup": {
+      "subtitle": "สร้างบัญชีของคุณฟรี 14 วัน",
+      "googleSignup": "สมัครด้วย Google",
+      "processing": "กำลังดำเนินการ...",
+      "or": "หรือ",
+      "emailLabel": "อีเมล",
+      "passwordLabel": "รหัสผ่าน",
+      "passwordPlaceholder": "อย่างน้อย 8 ตัวอักษร",
+      "confirmPasswordLabel": "ยืนยันรหัสผ่าน",
+      "confirmPasswordPlaceholder": "กรอกรหัสผ่านอีกครั้ง",
+      "companyLabel": "ชื่อบริษัท/องค์กร",
+      "companyPlaceholder": "ชื่อบริษัทของคุณ",
+      "provinceLabel": "จังหวัด",
+      "provincePlaceholder": "-- เลือกจังหวัด --",
+      "phoneLabel": "เบอร์โทรศัพท์",
+      "acceptPrefix": "ฉันยอมรับ",
+      "termsLink": "ข้อกำหนดและเงื่อนไข",
+      "privacyLink": "นโยบายความเป็นส่วนตัว (PDPA)",
+      "submit": "สมัครสมาชิก",
+      "submitting": "กำลังสมัครสมาชิก...",
+      "haveAccount": "มีบัญชีอยู่แล้ว?",
+      "loginLink": "เข้าสู่ระบบ",
+      "trialHeadline": "ทดลองใช้ฟรี 14 วัน • ไม่ต้องใช้บัตรเครดิต",
+      "trialDetail": "หลังจากทดลองใช้: ฟรี 5 leads/เดือน หรืออัปเกรดเพื่อรับฟีเจอร์เต็มรูปแบบ",
+      "strength": {
+        "label": "ความแข็งแกร่ง:",
+        "weak": "อ่อนแอ",
+        "medium": "ปานกลาง",
+        "good": "ดี",
+        "strong": "แข็งแกร่ง"
+      },
+      "validation": {
+        "emailRequired": "กรุณากรอกอีเมล",
+        "emailInvalid": "รูปแบบอีเมลไม่ถูกต้อง",
+        "passwordRequired": "กรุณากรอกรหัสผ่าน",
+        "passwordMin": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
+        "passwordWeak": "รหัสผ่านไม่แข็งแกร่งพอ",
+        "confirmPasswordRequired": "กรุณายืนยันรหัสผ่าน",
+        "confirmPasswordMismatch": "รหัสผ่านไม่ตรงกัน",
+        "companyRequired": "กรุณากรอกชื่อบริษัท",
+        "companyMin": "ชื่อบริษัทต้องมีอย่างน้อย 2 ตัวอักษร",
+        "provinceRequired": "กรุณาเลือกจังหวัด",
+        "phoneRequired": "กรุณากรอกเบอร์โทรศัพท์",
+        "phoneInvalid": "รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง",
+        "acceptTerms": "กรุณายอมรับข้อกำหนดและเงื่อนไข",
+        "acceptPdpa": "กรุณายอมรับนโยบายความเป็นส่วนตัว"
+      },
+      "errors": {
+        "signupFailed": "เกิดข้อผิดพลาดในการสมัครสมาชิก กรุณาลองใหม่อีกครั้ง",
+        "googleSignupFailed": "เกิดข้อผิดพลาดในการสมัครด้วย Google กรุณาลองใหม่อีกครั้ง"
+      }
+    },
+    "verifyEmail": {
+      "verifyingTitle": "กำลังยืนยันอีเมล...",
+      "pleaseWait": "กรุณารอสักครู่",
+      "successTitle": "ยืนยันอีเมลสำเร็จ!",
+      "successRedirect": "กำลังนำคุณไปยังหน้าถัดไป...",
+      "title": "กรุณายืนยันอีเมล",
+      "sentTo": "เราได้ส่งลิงก์ยืนยันไปยัง",
+      "sentGeneric": "เราได้ส่งลิงก์ยืนยันไปยังอีเมลของคุณ",
+      "instructions": "กรุณาตรวจสอบกล่องจดหมายของคุณ รวมถึงโฟลเดอร์สแปม และคลิกลิงก์ยืนยัน",
+      "resendSuccess": "ส่งอีเมลยืนยันใหม่แล้ว กรุณาตรวจสอบกล่องจดหมาย",
+      "resendCountdown": "ส่งใหม่ได้ในอีก {seconds} วินาที",
+      "resendButton": "ส่งอีเมลยืนยันใหม่",
+      "logout": "ออกจากระบบ",
+      "needHelp": "ต้องการความช่วยเหลือ?",
+      "errors": {
+        "verifyFailed": "การยืนยันอีเมลล้มเหลว",
+        "invalidOrExpired": "ลิงก์ยืนยันอีเมลไม่ถูกต้องหรือหมดอายุ",
+        "resendFailed": "ไม่สามารถส่งอีเมลได้ กรุณาลองใหม่"
+      }
+    }
+  },
+  "appPages": {
+    "sessions": {
+      "title": "เซสชันที่ใช้งาน",
+      "subtitle": "จัดการเซสชันที่เข้าสู่ระบบและดูประวัติการเข้าสู่ระบบ",
+      "currentSessionBadge": "เซสชันปัจจุบัน",
+      "sections": {
+        "current": "เซสชันปัจจุบัน",
+        "other": "เซสชันอื่น ๆ",
+        "history": "ประวัติการเข้าสู่ระบบ"
+      },
+      "labels": {
+        "signedIn": "เข้าสู่ระบบ",
+        "lastActive": "ใช้งานล่าสุด"
+      },
+      "actions": {
+        "processing": "กำลังดำเนินการ...",
+        "signOut": "ออกจากระบบ",
+        "signOutOtherDevices": "ออกจากระบบทุกอุปกรณ์อื่น"
+      },
+      "empty": {
+        "current": "ไม่พบเซสชันปัจจุบัน",
+        "other": "ไม่มีเซสชันอื่นที่ใช้งานอยู่",
+        "history": "ไม่พบประวัติการเข้าสู่ระบบ"
+      },
+      "table": {
+        "time": "เวลา",
+        "device": "อุปกรณ์",
+        "status": "สถานะ",
+        "reason": "เหตุผล"
+      },
+      "status": {
+        "success": "สำเร็จ",
+        "failed": "ล้มเหลว"
+      },
+      "time": {
+        "justNow": "เมื่อสักครู่",
+        "minutesAgo": "{count} นาทีที่แล้ว",
+        "hoursAgo": "{count} ชั่วโมงที่แล้ว",
+        "daysAgo": "{count} วันที่แล้ว"
+      }
+    },
+    "auditLogs": {
+      "title": "บันทึกการตรวจสอบ",
+      "subtitle": "ดูกิจกรรมทั้งหมดในระบบ",
+      "exportCsv": "ส่งออก CSV",
+      "filters": {
+        "all": "ทั้งหมด",
+        "dateFrom": "จากวันที่",
+        "dateTo": "ถึงวันที่",
+        "action": "การกระทำ",
+        "resourceType": "ประเภททรัพยากร",
+        "userSearch": "ค้นหาผู้ใช้",
+        "userSearchPlaceholder": "อีเมลหรือชื่อ",
+        "search": "ค้นหา",
+        "reset": "รีเซ็ต"
+      },
+      "actions": {
+        "create": "สร้าง",
+        "update": "แก้ไข",
+        "delete": "ลบ",
+        "view": "ดู",
+        "export": "ส่งออก",
+        "login": "เข้าสู่ระบบ",
+        "logout": "ออกจากระบบ"
+      },
+      "resources": {
+        "lead": "ลีด",
+        "deal": "ดีล",
+        "quote": "ใบเสนอราคา",
+        "user": "ผู้ใช้",
+        "settings": "การตั้งค่า",
+        "session": "เซสชัน",
+        "apiKey": "API key"
+      },
+      "stats": {
+        "eventsToday": "เหตุการณ์วันนี้",
+        "activeUsersToday": "ผู้ใช้ที่ใช้งานวันนี้",
+        "mostCommonAction": "การกระทำที่พบบ่อย",
+        "suspiciousEvents": "เหตุการณ์น่าสงสัย"
+      },
+      "table": {
+        "time": "เวลา",
+        "user": "ผู้ใช้",
+        "action": "การกระทำ",
+        "type": "ประเภท",
+        "details": "รายละเอียด"
+      },
+      "details": {
+        "before": "ก่อนแก้ไข",
+        "after": "หลังแก้ไข"
+      },
+      "empty": {
+        "logs": "ไม่พบข้อมูลบันทึกการตรวจสอบ"
+      },
+      "pagination": {
+        "showing": "แสดง {start}-{end} จาก {total} รายการ",
+        "previous": "ก่อนหน้า",
+        "next": "ถัดไป"
+      },
+      "timeline": {
+        "title": "กิจกรรมล่าสุด"
+      }
+    }
+  },
   "dashboard": {
     "title": "แดชบอร์ด",
     "subtitle": "ภาพรวมธุรกิจพลังงานแสงอาทิตย์ของคุณ",

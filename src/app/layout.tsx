@@ -19,7 +19,7 @@ const notoSansThai = Noto_Sans_Thai({
   weight: ['300', '400', '500', '600', '700'],
 })
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://solariq.co.th'
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://solariqapp.com'
 
 export const metadata: Metadata = {
   title: {

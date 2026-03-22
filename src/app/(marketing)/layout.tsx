@@ -175,7 +175,7 @@ function MarketingFooter() {
             <div className="mt-6 space-y-2">
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <Mail className="h-4 w-4" />
-                <span>contact@solariq.co.th</span>
+                <span>contact@solariqapp.com</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <Phone className="h-4 w-4" />

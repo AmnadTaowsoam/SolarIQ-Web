@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import clsx from 'clsx'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
+import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import {
   useActiveSessions,
   useTerminateSession,
@@ -11,15 +13,17 @@ import {
   useLoginHistory,
   type Session,
 } from '@/hooks/useSessions'
+import { defaultLocale } from '@/i18n/config'
+import { extractLocaleFromPath } from '@/lib/locale'
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatDateTime(iso: string): string {
+function formatDateTime(iso: string, locale: string): string {
   try {
     const d = new Date(iso)
-    return d.toLocaleString('th-TH', {
+    return d.toLocaleString(locale === 'en' ? 'en-US' : 'th-TH', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -31,17 +35,17 @@ function formatDateTime(iso: string): string {
   }
 }
 
-function timeAgo(iso: string): string {
+function timeAgo(iso: string, locale: string, t: (key: string, values?: Record<string, string | number>) => string): string {
   const now = Date.now()
   const then = new Date(iso).getTime()
   const diffMs = now - then
   const mins = Math.floor(diffMs / 60_000)
-  if (mins < 1) return 'เมื่อสักครู่'
-  if (mins < 60) return `${mins} นาทีที่แล้ว`
+  if (mins < 1) return t('time.justNow')
+  if (mins < 60) return t('time.minutesAgo', { count: mins })
   const hours = Math.floor(mins / 60)
-  if (hours < 24) return `${hours} ชั่วโมงที่แล้ว`
+  if (hours < 24) return t('time.hoursAgo', { count: hours })
   const days = Math.floor(hours / 24)
-  return `${days} วันที่แล้ว`
+  return t('time.daysAgo', { count: days })
 }
 
 function deviceIcon(device: string): React.ReactNode {
@@ -76,10 +80,14 @@ function SessionCard({
   session,
   onTerminate,
   terminating,
+  locale,
+  t,
 }: {
   session: Session
   onTerminate: (id: string) => void
   terminating: boolean
+  locale: string
+  t: (key: string, values?: Record<string, string | number>) => string
 }) {
   return (
     <div
@@ -107,7 +115,7 @@ function SessionCard({
             </h3>
             {session.is_current && (
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">
-                เซสชันปัจจุบัน
+                {t('currentSessionBadge')}
               </span>
             )}
           </div>
@@ -129,8 +137,8 @@ function SessionCard({
                 {session.location}
               </span>
             )}
-            <span>เข้าสู่ระบบ: {formatDateTime(session.login_time)}</span>
-            <span>ใช้งานล่าสุด: {timeAgo(session.last_active)}</span>
+            <span>{t('labels.signedIn')}: {formatDateTime(session.login_time, locale)}</span>
+            <span>{t('labels.lastActive')}: {timeAgo(session.last_active, locale, t)}</span>
           </div>
         </div>
 
@@ -141,7 +149,7 @@ function SessionCard({
             disabled={terminating}
             className="flex-shrink-0 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 disabled:opacity-50 transition-colors"
           >
-            {terminating ? 'กำลังดำเนินการ...' : 'ออกจากระบบ'}
+            {terminating ? t('actions.processing') : t('actions.signOut')}
           </button>
         )}
       </div>
@@ -154,6 +162,9 @@ function SessionCard({
 // ---------------------------------------------------------------------------
 
 export default function SessionsPage() {
+  const pathname = usePathname()
+  const locale = extractLocaleFromPath(pathname).locale ?? defaultLocale
+  const t = useTranslations('appPages.sessions')
   const { user, isLoading: authLoading } = useAuth()
   const { data: sessions, isLoading: sessionsLoading } = useActiveSessions()
   const { data: loginHistory, isLoading: historyLoading } = useLoginHistory()
@@ -198,13 +209,13 @@ export default function SessionsPage() {
       <div className="space-y-8 max-w-4xl">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">เซสชันที่ใช้งาน</h1>
-          <p className="text-sm text-gray-500 mt-1">จัดการเซสชันที่เข้าสู่ระบบและดูประวัติการเข้าสู่ระบบ</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Current Session */}
         <section>
-          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">เซสชันปัจจุบัน</h2>
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">{t('sections.current')}</h2>
           {sessionsLoading ? (
             <div className="bg-white rounded-xl border-2 border-gray-200 p-5">
               <div className="flex items-start gap-4">
@@ -217,23 +228,23 @@ export default function SessionsPage() {
               </div>
             </div>
           ) : currentSession ? (
-            <SessionCard session={currentSession} onTerminate={handleTerminate} terminating={false} />
+            <SessionCard session={currentSession} onTerminate={handleTerminate} terminating={false} locale={locale} t={t} />
           ) : (
-            <p className="text-sm text-gray-500">ไม่พบเซสชันปัจจุบัน</p>
+            <p className="text-sm text-gray-500">{t('empty.current')}</p>
           )}
         </section>
 
         {/* Other Sessions */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">เซสชันอื่น ๆ</h2>
+            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">{t('sections.other')}</h2>
             {otherSessions.length > 0 && (
               <button
                 onClick={handleTerminateOthers}
                 disabled={terminatingAll}
                 className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 disabled:opacity-50 transition-colors"
               >
-                {terminatingAll ? 'กำลังดำเนินการ...' : 'ออกจากระบบทุกอุปกรณ์อื่น'}
+                {terminatingAll ? t('actions.processing') : t('actions.signOutOtherDevices')}
               </button>
             )}
           </div>
@@ -258,7 +269,7 @@ export default function SessionsPage() {
               <svg className="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
               </svg>
-              <p className="text-sm text-gray-500">ไม่มีเซสชันอื่นที่ใช้งานอยู่</p>
+              <p className="text-sm text-gray-500">{t('empty.other')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -268,6 +279,8 @@ export default function SessionsPage() {
                   session={session}
                   onTerminate={handleTerminate}
                   terminating={terminatingId === session.id}
+                  locale={locale}
+                  t={t}
                 />
               ))}
             </div>
@@ -276,17 +289,17 @@ export default function SessionsPage() {
 
         {/* Login History */}
         <section>
-          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">ประวัติการเข้าสู่ระบบ</h2>
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">{t('sections.history')}</h2>
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50/60">
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">เวลา</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.time')}</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">IP</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">อุปกรณ์</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">สถานะ</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">เหตุผล</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.device')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.status')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.reason')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -303,13 +316,13 @@ export default function SessionsPage() {
                   ) : !loginHistory || loginHistory.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="px-4 py-8 text-center text-gray-500 text-sm">
-                        ไม่พบประวัติการเข้าสู่ระบบ
+                        {t('empty.history')}
                       </td>
                     </tr>
                   ) : (
                     loginHistory.map((entry) => (
                       <tr key={entry.id} className="hover:bg-gray-50/40 transition-colors">
-                        <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{formatDateTime(entry.timestamp)}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{formatDateTime(entry.timestamp, locale)}</td>
                         <td className="px-4 py-3 text-sm text-gray-600 font-mono text-xs">{entry.ip_address}</td>
                         <td className="px-4 py-3 text-sm text-gray-600">
                           <div>{entry.browser}</div>
@@ -322,7 +335,7 @@ export default function SessionsPage() {
                               entry.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                             )}
                           >
-                            {entry.success ? 'สำเร็จ' : 'ล้มเหลว'}
+                            {entry.success ? t('status.success') : t('status.failed')}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-500">{entry.failure_reason || '-'}</td>

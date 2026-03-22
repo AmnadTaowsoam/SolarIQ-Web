@@ -223,7 +223,7 @@ export default function PrivacyPage() {
                   </p>
                   <div className="bg-gray-50 p-4 rounded-lg mt-2">
                     <p><strong>Data Protection Officer (DPO)</strong></p>
-                    <p>อีเมล: dpo@solariq.co.th</p>
+                    <p>อีเมล: dpo@solariqapp.com</p>
                     <p>โทรศัพท์: 02-XXX-XXXX</p>
                     <p>ที่อยู่: 123 ถนนสุขุมวิท กรุงเทพฯ 10110</p>
                   </div>

@@ -10,7 +10,7 @@ const contactCards = [
   {
     icon: Mail,
     title: 'อีเมล',
-    detail: 'contact@solariq.co.th',
+    detail: 'contact@solariqapp.com',
     sub: 'ตอบกลับภายใน 24 ชั่วโมง',
   },
   {

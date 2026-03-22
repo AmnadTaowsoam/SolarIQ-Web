@@ -397,7 +397,7 @@ export default function SettingsPage(): React.ReactElement {
         <div className="text-center text-xs text-gray-400 mt-8">
           <p>SolarIQ v1.0.0</p>
           <p className="mt-1">
-            ติดต่อเรา: support@solariq.co.th
+            ติดต่อเรา: support@solariqapp.com
           </p>
         </div>
       </main>

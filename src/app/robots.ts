@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://solariq.co.th'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://solariqapp.com'
   const isProduction = process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN
 
   return {

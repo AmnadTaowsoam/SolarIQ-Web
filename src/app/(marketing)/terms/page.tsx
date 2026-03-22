@@ -273,7 +273,7 @@ export default function TermsPage() {
               <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6 not-prose">
                 <p className="font-semibold text-gray-900 dark:text-white">บริษัท SolarIQ จำกัด</p>
                 <div className="mt-3 space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
-                  <p>อีเมล: legal@solariq.co.th</p>
+                  <p>อีเมล: legal@solariqapp.com</p>
                   <p>โทรศัพท์: 02-XXX-XXXX</p>
                   <p>ที่อยู่: กรุงเทพมหานคร, ประเทศไทย</p>
                   <p>เวลาทำการ: จันทร์ - ศุกร์ 9:00 - 18:00 น.</p>

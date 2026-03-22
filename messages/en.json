@@ -98,6 +98,231 @@
     "loginButton": "Log In",
     "loginError": "Invalid email or password"
   },
+  "authPages": {
+    "login": {
+      "subtitle": "Sign in to your account",
+      "devLogin": "Dev login",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "provisionedAccountsHint": "If your organization provisions accounts centrally, you can still sign in here after your administrator activates access.",
+      "messages": {
+        "success": "Login successful!"
+      },
+      "errors": {
+        "emailRequired": "Email is required",
+        "invalidEmail": "Invalid email format",
+        "emailTooLong": "Email is too long",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 6 characters",
+        "passwordTooLong": "Password is too long",
+        "failed": "Failed to login. Please try again.",
+        "userNotFound": "No account found with this email",
+        "wrongPassword": "Incorrect password",
+        "invalidCredential": "Invalid email or password",
+        "tooManyAttempts": "Too many failed attempts. Please try again later",
+        "tooManyAttemptsDynamic": "Too many failed attempts. Please try again in {seconds} seconds."
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email address and we will send you the next step.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "submit": "Send reset link",
+      "successMessage": "If an account exists for this email, a reset link has been sent.",
+      "devHint": "Dev login is enabled in this environment. If email reset is not configured, contact",
+      "backToSignIn": "Back to sign in",
+      "needAccount": "Need an account?",
+      "createAccount": "Create account",
+      "errors": {
+        "emailRequired": "Email is required",
+        "invalidEmail": "Invalid email format",
+        "sendFailed": "Unable to send password reset email right now. Please try again later."
+      }
+    },
+    "signup": {
+      "subtitle": "Create your account with a free 14-day trial",
+      "googleSignup": "Sign up with Google",
+      "processing": "Processing...",
+      "or": "or",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Enter your password again",
+      "companyLabel": "Company / Organization",
+      "companyPlaceholder": "Your company name",
+      "provinceLabel": "Province",
+      "provincePlaceholder": "-- Select province --",
+      "phoneLabel": "Phone number",
+      "acceptPrefix": "I accept",
+      "termsLink": "Terms and Conditions",
+      "privacyLink": "Privacy Policy (PDPA)",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "trialHeadline": "Free 14-day trial • No credit card required",
+      "trialDetail": "After the trial: free 5 leads/month or upgrade for the full feature set",
+      "strength": {
+        "label": "Strength:",
+        "weak": "Weak",
+        "medium": "Medium",
+        "good": "Good",
+        "strong": "Strong"
+      },
+      "validation": {
+        "emailRequired": "Please enter your email",
+        "emailInvalid": "Invalid email format",
+        "passwordRequired": "Please enter your password",
+        "passwordMin": "Password must be at least 8 characters",
+        "passwordWeak": "Password is not strong enough",
+        "confirmPasswordRequired": "Please confirm your password",
+        "confirmPasswordMismatch": "Passwords do not match",
+        "companyRequired": "Please enter your company name",
+        "companyMin": "Company name must be at least 2 characters",
+        "provinceRequired": "Please select your province",
+        "phoneRequired": "Please enter your phone number",
+        "phoneInvalid": "Invalid phone number format",
+        "acceptTerms": "Please accept the terms and conditions",
+        "acceptPdpa": "Please accept the privacy policy"
+      },
+      "errors": {
+        "signupFailed": "Unable to create your account right now. Please try again.",
+        "googleSignupFailed": "Google sign-up failed. Please try again."
+      }
+    },
+    "verifyEmail": {
+      "verifyingTitle": "Verifying your email...",
+      "pleaseWait": "Please wait a moment",
+      "successTitle": "Email verified successfully!",
+      "successRedirect": "Taking you to the next step...",
+      "title": "Please verify your email",
+      "sentTo": "We sent a verification link to",
+      "sentGeneric": "We sent a verification link to your email address",
+      "instructions": "Please check your inbox, including the spam folder, and click the verification link.",
+      "resendSuccess": "A new verification email has been sent. Please check your inbox.",
+      "resendCountdown": "Resend available in {seconds} seconds",
+      "resendButton": "Resend verification email",
+      "logout": "Sign out",
+      "needHelp": "Need help?",
+      "errors": {
+        "verifyFailed": "Email verification failed",
+        "invalidOrExpired": "This verification link is invalid or has expired",
+        "resendFailed": "Unable to send email right now. Please try again."
+      }
+    }
+  },
+  "appPages": {
+    "sessions": {
+      "title": "Active Sessions",
+      "subtitle": "Manage signed-in sessions and review login history",
+      "currentSessionBadge": "Current session",
+      "sections": {
+        "current": "Current Session",
+        "other": "Other Sessions",
+        "history": "Login History"
+      },
+      "labels": {
+        "signedIn": "Signed in",
+        "lastActive": "Last active"
+      },
+      "actions": {
+        "processing": "Processing...",
+        "signOut": "Sign out",
+        "signOutOtherDevices": "Sign out other devices"
+      },
+      "empty": {
+        "current": "Current session not found",
+        "other": "No other active sessions",
+        "history": "No login history found"
+      },
+      "table": {
+        "time": "Time",
+        "device": "Device",
+        "status": "Status",
+        "reason": "Reason"
+      },
+      "status": {
+        "success": "Success",
+        "failed": "Failed"
+      },
+      "time": {
+        "justNow": "Just now",
+        "minutesAgo": "{count} minutes ago",
+        "hoursAgo": "{count} hours ago",
+        "daysAgo": "{count} days ago"
+      }
+    },
+    "auditLogs": {
+      "title": "Audit Logs",
+      "subtitle": "Review all activity across the system",
+      "exportCsv": "Export CSV",
+      "filters": {
+        "all": "All",
+        "dateFrom": "From date",
+        "dateTo": "To date",
+        "action": "Action",
+        "resourceType": "Resource type",
+        "userSearch": "User search",
+        "userSearchPlaceholder": "Email or name",
+        "search": "Search",
+        "reset": "Reset"
+      },
+      "actions": {
+        "create": "Create",
+        "update": "Update",
+        "delete": "Delete",
+        "view": "View",
+        "export": "Export",
+        "login": "Login",
+        "logout": "Logout"
+      },
+      "resources": {
+        "lead": "Lead",
+        "deal": "Deal",
+        "quote": "Quote",
+        "user": "User",
+        "settings": "Settings",
+        "session": "Session",
+        "apiKey": "API key"
+      },
+      "stats": {
+        "eventsToday": "Events today",
+        "activeUsersToday": "Active users today",
+        "mostCommonAction": "Most common action",
+        "suspiciousEvents": "Suspicious events"
+      },
+      "table": {
+        "time": "Time",
+        "user": "User",
+        "action": "Action",
+        "type": "Type",
+        "details": "Details"
+      },
+      "details": {
+        "before": "Before",
+        "after": "After"
+      },
+      "empty": {
+        "logs": "No audit log entries found"
+      },
+      "pagination": {
+        "showing": "Showing {start}-{end} of {total} items",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "timeline": {
+        "title": "Recent activity"
+      }
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Overview of your solar business",

@@ -4,6 +4,8 @@ import React, { useState, useCallback } from 'react'
 import clsx from 'clsx'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
+import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import {
   useAuditLogs,
   useAuditStats,
@@ -13,32 +15,12 @@ import {
   type AuditLogFilters,
   type AuditLogEntry,
 } from '@/hooks/useAuditLogs'
+import { defaultLocale } from '@/i18n/config'
+import { extractLocaleFromPath } from '@/lib/locale'
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-
-const ACTION_OPTIONS: { value: AuditAction | ''; label: string }[] = [
-  { value: '', label: 'ทั้งหมด' },
-  { value: 'CREATE', label: 'CREATE' },
-  { value: 'UPDATE', label: 'UPDATE' },
-  { value: 'DELETE', label: 'DELETE' },
-  { value: 'VIEW', label: 'VIEW' },
-  { value: 'EXPORT', label: 'EXPORT' },
-  { value: 'LOGIN', label: 'LOGIN' },
-  { value: 'LOGOUT', label: 'LOGOUT' },
-]
-
-const RESOURCE_OPTIONS: { value: AuditResourceType | ''; label: string }[] = [
-  { value: '', label: 'ทั้งหมด' },
-  { value: 'lead', label: 'lead' },
-  { value: 'deal', label: 'deal' },
-  { value: 'quote', label: 'quote' },
-  { value: 'user', label: 'user' },
-  { value: 'settings', label: 'settings' },
-  { value: 'session', label: 'session' },
-  { value: 'api_key', label: 'api_key' },
-]
 
 const ACTION_BADGE_COLORS: Record<AuditAction, string> = {
   CREATE: 'bg-green-100 text-green-800',
@@ -64,10 +46,10 @@ const ACTION_TIMELINE_ICONS: Record<AuditAction, string> = {
 // Helper
 // ---------------------------------------------------------------------------
 
-function formatDateTime(iso: string): string {
+function formatDateTime(iso: string, locale: string): string {
   try {
     const d = new Date(iso)
-    return d.toLocaleString('th-TH', {
+    return d.toLocaleString(locale === 'en' ? 'en-US' : 'th-TH', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -79,10 +61,10 @@ function formatDateTime(iso: string): string {
   }
 }
 
-function formatTimeShort(iso: string): string {
+function formatTimeShort(iso: string, locale: string): string {
   try {
     const d = new Date(iso)
-    return d.toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit' })
+    return d.toLocaleString(locale === 'en' ? 'en-US' : 'th-TH', { hour: '2-digit', minute: '2-digit' })
   } catch {
     return iso
   }
@@ -104,7 +86,19 @@ function StatCard({ title, value, icon }: { title: string; value: string | numbe
   )
 }
 
-function ExpandableRow({ entry }: { entry: AuditLogEntry }) {
+function ExpandableRow({
+  entry,
+  locale,
+  t,
+  actionLabels,
+  resourceLabels,
+}: {
+  entry: AuditLogEntry
+  locale: string
+  t: (key: string, values?: Record<string, string | number>) => string
+  actionLabels: Record<AuditAction, string>
+  resourceLabels: Record<AuditResourceType, string>
+}) {
   const [expanded, setExpanded] = useState(false)
   const hasChanges = entry.changes && (Object.keys(entry.changes.before).length > 0 || Object.keys(entry.changes.after).length > 0)
 
@@ -117,7 +111,7 @@ function ExpandableRow({ entry }: { entry: AuditLogEntry }) {
         )}
         onClick={() => hasChanges && setExpanded(!expanded)}
       >
-        <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{formatDateTime(entry.timestamp)}</td>
+        <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{formatDateTime(entry.timestamp, locale)}</td>
         <td className="px-4 py-3">
           <div className="text-sm font-medium text-gray-900">{entry.user_name}</div>
           <div className="text-xs text-gray-500">{entry.user_email}</div>
@@ -129,10 +123,10 @@ function ExpandableRow({ entry }: { entry: AuditLogEntry }) {
               ACTION_BADGE_COLORS[entry.action]
             )}
           >
-            {entry.action}
+            {actionLabels[entry.action]}
           </span>
         </td>
-        <td className="px-4 py-3 text-sm text-gray-600">{entry.resource_type}</td>
+        <td className="px-4 py-3 text-sm text-gray-600">{resourceLabels[entry.resource_type]}</td>
         <td className="px-4 py-3 text-sm text-gray-600 max-w-[200px] truncate">{entry.description}</td>
         <td className="px-4 py-3 text-sm text-gray-500 font-mono text-xs">{entry.ip_address}</td>
         <td className="px-4 py-3 text-center">
@@ -153,13 +147,13 @@ function ExpandableRow({ entry }: { entry: AuditLogEntry }) {
           <td colSpan={7} className="px-4 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h4 className="text-xs font-semibold text-red-600 mb-2">ก่อนแก้ไข (Before)</h4>
+                <h4 className="text-xs font-semibold text-red-600 mb-2">{t('details.before')}</h4>
                 <pre className="text-xs bg-red-50 border border-red-200 rounded-lg p-3 overflow-x-auto">
                   {JSON.stringify(entry.changes.before, null, 2)}
                 </pre>
               </div>
               <div>
-                <h4 className="text-xs font-semibold text-green-600 mb-2">หลังแก้ไข (After)</h4>
+                <h4 className="text-xs font-semibold text-green-600 mb-2">{t('details.after')}</h4>
                 <pre className="text-xs bg-green-50 border border-green-200 rounded-lg p-3 overflow-x-auto">
                   {JSON.stringify(entry.changes.after, null, 2)}
                 </pre>
@@ -177,7 +171,48 @@ function ExpandableRow({ entry }: { entry: AuditLogEntry }) {
 // ---------------------------------------------------------------------------
 
 export default function AdminAuditLogsPage() {
+  const pathname = usePathname()
+  const locale = extractLocaleFromPath(pathname).locale ?? defaultLocale
+  const t = useTranslations('appPages.auditLogs')
   const { user, isLoading: authLoading } = useAuth()
+  const actionLabels: Record<AuditAction, string> = {
+    CREATE: t('actions.create'),
+    UPDATE: t('actions.update'),
+    DELETE: t('actions.delete'),
+    VIEW: t('actions.view'),
+    EXPORT: t('actions.export'),
+    LOGIN: t('actions.login'),
+    LOGOUT: t('actions.logout'),
+  }
+  const resourceLabels: Record<AuditResourceType, string> = {
+    lead: t('resources.lead'),
+    deal: t('resources.deal'),
+    quote: t('resources.quote'),
+    user: t('resources.user'),
+    settings: t('resources.settings'),
+    session: t('resources.session'),
+    api_key: t('resources.apiKey'),
+  }
+  const actionOptions: { value: AuditAction | ''; label: string }[] = [
+    { value: '', label: t('filters.all') },
+    { value: 'CREATE', label: actionLabels.CREATE },
+    { value: 'UPDATE', label: actionLabels.UPDATE },
+    { value: 'DELETE', label: actionLabels.DELETE },
+    { value: 'VIEW', label: actionLabels.VIEW },
+    { value: 'EXPORT', label: actionLabels.EXPORT },
+    { value: 'LOGIN', label: actionLabels.LOGIN },
+    { value: 'LOGOUT', label: actionLabels.LOGOUT },
+  ]
+  const resourceOptions: { value: AuditResourceType | ''; label: string }[] = [
+    { value: '', label: t('filters.all') },
+    { value: 'lead', label: resourceLabels.lead },
+    { value: 'deal', label: resourceLabels.deal },
+    { value: 'quote', label: resourceLabels.quote },
+    { value: 'user', label: resourceLabels.user },
+    { value: 'settings', label: resourceLabels.settings },
+    { value: 'session', label: resourceLabels.session },
+    { value: 'api_key', label: resourceLabels.api_key },
+  ]
 
   // Filter state
   const [dateFrom, setDateFrom] = useState('')
@@ -259,8 +294,8 @@ export default function AdminAuditLogsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">บันทึกการตรวจสอบ</h1>
-            <p className="text-sm text-gray-500 mt-1">ดูกิจกรรมทั้งหมดในระบบ</p>
+            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+            <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
           </div>
           <button
             onClick={handleExport}
@@ -269,7 +304,7 @@ export default function AdminAuditLogsPage() {
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            ส่งออก CSV
+            {t('exportCsv')}
           </button>
         </div>
 
@@ -277,7 +312,7 @@ export default function AdminAuditLogsPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">จากวันที่</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">{t('filters.dateFrom')}</label>
             <input
               type="date"
               value={dateFrom}
@@ -286,7 +321,7 @@ export default function AdminAuditLogsPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">ถึงวันที่</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">{t('filters.dateTo')}</label>
             <input
               type="date"
               value={dateTo}
@@ -295,13 +330,13 @@ export default function AdminAuditLogsPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">การกระทำ</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">{t('filters.action')}</label>
             <select
               value={action}
               onChange={(e) => setAction(e.target.value as AuditAction | '')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-white"
             >
-              {ACTION_OPTIONS.map((opt) => (
+              {actionOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
@@ -309,13 +344,13 @@ export default function AdminAuditLogsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">ประเภททรัพยากร</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">{t('filters.resourceType')}</label>
             <select
               value={resourceType}
               onChange={(e) => setResourceType(e.target.value as AuditResourceType | '')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-white"
             >
-              {RESOURCE_OPTIONS.map((opt) => (
+              {resourceOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
@@ -323,12 +358,12 @@ export default function AdminAuditLogsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">ค้นหาผู้ใช้</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">{t('filters.userSearch')}</label>
             <input
               type="text"
               value={userSearch}
               onChange={(e) => setUserSearch(e.target.value)}
-              placeholder="อีเมลหรือชื่อ"
+              placeholder={t('filters.userSearchPlaceholder')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
             />
           </div>
@@ -337,13 +372,13 @@ export default function AdminAuditLogsPage() {
               onClick={handleSearch}
               className="flex-1 px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition-colors"
             >
-              ค้นหา
+              {t('filters.search')}
             </button>
             <button
               onClick={handleReset}
               className="px-4 py-2 border border-gray-300 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
-              รีเซ็ต
+              {t('filters.reset')}
             </button>
           </div>
           </div>
@@ -361,7 +396,7 @@ export default function AdminAuditLogsPage() {
         ) : (
           <>
             <StatCard
-              title="เหตุการณ์วันนี้"
+              title={t('stats.eventsToday')}
               value={stats?.total_events_today ?? 0}
               icon={
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -370,7 +405,7 @@ export default function AdminAuditLogsPage() {
               }
             />
             <StatCard
-              title="ผู้ใช้ที่ใช้งานวันนี้"
+              title={t('stats.activeUsersToday')}
               value={stats?.unique_users_today ?? 0}
               icon={
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -379,7 +414,7 @@ export default function AdminAuditLogsPage() {
               }
             />
             <StatCard
-              title="การกระทำที่พบบ่อย"
+              title={t('stats.mostCommonAction')}
               value={stats?.most_common_action ?? '-'}
               icon={
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -388,7 +423,7 @@ export default function AdminAuditLogsPage() {
               }
             />
             <StatCard
-              title="เหตุการณ์น่าสงสัย"
+              title={t('stats.suspiciousEvents')}
               value={stats?.suspicious_events ?? 0}
               icon={
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -409,11 +444,11 @@ export default function AdminAuditLogsPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50/60">
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">เวลา</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ผู้ใช้</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">การกระทำ</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ประเภท</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">รายละเอียด</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.time')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.user')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.action')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.type')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('table.details')}</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">IP</th>
                     <th className="px-4 py-3 w-8"></th>
                   </tr>
@@ -432,11 +467,20 @@ export default function AdminAuditLogsPage() {
                   ) : logs.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="px-4 py-12 text-center text-gray-500">
-                        ไม่พบข้อมูลบันทึกการตรวจสอบ
+                        {t('empty.logs')}
                       </td>
                     </tr>
                   ) : (
-                    logs.map((entry) => <ExpandableRow key={entry.id} entry={entry} />)
+                    logs.map((entry) => (
+                      <ExpandableRow
+                        key={entry.id}
+                        entry={entry}
+                        locale={locale}
+                        t={t}
+                        actionLabels={actionLabels}
+                        resourceLabels={resourceLabels}
+                      />
+                    ))
                   )}
                 </tbody>
               </table>
@@ -446,7 +490,11 @@ export default function AdminAuditLogsPage() {
             {totalPages > 1 && (
               <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50/40">
                 <p className="text-sm text-gray-600">
-                  แสดง {((page - 1) * 50) + 1}-{Math.min(page * 50, totalItems)} จาก {totalItems} รายการ
+                  {t('pagination.showing', {
+                    start: ((page - 1) * 50) + 1,
+                    end: Math.min(page * 50, totalItems),
+                    total: totalItems,
+                  })}
                 </p>
                 <div className="flex items-center gap-1">
                   <button
@@ -454,7 +502,7 @@ export default function AdminAuditLogsPage() {
                     disabled={page <= 1}
                     className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
-                    ก่อนหน้า
+                    {t('pagination.previous')}
                   </button>
                   {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
                     let pageNum: number
@@ -487,7 +535,7 @@ export default function AdminAuditLogsPage() {
                     disabled={page >= totalPages}
                     className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
-                    ถัดไป
+                    {t('pagination.next')}
                   </button>
                 </div>
               </div>
@@ -498,7 +546,7 @@ export default function AdminAuditLogsPage() {
         {/* Activity Timeline Sidebar */}
         <div className="hidden xl:block w-80 flex-shrink-0">
           <div className="bg-white rounded-xl border border-gray-200 p-4 sticky top-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">กิจกรรมล่าสุด</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-4">{t('timeline.title')}</h3>
             <div className="space-y-0">
               {logsLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
@@ -528,7 +576,7 @@ export default function AdminAuditLogsPage() {
                     <div className="flex-1 pb-4 min-w-0">
                       <p className="text-xs text-gray-900 truncate">{entry.description}</p>
                       <p className="text-[11px] text-gray-500 mt-0.5">
-                        {entry.user_name} &middot; {formatTimeShort(entry.timestamp)}
+                        {entry.user_name} &middot; {formatTimeShort(entry.timestamp, locale)}
                       </p>
                     </div>
                   </div>

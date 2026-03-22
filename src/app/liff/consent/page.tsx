@@ -262,7 +262,7 @@ export default function ConsentPage(): React.ReactElement {
               <div>
                 <p className="text-sm text-blue-800 font-medium">สิทธิ์ของคุณ</p>
                 <p className="text-xs text-blue-600 mt-1">
-                  คุณมีสิทธิ์ขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลของคุณได้ตลอดเวลา ติดต่อเราที่ privacy@solariq.co.th
+                  คุณมีสิทธิ์ขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลของคุณได้ตลอดเวลา ติดต่อเราที่ privacy@solariqapp.com
                 </p>
               </div>
             </div>
