@@ -57,7 +57,7 @@ function ConfettiEffect() {
 /* ------------------------------------------------------------------ */
 export default function CheckoutSuccessPage() {
   const searchParams = useSearchParams()
-  const sessionId = searchParams.get('session_id')
+  const sessionId = searchParams.get('charge_id') ?? searchParams.get('session_id')
   const [showConfetti, setShowConfetti] = useState(true)
 
   useEffect(() => {

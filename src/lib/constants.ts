@@ -70,6 +70,7 @@ export const API_ENDPOINTS = {
     INVOICES: '/api/v1/billing/invoices',
     USAGE: '/api/v1/billing/usage',
     CREATE_CHECKOUT_SESSION: '/api/v1/billing/create-checkout-session',
+    CHARGE_STATUS: (chargeId: string) => `/api/v1/billing/charges/${chargeId}/status`,
     CUSTOMER_PORTAL: '/api/v1/billing/customer-portal',
   },
 } as const

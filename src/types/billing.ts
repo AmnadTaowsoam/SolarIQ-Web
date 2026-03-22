@@ -31,7 +31,7 @@ export interface Plan {
     leads_per_month: number | null;
     users: number | null;
     features: PlanFeature[];
-    stripe_price_id?: string;
+    opn_price_id?: string;
 }
 
 export interface PlanList {
@@ -111,7 +111,7 @@ export interface Organization {
     owner_uid: string;
     plan_id: PlanType;
     leads_used_this_month: number;
-    stripe_customer_id?: string;
+    omise_customer_id?: string;
     created_at: string;
     updated_at: string;
 }
@@ -128,13 +128,34 @@ export interface BillingStatus {
 
 // ============== API Response Types ==============
 
-export interface StripeSetupIntentResponse {
+export interface PaymentSetupResponse {
     client_secret: string;
     setup_intent_id: string;
 }
 
-export interface StripeCustomerPortalResponse {
+export interface PaymentPortalResponse {
     url: string;
+}
+
+export type OpnSourceType =
+    | 'credit_card'
+    | 'promptpay'
+    | 'internet_banking_scb'
+    | 'internet_banking_kbank'
+    | 'internet_banking_bbl';
+
+export interface CheckoutRequest {
+    plan_id: string;
+    billing_cycle: string;
+    source_type: OpnSourceType;
+    return_uri: string;
+    promo_code?: string;
+}
+
+export interface CheckoutResponse {
+    authorize_uri?: string;
+    charge_id?: string;
+    qr_code_uri?: string;
 }
 
 // ============== Plan Constants ==============

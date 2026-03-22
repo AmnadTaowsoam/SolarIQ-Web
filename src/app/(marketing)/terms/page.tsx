@@ -225,6 +225,10 @@ export default function TermsPage() {
                 <Link href="/privacy" className="text-primary-600 dark:text-primary-400 hover:underline">
                   นโยบายความเป็นส่วนตัว
                 </Link>
+                {' '}และ{' '}
+                <Link href="/refund-policy" className="text-primary-600 dark:text-primary-400 hover:underline">
+                  นโยบายการคืนเงิน
+                </Link>
               </p>
             </section>
 

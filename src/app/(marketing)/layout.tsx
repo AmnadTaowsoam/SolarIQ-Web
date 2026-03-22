@@ -148,8 +148,8 @@ const footerSections = [
     links: [
       { label: 'ข้อกำหนดการใช้งาน', href: '/terms' },
       { label: 'นโยบายความเป็นส่วนตัว', href: '/privacy' },
-      { label: 'PDPA Compliance', href: '/privacy' },
-      { label: 'Cookie Policy', href: '/privacy' },
+      { label: 'นโยบายการคืนเงิน', href: '/refund-policy' },
+      { label: 'PDPA Compliance', href: '/privacy#user-rights' },
     ],
   },
 ]
@@ -249,7 +249,10 @@ function MarketingFooter() {
               ข้อกำหนดการใช้งาน
             </Link>
             <Link href="/privacy" className="hover:text-primary-600 transition-colors">
-              นโยบายความเป็นส่วนตัว
+              ความเป็นส่วนตัว
+            </Link>
+            <Link href="/refund-policy" className="hover:text-primary-600 transition-colors">
+              การคืนเงิน
             </Link>
           </div>
         </div>

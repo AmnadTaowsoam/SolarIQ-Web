@@ -44,6 +44,7 @@ export default function BillingPage() {
   const subscribeMutation = useSubscribe();
   const updateSubscriptionMutation = useUpdateSubscription();
   const cancelSubscriptionMutation = useCancelSubscription();
+  // Customer portal kept for payment method management via Opn
   const customerPortalMutation = useCustomerPortal();
 
   const handleSelectPlan = async (planId: PlanType) => {

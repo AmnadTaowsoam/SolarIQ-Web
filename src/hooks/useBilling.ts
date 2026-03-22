@@ -16,8 +16,8 @@ import type {
     UsageResponse,
     Organization,
     BillingStatus,
-    StripeSetupIntentResponse,
-    StripeCustomerPortalResponse,
+    PaymentSetupResponse,
+    PaymentPortalResponse,
     PlanType,
 } from '@/types/billing';
 
@@ -216,12 +216,12 @@ export function useBillingStatus() {
     });
 }
 
-// ============== Stripe Payment Hooks ==============
+// ============== Opn Payment Hooks ==============
 
 export function useCreateSetupIntent() {
     return useMutation({
-        mutationFn: async (): Promise<StripeSetupIntentResponse> => {
-            const response = await apiClient.post<StripeSetupIntentResponse>('/billing/setup-intent', {});
+        mutationFn: async (): Promise<PaymentSetupResponse> => {
+            const response = await apiClient.post<PaymentSetupResponse>('/billing/setup-intent', {});
             return response.data;
         },
     });
@@ -229,8 +229,8 @@ export function useCreateSetupIntent() {
 
 export function useCustomerPortal() {
     return useMutation({
-        mutationFn: async (): Promise<StripeCustomerPortalResponse> => {
-            const response = await apiClient.post<StripeCustomerPortalResponse>('/billing/customer-portal', {});
+        mutationFn: async (): Promise<PaymentPortalResponse> => {
+            const response = await apiClient.post<PaymentPortalResponse>('/billing/customer-portal', {});
             return response.data;
         },
     });

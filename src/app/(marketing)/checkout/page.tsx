@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -15,9 +15,14 @@ import {
   Rocket,
   Building2,
   Gift,
+  QrCode,
+  RefreshCw,
+  X,
+  Landmark,
 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { API_ENDPOINTS } from '@/lib/constants'
+import type { OpnSourceType, CheckoutResponse } from '@/types/billing'
 
 /* ------------------------------------------------------------------ */
 /*  Plan Data                                                          */
@@ -110,6 +115,17 @@ const PLANS: Record<string, PlanInfo> = {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Payment Methods                                                    */
+/* ------------------------------------------------------------------ */
+const PAYMENT_METHODS: { id: OpnSourceType; label: string; icon: React.ElementType }[] = [
+  { id: 'credit_card', label: 'บัตรเครดิต/เดบิต', icon: CreditCard },
+  { id: 'promptpay', label: 'พร้อมเพย์', icon: QrCode },
+  { id: 'internet_banking_scb', label: 'SCB', icon: Landmark },
+  { id: 'internet_banking_kbank', label: 'KBANK', icon: Landmark },
+  { id: 'internet_banking_bbl', label: 'BBL', icon: Landmark },
+]
+
+/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 export default function CheckoutPage() {
@@ -120,11 +136,15 @@ export default function CheckoutPage() {
   const initialBilling = (searchParams.get('billing') ?? 'monthly') as BillingCycle
 
   const [billing, setBilling] = useState<BillingCycle>(initialBilling)
+  const [paymentMethod, setPaymentMethod] = useState<OpnSourceType>('credit_card')
   const [promoCode, setPromoCode] = useState('')
   const [promoApplied, setPromoApplied] = useState(false)
   const [promoError, setPromoError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [qrCodeUri, setQrCodeUri] = useState<string | null>(null)
+  const [chargeId, setChargeId] = useState<string | null>(null)
+  const [isPolling, setIsPolling] = useState(false)
 
   const plan = PLANS[planId]
 
@@ -158,25 +178,49 @@ export default function CheckoutPage() {
     }
   }
 
+  const handleCheckPaymentStatus = useCallback(async () => {
+    if (!chargeId) return
+    setIsPolling(true)
+    try {
+      const statusResponse = await api.get<{ status: string }>(
+        `${API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ?? '/api/v1/billing/create-checkout-session'}/${chargeId}/status`
+      )
+      if (statusResponse.status === 'successful') {
+        window.location.href = `${window.location.origin}/checkout/success?charge_id=${chargeId}`
+      }
+    } catch {
+      // Silently ignore polling errors
+    } finally {
+      setIsPolling(false)
+    }
+  }, [chargeId])
+
   const handleCheckout = async () => {
     setIsLoading(true)
     setError('')
+    setQrCodeUri(null)
+    setChargeId(null)
 
     try {
-      const response = await api.post<{ url: string }>(
+      const response = await api.post<CheckoutResponse>(
         API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ??
           '/api/v1/billing/create-checkout-session',
         {
           plan_id: planId,
           billing_cycle: billing,
+          source_type: paymentMethod,
+          return_uri: `${window.location.origin}/checkout/success`,
           promo_code: promoApplied ? promoCode : undefined,
-          success_url: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${window.location.origin}/checkout/cancel`,
         }
       )
 
-      if (response.url) {
-        window.location.href = response.url
+      if (response.qr_code_uri) {
+        // PromptPay: show QR code
+        setQrCodeUri(response.qr_code_uri)
+        setChargeId(response.charge_id ?? null)
+      } else if (response.authorize_uri) {
+        // Credit card / Internet banking: redirect
+        window.location.href = response.authorize_uri
       }
     } catch (err) {
       setError(
@@ -378,10 +422,80 @@ export default function CheckoutPage() {
                 )}
               </div>
 
+              {/* Payment method selector */}
+              <div className="mb-8">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
+                  วิธีการชำระเงิน
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {PAYMENT_METHODS.map((method) => {
+                    const MethodIcon = method.icon
+                    return (
+                      <button
+                        key={method.id}
+                        type="button"
+                        onClick={() => setPaymentMethod(method.id)}
+                        className={`flex items-center gap-2.5 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
+                          paymentMethod === method.id
+                            ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
+                            : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                      >
+                        <MethodIcon className="h-4 w-4 shrink-0" />
+                        <span className="truncate">{method.label}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
               {/* Error message */}
               {error && (
                 <div className="mb-6 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800 p-4 text-sm text-red-600 dark:text-red-400">
                   {error}
+                </div>
+              )}
+
+              {/* PromptPay QR Code Display */}
+              {qrCodeUri && (
+                <div className="mb-6 rounded-2xl border-2 border-primary-200 dark:border-primary-700 bg-white dark:bg-gray-800 p-6 text-center shadow-md">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <QrCode className="h-5 w-5 text-primary-500" />
+                      ชำระเงินผ่านพร้อมเพย์
+                    </h3>
+                    <button
+                      onClick={() => {
+                        setQrCodeUri(null)
+                        setChargeId(null)
+                      }}
+                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  <div className="mx-auto mb-4 inline-block rounded-xl bg-white p-4 shadow-inner">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={qrCodeUri}
+                      alt="PromptPay QR Code"
+                      className="h-56 w-56 object-contain"
+                    />
+                  </div>
+
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    สแกน QR Code เพื่อชำระเงินผ่านพร้อมเพย์
+                  </p>
+
+                  <button
+                    onClick={handleCheckPaymentStatus}
+                    disabled={isPolling}
+                    className="inline-flex items-center gap-2 rounded-lg bg-primary-50 dark:bg-primary-900/20 px-4 py-2.5 text-sm font-medium text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors disabled:opacity-50"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${isPolling ? 'animate-spin' : ''}`} />
+                    {isPolling ? 'กำลังตรวจสอบ...' : 'ตรวจสอบสถานะการชำระเงิน'}
+                  </button>
                 </div>
               )}
 
@@ -405,7 +519,7 @@ export default function CheckoutPage() {
               </button>
 
               <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
-                คุณจะถูกเปลี่ยนเส้นทางไปยังหน้าชำระเงินที่ปลอดภัยของ Stripe
+                ชำระเงินผ่านระบบ Opn Payments ที่ปลอดภัย
               </p>
 
               {/* Trust badges */}
@@ -431,18 +545,21 @@ export default function CheckoutPage() {
                     <CreditCard className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    Stripe Checkout
+                    Opn Payments
                   </span>
                 </div>
               </div>
 
               {/* Payment method logos */}
-              <div className="mt-6 flex items-center justify-center gap-4 text-gray-400">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-gray-400">
                 <span className="text-xs font-medium">รองรับ:</span>
                 <span className="text-xs">Visa</span>
                 <span className="text-xs">Mastercard</span>
                 <span className="text-xs">JCB</span>
-                <span className="text-xs">PromptPay</span>
+                <span className="text-xs">พร้อมเพย์</span>
+                <span className="text-xs">SCB</span>
+                <span className="text-xs">KBANK</span>
+                <span className="text-xs">BBL</span>
               </div>
 
               {/* Policy info */}
