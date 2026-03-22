@@ -198,3 +198,152 @@ export interface SolarAnalysisAdvancedRequest {
   selfConsumptionRate?: number
   netBillingRate?: number
 }
+
+// ---- Weather & Forecast Types ----
+
+/** Current weather conditions */
+export interface WeatherCurrent {
+  temp: number
+  clouds: number
+  humidity: number
+  windSpeed: number
+  description: string
+  icon: string
+}
+
+/** Hourly weather forecast with predicted production */
+export interface WeatherHourly {
+  time: string
+  temp: number
+  clouds: number
+  rain: number
+  predictedKwh: number
+}
+
+/** Daily weather forecast with predicted production */
+export interface WeatherDaily {
+  date: string
+  dayName: string
+  tempMin: number
+  tempMax: number
+  clouds: number
+  rain: number
+  predictedKwh: number
+  idealKwh: number
+  weatherIcon: string
+}
+
+/** Dynamic yield forecast combining weather and production */
+export interface DynamicYieldForecast {
+  current: WeatherCurrent
+  hourly: WeatherHourly[]
+  daily: WeatherDaily[]
+  totalPredicted7Day: number
+  totalIdeal7Day: number
+  weatherImpactPercent: number
+}
+
+/** Live conditions with real-time predictions */
+export interface LiveConditions {
+  weather: WeatherCurrent
+  predictedOutputNow: number
+  predicted24h: number
+  tempEfficiency: number
+}
+
+// ---- Climate Reliability Types ----
+
+/** Climate reliability score and historical data */
+export interface ClimateReliabilityData {
+  score: number
+  badge: string
+  badgeLevel: string
+  monthlyRadiation: { month: string; radiation: number; year: number }[]
+  riskFactors: { factor: string; severity: string; description: string }[]
+  seasonalPattern: { month: number; season: string; reliability: string }[]
+  dataSource: string
+}
+
+/** Climate risk assessment */
+export interface ClimateRiskAssessment {
+  overallRisk: string
+  monsoonImpact: number
+  dustSeasonImpact: number
+  floodRisk: string
+  recommendations: string[]
+}
+
+// ---- Air Quality Types ----
+
+/** Current air quality data */
+export interface AirQualityData {
+  aqi: number
+  pm25: number
+  pm10: number
+  category: string
+  solarEfficiencyLoss: number
+  cleaningRecommendation: string
+  daysSinceRain: number
+}
+
+/** Air quality forecast */
+export interface AirQualityForecast {
+  daily: { date: string; aqi: number; pm25: number; solarLoss: number }[]
+}
+
+/** Dust season analysis */
+export interface DustSeasonAnalysis {
+  annualLossPercent: number
+  worstMonths: string[]
+  seasonStart: string
+  seasonEnd: string
+  region: string
+}
+
+// ---- Financing Types ----
+
+/** Financing option comparison */
+export interface FinancingOption {
+  type: string
+  label: string
+  upfrontCost: number
+  monthlyPayment: number
+  totalCost25Year: number
+  netSavings25Year: number
+  breakEvenYears: number
+  recommended: boolean
+  details: string
+}
+
+/** Financing comparison result */
+export interface FinancingComparison {
+  options: FinancingOption[]
+  bestOption: string
+  systemCost: number
+  annualSavings: number
+}
+
+// ---- Energy Independence Types ----
+
+/** Energy independence score data */
+export interface EnergyIndependenceData {
+  score: number
+  level: string
+  solarSelfUsePercent: number
+  gridImportPercent: number
+  surplusExportPercent: number
+  tips: string[]
+}
+
+// ---- Smart Alerts Types ----
+
+/** Smart alert item */
+export interface SmartAlertItem {
+  id: string
+  type: string
+  severity: string
+  title: string
+  description: string
+  icon: string
+  timestamp: string
+}

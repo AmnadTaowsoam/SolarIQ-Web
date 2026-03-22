@@ -28,6 +28,18 @@ export const API_ENDPOINTS = {
     MONTHLY_PRODUCTION: '/api/v1/solar/monthly-production',
     SYSTEM_OPTIONS: '/api/v1/solar/system-options',
     ENVIRONMENTAL_IMPACT: '/api/v1/solar/environmental-impact',
+    // Forecast & Weather
+    FORECAST_WEATHER: '/api/v1/solar/forecast/weather',
+    FORECAST_DYNAMIC_YIELD: '/api/v1/solar/forecast/dynamic-yield',
+    FORECAST_LIVE_CONDITIONS: '/api/v1/solar/forecast/live-conditions',
+    FORECAST_CLIMATE_SCORE: '/api/v1/solar/forecast/climate-score',
+    FORECAST_CLIMATE_RISK: '/api/v1/solar/forecast/climate-risk',
+    FORECAST_AIR_QUALITY: '/api/v1/solar/forecast/air-quality',
+    FORECAST_AIR_QUALITY_FORECAST: '/api/v1/solar/forecast/air-quality-forecast',
+    FORECAST_DUST_SEASON: '/api/v1/solar/forecast/dust-season',
+    FORECAST_FINANCING_OPTIONS: '/api/v1/solar/forecast/financing-options',
+    FORECAST_ALERTS: '/api/v1/solar/forecast/alerts',
+    FEEDBACK: '/api/v1/solar/feedback',
   },
   // Dashboard
   DASHBOARD: {
@@ -119,6 +131,9 @@ export const DEFAULT_MAP_ZOOM = 12
 export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
+  SIGNUP: '/signup',
+  FORGOT_PASSWORD: '/forgot-password',
+  VERIFY_EMAIL: '/verify-email',
   DASHBOARD: '/dashboard',
   ANALYTICS: '/analytics',
   ANALYTICS_PIPELINE: '/analytics/pipeline',

@@ -14,6 +14,15 @@ import type {
   MonthlyProduction,
   SystemSizeOption,
   EnvironmentalImpactData,
+  DynamicYieldForecast,
+  LiveConditions,
+  ClimateReliabilityData,
+  ClimateRiskAssessment,
+  AirQualityData,
+  AirQualityForecast,
+  DustSeasonAnalysis,
+  FinancingComparison,
+  SmartAlertItem,
 } from '@/types'
 
 export function useSolarAnalysisAdvanced() {
@@ -102,5 +111,117 @@ export function useEnvironmentalImpact(annualProductionKwh: number) {
         params: { annualProductionKwh },
       }),
     enabled: annualProductionKwh > 0,
+  })
+}
+
+export function useWeatherForecast(lat: number, lng: number) {
+  return useQuery({
+    queryKey: ['weather-forecast', lat, lng],
+    queryFn: () =>
+      api.get<DynamicYieldForecast>(API_ENDPOINTS.SOLAR.FORECAST_WEATHER, {
+        params: { lat, lng },
+      }),
+    enabled: lat !== 0 && lng !== 0,
+  })
+}
+
+export function useDynamicYield(lat: number, lng: number, yearlyKwh: number) {
+  return useQuery({
+    queryKey: ['dynamic-yield', lat, lng, yearlyKwh],
+    queryFn: () =>
+      api.get<DynamicYieldForecast>(API_ENDPOINTS.SOLAR.FORECAST_DYNAMIC_YIELD, {
+        params: { lat, lng, yearlyKwh },
+      }),
+    enabled: lat !== 0 && lng !== 0 && yearlyKwh > 0,
+  })
+}
+
+export function useLiveConditions(lat: number, lng: number) {
+  return useQuery({
+    queryKey: ['live-conditions', lat, lng],
+    queryFn: () =>
+      api.get<LiveConditions>(API_ENDPOINTS.SOLAR.FORECAST_LIVE_CONDITIONS, {
+        params: { lat, lng },
+      }),
+    enabled: lat !== 0 && lng !== 0,
+    refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
+  })
+}
+
+export function useClimateScore(lat: number, lng: number) {
+  return useQuery({
+    queryKey: ['climate-score', lat, lng],
+    queryFn: () =>
+      api.get<ClimateReliabilityData>(API_ENDPOINTS.SOLAR.FORECAST_CLIMATE_SCORE, {
+        params: { lat, lng },
+      }),
+    enabled: lat !== 0 && lng !== 0,
+  })
+}
+
+export function useClimateRisk(lat: number, lng: number) {
+  return useQuery({
+    queryKey: ['climate-risk', lat, lng],
+    queryFn: () =>
+      api.get<ClimateRiskAssessment>(API_ENDPOINTS.SOLAR.FORECAST_CLIMATE_RISK, {
+        params: { lat, lng },
+      }),
+    enabled: lat !== 0 && lng !== 0,
+  })
+}
+
+export function useAirQuality(lat: number, lng: number) {
+  return useQuery({
+    queryKey: ['air-quality', lat, lng],
+    queryFn: () =>
+      api.get<AirQualityData>(API_ENDPOINTS.SOLAR.FORECAST_AIR_QUALITY, {
+        params: { lat, lng },
+      }),
+    enabled: lat !== 0 && lng !== 0,
+    refetchInterval: 10 * 60 * 1000, // Refresh every 10 minutes
+  })
+}
+
+export function useAirQualityForecast(lat: number, lng: number) {
+  return useQuery({
+    queryKey: ['air-quality-forecast', lat, lng],
+    queryFn: () =>
+      api.get<AirQualityForecast>(API_ENDPOINTS.SOLAR.FORECAST_AIR_QUALITY_FORECAST, {
+        params: { lat, lng },
+      }),
+    enabled: lat !== 0 && lng !== 0,
+  })
+}
+
+export function useDustSeason(lat: number, lng: number) {
+  return useQuery({
+    queryKey: ['dust-season', lat, lng],
+    queryFn: () =>
+      api.get<DustSeasonAnalysis>(API_ENDPOINTS.SOLAR.FORECAST_DUST_SEASON, {
+        params: { lat, lng },
+      }),
+    enabled: lat !== 0 && lng !== 0,
+  })
+}
+
+export function useFinancingOptions(systemCost: number, annualSavings: number) {
+  return useMutation({
+    mutationFn: () =>
+      api.post<FinancingComparison>(API_ENDPOINTS.SOLAR.FORECAST_FINANCING_OPTIONS, {
+        systemCost,
+        annualSavings,
+      }),
+  })
+}
+
+export function useSmartAlerts(lat: number, lng: number) {
+  return useQuery({
+    queryKey: ['smart-alerts', lat, lng],
+    queryFn: () =>
+      api.get<SmartAlertItem[]>(API_ENDPOINTS.SOLAR.FORECAST_ALERTS, {
+        params: { lat, lng },
+      }),
+    enabled: lat !== 0 && lng !== 0,
+    refetchInterval: 15 * 60 * 1000, // Refresh every 15 minutes
   })
 }

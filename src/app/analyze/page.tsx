@@ -24,6 +24,15 @@ import {
   EnvironmentalImpact,
   SelfConsumptionSlider,
   AnalysisReportExport,
+  LiveWeatherYield,
+  SevenDayForecast,
+  AirQualityImpact,
+  SmartAlerts,
+  ClimateReliabilityScore,
+  EnergyIndependenceScore,
+  BillSimulator,
+  FinancingCalculator,
+  FeedbackButton,
 } from '@/components/solar'
 import {
   Sun,
@@ -39,7 +48,27 @@ import {
   Building,
   Calendar,
   Wrench,
+  CloudSun,
+  ShieldCheck,
 } from 'lucide-react'
+import {
+  useLiveConditions,
+  useWeatherForecast,
+  useAirQuality,
+  useDustSeason,
+  useSmartAlerts as useSmartAlertsHook,
+  useClimateScore,
+} from '@/hooks'
+import type {
+  LiveConditions,
+  WeatherHourly,
+  WeatherDaily,
+  AirQualityData,
+  DustSeasonAnalysis,
+  SmartAlertItem,
+  ClimateReliabilityData,
+  EnergyIndependenceData,
+} from '@/types'
 
 // ---- Helpers ----
 
@@ -53,7 +82,7 @@ const formatCurrency = (value: number): string =>
 
 // ---- Tab definitions ----
 
-type TabId = 'overview' | 'roof' | 'solar' | 'financial' | 'equipment' | 'incentives' | 'data'
+type TabId = 'overview' | 'roof' | 'solar' | 'financial' | 'equipment' | 'incentives' | 'data' | 'forecast' | 'reliability'
 
 interface TabDef {
   id: TabId
@@ -69,6 +98,8 @@ const TABS: TabDef[] = [
   { id: 'equipment', label: 'Equipment', icon: <Cpu className="w-4 h-4" /> },
   { id: 'incentives', label: 'Incentives', icon: <Gift className="w-4 h-4" /> },
   { id: 'data', label: 'Data Export', icon: <Database className="w-4 h-4" /> },
+  { id: 'forecast', label: '\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C', icon: <CloudSun className="w-4 h-4" /> },
+  { id: 'reliability', label: '\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D', icon: <ShieldCheck className="w-4 h-4" /> },
 ]
 
 // ---- Tab Content Components ----
@@ -364,6 +395,20 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
         />
       )}
 
+      {/* Bill Simulator */}
+      <BillSimulator
+        monthlyBillThb={monthlyBill}
+        monthlySavingsThb={result.financialAnalysis.monthlySavings}
+        annualProductionKwh={result.panelConfig.yearlyEnergyDcKwh}
+        electricityRate={result.electricityRate}
+      />
+
+      {/* Financing Calculator */}
+      <FinancingCalculator
+        systemCost={result.financialAnalysis.installationCost}
+        annualSavings={result.financialAnalysis.yearlySavings}
+      />
+
       {/* Self-Consumption & Maintenance Summary */}
       <Card>
         <CardHeader title="ข้อมูลการใช้ไฟและค่าบำรุงรักษา" subtitle="Consumption & Maintenance" />
@@ -538,6 +583,74 @@ function DataExportTab({ result }: { result: SolarAnalysisAdvanced }) {
   )
 }
 
+function ForecastTab({ result }: { result: SolarAnalysisAdvanced }) {
+  const lat = result.coordinates.latitude
+  const lng = result.coordinates.longitude
+  const { data: liveData } = useLiveConditions(lat, lng)
+  const { data: forecastData } = useWeatherForecast(lat, lng)
+  const { data: airQualityData } = useAirQuality(lat, lng)
+  const { data: dustSeasonData } = useDustSeason(lat, lng)
+  const { data: alertsData } = useSmartAlertsHook(lat, lng)
+
+  const liveConditions = (liveData as LiveConditions | undefined) ?? null
+  const hourlyForecast = ((forecastData as { hourly?: WeatherHourly[] } | undefined)?.hourly) ?? []
+  const dailyForecast = ((forecastData as { daily?: WeatherDaily[] } | undefined)?.daily) ?? []
+  const totalPredicted7Day = ((forecastData as { totalPredicted7Day?: number } | undefined)?.totalPredicted7Day) ?? 0
+  const totalIdeal7Day = ((forecastData as { totalIdeal7Day?: number } | undefined)?.totalIdeal7Day) ?? 0
+  const airQuality = (airQualityData as AirQualityData | undefined) ?? null
+  const dustSeason = (dustSeasonData as DustSeasonAnalysis | undefined) ?? null
+  const alerts = ((alertsData as SmartAlertItem[] | undefined)) ?? []
+
+  return (
+    <div className="space-y-6 transition-opacity duration-300">
+      <LiveWeatherYield
+        liveConditions={liveConditions}
+        hourlyForecast={hourlyForecast}
+      />
+      <SevenDayForecast
+        daily={dailyForecast}
+        totalPredicted7Day={totalPredicted7Day}
+        totalIdeal7Day={totalIdeal7Day}
+      />
+      <AirQualityImpact
+        airQuality={airQuality}
+        dustSeason={dustSeason}
+      />
+      <SmartAlerts alerts={alerts} />
+    </div>
+  )
+}
+
+function ReliabilityTab({ result }: { result: SolarAnalysisAdvanced }) {
+  const lat = result.coordinates.latitude
+  const lng = result.coordinates.longitude
+  const { data: climateData } = useClimateScore(lat, lng)
+
+  const climateReliability = (climateData as ClimateReliabilityData | undefined) ?? null
+
+  // Calculate energy independence from existing data
+  const selfConsumption = result.selfConsumptionRate || 0.7
+  const energyIndependence: EnergyIndependenceData = {
+    score: Math.round(selfConsumption * 100),
+    level: selfConsumption >= 0.9 ? 'full' : selfConsumption >= 0.75 ? 'almost' : selfConsumption >= 0.5 ? 'transition' : 'start',
+    solarSelfUsePercent: Math.round(selfConsumption * 100),
+    gridImportPercent: Math.round((1 - selfConsumption) * 80),
+    surplusExportPercent: Math.round((1 - selfConsumption) * 20),
+    tips: [
+      '\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E41\u0E1A\u0E15\u0E40\u0E15\u0E2D\u0E23\u0E35\u0E48\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E01\u0E31\u0E01\u0E40\u0E01\u0E47\u0E1A\u0E1E\u0E25\u0E31\u0E07\u0E07\u0E32\u0E19\u0E2A\u0E48\u0E27\u0E19\u0E40\u0E01\u0E34\u0E19',
+      '\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E08\u0E33\u0E19\u0E27\u0E19\u0E41\u0E1C\u0E07\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E23\u0E2D\u0E07\u0E23\u0E31\u0E1A\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E07\u0E32\u0E19\u0E21\u0E32\u0E01\u0E02\u0E36\u0E49\u0E19',
+      '\u0E22\u0E49\u0E32\u0E22\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E44\u0E1F\u0E2B\u0E19\u0E31\u0E01\u0E44\u0E1B\u0E0A\u0E48\u0E27\u0E07\u0E01\u0E25\u0E32\u0E07\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E21\u0E35\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14',
+    ],
+  }
+
+  return (
+    <div className="space-y-6 transition-opacity duration-300">
+      <ClimateReliabilityScore data={climateReliability} />
+      <EnergyIndependenceScore data={energyIndependence} />
+    </div>
+  )
+}
+
 // ---- Tab Bar Component ----
 
 function TabBar({
@@ -694,6 +807,10 @@ export default function AnalyzePage() {
         return <IncentivesTab result={result} />
       case 'data':
         return <DataExportTab result={result} />
+      case 'forecast':
+        return <ForecastTab result={result} />
+      case 'reliability':
+        return <ReliabilityTab result={result} />
       default:
         return <OverviewTab result={result} />
     }
@@ -805,6 +922,8 @@ export default function AnalyzePage() {
           </div>
         )}
       </div>
+      {/* Floating Feedback Button */}
+      {result && <FeedbackButton />}
     </AppLayout>
   )
 }

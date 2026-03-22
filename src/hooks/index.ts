@@ -10,6 +10,16 @@ export {
   useMonthlyProduction,
   useSystemOptions,
   useEnvironmentalImpact,
+  useWeatherForecast,
+  useDynamicYield,
+  useLiveConditions,
+  useClimateScore,
+  useClimateRisk,
+  useAirQuality,
+  useAirQualityForecast,
+  useDustSeason,
+  useFinancingOptions,
+  useSmartAlerts,
 } from './useSolarAdvanced'
 export { useDocuments, useDocument, useUploadDocument, useDeleteDocument, useDocumentPreview } from './useKnowledge'
 export { 
