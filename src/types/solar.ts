@@ -1,12 +1,28 @@
 // Solar API Advanced Types
 
-/** Panel position on roof */
+/** Panel position on roof — actual lat/lng coordinates from Google Solar API */
 export interface SolarPanel {
-  centerX: number
-  centerY: number
+  centerLat: number
+  centerLng: number
   orientation: 'PORTRAIT' | 'LANDSCAPE'
   segmentIndex: number
   yearlyEnergyDcKwh: number
+}
+
+/** Per-segment stats within a panel configuration */
+export interface PanelConfigSegmentStat {
+  pitchDegrees: number
+  azimuthDegrees: number
+  panelsCount: number
+  yearlyEnergyDcKwh: number
+  segmentIndex: number
+}
+
+/** Panel configuration option — one per possible panel count (1..maxPanels) */
+export interface PanelConfigOption {
+  panelsCount: number
+  yearlyEnergyDcKwh: number
+  roofSegmentSummaries: PanelConfigSegmentStat[]
 }
 
 /** Roof segment details */
@@ -153,7 +169,8 @@ export interface SolarAnalysisAdvanced {
 
   electricityRate: number
 
-  // Advanced features
+  // Advanced features — all solarPanelConfigs from API (1 panel, 2 panels, ..., max)
+  panelConfigs: PanelConfigOption[]
   roofSegments: RoofSegment[]
   solarPanels: SolarPanel[]
   shadeAnalysis?: ShadeAnalysis

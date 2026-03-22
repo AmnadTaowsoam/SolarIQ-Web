@@ -299,6 +299,7 @@ function RoofTab({ result }: { result: SolarAnalysisAdvanced }) {
         longitude={result.coordinates.longitude}
         panels={result.solarPanels}
         segments={result.roofSegments}
+        panelConfigs={result.panelConfigs}
       />
     </div>
   )
