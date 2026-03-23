@@ -413,7 +413,7 @@
       "changePlanTitle": "Change Plan",
       "changePlanDescription": "Upgrade or downgrade your subscription",
       "managePaymentTitle": "Manage Payment",
-      "managePaymentDescription": "Update payment method via Stripe"
+      "managePaymentDescription": "Update payment method via Opn Payments"
     },
     "usage": {
       "title": "Current Usage",

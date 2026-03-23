@@ -413,7 +413,7 @@
       "changePlanTitle": "เปลี่ยนแพ็กเกจ",
       "changePlanDescription": "อัปเกรดหรือดาวน์เกรดแพ็กเกจ",
       "managePaymentTitle": "จัดการการชำระเงิน",
-      "managePaymentDescription": "อัปเดตวิธีชำระเงินผ่าน Stripe"
+      "managePaymentDescription": "อัปเดตวิธีชำระเงินผ่าน Opn Payments"
     },
     "usage": {
       "title": "การใช้งานปัจจุบัน",

@@ -10,7 +10,6 @@ import {
   Wind,
   CreditCard,
   ArrowRight,
-  Users,
   MonitorSmartphone,
   Code2,
   CalendarClock,
@@ -47,7 +46,7 @@ const partners = [
   { icon: Sun, name: 'Google Solar API' },
   { icon: Satellite, name: 'NASA POWER' },
   { icon: Wind, name: 'OpenWeatherMap' },
-  { icon: CreditCard, name: 'Stripe' },
+  { icon: CreditCard, name: 'Opn Payments' },
 ]
 
 const numbers = [
@@ -90,9 +89,7 @@ export default function AboutPage() {
           <span className="inline-block rounded-full bg-primary-100 dark:bg-primary-900/30 px-4 py-1 text-sm font-semibold text-primary-600 dark:text-primary-400 mb-4">
             พันธกิจของเรา
           </span>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Our Mission
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Our Mission</h2>
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-600 dark:text-gray-400">
             เราเชื่อว่าพลังงานสะอาดคืออนาคต SolarIQ ถูกสร้างขึ้นเพื่อช่วยให้ธุรกิจโซลาร์ในประเทศไทย
             เข้าถึงเครื่องมือวิเคราะห์ระดับโลก ด้วยข้อมูลที่แม่นยำ เทคโนโลยี AI ที่ล้ำสมัย
@@ -108,9 +105,7 @@ export default function AboutPage() {
             <span className="inline-block rounded-full bg-primary-100 dark:bg-primary-900/30 px-4 py-1 text-sm font-semibold text-primary-600 dark:text-primary-400 mb-4">
               ทำไมต้อง SolarIQ
             </span>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Why SolarIQ?
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Why SolarIQ?</h2>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -123,7 +118,9 @@ export default function AboutPage() {
                   <p.icon className="h-7 w-7" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{p.desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  {p.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -201,7 +198,9 @@ export default function AboutPage() {
                   {t.initials}
                 </div>
                 <div className="text-center">
-                  <div className="text-sm font-semibold text-gray-900 dark:text-white">{t.name}</div>
+                  <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {t.name}
+                  </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t.role}</div>
                 </div>
               </div>
