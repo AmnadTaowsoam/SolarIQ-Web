@@ -82,7 +82,16 @@ const formatCurrency = (value: number): string =>
 
 // ---- Tab definitions ----
 
-type TabId = 'overview' | 'roof' | 'solar' | 'financial' | 'equipment' | 'incentives' | 'data' | 'forecast' | 'reliability'
+type TabId =
+  | 'overview'
+  | 'roof'
+  | 'solar'
+  | 'financial'
+  | 'equipment'
+  | 'incentives'
+  | 'data'
+  | 'forecast'
+  | 'reliability'
 
 interface TabDef {
   id: TabId
@@ -91,15 +100,52 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
-  { id: 'overview', label: '\u0E20\u0E32\u0E1E\u0E23\u0E27\u0E21', icon: <Sun className="w-4 h-4" /> },
-  { id: 'roof', label: '\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32', icon: <Building className="w-4 h-4" /> },
-  { id: 'solar', label: '\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14', icon: <Zap className="w-4 h-4" /> },
-  { id: 'financial', label: '\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19', icon: <Wallet className="w-4 h-4" /> },
-  { id: 'equipment', label: '\u0E2D\u0E38\u0E1B\u0E01\u0E23\u0E13\u0E4C', icon: <Cpu className="w-4 h-4" /> },
-  { id: 'incentives', label: '\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E1B\u0E23\u0E30\u0E42\u0E22\u0E0A\u0E19\u0E4C', icon: <Gift className="w-4 h-4" /> },
-  { id: 'data', label: '\u0E2A\u0E48\u0E07\u0E2D\u0E2D\u0E01\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25', icon: <Database className="w-4 h-4" /> },
-  { id: 'forecast', label: '\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C', icon: <CloudSun className="w-4 h-4" /> },
-  { id: 'reliability', label: '\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D', icon: <ShieldCheck className="w-4 h-4" /> },
+  {
+    id: 'overview',
+    label: '\u0E20\u0E32\u0E1E\u0E23\u0E27\u0E21',
+    icon: <Sun className="w-4 h-4" />,
+  },
+  {
+    id: 'roof',
+    label: '\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32',
+    icon: <Building className="w-4 h-4" />,
+  },
+  {
+    id: 'solar',
+    label: '\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14',
+    icon: <Zap className="w-4 h-4" />,
+  },
+  {
+    id: 'financial',
+    label: '\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19',
+    icon: <Wallet className="w-4 h-4" />,
+  },
+  {
+    id: 'equipment',
+    label: '\u0E2D\u0E38\u0E1B\u0E01\u0E23\u0E13\u0E4C',
+    icon: <Cpu className="w-4 h-4" />,
+  },
+  {
+    id: 'incentives',
+    label: '\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E1B\u0E23\u0E30\u0E42\u0E22\u0E0A\u0E19\u0E4C',
+    icon: <Gift className="w-4 h-4" />,
+  },
+  {
+    id: 'data',
+    label: '\u0E2A\u0E48\u0E07\u0E2D\u0E2D\u0E01\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25',
+    icon: <Database className="w-4 h-4" />,
+  },
+  {
+    id: 'forecast',
+    label: '\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C',
+    icon: <CloudSun className="w-4 h-4" />,
+  },
+  {
+    id: 'reliability',
+    label:
+      '\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D',
+    icon: <ShieldCheck className="w-4 h-4" />,
+  },
 ]
 
 // ---- Tab Content Components ----
@@ -116,7 +162,9 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 <Zap className="w-5 h-5 text-[var(--brand-primary)]" />
               </div>
               <div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">{'\u0E02\u0E19\u0E32\u0E14\u0E23\u0E30\u0E1A\u0E1A'}</div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">
+                  {'\u0E02\u0E19\u0E32\u0E14\u0E23\u0E30\u0E1A\u0E1A'}
+                </div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
                   {result.panelConfig.capacityKw.toFixed(2)} kWp
                 </div>
@@ -134,11 +182,15 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 <TrendingUp className="w-5 h-5 text-green-500" />
               </div>
               <div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">{'\u0E1C\u0E25\u0E1C\u0E25\u0E34\u0E15\u0E15\u0E48\u0E2D\u0E1B\u0E35'}</div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">
+                  {'\u0E1C\u0E25\u0E1C\u0E25\u0E34\u0E15\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+                </div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
                   {result.panelConfig.yearlyEnergyDcKwh.toLocaleString()} kWh
                 </div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">{'\u0E15\u0E48\u0E2D\u0E1B\u0E35'}</div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">
+                  {'\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+                </div>
               </div>
             </div>
           </CardBody>
@@ -150,7 +202,9 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 <DollarSign className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">{'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}</div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">
+                  {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}
+                </div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
                   {result.financialAnalysis.paybackYears.toFixed(1)} {'\u0E1B\u0E35'}
                 </div>
@@ -168,11 +222,20 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 <Leaf className="w-5 h-5 text-emerald-500" />
               </div>
               <div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">{'\u0E25\u0E14\u0E04\u0E32\u0E23\u0E4C\u0E1A\u0E2D\u0E19'}</div>
-                <div className="text-xl font-bold text-[var(--brand-text)]">
-                  {((result.panelConfig.yearlyEnergyDcKwh * result.solarPotential.carbonOffsetFactorKgPerMwh) / 1000).toFixed(1)} {'\u0E15\u0E31\u0E19'}
+                <div className="text-xs text-[var(--brand-text-secondary)]">
+                  {'\u0E25\u0E14\u0E04\u0E32\u0E23\u0E4C\u0E1A\u0E2D\u0E19'}
                 </div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">{'\u0E15\u0E48\u0E2D\u0E1B\u0E35'}</div>
+                <div className="text-xl font-bold text-[var(--brand-text)]">
+                  {(
+                    (result.panelConfig.yearlyEnergyDcKwh *
+                      result.solarPotential.carbonOffsetFactorKgPerMwh) /
+                    1000
+                  ).toFixed(1)}{' '}
+                  {'\u0E15\u0E31\u0E19'}
+                </div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">
+                  {'\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+                </div>
               </div>
             </div>
           </CardBody>
@@ -185,25 +248,35 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
         <CardBody>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E04\u0E48\u0E32\u0E15\u0E34\u0E14\u0E15\u0E31\u0E49\u0E07'}</div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">
+                {'\u0E04\u0E48\u0E32\u0E15\u0E34\u0E14\u0E15\u0E31\u0E49\u0E07'}
+              </div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {formatCurrency(result.financialAnalysis.installationCost)}
               </div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E23\u0E32\u0E04\u0E32\u0E2A\u0E38\u0E17\u0E18\u0E34'}</div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">
+                {'\u0E23\u0E32\u0E04\u0E32\u0E2A\u0E38\u0E17\u0E18\u0E34'}
+              </div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {formatCurrency(result.financialAnalysis.netCost)}
               </div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19'}</div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">
+                {
+                  '\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19'
+                }
+              </div>
               <div className="text-lg font-semibold text-green-600">
                 {formatCurrency(result.financialAnalysis.monthlySavings)}
               </div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}</div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">
+                {'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+              </div>
               <div className="text-lg font-semibold text-green-600">
                 {formatCurrency(result.financialAnalysis.yearlySavings)}
               </div>
@@ -215,29 +288,43 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
       {/* Solar Potential & Location */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
-          <CardHeader title={'\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C'} />
+          <CardHeader
+            title={
+              '\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C'
+            }
+          />
           <CardBody>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14'}</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  {
+                    '\u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14'
+                  }
+                </div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {result.solarPotential.maxSunshineHoursPerYear.toLocaleString()} hrs/yr
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E1E\u0E37\u0E49\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32'}</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  {'\u0E1E\u0E37\u0E49\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32'}
+                </div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {result.solarPotential.roofAreaM2.toFixed(0)} m&sup2;
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E41\u0E1C\u0E07\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14'}</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  {'\u0E41\u0E1C\u0E07\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14'}
+                </div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {result.solarPotential.maxPanels}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E04\u0E38\u0E13\u0E20\u0E32\u0E1E\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25'}</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  {'\u0E04\u0E38\u0E13\u0E20\u0E32\u0E1E\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25'}
+                </div>
                 <div className="text-lg font-semibold text-[var(--brand-primary)]">
                   {result.solarPotential.quality}
                 </div>
@@ -250,27 +337,36 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
           <CardBody>
             <div className="space-y-3">
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E17\u0E35\u0E48\u0E2D\u0E22\u0E39\u0E48'}</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  {'\u0E17\u0E35\u0E48\u0E2D\u0E22\u0E39\u0E48'}
+                </div>
                 <div className="text-sm font-medium text-[var(--brand-text)]">{result.address}</div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E1E\u0E34\u0E01\u0E31\u0E14'}</div>
+                  <div className="text-sm text-[var(--brand-text-secondary)]">
+                    {'\u0E1E\u0E34\u0E01\u0E31\u0E14'}
+                  </div>
                   <div className="text-sm font-medium text-[var(--brand-text)]">
-                    {result.coordinates.latitude.toFixed(4)}, {result.coordinates.longitude.toFixed(4)}
+                    {result.coordinates.latitude.toFixed(4)},{' '}
+                    {result.coordinates.longitude.toFixed(4)}
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E2D\u0E31\u0E15\u0E23\u0E32\u0E04\u0E48\u0E32\u0E44\u0E1F'}</div>
+                  <div className="text-sm text-[var(--brand-text-secondary)]">
+                    {'\u0E2D\u0E31\u0E15\u0E23\u0E32\u0E04\u0E48\u0E32\u0E44\u0E1F'}
+                  </div>
                   <div className="text-sm font-medium text-[var(--brand-text)]">
-                    {'\u0E3F'}{result.electricityRate.toFixed(2)}/kWh
+                    {'\u0E3F'}
+                    {result.electricityRate.toFixed(2)}/kWh
                   </div>
                 </div>
               </div>
               {result.solarPotential.imageryDate && (
                 <div className="flex items-center gap-1.5 text-xs text-[var(--brand-text-secondary)]">
                   <Calendar className="w-3.5 h-3.5" />
-                  {'\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E16\u0E48\u0E32\u0E22\u0E20\u0E32\u0E1E'}: {result.solarPotential.imageryDate}
+                  {'\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E16\u0E48\u0E32\u0E22\u0E20\u0E32\u0E1E'}
+                  : {result.solarPotential.imageryDate}
                 </div>
               )}
             </div>
@@ -287,13 +383,20 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
       )}
 
       {/* Advanced financial metrics */}
-      {(result.financialAnalysis.npvThb !== undefined || result.financialAnalysis.irrPercent !== undefined) && (
+      {(result.financialAnalysis.npvThb !== undefined ||
+        result.financialAnalysis.irrPercent !== undefined) && (
         <Card>
-          <CardHeader title={'\u0E15\u0E31\u0E27\u0E0A\u0E35\u0E49\u0E27\u0E31\u0E14\u0E17\u0E32\u0E07\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19\u0E02\u0E31\u0E49\u0E19\u0E2A\u0E39\u0E07'} />
+          <CardHeader
+            title={
+              '\u0E15\u0E31\u0E27\u0E0A\u0E35\u0E49\u0E27\u0E31\u0E14\u0E17\u0E32\u0E07\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19\u0E02\u0E31\u0E49\u0E19\u0E2A\u0E39\u0E07'
+            }
+          />
           <CardBody>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">NPV (25 {'\u0E1B\u0E35'})</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  NPV (25 {'\u0E1B\u0E35'})
+                </div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {formatCurrency(result.financialAnalysis.npvThb)}
                 </div>
@@ -305,13 +408,17 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">ROI 25 {'\u0E1B\u0E35'}</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  ROI 25 {'\u0E1B\u0E35'}
+                </div>
                 <div className="text-lg font-semibold text-green-600">
                   {result.financialAnalysis.roi25Year.toFixed(1)}%
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}
+                </div>
                 <div className="text-lg font-semibold text-blue-600">
                   {result.financialAnalysis.paybackYears.toFixed(1)} {'\u0E1B\u0E35'}
                 </div>
@@ -342,9 +449,7 @@ function RoofTab({ result }: { result: SolarAnalysisAdvanced }) {
 function SolarPotentialTab({ result }: { result: SolarAnalysisAdvanced }) {
   return (
     <div className="space-y-6 transition-opacity duration-300">
-      {result.shadeAnalysis && (
-        <ShadeAnalysisChart shadeAnalysis={result.shadeAnalysis} />
-      )}
+      {result.shadeAnalysis && <ShadeAnalysisChart shadeAnalysis={result.shadeAnalysis} />}
       {result.hourlyIrradiance && result.hourlyIrradiance.length > 0 && (
         <HourlyIrradianceChart data={result.hourlyIrradiance} />
       )}
@@ -361,19 +466,32 @@ function SolarPotentialTab({ result }: { result: SolarAnalysisAdvanced }) {
           systemSizeKwp={result.panelConfig.capacityKw}
         />
       )}
-      {!result.shadeAnalysis && (!result.hourlyIrradiance || result.hourlyIrradiance.length === 0) && !result.dataLayers && (!result.monthlyProduction || result.monthlyProduction.length === 0) && (
-        <Card>
-          <CardBody className="p-8 text-center text-[var(--brand-text-secondary)]">
-            <Sun className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p>{'\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E19\u0E35\u0E49'}</p>
-          </CardBody>
-        </Card>
-      )}
+      {!result.shadeAnalysis &&
+        (!result.hourlyIrradiance || result.hourlyIrradiance.length === 0) &&
+        !result.dataLayers &&
+        (!result.monthlyProduction || result.monthlyProduction.length === 0) && (
+          <Card>
+            <CardBody className="p-8 text-center text-[var(--brand-text-secondary)]">
+              <Sun className="w-12 h-12 mx-auto mb-3 opacity-30" />
+              <p>
+                {
+                  '\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E19\u0E35\u0E49'
+                }
+              </p>
+            </CardBody>
+          </Card>
+        )}
     </div>
   )
 }
 
-function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; monthlyBill: number }) {
+function FinancialTab({
+  result,
+  monthlyBill,
+}: {
+  result: SolarAnalysisAdvanced
+  monthlyBill: number
+}) {
   const annualMaintenance = result.annualMaintenanceCost || 0
   const netYearlySavings = result.financialAnalysis.yearlySavings - annualMaintenance
 
@@ -389,10 +507,7 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
 
       {/* System Size Optimizer */}
       {result.systemOptions && result.systemOptions.length > 0 && (
-        <SystemSizeOptimizer
-          options={result.systemOptions}
-          currentBillThb={monthlyBill}
-        />
+        <SystemSizeOptimizer options={result.systemOptions} currentBillThb={monthlyBill} />
       )}
 
       {/* Bill Simulator */}
@@ -411,36 +526,59 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
 
       {/* Self-Consumption & Maintenance Summary */}
       <Card>
-        <CardHeader title={'\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E44\u0E1F\u0E41\u0E25\u0E30\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32'} subtitle="Consumption & Maintenance" />
+        <CardHeader
+          title={
+            '\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E44\u0E1F\u0E41\u0E25\u0E30\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32'
+          }
+          subtitle="Consumption & Maintenance"
+        />
         <CardBody>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E2D\u0E31\u0E15\u0E23\u0E32\u0E43\u0E0A\u0E49\u0E40\u0E2D\u0E07'}</div>
-              <div className="text-lg font-semibold text-[var(--brand-primary)]">
-                {result.selfConsumptionRate ? `${(result.selfConsumptionRate * 100).toFixed(0)}%` : 'N/A'}
+              <div className="text-sm text-[var(--brand-text-secondary)]">
+                {'\u0E2D\u0E31\u0E15\u0E23\u0E32\u0E43\u0E0A\u0E49\u0E40\u0E2D\u0E07'}
               </div>
-              <div className="text-xs text-[var(--brand-text-secondary)]">Self-Consumption Rate</div>
+              <div className="text-lg font-semibold text-[var(--brand-primary)]">
+                {result.selfConsumptionRate
+                  ? `${(result.selfConsumptionRate * 100).toFixed(0)}%`
+                  : 'N/A'}
+              </div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">
+                Self-Consumption Rate
+              </div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E23\u0E32\u0E04\u0E32\u0E02\u0E32\u0E22\u0E04\u0E37\u0E19'}</div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">
+                {'\u0E23\u0E32\u0E04\u0E32\u0E02\u0E32\u0E22\u0E04\u0E37\u0E19'}
+              </div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {result.netBillingRate ? `\u0E3F${result.netBillingRate.toFixed(1)}/kWh` : 'N/A'}
               </div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Net Billing Rate</div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32/\u0E1B\u0E35'}</div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">
+                {
+                  '\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32/\u0E1B\u0E35'
+                }
+              </div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {annualMaintenance > 0 ? formatCurrency(annualMaintenance) : 'N/A'}
               </div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Annual Maintenance</div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">{'\u0E1C\u0E25\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E23\u0E27\u0E21 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07)'}</div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">
+                {
+                  '\u0E1C\u0E25\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E23\u0E27\u0E21 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07)'
+                }
+              </div>
               <div className="text-lg font-semibold text-green-600">
                 {formatCurrency(netYearlySavings)}/{'\u0E1B\u0E35'}
               </div>
-              <div className="text-xs text-[var(--brand-text-secondary)]">Net Savings After Maintenance</div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">
+                Net Savings After Maintenance
+              </div>
             </div>
           </div>
         </CardBody>
@@ -448,7 +586,11 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
 
       {/* Detailed financial breakdown */}
       <Card>
-        <CardHeader title={'\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E17\u0E32\u0E07\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19'} />
+        <CardHeader
+          title={
+            '\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E17\u0E32\u0E07\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19'
+          }
+        />
         <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -458,28 +600,41 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
               </h4>
               <div className="space-y-2">
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
-                  <span className="text-sm text-[var(--brand-text-secondary)]">{'\u0E04\u0E48\u0E32\u0E15\u0E34\u0E14\u0E15\u0E31\u0E49\u0E07'}</span>
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
+                    {'\u0E04\u0E48\u0E32\u0E15\u0E34\u0E14\u0E15\u0E31\u0E49\u0E07'}
+                  </span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
                     {formatCurrency(result.financialAnalysis.installationCost)}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
-                  <span className="text-sm text-[var(--brand-text-secondary)]">{'\u0E23\u0E32\u0E04\u0E32\u0E2A\u0E38\u0E17\u0E18\u0E34 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E1B\u0E23\u0E30\u0E42\u0E22\u0E0A\u0E19\u0E4C)'}</span>
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
+                    {
+                      '\u0E23\u0E32\u0E04\u0E32\u0E2A\u0E38\u0E17\u0E18\u0E34 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E1B\u0E23\u0E30\u0E42\u0E22\u0E0A\u0E19\u0E4C)'
+                    }
+                  </span>
                   <span className="text-sm font-medium text-green-600">
                     {formatCurrency(result.financialAnalysis.netCost)}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
-                  <span className="text-sm text-[var(--brand-text-secondary)]">{'\u0E23\u0E32\u0E04\u0E32\u0E15\u0E48\u0E2D kWp'}</span>
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
+                    {'\u0E23\u0E32\u0E04\u0E32\u0E15\u0E48\u0E2D kWp'}
+                  </span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
-                    {formatCurrency(result.financialAnalysis.installationCost / Math.max(result.panelConfig.capacityKw, 0.01))}
+                    {formatCurrency(
+                      result.financialAnalysis.installationCost /
+                        Math.max(result.panelConfig.capacityKw, 0.01)
+                    )}
                   </span>
                 </div>
                 {annualMaintenance > 0 && (
                   <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                     <span className="text-sm text-[var(--brand-text-secondary)] flex items-center gap-1">
                       <Wrench className="w-3.5 h-3.5" />
-                      {'\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32/\u0E1B\u0E35'}
+                      {
+                        '\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32/\u0E1B\u0E35'
+                      }
                     </span>
                     <span className="text-sm font-medium text-[var(--brand-text)]">
                       {formatCurrency(annualMaintenance)}
@@ -495,27 +650,39 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
               </h4>
               <div className="space-y-2">
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
-                  <span className="text-sm text-[var(--brand-text-secondary)]">{'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19'}</span>
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
+                    {
+                      '\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19'
+                    }
+                  </span>
                   <span className="text-sm font-medium text-green-600">
                     {formatCurrency(result.financialAnalysis.monthlySavings)}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
-                  <span className="text-sm text-[var(--brand-text-secondary)]">{'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}</span>
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
+                    {'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+                  </span>
                   <span className="text-sm font-medium text-green-600">
                     {formatCurrency(result.financialAnalysis.yearlySavings)}
                   </span>
                 </div>
                 {annualMaintenance > 0 && (
                   <div className="flex justify-between py-2 border-b border-[var(--brand-border)] bg-green-50/50">
-                    <span className="text-sm font-medium text-[var(--brand-text)]">{'\u0E1C\u0E25\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E23\u0E27\u0E21 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07)'}</span>
+                    <span className="text-sm font-medium text-[var(--brand-text)]">
+                      {
+                        '\u0E1C\u0E25\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E23\u0E27\u0E21 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07)'
+                      }
+                    </span>
                     <span className="text-sm font-bold text-green-600">
                       {formatCurrency(netYearlySavings)}/{'\u0E1B\u0E35'}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
-                  <span className="text-sm text-[var(--brand-text-secondary)]">NPV (25 {'\u0E1B\u0E35'})</span>
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
+                    NPV (25 {'\u0E1B\u0E35'})
+                  </span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
                     {formatCurrency(result.financialAnalysis.npvThb)}
                   </span>
@@ -538,10 +705,7 @@ function FinancialTab({ result, monthlyBill }: { result: SolarAnalysisAdvanced; 
 function EquipmentTab({ result }: { result: SolarAnalysisAdvanced }) {
   return (
     <div className="space-y-6 transition-opacity duration-300">
-      <PanelComparison
-        panels={result.panelSpecs}
-        systemSizeKw={result.panelConfig.capacityKw}
-      />
+      <PanelComparison panels={result.panelSpecs} systemSizeKw={result.panelConfig.capacityKw} />
     </div>
   )
 }
@@ -562,7 +726,14 @@ function DataExportTab({ result }: { result: SolarAnalysisAdvanced }) {
     <div className="space-y-6 transition-opacity duration-300">
       {/* Report Export */}
       <Card>
-        <CardHeader title={'\u0E23\u0E32\u0E22\u0E07\u0E32\u0E19\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C'} subtitle={'\u0E14\u0E32\u0E27\u0E19\u0E4C\u0E42\u0E2B\u0E25\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E04\u0E31\u0E14\u0E25\u0E2D\u0E01\u0E23\u0E32\u0E22\u0E07\u0E32\u0E19'} />
+        <CardHeader
+          title={
+            '\u0E23\u0E32\u0E22\u0E07\u0E32\u0E19\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C'
+          }
+          subtitle={
+            '\u0E14\u0E32\u0E27\u0E19\u0E4C\u0E42\u0E2B\u0E25\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E04\u0E31\u0E14\u0E25\u0E2D\u0E01\u0E23\u0E32\u0E22\u0E07\u0E32\u0E19'
+          }
+        />
         <CardBody>
           <AnalysisReportExport result={result} />
         </CardBody>
@@ -575,7 +746,11 @@ function DataExportTab({ result }: { result: SolarAnalysisAdvanced }) {
         <Card>
           <CardBody className="p-8 text-center text-[var(--brand-text-secondary)]">
             <Database className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p>{'\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E0A\u0E31\u0E49\u0E19\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E14\u0E32\u0E27\u0E19\u0E4C\u0E42\u0E2B\u0E25\u0E14'}</p>
+            <p>
+              {
+                '\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E0A\u0E31\u0E49\u0E19\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E14\u0E32\u0E27\u0E19\u0E4C\u0E42\u0E2B\u0E25\u0E14'
+              }
+            </p>
           </CardBody>
         </Card>
       )}
@@ -593,29 +768,25 @@ function ForecastTab({ result }: { result: SolarAnalysisAdvanced }) {
   const { data: alertsData } = useSmartAlertsHook(lat, lng)
 
   const liveConditions = (liveData as LiveConditions | undefined) ?? null
-  const hourlyForecast = ((forecastData as { hourly?: WeatherHourly[] } | undefined)?.hourly) ?? []
-  const dailyForecast = ((forecastData as { daily?: WeatherDaily[] } | undefined)?.daily) ?? []
-  const totalPredicted7Day = ((forecastData as { totalPredicted7Day?: number } | undefined)?.totalPredicted7Day) ?? 0
-  const totalIdeal7Day = ((forecastData as { totalIdeal7Day?: number } | undefined)?.totalIdeal7Day) ?? 0
+  const hourlyForecast = (forecastData as { hourly?: WeatherHourly[] } | undefined)?.hourly ?? []
+  const dailyForecast = (forecastData as { daily?: WeatherDaily[] } | undefined)?.daily ?? []
+  const totalPredicted7Day =
+    (forecastData as { totalPredicted7Day?: number } | undefined)?.totalPredicted7Day ?? 0
+  const totalIdeal7Day =
+    (forecastData as { totalIdeal7Day?: number } | undefined)?.totalIdeal7Day ?? 0
   const airQuality = (airQualityData as AirQualityData | undefined) ?? null
   const dustSeason = (dustSeasonData as DustSeasonAnalysis | undefined) ?? null
-  const alerts = ((alertsData as SmartAlertItem[] | undefined)) ?? []
+  const alerts = (alertsData as SmartAlertItem[] | undefined) ?? []
 
   return (
     <div className="space-y-6 transition-opacity duration-300">
-      <LiveWeatherYield
-        liveConditions={liveConditions}
-        hourlyForecast={hourlyForecast}
-      />
+      <LiveWeatherYield liveConditions={liveConditions} hourlyForecast={hourlyForecast} />
       <SevenDayForecast
         daily={dailyForecast}
         totalPredicted7Day={totalPredicted7Day}
         totalIdeal7Day={totalIdeal7Day}
       />
-      <AirQualityImpact
-        airQuality={airQuality}
-        dustSeason={dustSeason}
-      />
+      <AirQualityImpact airQuality={airQuality} dustSeason={dustSeason} />
       <SmartAlerts alerts={alerts} />
     </div>
   )
@@ -632,7 +803,14 @@ function ReliabilityTab({ result }: { result: SolarAnalysisAdvanced }) {
   const selfConsumption = result.selfConsumptionRate || 0.7
   const energyIndependence: EnergyIndependenceData = {
     score: Math.round(selfConsumption * 100),
-    level: selfConsumption >= 0.9 ? 'full' : selfConsumption >= 0.75 ? 'almost' : selfConsumption >= 0.5 ? 'transition' : 'start',
+    level:
+      selfConsumption >= 0.9
+        ? 'full'
+        : selfConsumption >= 0.75
+          ? 'almost'
+          : selfConsumption >= 0.5
+            ? 'transition'
+            : 'start',
     solarSelfUsePercent: Math.round(selfConsumption * 100),
     gridImportPercent: Math.round((1 - selfConsumption) * 80),
     surplusExportPercent: Math.round((1 - selfConsumption) * 20),
@@ -710,7 +888,10 @@ export default function AnalyzePage() {
 
   const handleAnalyze = async () => {
     if (!latitude || !longitude || !monthlyBill) {
-      addToast('error', '\u0E01\u0E23\u0E38\u0E13\u0E32\u0E01\u0E23\u0E2D\u0E01\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E43\u0E2B\u0E49\u0E04\u0E23\u0E1A\u0E16\u0E49\u0E27\u0E19')
+      addToast(
+        'error',
+        '\u0E01\u0E23\u0E38\u0E13\u0E32\u0E01\u0E23\u0E2D\u0E01\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E43\u0E2B\u0E49\u0E04\u0E23\u0E1A\u0E16\u0E49\u0E27\u0E19'
+      )
       return
     }
 
@@ -719,17 +900,26 @@ export default function AnalyzePage() {
     const bill = parseFloat(monthlyBill)
 
     if (isNaN(lat) || lat < -90 || lat > 90) {
-      addToast('error', '\u0E25\u0E30\u0E15\u0E34\u0E08\u0E39\u0E14\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07 (\u0E15\u0E49\u0E2D\u0E07\u0E2D\u0E22\u0E39\u0E48\u0E23\u0E30\u0E2B\u0E27\u0E48\u0E32\u0E07 -90 \u0E16\u0E36\u0E07 90)')
+      addToast(
+        'error',
+        '\u0E25\u0E30\u0E15\u0E34\u0E08\u0E39\u0E14\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07 (\u0E15\u0E49\u0E2D\u0E07\u0E2D\u0E22\u0E39\u0E48\u0E23\u0E30\u0E2B\u0E27\u0E48\u0E32\u0E07 -90 \u0E16\u0E36\u0E07 90)'
+      )
       return
     }
 
     if (isNaN(lng) || lng < -180 || lng > 180) {
-      addToast('error', '\u0E25\u0E2D\u0E07\u0E08\u0E34\u0E08\u0E39\u0E14\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07 (\u0E15\u0E49\u0E2D\u0E07\u0E2D\u0E22\u0E39\u0E48\u0E23\u0E30\u0E2B\u0E27\u0E48\u0E32\u0E07 -180 \u0E16\u0E36\u0E07 180)')
+      addToast(
+        'error',
+        '\u0E25\u0E2D\u0E07\u0E08\u0E34\u0E08\u0E39\u0E14\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07 (\u0E15\u0E49\u0E2D\u0E07\u0E2D\u0E22\u0E39\u0E48\u0E23\u0E30\u0E2B\u0E27\u0E48\u0E32\u0E07 -180 \u0E16\u0E36\u0E07 180)'
+      )
       return
     }
 
     if (isNaN(bill) || bill <= 0) {
-      addToast('error', '\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E1B\u0E47\u0E19\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02\u0E17\u0E35\u0E48\u0E21\u0E32\u0E01\u0E01\u0E27\u0E48\u0E32 0')
+      addToast(
+        'error',
+        '\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E1B\u0E47\u0E19\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02\u0E17\u0E35\u0E48\u0E21\u0E32\u0E01\u0E01\u0E27\u0E48\u0E32 0'
+      )
       return
     }
 
@@ -748,15 +938,24 @@ export default function AnalyzePage() {
       })
       setResult(response as unknown as SolarAnalysisAdvanced)
       setActiveTab('overview')
-      addToast('success', '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08!')
-    } catch (error) {
-      addToast('error', '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E44\u0E21\u0E48\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08 \u0E01\u0E23\u0E38\u0E13\u0E32\u0E25\u0E2D\u0E07\u0E43\u0E2B\u0E21\u0E48\u0E2D\u0E35\u0E01\u0E04\u0E23\u0E31\u0E49\u0E07')
+      addToast(
+        'success',
+        '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08!'
+      )
+    } catch {
+      addToast(
+        'error',
+        '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E44\u0E21\u0E48\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08 \u0E01\u0E23\u0E38\u0E13\u0E32\u0E25\u0E2D\u0E07\u0E43\u0E2B\u0E21\u0E48\u0E2D\u0E35\u0E01\u0E04\u0E23\u0E31\u0E49\u0E07'
+      )
     }
   }
 
   const useCurrentLocation = () => {
     if (!navigator.geolocation) {
-      addToast('error', '\u0E40\u0E1A\u0E23\u0E32\u0E27\u0E4C\u0E40\u0E0B\u0E2D\u0E23\u0E4C\u0E44\u0E21\u0E48\u0E23\u0E2D\u0E07\u0E23\u0E31\u0E1A\u0E01\u0E32\u0E23\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07')
+      addToast(
+        'error',
+        '\u0E40\u0E1A\u0E23\u0E32\u0E27\u0E4C\u0E40\u0E0B\u0E2D\u0E23\u0E4C\u0E44\u0E21\u0E48\u0E23\u0E2D\u0E07\u0E23\u0E31\u0E1A\u0E01\u0E32\u0E23\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07'
+      )
       return
     }
 
@@ -764,10 +963,16 @@ export default function AnalyzePage() {
       (position) => {
         setLatitude(position.coords.latitude.toFixed(6))
         setLongitude(position.coords.longitude.toFixed(6))
-        addToast('success', '\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08')
+        addToast(
+          'success',
+          '\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08'
+        )
       },
       () => {
-        addToast('error', '\u0E44\u0E21\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E44\u0E14\u0E49 \u0E01\u0E23\u0E38\u0E13\u0E32\u0E01\u0E23\u0E2D\u0E01\u0E40\u0E2D\u0E07')
+        addToast(
+          'error',
+          '\u0E44\u0E21\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E44\u0E14\u0E49 \u0E01\u0E23\u0E38\u0E13\u0E32\u0E01\u0E23\u0E2D\u0E01\u0E40\u0E2D\u0E07'
+        )
       }
     )
   }
@@ -791,7 +996,9 @@ export default function AnalyzePage() {
   }
 
   const renderTabContent = () => {
-    if (!result) return null
+    if (!result) {
+      return null
+    }
     switch (activeTab) {
       case 'overview':
         return <OverviewTab result={result} />
@@ -821,25 +1028,39 @@ export default function AnalyzePage() {
       <div className="space-y-6">
         {/* Page header */}
         <div>
-          <h1 className="text-2xl font-bold text-[var(--brand-text)]">{'\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C'}</h1>
+          <h1 className="text-2xl font-bold text-[var(--brand-text)]">
+            {
+              '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C'
+            }
+          </h1>
           <p className="text-[var(--brand-text-secondary)] mt-1">
-            {'\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1E\u0E25\u0E31\u0E07\u0E07\u0E32\u0E19\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C\u0E04\u0E23\u0E1A\u0E27\u0E07\u0E08\u0E23 \u0E1E\u0E23\u0E49\u0E2D\u0E21\u0E41\u0E1C\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32, \u0E01\u0E32\u0E23\u0E1A\u0E31\u0E07\u0E41\u0E14\u0E14, \u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19 \u0E41\u0E25\u0E30\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C\u0E2A\u0E20\u0E32\u0E1E\u0E2D\u0E32\u0E01\u0E32\u0E28'}
+            {
+              '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1E\u0E25\u0E31\u0E07\u0E07\u0E32\u0E19\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C\u0E04\u0E23\u0E1A\u0E27\u0E07\u0E08\u0E23 \u0E1E\u0E23\u0E49\u0E2D\u0E21\u0E41\u0E1C\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32, \u0E01\u0E32\u0E23\u0E1A\u0E31\u0E07\u0E41\u0E14\u0E14, \u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19 \u0E41\u0E25\u0E30\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C\u0E2A\u0E20\u0E32\u0E1E\u0E2D\u0E32\u0E01\u0E32\u0E28'
+            }
           </p>
         </div>
 
         {/* Input Form */}
         <Card>
-          <CardHeader title={'\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E17\u0E35\u0E48\u0E15\u0E31\u0E49\u0E07\u0E41\u0E25\u0E30\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32'} />
+          <CardHeader
+            title={
+              '\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E17\u0E35\u0E48\u0E15\u0E31\u0E49\u0E07\u0E41\u0E25\u0E30\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32'
+            }
+          />
           <CardBody>
             <div className="space-y-4">
               {/* Quick actions */}
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={useCurrentLocation}>
                   <MapPin className="w-4 h-4 mr-2" />
-                  {'\u{1F4CD} \u0E43\u0E0A\u0E49\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E1B\u0E31\u0E08\u0E08\u0E38\u0E1A\u0E31\u0E19'}
+                  {
+                    '\u{1F4CD} \u0E43\u0E0A\u0E49\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E1B\u0E31\u0E08\u0E08\u0E38\u0E1A\u0E31\u0E19'
+                  }
                 </Button>
                 <Button variant="outline" size="sm" onClick={useDefaultLocation}>
-                  {'\u{1F3D9}\uFE0F \u0E43\u0E0A\u0E49\u0E01\u0E23\u0E38\u0E07\u0E40\u0E17\u0E1E\u0E2F'}
+                  {
+                    '\u{1F3D9}\uFE0F \u0E43\u0E0A\u0E49\u0E01\u0E23\u0E38\u0E07\u0E40\u0E17\u0E1E\u0E2F'
+                  }
                 </Button>
               </div>
 
@@ -850,33 +1071,45 @@ export default function AnalyzePage() {
                   value={latitude}
                   onChange={(e) => setLatitude(e.target.value)}
                   placeholder="e.g., 13.7563"
-                  hint={'\u0E01\u0E23\u0E2D\u0E01\u0E25\u0E30\u0E15\u0E34\u0E08\u0E39\u0E14 (-90 \u0E16\u0E36\u0E07 90)'}
+                  hint={
+                    '\u0E01\u0E23\u0E2D\u0E01\u0E25\u0E30\u0E15\u0E34\u0E08\u0E39\u0E14 (-90 \u0E16\u0E36\u0E07 90)'
+                  }
                 />
                 <Input
                   label={'\u0E25\u0E2D\u0E07\u0E08\u0E34\u0E08\u0E39\u0E14'}
                   value={longitude}
                   onChange={(e) => setLongitude(e.target.value)}
                   placeholder="e.g., 100.5018"
-                  hint={'\u0E01\u0E23\u0E2D\u0E01\u0E25\u0E2D\u0E07\u0E08\u0E34\u0E08\u0E39\u0E14 (-180 \u0E16\u0E36\u0E07 180)'}
+                  hint={
+                    '\u0E01\u0E23\u0E2D\u0E01\u0E25\u0E2D\u0E07\u0E08\u0E34\u0E08\u0E39\u0E14 (-180 \u0E16\u0E36\u0E07 180)'
+                  }
                 />
               </div>
 
               {/* Address */}
               <Input
-                label={'\u0E17\u0E35\u0E48\u0E2D\u0E22\u0E39\u0E48 (\u0E44\u0E21\u0E48\u0E1A\u0E31\u0E07\u0E04\u0E31\u0E1A)'}
+                label={
+                  '\u0E17\u0E35\u0E48\u0E2D\u0E22\u0E39\u0E48 (\u0E44\u0E21\u0E48\u0E1A\u0E31\u0E07\u0E04\u0E31\u0E1A)'
+                }
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder={'\u0E40\u0E0A\u0E48\u0E19 123 \u0E16.\u0E2A\u0E38\u0E02\u0E38\u0E21\u0E27\u0E34\u0E17 \u0E01\u0E23\u0E38\u0E07\u0E40\u0E17\u0E1E\u0E2F'}
+                placeholder={
+                  '\u0E40\u0E0A\u0E48\u0E19 123 \u0E16.\u0E2A\u0E38\u0E02\u0E38\u0E21\u0E27\u0E34\u0E17 \u0E01\u0E23\u0E38\u0E07\u0E40\u0E17\u0E1E\u0E2F'
+                }
               />
 
               {/* Monthly Bill */}
               <Input
-                label={'\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19 (\u0E1A\u0E32\u0E17)'}
+                label={
+                  '\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19 (\u0E1A\u0E32\u0E17)'
+                }
                 type="number"
                 value={monthlyBill}
                 onChange={(e) => setMonthlyBill(e.target.value)}
                 placeholder="e.g., 5000"
-                hint={'\u0E01\u0E23\u0E2D\u0E01\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19\u0E02\u0E2D\u0E07\u0E04\u0E38\u0E13'}
+                hint={
+                  '\u0E01\u0E23\u0E2D\u0E01\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19\u0E02\u0E2D\u0E07\u0E04\u0E38\u0E13'
+                }
               />
             </div>
           </CardBody>
@@ -893,7 +1126,10 @@ export default function AnalyzePage() {
         {/* Location Preview - shows when coordinates are entered */}
         {latitude && longitude && !isNaN(parseFloat(latitude)) && !isNaN(parseFloat(longitude)) && (
           <Card className="border-2 border-dashed border-[var(--brand-primary)]/30 bg-[var(--brand-primary)]/5">
-            <CardHeader title={'\u{1F5FA}\uFE0F \u0E15\u0E31\u0E27\u0E2D\u0E22\u0E48\u0E32\u0E07\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E17\u0E35\u0E48\u0E15\u0E31\u0E49\u0E07'} subtitle="Preview \u0E08\u0E30\u0E2D\u0E31\u0E1B\u0E40\u0E14\u0E15\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E01\u0E23\u0E2D\u0E01\u0E1E\u0E34\u0E01\u0E31\u0E14" />
+            <CardHeader
+              title="🗺️ ตัวอย่างข้อมูลที่ตั้ง"
+              subtitle="Preview จะอัปเดตอัตโนมัติเมื่อกรอกพิกัด"
+            />
             <CardBody>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Mini Map Preview */}
@@ -909,34 +1145,78 @@ export default function AnalyzePage() {
                 {/* Quick Info Cards */}
                 <div className="space-y-3">
                   <div className="p-3 rounded-lg bg-[var(--brand-surface)]">
-                    <div className="text-xs text-[var(--brand-text-secondary)]">{'\u{1F4CD} \u0E1E\u0E34\u0E01\u0E31\u0E14'}</div>
-                    <div className="text-sm font-medium text-[var(--brand-text)]">{parseFloat(latitude).toFixed(4)}, {parseFloat(longitude).toFixed(4)}</div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-[var(--brand-surface)]">
-                    <div className="text-xs text-[var(--brand-text-secondary)]">{'\u{1F30D} \u0E20\u0E39\u0E21\u0E34\u0E20\u0E32\u0E04'}</div>
+                    <div className="text-xs text-[var(--brand-text-secondary)]">
+                      {'\u{1F4CD} \u0E1E\u0E34\u0E01\u0E31\u0E14'}
+                    </div>
                     <div className="text-sm font-medium text-[var(--brand-text)]">
-                      {parseFloat(latitude) > 15 ? '\u0E20\u0E32\u0E04\u0E40\u0E2B\u0E19\u0E37\u0E2D/\u0E2D\u0E35\u0E2A\u0E32\u0E19' : parseFloat(latitude) > 13 ? '\u0E20\u0E32\u0E04\u0E01\u0E25\u0E32\u0E07' : '\u0E20\u0E32\u0E04\u0E43\u0E15\u0E49'}
+                      {parseFloat(latitude).toFixed(4)}, {parseFloat(longitude).toFixed(4)}
                     </div>
                   </div>
                   <div className="p-3 rounded-lg bg-[var(--brand-surface)]">
-                    <div className="text-xs text-[var(--brand-text-secondary)]">{'\u2600\uFE0F \u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14\u0E42\u0E14\u0E22\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22'}</div>
+                    <div className="text-xs text-[var(--brand-text-secondary)]">
+                      {'\u{1F30D} \u0E20\u0E39\u0E21\u0E34\u0E20\u0E32\u0E04'}
+                    </div>
                     <div className="text-sm font-medium text-[var(--brand-text)]">
-                      {parseFloat(latitude) > 15 ? '1,700-1,800' : parseFloat(latitude) > 13 ? '1,600-1,700' : '1,500-1,600'} {'\u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07/\u0E1B\u0E35'}
+                      {parseFloat(latitude) > 15
+                        ? '\u0E20\u0E32\u0E04\u0E40\u0E2B\u0E19\u0E37\u0E2D/\u0E2D\u0E35\u0E2A\u0E32\u0E19'
+                        : parseFloat(latitude) > 13
+                          ? '\u0E20\u0E32\u0E04\u0E01\u0E25\u0E32\u0E07'
+                          : '\u0E20\u0E32\u0E04\u0E43\u0E15\u0E49'}
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-[var(--brand-surface)]">
+                    <div className="text-xs text-[var(--brand-text-secondary)]">
+                      {
+                        '\u2600\uFE0F \u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14\u0E42\u0E14\u0E22\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22'
+                      }
+                    </div>
+                    <div className="text-sm font-medium text-[var(--brand-text)]">
+                      {parseFloat(latitude) > 15
+                        ? '1,700-1,800'
+                        : parseFloat(latitude) > 13
+                          ? '1,600-1,700'
+                          : '1,500-1,600'}{' '}
+                      {'\u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07/\u0E1B\u0E35'}
                     </div>
                   </div>
                 </div>
                 {/* Feature Highlights */}
                 <div className="space-y-2">
-                  <div className="text-xs font-medium text-[var(--brand-text-secondary)] mb-2">{'\u{1F4CA} \u0E04\u0E38\u0E13\u0E08\u0E30\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25'}</div>
+                  <div className="text-xs font-medium text-[var(--brand-text-secondary)] mb-2">
+                    {
+                      '\u{1F4CA} \u0E04\u0E38\u0E13\u0E08\u0E30\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25'
+                    }
+                  </div>
                   {[
-                    { icon: '\u{1F3E0}', text: '\u0E41\u0E1C\u0E19\u0E1C\u0E31\u0E07\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32\u0E41\u0E25\u0E30\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E41\u0E1C\u0E07\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C' },
-                    { icon: '\u{1F4B0}', text: '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1C\u0E25\u0E15\u0E2D\u0E1A\u0E41\u0E17\u0E19\u0E01\u0E32\u0E23\u0E25\u0E07\u0E17\u0E38\u0E19 25 \u0E1B\u0E35' },
-                    { icon: '\u{1F324}\uFE0F', text: '\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F 7 \u0E27\u0E31\u0E19' },
-                    { icon: '\u{1F32B}\uFE0F', text: '\u0E1C\u0E25\u0E01\u0E23\u0E30\u0E17\u0E1A PM2.5 \u0E15\u0E48\u0E2D\u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E' },
-                    { icon: '\u{1F4C8}', text: '\u0E14\u0E31\u0E0A\u0E19\u0E35\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D\u0E02\u0E2D\u0E07\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14' },
-                    { icon: '\u{1F3E6}', text: '\u0E40\u0E1B\u0E23\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E01\u0E32\u0E23\u0E25\u0E07\u0E17\u0E38\u0E19' },
+                    {
+                      icon: '\u{1F3E0}',
+                      text: '\u0E41\u0E1C\u0E19\u0E1C\u0E31\u0E07\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32\u0E41\u0E25\u0E30\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E41\u0E1C\u0E07\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C',
+                    },
+                    {
+                      icon: '\u{1F4B0}',
+                      text: '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1C\u0E25\u0E15\u0E2D\u0E1A\u0E41\u0E17\u0E19\u0E01\u0E32\u0E23\u0E25\u0E07\u0E17\u0E38\u0E19 25 \u0E1B\u0E35',
+                    },
+                    {
+                      icon: '\u{1F324}\uFE0F',
+                      text: '\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F 7 \u0E27\u0E31\u0E19',
+                    },
+                    {
+                      icon: '\u{1F32B}\uFE0F',
+                      text: '\u0E1C\u0E25\u0E01\u0E23\u0E30\u0E17\u0E1A PM2.5 \u0E15\u0E48\u0E2D\u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E',
+                    },
+                    {
+                      icon: '\u{1F4C8}',
+                      text: '\u0E14\u0E31\u0E0A\u0E19\u0E35\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D\u0E02\u0E2D\u0E07\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14',
+                    },
+                    {
+                      icon: '\u{1F3E6}',
+                      text: '\u0E40\u0E1B\u0E23\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E01\u0E32\u0E23\u0E25\u0E07\u0E17\u0E38\u0E19',
+                    },
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-[var(--brand-text)]">
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 text-xs text-[var(--brand-text)]"
+                    >
                       <span>{item.icon}</span>
                       <span>{item.text}</span>
                     </div>
@@ -956,10 +1236,14 @@ export default function AnalyzePage() {
             className="w-full md:w-auto px-12 py-4 text-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg hover:shadow-xl transition-all"
           >
             <Sun className="w-5 h-5 mr-2" />
-            {'\u{1F50D} \u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C'}
+            {
+              '\u{1F50D} \u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C'
+            }
           </Button>
           <p className="text-xs text-[var(--brand-text-secondary)]">
-            {'\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1F\u0E23\u0E35 \u2022 \u0E1C\u0E25\u0E25\u0E31\u0E1E\u0E18\u0E4C\u0E20\u0E32\u0E22\u0E43\u0E19 30 \u0E27\u0E34\u0E19\u0E32\u0E17\u0E35 \u2022 \u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E08\u0E32\u0E01 Google Solar API'}
+            {
+              '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1F\u0E23\u0E35 \u2022 \u0E1C\u0E25\u0E25\u0E31\u0E1E\u0E18\u0E4C\u0E20\u0E32\u0E22\u0E43\u0E19 30 \u0E27\u0E34\u0E19\u0E32\u0E17\u0E35 \u2022 \u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E08\u0E32\u0E01 Google Solar API'
+            }
           </p>
         </div>
 
@@ -969,7 +1253,9 @@ export default function AnalyzePage() {
             {/* Results Header with Export */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <h2 className="text-xl font-bold text-[var(--brand-text)]">
-                {'\u0E1C\u0E25\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C'}
+                {
+                  '\u0E1C\u0E25\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C'
+                }
               </h2>
               <AnalysisReportExport result={result} />
             </div>
@@ -977,28 +1263,47 @@ export default function AnalyzePage() {
             {/* Quick Summary Banner */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200">
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{result.panelConfig.capacityKw.toFixed(1)} kWp</div>
-                <div className="text-xs text-gray-600">{'\u0E02\u0E19\u0E32\u0E14\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E19\u0E30\u0E19\u0E33'}</div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {result.panelConfig.capacityKw.toFixed(1)} kWp
+                </div>
+                <div className="text-xs text-gray-600">
+                  {'\u0E02\u0E19\u0E32\u0E14\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E19\u0E30\u0E19\u0E33'}
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{formatCurrency(result.financialAnalysis.yearlySavings)}</div>
-                <div className="text-xs text-gray-600">{'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {formatCurrency(result.financialAnalysis.yearlySavings)}
+                </div>
+                <div className="text-xs text-gray-600">
+                  {'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{result.financialAnalysis.paybackYears.toFixed(1)} {'\u0E1B\u0E35'}</div>
-                <div className="text-xs text-gray-600">{'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {result.financialAnalysis.paybackYears.toFixed(1)} {'\u0E1B\u0E35'}
+                </div>
+                <div className="text-xs text-gray-600">
+                  {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-600">{((result.panelConfig.yearlyEnergyDcKwh * result.solarPotential.carbonOffsetFactorKgPerMwh) / 1000).toFixed(1)} {'\u0E15\u0E31\u0E19'}</div>
-                <div className="text-xs text-gray-600">CO{'\u2082'} {'\u0E25\u0E14\u0E44\u0E14\u0E49\u0E15\u0E48\u0E2D\u0E1B\u0E35'}</div>
+                <div className="text-2xl font-bold text-emerald-600">
+                  {(
+                    (result.panelConfig.yearlyEnergyDcKwh *
+                      result.solarPotential.carbonOffsetFactorKgPerMwh) /
+                    1000
+                  ).toFixed(1)}{' '}
+                  {'\u0E15\u0E31\u0E19'}
+                </div>
+                <div className="text-xs text-gray-600">
+                  CO{'\u2082'} {'\u0E25\u0E14\u0E44\u0E14\u0E49\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+                </div>
               </div>
             </div>
 
             <Card className="overflow-hidden">
               <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
-              <div className="p-6">
-                {renderTabContent()}
-              </div>
+              <div className="p-6">{renderTabContent()}</div>
             </Card>
           </div>
         )}

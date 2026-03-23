@@ -60,16 +60,14 @@ const PLANS: Record<string, PlanInfo> = {
     name: 'Starter',
     subtitle: 'สำหรับทีมขนาดเล็ก',
     icon: Zap,
-    monthlyPrice: 1490,
-    annualPrice: 1190,
+    monthlyPrice: 2900,
+    annualPrice: 2320,
     features: [
-      'วิเคราะห์โซลาร์: 50 ครั้ง/เดือน',
-      'ROI + Financial Analysis เต็มรูปแบบ',
-      'พยากรณ์อากาศ 7 วัน',
-      'PM2.5 Impact Analysis',
-      'จำลองค่าไฟ Before/After',
-      'PDF Export: 20 ครั้ง/เดือน',
-      '3 ผู้ใช้',
+      'วิเคราะห์โซลาร์: 20 ครั้ง/เดือน',
+      'ROI Calculator พื้นฐาน',
+      'PDF Proposal Generation',
+      'Basic Dashboard',
+      '1 ผู้ใช้',
       'Email Support',
     ],
   },
@@ -78,19 +76,18 @@ const PLANS: Record<string, PlanInfo> = {
     name: 'Professional',
     subtitle: 'สำหรับทีมที่ต้องการเติบโต',
     icon: Rocket,
-    monthlyPrice: 3990,
-    annualPrice: 3190,
+    monthlyPrice: 7900,
+    annualPrice: 6320,
     features: [
-      'วิเคราะห์โซลาร์: 300 ครั้ง/เดือน',
-      'ทุกอย่างใน Starter +',
+      'วิเคราะห์โซลาร์: 100 ครั้ง/เดือน',
       'Climate Reliability Score',
-      'เปรียบเทียบการลงทุน (เงินสด/สินเชื่อ/เช่า)',
       'Energy Independence Score',
+      'PM2.5 Impact Analysis',
+      'เปรียบเทียบการลงทุน (เงินสด/สินเชื่อ/เช่า)',
       'Smart Alerts อัจฉริยะ',
-      'PDF Export: ไม่จำกัด',
+      'Full Dashboard + CSV Export',
       'API Access',
-      '10 ผู้ใช้',
-      'Lead Management',
+      '5 ผู้ใช้',
       'Priority Support',
     ],
   },
@@ -99,8 +96,8 @@ const PLANS: Record<string, PlanInfo> = {
     name: 'Enterprise',
     subtitle: 'สำหรับองค์กรขนาดใหญ่',
     icon: Building2,
-    monthlyPrice: 9990,
-    annualPrice: 7990,
+    monthlyPrice: 15000,
+    annualPrice: 12000,
     features: [
       'วิเคราะห์โซลาร์: ไม่จำกัด',
       'ทุกอย่างใน Professional +',
@@ -156,17 +153,23 @@ export default function CheckoutPage() {
   }, [planId, router])
 
   const price = useMemo(() => {
-    if (!plan) return 0
+    if (!plan) {
+      return 0
+    }
     return billing === 'annual' ? plan.annualPrice : plan.monthlyPrice
   }, [plan, billing])
 
   const savings = useMemo(() => {
-    if (!plan || billing !== 'annual') return 0
+    if (!plan || billing !== 'annual') {
+      return 0
+    }
     return (plan.monthlyPrice - plan.annualPrice) * 12
   }, [plan, billing])
 
   const handleApplyPromo = async () => {
-    if (!promoCode.trim()) return
+    if (!promoCode.trim()) {
+      return
+    }
     setPromoError('')
     // Placeholder: validate promo code via API
     try {
@@ -179,7 +182,9 @@ export default function CheckoutPage() {
   }
 
   const handleCheckPaymentStatus = useCallback(async () => {
-    if (!chargeId) return
+    if (!chargeId) {
+      return
+    }
     setIsPolling(true)
     try {
       const statusResponse = await api.get<{ status: string }>(
@@ -203,8 +208,7 @@ export default function CheckoutPage() {
 
     try {
       const response = await api.post<CheckoutResponse>(
-        API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ??
-          '/api/v1/billing/create-checkout-session',
+        API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ?? '/api/v1/billing/create-checkout-session',
         {
           plan_id: planId,
           billing_cycle: billing,
@@ -271,12 +275,8 @@ export default function CheckoutPage() {
                   <Icon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">
-                    {plan.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {plan.subtitle}
-                  </p>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{plan.name}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{plan.subtitle}</p>
                 </div>
               </div>
 
@@ -345,9 +345,7 @@ export default function CheckoutPage() {
           {/* -------------------------------------------------------- */}
           <div className="lg:col-span-3 order-1 lg:order-2">
             <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 lg:p-8 shadow-sm">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                ชำระเงิน
-              </h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">ชำระเงิน</h1>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
                 เลือกรอบการชำระเงินและดำเนินการต่อ
               </p>
@@ -412,13 +410,9 @@ export default function CheckoutPage() {
                     {promoApplied ? 'ใช้แล้ว' : 'ใช้รหัส'}
                   </button>
                 </div>
-                {promoError && (
-                  <p className="mt-2 text-sm text-red-500">{promoError}</p>
-                )}
+                {promoError && <p className="mt-2 text-sm text-red-500">{promoError}</p>}
                 {promoApplied && (
-                  <p className="mt-2 text-sm text-green-600">
-                    ใช้รหัสโปรโมชั่นสำเร็จ
-                  </p>
+                  <p className="mt-2 text-sm text-green-600">ใช้รหัสโปรโมชั่นสำเร็จ</p>
                 )}
               </div>
 
@@ -528,25 +522,19 @@ export default function CheckoutPage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 dark:bg-green-900/20">
                     <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    SSL Secure
-                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">SSL Secure</span>
                 </div>
                 <div className="flex flex-col items-center gap-2 text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
                     <Lock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    Secure Payment
-                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Secure Payment</span>
                 </div>
                 <div className="flex flex-col items-center gap-2 text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-50 dark:bg-purple-900/20">
                     <CreditCard className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    Opn Payments
-                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Opn Payments</span>
                 </div>
               </div>
 
@@ -564,15 +552,9 @@ export default function CheckoutPage() {
 
               {/* Policy info */}
               <div className="mt-8 rounded-lg bg-gray-50 dark:bg-gray-700/50 p-4 text-xs text-gray-500 dark:text-gray-400 space-y-1">
-                <p>
-                  ยกเลิกได้ตลอดเวลา ไม่มีค่าใช้จ่ายในการยกเลิก
-                </p>
-                <p>
-                  เมื่อยกเลิก คุณจะยังใช้งานได้จนจบรอบบิลปัจจุบัน
-                </p>
-                <p>
-                  รับใบเสร็จรับเงินอิเล็กทรอนิกส์ทุกรอบบิลทาง Email
-                </p>
+                <p>ยกเลิกได้ตลอดเวลา ไม่มีค่าใช้จ่ายในการยกเลิก</p>
+                <p>เมื่อยกเลิก คุณจะยังใช้งานได้จนจบรอบบิลปัจจุบัน</p>
+                <p>รับใบเสร็จรับเงินอิเล็กทรอนิกส์ทุกรอบบิลทาง Email</p>
               </div>
             </div>
           </div>
