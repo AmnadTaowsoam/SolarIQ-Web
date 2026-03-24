@@ -194,7 +194,9 @@ function mapApiResponse(raw: any): SolarAnalysisAdvanced {
 export function useSolarAnalysisAdvanced() {
   return useMutation({
     mutationFn: async (request: SolarAnalysisAdvancedRequest) => {
-      const raw = await api.post(API_ENDPOINTS.SOLAR.ANALYZE_ADVANCED, request)
+      const resp = await api.post(API_ENDPOINTS.SOLAR.ANALYZE_ADVANCED, request)
+      // axios returns { data, status, ... } — extract .data for the mapper
+      const raw = resp?.data ?? resp
       return mapApiResponse(raw)
     },
   })
