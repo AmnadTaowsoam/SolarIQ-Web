@@ -116,7 +116,7 @@ apiClient.interceptors.request.use(
 // Response interceptor to handle errors including 402 Quota Exceeded
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<QuotaErrorResponse>) => {
+  async (error: AxiosError<QuotaErrorResponse>) => {
     // Handle 402 Payment Required (Quota Exceeded)
     if (error.response?.status === 402 && error.response?.data) {
       const errorData = error.response.data

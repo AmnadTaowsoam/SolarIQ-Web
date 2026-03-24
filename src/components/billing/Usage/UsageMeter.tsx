@@ -1,181 +1,33 @@
-'use client';
+'use client'
 
-import { UsageData } from '@/';
-
-import { UsageData } from '@/';
-
-import { UsageBar } from '@//lib/components/billing/UsageBar';
-import { feature } from '@/lib/types/billing';
-import { UsageData } from '../billing/types';
-
-import { UsageHistory } from '../billing/types'
-import { UsageSummary as UsageSummary } from '../billing/types'
-import { QuotaResult } from '../billing/types'
-import { ProjectedUsageData } from '../billing/types'
-import { UsageHistory } from '../billing/types'
-import { PlanFeature } from '../billing/types'
-import { PlanType } from '../billing/types'
-import { PlanList } from '../billing/types'
-import { PlanComparison } from '../billing/types'
-import { UpgradePreviewResponse } from '../billing/types'
-import { PlanType } from '../billing/types'
-import { Plan } from '../billing/types'
-import { PlanFeature } from '../billing/types'
-import { PlanFeatureList } from '../billing/types'
-            .map((plan) => (
-                .map((plan) => (
-                    .map((plan) => (
-                        .map((plan) => (
-                            .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                            .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                        .map((plan) => {
-                            .map((plan) => {
-                                .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                            .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                            .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                                                        .map((plan) => {
-                            .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                        .map((plan) => {
-                            .map((plan) => {
-                                .map((plan) => {
-                            .map((plan) => {
-                            .map((plan) => {
-                                .map((plan) => {
-                                .map((plan) => {
-                                    .map((plan) => {
-                                        .map((plan) => {
-                                            .map((plan) => {
-                                                .map((plan) => {
-                                                    .map((plan) => {
-                        })
-                    </ />
-                </ />
-        />
-    )
+interface UsageMeterProps {
+  label: string
+  current: number
+  limit: number
+  unit?: string
 }
 
-    return (
-        <div className="p-4 space-y-4">
-            <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                </div>
-                    </div>
-                </div>
-            </ </div>
-        </div>
-    );
+export default function UsageMeter({ label, current, limit, unit = '' }: UsageMeterProps) {
+  const percentage = limit > 0 ? Math.min((current / limit) * 100, 100) : 0
+  const isNearLimit = percentage >= 80
+  const isOverLimit = percentage >= 100
+
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between text-sm">
+        <span className="font-medium text-gray-700">{label}</span>
+        <span
+          className={`text-xs ${isOverLimit ? 'text-red-600' : isNearLimit ? 'text-amber-600' : 'text-gray-500'}`}
+        >
+          {current.toLocaleString()} / {limit.toLocaleString()} {unit}
+        </span>
+      </div>
+      <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+        <div
+          className={`h-full rounded-full transition-all ${isOverLimit ? 'bg-red-500' : isNearLimit ? 'bg-amber-500' : 'bg-blue-500'}`}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  )
 }
