@@ -6,7 +6,23 @@ import { buildLocalizedPath, extractLocaleFromPath, normalizePathname } from '@/
 const LOCALE_COOKIE = 'NEXT_LOCALE'
 
 // Routes that don't require authentication
-const publicRoutes = ['/', '/login', '/signup', '/forgot-password', '/verify-email', '/landing', '/pricing-plans', '/about', '/terms', '/privacy', '/refund-policy', '/contact', '/checkout', '/checkout/success', '/checkout/cancel']
+const publicRoutes = [
+  '/',
+  '/login',
+  '/signup',
+  '/forgot-password',
+  '/verify-email',
+  '/landing',
+  '/pricing-plans',
+  '/about',
+  '/terms',
+  '/privacy',
+  '/refund-policy',
+  '/contact',
+  '/checkout',
+  '/checkout/success',
+  '/checkout/cancel',
+]
 
 // Admin-only routes
 const adminRoutes = ['/knowledge', '/pricing', '/admin/revenue']
@@ -36,7 +52,8 @@ export function middleware(request: NextRequest) {
 
   // Handle root path first
   if (strippedPath === '/') {
-    const hasSession = request.cookies.get('__session') ?? request.cookies.get('firebase-auth-token')
+    const hasSession =
+      request.cookies.get('__session') ?? request.cookies.get('firebase-auth-token')
     const target = hasSession ? '/dashboard' : '/landing'
     const localizedTarget = buildLocalizedPath(target, preferredLocale)
     const redirectUrl = new URL(localizedTarget, request.url)
@@ -99,7 +116,9 @@ export function middleware(request: NextRequest) {
   if (isAdminRoute) {
     const userRole = request.cookies.get('user-role')?.value
     if (userRole && userRole !== 'admin') {
-      return NextResponse.redirect(new URL(buildLocalizedPath('/dashboard', preferredLocale), request.url))
+      return NextResponse.redirect(
+        new URL(buildLocalizedPath('/dashboard', preferredLocale), request.url)
+      )
     }
   }
 
@@ -108,6 +127,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|sw.js|workbox-.*|site.webmanifest|icons/.*).*)',
   ],
 }
