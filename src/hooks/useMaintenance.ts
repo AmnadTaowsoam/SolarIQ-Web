@@ -159,6 +159,27 @@ export function useCreateServiceRecord(installationId: string) {
   })
 }
 
+export interface MaintenanceAlert {
+  alert_type: string
+  severity: string
+  title: string
+  message: string
+  installation_id: string
+  customer_name: string
+  due_date?: string
+}
+
+export function useMaintenanceAlerts() {
+  return useQuery({
+    queryKey: ['maintenance-alerts'],
+    queryFn: async () => {
+      const resp = await api.get('/api/v1/maintenance/alerts')
+      return extractData<{ alerts: MaintenanceAlert[]; total: number }>(resp)
+    },
+    refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
+  })
+}
+
 export function useUpcomingMaintenance(days = 30) {
   return useQuery({
     queryKey: ['upcoming-maintenance', days],
