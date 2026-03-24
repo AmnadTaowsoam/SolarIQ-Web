@@ -17,16 +17,31 @@ import { THAI_PROVINCES, getProvinceLabel } from '@/lib/provinces'
 // Password strength calculation
 function calculatePasswordStrength(password: string): number {
   let strength = 0
-  if (password.length >= 8) { strength += 1 }
-  if (password.length >= 12) { strength += 1 }
-  if (/[a-z]/.test(password)) { strength += 1 }
-  if (/[A-Z]/.test(password)) { strength += 1 }
-  if (/[0-9]/.test(password)) { strength += 1 }
-  if (/[^a-zA-Z0-9]/.test(password)) { strength += 1 }
+  if (password.length >= 8) {
+    strength += 1
+  }
+  if (password.length >= 12) {
+    strength += 1
+  }
+  if (/[a-z]/.test(password)) {
+    strength += 1
+  }
+  if (/[A-Z]/.test(password)) {
+    strength += 1
+  }
+  if (/[0-9]/.test(password)) {
+    strength += 1
+  }
+  if (/[^a-zA-Z0-9]/.test(password)) {
+    strength += 1
+  }
   return Math.min(strength, 4)
 }
 
-function getPasswordStrengthLabel(strength: number, labels: { weak: string; medium: string; good: string; strong: string }): string {
+function getPasswordStrengthLabel(
+  strength: number,
+  labels: { weak: string; medium: string; good: string; strong: string }
+): string {
   switch (strength) {
     case 0:
     case 1:
@@ -81,10 +96,7 @@ interface FormErrors {
   acceptPdpa?: string
 }
 
-function validateForm(
-  data: FormData,
-  t: (key: string) => string
-): FormErrors {
+function validateForm(data: FormData, t: (key: string) => string): FormErrors {
   const errors: FormErrors = {}
 
   if (!data.email) {
@@ -174,7 +186,10 @@ export default function SignupPage() {
     strong: t('strength.strong'),
   })
   const provinceOptions = useMemo(
-    () => [...THAI_PROVINCES].sort((a, b) => getProvinceLabel(a, locale).localeCompare(getProvinceLabel(b, locale), locale)),
+    () =>
+      [...THAI_PROVINCES].sort((a, b) =>
+        getProvinceLabel(a, locale).localeCompare(getProvinceLabel(b, locale), locale)
+      ),
     [locale]
   )
 
@@ -190,7 +205,9 @@ export default function SignupPage() {
       setFormData((prev) => ({ ...prev, [field]: value }))
       setTouched((prev) => ({ ...prev, [field]: true }))
       // Clear error when user starts typing
-      if (error) { setError(null) }
+      if (error) {
+        setError(null)
+      }
     },
     [error]
   )
@@ -201,7 +218,7 @@ export default function SignupPage() {
       const errors = validateForm(formData, t)
       setFormErrors((prev) => ({ ...prev, [field]: errors[field] }))
     },
-    [formData]
+    [formData, t]
   )
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -209,7 +226,7 @@ export default function SignupPage() {
     setError(null)
 
     // Validate all fields
-      const errors = validateForm(formData, t)
+    const errors = validateForm(formData, t)
     setFormErrors(errors)
     setTouched({
       email: true,
@@ -229,7 +246,7 @@ export default function SignupPage() {
     setIsLoading(true)
 
     try {
-      const response = await api.post<{ success: boolean; message?: string }>('/signup', {
+      const response = await api.post<{ success: boolean; message?: string }>('/auth/signup', {
         email: formData.email,
         password: formData.password,
         company_name: formData.companyName,
@@ -245,11 +262,7 @@ export default function SignupPage() {
         router.push(`${verifyEmailPath}?email=${encodeURIComponent(formData.email)}`)
       }
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : t('errors.signupFailed')
-      )
+      setError(err instanceof Error ? err.message : t('errors.signupFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -262,9 +275,7 @@ export default function SignupPage() {
     try {
       // Initialize Google OAuth flow
       // This will be handled by Firebase
-      const { GoogleAuthProvider, signInWithPopup } = await import(
-        'firebase/auth'
-      )
+      const { GoogleAuthProvider, signInWithPopup } = await import('firebase/auth')
       const { auth } = await import('@/lib/firebase')
 
       const provider = new GoogleAuthProvider()
@@ -276,8 +287,8 @@ export default function SignupPage() {
 
       // Send to backend for verification and account creation
       const response = await api.post<{
-        success: boolean;
-        requires_onboarding?: boolean;
+        success: boolean
+        requires_onboarding?: boolean
         message?: string
       }>('/signup/google', {
         id_token: idToken,
@@ -291,11 +302,7 @@ export default function SignupPage() {
         }
       }
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : t('errors.googleSignupFailed')
-      )
+      setError(err instanceof Error ? err.message : t('errors.googleSignupFailed'))
     } finally {
       setGoogleLoading(false)
     }
@@ -313,9 +320,7 @@ export default function SignupPage() {
           {isTrial && (
             <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2">
               <span className="flex h-2 w-2 rounded-full bg-green-500" />
-              <span className="text-sm font-semibold text-green-700">
-                ทดลองฟรี 14 วัน
-              </span>
+              <span className="text-sm font-semibold text-green-700">ทดลองฟรี 14 วัน</span>
             </div>
           )}
         </div>
@@ -371,10 +376,7 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('emailLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
@@ -391,10 +393,7 @@ export default function SignupPage() {
 
             {/* Password */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('passwordLabel')} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -414,12 +413,7 @@ export default function SignupPage() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -428,12 +422,7 @@ export default function SignupPage() {
                       />
                     </svg>
                   ) : (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -472,10 +461,10 @@ export default function SignupPage() {
                         passwordStrength <= 1
                           ? 'text-red-500'
                           : passwordStrength === 2
-                          ? 'text-yellow-500'
-                          : passwordStrength === 3
-                          ? 'text-blue-500'
-                          : 'text-green-500'
+                            ? 'text-yellow-500'
+                            : passwordStrength === 3
+                              ? 'text-blue-500'
+                              : 'text-green-500'
                       }`}
                     >
                       {passwordStrengthLabel}
@@ -499,15 +488,9 @@ export default function SignupPage() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder={t('confirmPasswordPlaceholder')}
                   value={formData.confirmPassword}
-                  onChange={(e) =>
-                    handleInputChange('confirmPassword', e.target.value)
-                  }
+                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                   onBlur={() => handleBlur('confirmPassword')}
-                  error={
-                    touched.confirmPassword
-                      ? formErrors.confirmPassword
-                      : undefined
-                  }
+                  error={touched.confirmPassword ? formErrors.confirmPassword : undefined}
                   disabled={isLoading || googleLoading}
                 />
                 <button
@@ -516,12 +499,7 @@ export default function SignupPage() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -530,12 +508,7 @@ export default function SignupPage() {
                       />
                     </svg>
                   ) : (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -556,10 +529,7 @@ export default function SignupPage() {
 
             {/* Company Name */}
             <div>
-              <label
-                htmlFor="companyName"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('companyLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
@@ -576,10 +546,7 @@ export default function SignupPage() {
 
             {/* Province */}
             <div>
-              <label
-                htmlFor="province"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="province" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('provinceLabel')} <span className="text-red-500">*</span>
               </label>
               <select
@@ -589,9 +556,7 @@ export default function SignupPage() {
                 onBlur={() => handleBlur('province')}
                 disabled={isLoading || googleLoading}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  touched.province && formErrors.province
-                    ? 'border-red-500'
-                    : 'border-gray-300'
+                  touched.province && formErrors.province ? 'border-red-500' : 'border-gray-300'
                 }`}
               >
                 <option value="">{t('provincePlaceholder')}</option>
@@ -602,18 +567,13 @@ export default function SignupPage() {
                 ))}
               </select>
               {touched.province && formErrors.province && (
-                <p className="mt-1 text-sm text-red-500">
-                  {formErrors.province}
-                </p>
+                <p className="mt-1 text-sm text-red-500">{formErrors.province}</p>
               )}
             </div>
 
             {/* Phone */}
             <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('phoneLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
@@ -634,37 +594,27 @@ export default function SignupPage() {
                 <input
                   type="checkbox"
                   checked={formData.acceptTerms}
-                  onChange={(e) =>
-                    handleInputChange('acceptTerms', e.target.checked)
-                  }
+                  onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
                   disabled={isLoading || googleLoading}
                   className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-600">
                   {t('acceptPrefix')}{' '}
-                  <Link
-                    href="/terms"
-                    className="text-blue-600 hover:underline"
-                    target="_blank"
-                  >
+                  <Link href="/terms" className="text-blue-600 hover:underline" target="_blank">
                     {t('termsLink')}
                   </Link>{' '}
                   <span className="text-red-500">*</span>
                 </span>
               </label>
               {touched.acceptTerms && formErrors.acceptTerms && (
-                <p className="text-sm text-red-500 ml-7">
-                  {formErrors.acceptTerms}
-                </p>
+                <p className="text-sm text-red-500 ml-7">{formErrors.acceptTerms}</p>
               )}
 
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.acceptPdpa}
-                  onChange={(e) =>
-                    handleInputChange('acceptPdpa', e.target.checked)
-                  }
+                  onChange={(e) => handleInputChange('acceptPdpa', e.target.checked)}
                   disabled={isLoading || googleLoading}
                   className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
@@ -681,18 +631,12 @@ export default function SignupPage() {
                 </span>
               </label>
               {touched.acceptPdpa && formErrors.acceptPdpa && (
-                <p className="text-sm text-red-500 ml-7">
-                  {formErrors.acceptPdpa}
-                </p>
+                <p className="text-sm text-red-500 ml-7">{formErrors.acceptPdpa}</p>
               )}
             </div>
 
             {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={isLoading || googleLoading}
-              className="w-full mt-6"
-            >
+            <Button type="submit" disabled={isLoading || googleLoading} className="w-full mt-6">
               {isLoading ? t('submitting') : t('submit')}
             </Button>
           </form>
@@ -713,18 +657,12 @@ export default function SignupPage() {
               <p className="font-medium text-green-700">
                 บัญชีทดลองใช้ฟรี 14 วัน จะเริ่มต้นหลังสมัคร
               </p>
-              <p className="mt-1">
-                ไม่ต้องใช้บัตรเครดิต ยกเลิกได้ตลอดเวลา
-              </p>
+              <p className="mt-1">ไม่ต้องใช้บัตรเครดิต ยกเลิกได้ตลอดเวลา</p>
             </>
           ) : (
             <>
-              <p>
-                {t('trialHeadline')}
-              </p>
-              <p className="mt-1">
-                {t('trialDetail')}
-              </p>
+              <p>{t('trialHeadline')}</p>
+              <p className="mt-1">{t('trialDetail')}</p>
             </>
           )}
         </div>
