@@ -206,24 +206,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
             try {
               // Exchange Firebase token for JWT
               const firebaseToken = await getIdToken(fbUser, false)
-              const loginResp = await api.post<{
-                access_token: string
-                refresh_token: string
-                user: Record<string, unknown>
-              }>('/auth/login', { firebase_id_token: firebaseToken })
+              const loginRaw = await api.post('/auth/login', { firebase_id_token: firebaseToken })
+              const loginData = loginRaw?.data ?? loginRaw
 
               if (!isMounted) {
                 return
               }
-              setTokens(loginResp.access_token, loginResp.refresh_token)
+              if (loginData?.access_token) {
+                setTokens(loginData.access_token, loginData.refresh_token)
+              }
 
               // Fetch full user profile using JWT
-              const profileResp = await api.get<{ user: User }>('/api/v1/auth/me')
+              const profileRaw = await api.get('/api/v1/auth/me')
+              const profileData = profileRaw?.data ?? profileRaw
               if (!isMounted) {
                 return
               }
-              setUser(profileResp.user)
-              setSessionCookie(true, profileResp.user.role)
+              const userData = profileData?.user ?? profileData
+              setUser(userData)
+              setSessionCookie(true, userData?.role || 'contractor')
             } catch {
               // Fallback: use Firebase user info directly
               const fallbackUser: User = {
