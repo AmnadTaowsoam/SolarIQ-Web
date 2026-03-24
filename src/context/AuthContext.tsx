@@ -1,10 +1,10 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react'
-import { onIdTokenChanged, signOut, User as FirebaseUser } from 'firebase/auth'
+import { getIdToken, onIdTokenChanged, signOut, User as FirebaseUser } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { User } from '@/types'
-import { api } from '@/lib/api'
+import { api, setTokens, clearTokens } from '@/lib/api'
 import { useRouter } from 'next/navigation'
 import { clearAuthData } from '@/lib/security'
 
@@ -65,7 +65,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     .trim()
     .toLowerCase()
   const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || 'Solariq123!'
-  const devLoginRole = process.env.NEXT_PUBLIC_DEV_LOGIN_ROLE === 'contractor' ? 'contractor' : 'admin'
+  const devLoginRole =
+    process.env.NEXT_PUBLIC_DEV_LOGIN_ROLE === 'contractor' ? 'contractor' : 'admin'
   const devAuthStorageKey = 'solariq_dev_auth_user'
 
   const loginWithDevCredentials = useCallback(
@@ -76,11 +77,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const normalizedEmail = email.trim().toLowerCase()
       const normalizedPassword = password.trim()
-      const acceptedPasswords = new Set([
-        devLoginPassword,
-        'Solariq123',
-        'Solariq123!',
-      ])
+      const acceptedPasswords = new Set([devLoginPassword, 'Solariq123', 'Solariq123!'])
 
       if (normalizedEmail !== devLoginEmail || !acceptedPasswords.has(normalizedPassword)) {
         return false
@@ -97,7 +94,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       setUser(devUser)
-      setFirebaseUser({ uid: devUser.uid, email: devUser.email, displayName: devUser.displayName } as FirebaseUser)
+      setFirebaseUser({
+        uid: devUser.uid,
+        email: devUser.email,
+        displayName: devUser.displayName,
+      } as FirebaseUser)
       setSessionCookie(true, devUser.role)
       if (typeof window !== 'undefined') {
         localStorage.setItem(devAuthStorageKey, JSON.stringify(devUser))
@@ -117,6 +118,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(null)
       setFirebaseUser(null)
       setSessionCookie(false)
+      clearTokens()
       clearAuthData()
       if (typeof window !== 'undefined') {
         localStorage.removeItem(devAuthStorageKey)
@@ -133,15 +135,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       clearTimeout(timeoutId)
       // Only set timeout if user is authenticated
       if (firebaseUser) {
-        timeoutId = setTimeout(() => {
-          logout()
-        }, 30 * 60 * 1000) // 30 minutes
+        timeoutId = setTimeout(
+          () => {
+            logout()
+          },
+          30 * 60 * 1000
+        ) // 30 minutes
       }
     }
 
     const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
     events.forEach((event) => document.addEventListener(event, resetTimeout))
-    
+
     resetTimeout()
 
     return () => {
@@ -158,9 +163,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
           try {
             const parsed = JSON.parse(storedUser) as User
             setUser(parsed)
-            setFirebaseUser(
-              { uid: parsed.uid, email: parsed.email, displayName: parsed.displayName } as FirebaseUser
-            )
+            setFirebaseUser({
+              uid: parsed.uid,
+              email: parsed.email,
+              displayName: parsed.displayName,
+            } as FirebaseUser)
             setSessionCookie(true, parsed.role)
           } catch {
             localStorage.removeItem(devAuthStorageKey)
@@ -197,15 +204,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           if (fbUser) {
             try {
-              // Fetch user profile from backend
-              const response = await api.get<{ user: User }>('/api/v1/auth/me')
+              // Exchange Firebase token for JWT
+              const firebaseToken = await getIdToken(fbUser, false)
+              const loginResp = await api.post<{
+                access_token: string
+                refresh_token: string
+                user: Record<string, unknown>
+              }>('/auth/login', { firebase_id_token: firebaseToken })
+
               if (!isMounted) {
                 return
               }
-              setUser(response.user)
-              setSessionCookie(true, response.user.role)
+              setTokens(loginResp.access_token, loginResp.refresh_token)
+
+              // Fetch full user profile using JWT
+              const profileResp = await api.get<{ user: User }>('/api/v1/auth/me')
+              if (!isMounted) {
+                return
+              }
+              setUser(profileResp.user)
+              setSessionCookie(true, profileResp.user.role)
             } catch {
-              // Create a basic user object from Firebase user
+              // Fallback: use Firebase user info directly
               const fallbackUser: User = {
                 uid: fbUser.uid,
                 email: fbUser.email,

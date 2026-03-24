@@ -9,6 +9,24 @@ import { auth } from '@/lib/firebase'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
+// ── JWT Token Storage ───────────────────────────────────────────────
+let _accessToken: string | null = null
+let _refreshToken: string | null = null
+
+export function setTokens(access: string, refresh: string) {
+  _accessToken = access
+  _refreshToken = refresh
+}
+
+export function clearTokens() {
+  _accessToken = null
+  _refreshToken = null
+}
+
+export function getAccessToken() {
+  return _accessToken
+}
+
 // Custom error class for quota exceeded errors
 export class QuotaExceededError extends Error {
   featureKey: string
@@ -53,9 +71,15 @@ const apiClient: AxiosInstance = axios.create({
   },
 })
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token (prefer JWT, fallback to Firebase)
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Use JWT access token if available
+    if (_accessToken) {
+      config.headers.Authorization = `Bearer ${_accessToken}`
+      return config
+    }
+    // Fallback to Firebase ID token (for transition period)
     const user = auth.currentUser
     if (user) {
       try {
@@ -100,12 +124,29 @@ apiClient.interceptors.response.use(
       return Promise.reject(quotaError)
     }
 
-    // Handle 401 Unauthorized - redirect to login
+    // Handle 401 Unauthorized - try refresh token, then redirect
+    if (error.response?.status === 401 && _refreshToken) {
+      try {
+        const refreshResp = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+          refresh_token: _refreshToken,
+        })
+        const { access_token, refresh_token } = refreshResp.data
+        setTokens(access_token, refresh_token)
+        // Retry original request with new token
+        if (error.config) {
+          error.config.headers.Authorization = `Bearer ${access_token}`
+          return apiClient.request(error.config)
+        }
+      } catch {
+        // Refresh failed — clear tokens and redirect
+        clearTokens()
+      }
+    }
+
     if (error.response?.status === 401) {
+      clearTokens()
       if (typeof window !== 'undefined') {
-        // Clear any cached auth state
         localStorage.removeItem('auth_state')
-        // Redirect to login
         window.location.href = '/login'
       }
     }
