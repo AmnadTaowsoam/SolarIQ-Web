@@ -43,7 +43,12 @@
     "serviceArea": "พื้นที่บริการ",
     "sessions": "เซสชัน",
     "admin": "ผู้ดูแล",
-    "auditLogs": "บันทึกตรวจสอบ"
+    "auditLogs": "บันทึกตรวจสอบ",
+    "calendar": "ปฏิทินงาน",
+    "maintenance": "บำรุงรักษา",
+    "serviceCenter": "ศูนย์บริการ",
+    "myBusiness": "ธุรกิจของฉัน",
+    "accountAndPlan": "บัญชีและแพลน"
   },
   "navbar": {
     "openMenu": "เปิดเมนู",

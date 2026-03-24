@@ -118,10 +118,10 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      label: 'เครื่องมือ',
+      label: tNav('tools'),
       items: [
         {
-          name: 'ปฏิทินงาน',
+          name: tNav('calendar'),
           href: '/calendar',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,7 +151,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      label: 'ธุรกิจของฉัน',
+      label: tNav('myBusiness'),
       items: [
         {
           name: tNav('commissions'),
@@ -182,7 +182,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           ),
         },
         {
-          name: 'บำรุงรักษา',
+          name: tNav('maintenance'),
           href: '/maintenance',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -196,7 +196,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           ),
         },
         {
-          name: 'ศูนย์บริการ',
+          name: tNav('serviceCenter'),
           href: '/service-requests',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -212,7 +212,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      label: 'บัญชีและแพลน',
+      label: tNav('accountAndPlan'),
       items: [
         {
           name: tNav('billing'),

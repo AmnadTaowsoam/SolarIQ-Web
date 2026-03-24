@@ -43,7 +43,12 @@
     "serviceArea": "Service Area",
     "sessions": "Sessions",
     "admin": "Admin",
-    "auditLogs": "Audit Logs"
+    "auditLogs": "Audit Logs",
+    "calendar": "Calendar",
+    "maintenance": "Maintenance",
+    "serviceCenter": "Service Center",
+    "myBusiness": "My Business",
+    "accountAndPlan": "Account & Plan"
   },
   "navbar": {
     "openMenu": "Open menu",
