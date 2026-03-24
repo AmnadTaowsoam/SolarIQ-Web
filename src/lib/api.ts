@@ -62,18 +62,34 @@ interface QuotaErrorResponse {
   recommended_plan?: string
 }
 
+// Helper to read a cookie by name
+function getCookie(name: string): string | undefined {
+  if (typeof document === 'undefined') {
+    return undefined
+  }
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))
+  return match ? match[2] : undefined
+}
+
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
+  withCredentials: true, // Send cookies cross-origin for CSRF
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// Request interceptor to add auth token (prefer JWT, fallback to Firebase)
+// Request interceptor to add auth token + CSRF token
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    // Attach CSRF token for state-changing requests
+    const csrfToken = getCookie('csrf_token')
+    if (csrfToken && config.method && !['get', 'head', 'options'].includes(config.method)) {
+      config.headers['x-csrf-token'] = csrfToken
+    }
+
     // Use JWT access token if available
     if (_accessToken) {
       config.headers.Authorization = `Bearer ${_accessToken}`
