@@ -1,7 +1,7 @@
 name: Deploy to Cloudflare Pages
-# Disabled: Cloudflare Pages Git integration handles production deploys
-# This workflow was overriding with broken static deploy
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -14,16 +14,18 @@ jobs:
           node-version: '18'
           cache: 'npm'
       - run: npm ci
-      - run: npx @cloudflare/next-on-pages
+      - run: npm run build
         env:
           NEXT_PUBLIC_API_URL: https://solariq-api-269682189177.asia-southeast1.run.app
           NEXT_PUBLIC_FIREBASE_API_KEY: AIzaSyDLS4Dobhn2hUkCT8HGUotKD5bwxNvkJOc
           NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: solariqapp.firebaseapp.com
           NEXT_PUBLIC_FIREBASE_PROJECT_ID: solariqapp
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: AIzaSyCQ0NnvrdM6wGiFTyQo0XyUM_XfMp6Cbik
+      - name: Remove build cache
+        run: rm -rf .next/cache
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .vercel/output/static --project-name=solariq-web
+          command: pages deploy .next --project-name=solariq-web
