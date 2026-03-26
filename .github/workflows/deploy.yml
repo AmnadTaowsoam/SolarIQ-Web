@@ -1,36 +1,5 @@
 name: Deploy to Cloudflare Pages
+# Cloudflare Pages Git integration handles auto-deploy
+# This workflow is for manual deploys only
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    env:
-      HUSKY: '0'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
-      - name: Build for Cloudflare
-        run: npx opennextjs-cloudflare build
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
-          NEXT_PUBLIC_LIFF_ID: ${{ secrets.NEXT_PUBLIC_LIFF_ID }}
-          NEXT_PUBLIC_LIFF_URL: ${{ secrets.NEXT_PUBLIC_LIFF_URL }}
-          NEXT_PUBLIC_LINE_CHANNEL_ID: ${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_ID }}
-          NODE_ENV: production
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .open-next/assets --project-name=solariq-web
