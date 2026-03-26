@@ -17,7 +17,6 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   eslint: {
@@ -32,6 +31,7 @@ const nextConfig = {
     deviceSizes: [375, 640, 768, 1024, 1280, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+    unoptimized: true,
   },
   experimental: {
     optimizeCss: true,
