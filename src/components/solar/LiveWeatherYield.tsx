@@ -62,7 +62,7 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
     }))
   }, [hourlyForecast])
 
-  if (!liveConditions) {
+  if (!liveConditions || !liveConditions.weather) {
     return (
       <Card>
         <CardBody className="p-6 text-center text-[var(--brand-text-secondary)]">
@@ -74,7 +74,7 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
   }
 
   const { weather, predictedOutputNow, predicted24h, tempEfficiency } = liveConditions
-  const weatherIcon = getWeatherIcon(weather.clouds, weather.description)
+  const weatherIcon = getWeatherIcon(weather.clouds ?? 0, weather.description ?? '')
 
   return (
     <Card>
