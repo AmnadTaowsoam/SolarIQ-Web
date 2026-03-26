@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardHeader, CardBody } from '@/components/ui'
-import { Ruler, Sun, LayoutGrid } from 'lucide-react'
+import { Ruler, Sun, LayoutGrid, Building } from 'lucide-react'
 import type { RoofSegment } from '@/types'
 
 interface RoofSegmentAnalysisProps {
@@ -51,8 +51,27 @@ export function RoofSegmentAnalysis({ segments }: RoofSegmentAnalysisProps) {
   if (!segments || segments.length === 0) {
     return (
       <Card>
-        <CardBody className="p-6 text-center text-[var(--brand-text-secondary)]">
-          No roof segment data available.
+        <CardBody className="p-8 text-center">
+          <Building className="w-12 h-12 mx-auto mb-3 text-[var(--brand-text-secondary)] opacity-30" />
+          <p className="text-[var(--brand-text-secondary)] font-medium mb-2">
+            {
+              '\u0E44\u0E21\u0E48\u0E1E\u0E1A\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E2A\u0E48\u0E27\u0E19\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32'
+            }
+          </p>
+          <p className="text-sm text-[var(--brand-text-secondary)]">
+            Google Solar API{' '}
+            {
+              '\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25 Roof Segment \u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E19\u0E35\u0E49'
+            }
+            {' \u2014 '}
+            {
+              '\u0E2D\u0E32\u0E08\u0E40\u0E1B\u0E47\u0E19\u0E40\u0E1E\u0E23\u0E32\u0E30\u0E20\u0E32\u0E1E\u0E16\u0E48\u0E32\u0E22\u0E14\u0E32\u0E27\u0E40\u0E17\u0E35\u0E22\u0E21\u0E22\u0E31\u0E07\u0E44\u0E21\u0E48\u0E04\u0E23\u0E2D\u0E1A\u0E04\u0E25\u0E38\u0E21\u0E1E\u0E37\u0E49\u0E19\u0E17\u0E35\u0E48\u0E19\u0E35\u0E49'
+            }
+          </p>
+          <p className="text-xs text-[var(--brand-text-secondary)] mt-2">
+            Roof segment data is not available from Google Solar API for this location. This may be
+            because satellite imagery does not fully cover this area yet.
+          </p>
         </CardBody>
       </Card>
     )
@@ -137,7 +156,10 @@ export function RoofSegmentAnalysis({ segments }: RoofSegmentAnalysisProps) {
             <div className="text-center">
               <div className="text-[var(--brand-text-secondary)]">Avg Sunshine</div>
               <div className="text-lg font-bold text-amber-500">
-                {(segments.reduce((s, seg) => s + seg.sunshineHours, 0) / segments.length).toFixed(0)} hrs
+                {(segments.reduce((s, seg) => s + seg.sunshineHours, 0) / segments.length).toFixed(
+                  0
+                )}{' '}
+                hrs
               </div>
             </div>
           </div>

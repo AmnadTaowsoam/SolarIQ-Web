@@ -21,13 +21,20 @@ interface SmartAlertsProps {
 
 function getAlertIcon(type: string) {
   switch (type) {
-    case 'weather_rain': return <CloudRain className="w-5 h-5" />
-    case 'weather_heat': return <Thermometer className="w-5 h-5" />
-    case 'weather_storm': return <AlertTriangle className="w-5 h-5" />
-    case 'maintenance': return <Wrench className="w-5 h-5" />
-    case 'performance': return <Zap className="w-5 h-5" />
-    case 'financial': return <DollarSign className="w-5 h-5" />
-    default: return <Info className="w-5 h-5" />
+    case 'weather_rain':
+      return <CloudRain className="w-5 h-5" />
+    case 'weather_heat':
+      return <Thermometer className="w-5 h-5" />
+    case 'weather_storm':
+      return <AlertTriangle className="w-5 h-5" />
+    case 'maintenance':
+      return <Wrench className="w-5 h-5" />
+    case 'performance':
+      return <Zap className="w-5 h-5" />
+    case 'financial':
+      return <DollarSign className="w-5 h-5" />
+    default:
+      return <Info className="w-5 h-5" />
   }
 }
 
@@ -63,18 +70,23 @@ function getSeverityConfig(severity: string) {
 export function SmartAlerts({ alerts }: SmartAlertsProps) {
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set())
 
-  const visibleAlerts = alerts.filter((a) => !dismissedIds.has(a.id))
+  const safeAlerts = Array.isArray(alerts) ? alerts : []
+  const visibleAlerts = safeAlerts.filter((a) => !dismissedIds.has(a.id))
 
   const handleDismiss = (id: string) => {
     setDismissedIds((prev) => new Set([...prev, id]))
   }
 
-  if (!alerts || alerts.length === 0) {
+  if (safeAlerts.length === 0) {
     return (
       <Card>
         <CardBody className="p-6 text-center text-[var(--brand-text-secondary)]">
           <Bell className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p>{'\u0E44\u0E21\u0E48\u0E21\u0E35\u0E01\u0E32\u0E23\u0E41\u0E08\u0E49\u0E07\u0E40\u0E15\u0E37\u0E2D\u0E19\u0E43\u0E19\u0E02\u0E13\u0E30\u0E19\u0E35\u0E49'}</p>
+          <p>
+            {
+              '\u0E44\u0E21\u0E48\u0E21\u0E35\u0E01\u0E32\u0E23\u0E41\u0E08\u0E49\u0E07\u0E40\u0E15\u0E37\u0E2D\u0E19\u0E43\u0E19\u0E02\u0E13\u0E30\u0E19\u0E35\u0E49'
+            }
+          </p>
         </CardBody>
       </Card>
     )
@@ -85,7 +97,11 @@ export function SmartAlerts({ alerts }: SmartAlertsProps) {
       <Card>
         <CardBody className="p-6 text-center text-[var(--brand-text-secondary)]">
           <Bell className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p>{'\u0E1B\u0E34\u0E14\u0E01\u0E32\u0E23\u0E41\u0E08\u0E49\u0E07\u0E40\u0E15\u0E37\u0E2D\u0E19\u0E17\u0E31\u0E49\u0E07\u0E2B\u0E21\u0E14\u0E41\u0E25\u0E49\u0E27'}</p>
+          <p>
+            {
+              '\u0E1B\u0E34\u0E14\u0E01\u0E32\u0E23\u0E41\u0E08\u0E49\u0E07\u0E40\u0E15\u0E37\u0E2D\u0E19\u0E17\u0E31\u0E49\u0E07\u0E2B\u0E21\u0E14\u0E41\u0E25\u0E49\u0E27'
+            }
+          </p>
         </CardBody>
       </Card>
     )
@@ -94,7 +110,9 @@ export function SmartAlerts({ alerts }: SmartAlertsProps) {
   return (
     <Card>
       <CardHeader
-        title={'\u0E01\u0E32\u0E23\u0E41\u0E08\u0E49\u0E07\u0E40\u0E15\u0E37\u0E2D\u0E19\u0E2D\u0E31\u0E08\u0E09\u0E23\u0E34\u0E22\u0E30'}
+        title={
+          '\u0E01\u0E32\u0E23\u0E41\u0E08\u0E49\u0E07\u0E40\u0E15\u0E37\u0E2D\u0E19\u0E2D\u0E31\u0E08\u0E09\u0E23\u0E34\u0E22\u0E30'
+        }
         subtitle={`Smart Alerts (${visibleAlerts.length})`}
       />
       <CardBody>
@@ -118,9 +136,7 @@ export function SmartAlerts({ alerts }: SmartAlertsProps) {
                       {alert.title}
                     </span>
                   </div>
-                  <p className="text-xs text-[var(--brand-text-secondary)]">
-                    {alert.description}
-                  </p>
+                  <p className="text-xs text-[var(--brand-text-secondary)]">{alert.description}</p>
                   <div className="text-[10px] text-[var(--brand-text-secondary)] mt-1 opacity-60">
                     {new Date(alert.timestamp).toLocaleString('th-TH')}
                   </div>

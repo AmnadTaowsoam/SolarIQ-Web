@@ -132,7 +132,7 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                   {'\u0E02\u0E19\u0E32\u0E14\u0E23\u0E30\u0E1A\u0E1A'}
                 </div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
-                  {result.panelConfig.capacityKw.toFixed(2)} kWp
+                  {(result.panelConfig.capacityKw ?? 0).toFixed(2)} kWp
                 </div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
                   {result.panelConfig.panelsCount} {'\u0E41\u0E1C\u0E07'}
@@ -172,10 +172,10 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                   {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}
                 </div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
-                  {result.financialAnalysis.paybackYears.toFixed(1)} {'\u0E1B\u0E35'}
+                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {'\u0E1B\u0E35'}
                 </div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
-                  ROI: {result.financialAnalysis.roi25Year.toFixed(1)}%
+                  ROI: {(result.financialAnalysis.roi25Year ?? 0).toFixed(1)}%
                 </div>
               </div>
             </div>
@@ -276,7 +276,7 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                   {'\u0E1E\u0E37\u0E49\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32'}
                 </div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
-                  {result.solarPotential.roofAreaM2.toFixed(0)} m&sup2;
+                  {(result.solarPotential.roofAreaM2 ?? 0).toFixed(0)} m&sup2;
                 </div>
               </div>
               <div>
@@ -370,7 +370,7 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
               <div>
                 <div className="text-sm text-[var(--brand-text-secondary)]">IRR</div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
-                  {result.financialAnalysis.irrPercent.toFixed(1)}%
+                  {(result.financialAnalysis.irrPercent ?? 0).toFixed(1)}%
                 </div>
               </div>
               <div>
@@ -378,7 +378,7 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                   ROI 25 {'\u0E1B\u0E35'}
                 </div>
                 <div className="text-lg font-semibold text-green-600">
-                  {result.financialAnalysis.roi25Year.toFixed(1)}%
+                  {(result.financialAnalysis.roi25Year ?? 0).toFixed(1)}%
                 </div>
               </div>
               <div>
@@ -386,7 +386,7 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                   {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}
                 </div>
                 <div className="text-lg font-semibold text-blue-600">
-                  {result.financialAnalysis.paybackYears.toFixed(1)} {'\u0E1B\u0E35'}
+                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {'\u0E1B\u0E35'}
                 </div>
               </div>
             </div>
@@ -706,7 +706,7 @@ function FinancialTab({
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                   <span className="text-sm text-[var(--brand-text-secondary)]">IRR</span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
-                    {result.financialAnalysis.irrPercent.toFixed(1)}%
+                    {(result.financialAnalysis.irrPercent ?? 0).toFixed(1)}%
                   </span>
                 </div>
               </div>
@@ -784,15 +784,18 @@ function ForecastTab({ result }: { result: SolarAnalysisAdvanced }) {
   const { data: alertsData } = useSmartAlertsHook(lat, lng)
 
   const liveConditions = (liveData as LiveConditions | undefined) ?? null
-  const hourlyForecast = (forecastData as { hourly?: WeatherHourly[] } | undefined)?.hourly ?? []
-  const dailyForecast = (forecastData as { daily?: WeatherDaily[] } | undefined)?.daily ?? []
+  const rawHourly = (forecastData as { hourly?: WeatherHourly[] } | undefined)?.hourly
+  const hourlyForecast = Array.isArray(rawHourly) ? rawHourly : []
+  const rawDaily = (forecastData as { daily?: WeatherDaily[] } | undefined)?.daily
+  const dailyForecast = Array.isArray(rawDaily) ? rawDaily : []
   const totalPredicted7Day =
     (forecastData as { totalPredicted7Day?: number } | undefined)?.totalPredicted7Day ?? 0
   const totalIdeal7Day =
     (forecastData as { totalIdeal7Day?: number } | undefined)?.totalIdeal7Day ?? 0
   const airQuality = (airQualityData as AirQualityData | undefined) ?? null
   const dustSeason = (dustSeasonData as DustSeasonAnalysis | undefined) ?? null
-  const alerts = (alertsData as SmartAlertItem[] | undefined) ?? []
+  const rawAlerts = alertsData as SmartAlertItem[] | undefined
+  const alerts = Array.isArray(rawAlerts) ? rawAlerts : []
 
   return (
     <div className="space-y-6 transition-opacity duration-300">
@@ -1210,7 +1213,7 @@ export default function AnalyzePage() {
                       longitude: result.coordinates.longitude,
                       monthly_bill: parseFloat(monthlyBill) || 0,
                       status: 'new',
-                      notes: `Solar Analysis: ${result.panelConfig.capacityKw.toFixed(1)} kWp, Payback: ${result.financialAnalysis.paybackYears.toFixed(1)} years`,
+                      notes: `Solar Analysis: ${(result.panelConfig.capacityKw ?? 0).toFixed(1)} kWp, Payback: ${(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} years`,
                       solar_analysis: {
                         system_size_kw: result.panelConfig.capacityKw,
                         annual_production_kwh: result.panelConfig.yearlyEnergyDcKwh,
@@ -1234,7 +1237,7 @@ export default function AnalyzePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200">
               <div className="text-center">
                 <div className="text-2xl font-bold text-orange-600">
-                  {result.panelConfig.capacityKw.toFixed(1)} kWp
+                  {(result.panelConfig.capacityKw ?? 0).toFixed(1)} kWp
                 </div>
                 <div className="text-xs text-gray-600">
                   {'\u0E02\u0E19\u0E32\u0E14\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E19\u0E30\u0E19\u0E33'}
@@ -1250,7 +1253,7 @@ export default function AnalyzePage() {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">
-                  {result.financialAnalysis.paybackYears.toFixed(1)} {'\u0E1B\u0E35'}
+                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {'\u0E1B\u0E35'}
                 </div>
                 <div className="text-xs text-gray-600">
                   {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}

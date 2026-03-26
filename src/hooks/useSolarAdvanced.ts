@@ -32,6 +32,12 @@ function mapRoofSegment(seg: any) {
     azimuthDegrees: seg.azimuthDegrees ?? seg.azimuth_degrees ?? 0,
     areaM2: seg.areaM2 ?? seg.area_m2 ?? 0,
     panelCount: seg.panelCount ?? seg.panel_count ?? 0,
+    sunshineHours:
+      seg.sunshineHours ??
+      seg.sunshine_hours ??
+      seg.yearlyEnergyDcKwh ??
+      seg.yearly_energy_dc_kwh ??
+      0,
     yearlyEnergyDcKwh: seg.yearlyEnergyDcKwh ?? seg.yearly_energy_dc_kwh ?? 0,
     centerLat: seg.centerLat ?? seg.center_lat ?? 0,
     centerLng: seg.centerLng ?? seg.center_lng ?? 0,
