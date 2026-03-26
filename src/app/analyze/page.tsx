@@ -1219,9 +1219,9 @@ export default function AnalyzePage() {
                         installation_cost: result.financialAnalysis.installationCost,
                       },
                     })
-                    addToast('Saved as Lead successfully!', 'success')
+                    addToast('success', 'Saved as Lead successfully!')
                   } catch {
-                    addToast('Failed to save as Lead. Please try again.', 'error')
+                    addToast('error', 'Failed to save as Lead. Please try again.')
                   }
                 }}
                 className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
