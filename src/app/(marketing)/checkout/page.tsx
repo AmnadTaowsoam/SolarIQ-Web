@@ -190,7 +190,7 @@ export default function CheckoutPage() {
       const statusResponse = await api.get<{ status: string }>(
         `${API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ?? '/api/v1/billing/create-checkout-session'}/${chargeId}/status`
       )
-      if (statusResponse.status === 'successful') {
+      if ((statusResponse as { status: string }).status === 'successful') {
         window.location.href = `${window.location.origin}/checkout/success?charge_id=${chargeId}`
       }
     } catch {
@@ -218,13 +218,14 @@ export default function CheckoutPage() {
         }
       )
 
-      if (response.qr_code_uri) {
+      const data = response as Record<string, string>
+      if (data.qr_code_uri) {
         // PromptPay: show QR code
-        setQrCodeUri(response.qr_code_uri)
-        setChargeId(response.charge_id ?? null)
-      } else if (response.authorize_uri) {
+        setQrCodeUri(data.qr_code_uri)
+        setChargeId(data.charge_id ?? null)
+      } else if (data.authorize_uri) {
         // Credit card / Internet banking: redirect
-        window.location.href = response.authorize_uri
+        window.location.href = data.authorize_uri
       }
     } catch (err) {
       setError(
