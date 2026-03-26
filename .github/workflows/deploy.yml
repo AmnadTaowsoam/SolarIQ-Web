@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - name: Build for Cloudflare Pages
         run: npx @cloudflare/next-on-pages
         env:
