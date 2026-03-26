@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -11,17 +12,83 @@ import apiClient from '@/lib/api'
 // Thai provinces list (77 provinces)
 // ---------------------------------------------------------------------------
 const THAI_PROVINCES = [
-  'กรุงเทพมหานคร', 'กระบี่', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร', 'ขอนแก่น',
-  'จันทบุรี', 'ฉะเชิงเทรา', 'ชลบุรี', 'ชัยนาท', 'ชัยภูมิ', 'ชุมพร', 'เชียงราย',
-  'เชียงใหม่', 'ตรัง', 'ตราด', 'ตาก', 'นครนายก', 'นครปฐม', 'นครพนม', 'นครราชสีมา',
-  'นครศรีธรรมราช', 'นครสวรรค์', 'นนทบุรี', 'นราธิวาส', 'น่าน', 'บึงกาฬ', 'บุรีรัมย์',
-  'ปทุมธานี', 'ประจวบคีรีขันธ์', 'ปราจีนบุรี', 'ปัตตานี', 'พระนครศรีอยุธยา', 'พะเยา',
-  'พังงา', 'พัทลุง', 'พิจิตร', 'พิษณุโลก', 'เพชรบุรี', 'เพชรบูรณ์', 'แพร่', 'ภูเก็ต',
-  'มหาสารคาม', 'มุกดาหาร', 'แม่ฮ่องสอน', 'ยโสธร', 'ยะลา', 'ร้อยเอ็ด', 'ระนอง',
-  'ระยอง', 'ราชบุรี', 'ลพบุรี', 'ลำปาง', 'ลำพูน', 'เลย', 'ศรีสะเกษ', 'สกลนคร',
-  'สงขลา', 'สตูล', 'สมุทรปราการ', 'สมุทรสงคราม', 'สมุทรสาคร', 'สระแก้ว', 'สระบุรี',
-  'สิงห์บุรี', 'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์', 'หนองคาย',
-  'หนองบัวลำภู', 'อ่างทอง', 'อำนาจเจริญ', 'อุดรธานี', 'อุตรดิตถ์', 'อุทัยธานี', 'อุบลราชธานี',
+  'กรุงเทพมหานคร',
+  'กระบี่',
+  'กาญจนบุรี',
+  'กาฬสินธุ์',
+  'กำแพงเพชร',
+  'ขอนแก่น',
+  'จันทบุรี',
+  'ฉะเชิงเทรา',
+  'ชลบุรี',
+  'ชัยนาท',
+  'ชัยภูมิ',
+  'ชุมพร',
+  'เชียงราย',
+  'เชียงใหม่',
+  'ตรัง',
+  'ตราด',
+  'ตาก',
+  'นครนายก',
+  'นครปฐม',
+  'นครพนม',
+  'นครราชสีมา',
+  'นครศรีธรรมราช',
+  'นครสวรรค์',
+  'นนทบุรี',
+  'นราธิวาส',
+  'น่าน',
+  'บึงกาฬ',
+  'บุรีรัมย์',
+  'ปทุมธานี',
+  'ประจวบคีรีขันธ์',
+  'ปราจีนบุรี',
+  'ปัตตานี',
+  'พระนครศรีอยุธยา',
+  'พะเยา',
+  'พังงา',
+  'พัทลุง',
+  'พิจิตร',
+  'พิษณุโลก',
+  'เพชรบุรี',
+  'เพชรบูรณ์',
+  'แพร่',
+  'ภูเก็ต',
+  'มหาสารคาม',
+  'มุกดาหาร',
+  'แม่ฮ่องสอน',
+  'ยโสธร',
+  'ยะลา',
+  'ร้อยเอ็ด',
+  'ระนอง',
+  'ระยอง',
+  'ราชบุรี',
+  'ลพบุรี',
+  'ลำปาง',
+  'ลำพูน',
+  'เลย',
+  'ศรีสะเกษ',
+  'สกลนคร',
+  'สงขลา',
+  'สตูล',
+  'สมุทรปราการ',
+  'สมุทรสงคราม',
+  'สมุทรสาคร',
+  'สระแก้ว',
+  'สระบุรี',
+  'สิงห์บุรี',
+  'สุโขทัย',
+  'สุพรรณบุรี',
+  'สุราษฎร์ธานี',
+  'สุรินทร์',
+  'หนองคาย',
+  'หนองบัวลำภู',
+  'อ่างทอง',
+  'อำนาจเจริญ',
+  'อุดรธานี',
+  'อุตรดิตถ์',
+  'อุทัยธานี',
+  'อุบลราชธานี',
 ]
 
 type AreaMode = 'province' | 'radius' | 'polygon'
@@ -49,6 +116,7 @@ const DEFAULT_SETTINGS: RoutingSettings = {
 }
 
 export default function ServiceAreaPage() {
+  const t = useTranslations('serviceAreaPage')
   const { user } = useAuth()
   const [settings, setSettings] = useState<RoutingSettings>(DEFAULT_SETTINGS)
   const [isSaving, setIsSaving] = useState(false)
@@ -60,7 +128,9 @@ export default function ServiceAreaPage() {
     apiClient
       .get<{ data: RoutingSettings }>('/lead-routing/settings')
       .then((res) => setSettings({ ...DEFAULT_SETTINGS, ...res.data.data }))
-      .catch(() => {/* use defaults */})
+      .catch(() => {
+        /* use defaults */
+      })
   }, [])
 
   const handleSave = async () => {
@@ -97,20 +167,22 @@ export default function ServiceAreaPage() {
     <AppLayout user={user}>
       <div className="max-w-3xl space-y-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">พื้นที่ให้บริการ</h1>
-          <p className="text-sm text-gray-500 mt-1">กำหนดพื้นที่และกฎการรับ Lead อัตโนมัติ</p>
+          <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Mode selector */}
         <Card>
-          <CardHeader title="วิธีกำหนดพื้นที่" subtitle="เลือกรูปแบบการกำหนดพื้นที่ให้บริการ" />
+          <CardHeader title={t('modeSelector.title')} subtitle={t('modeSelector.subtitle')} />
           <CardBody>
             <div className="flex flex-col sm:flex-row gap-3">
-              {([
-                { value: 'province', label: 'เลือกจังหวัด' },
-                { value: 'radius', label: 'รัศมี (กม.)' },
-                { value: 'polygon', label: 'วาด Polygon (Enterprise)', enterprise: true },
-              ] as { value: AreaMode; label: string; enterprise?: boolean }[]).map((opt) => (
+              {(
+                [
+                  { value: 'province', label: t('modeSelector.province') },
+                  { value: 'radius', label: t('modeSelector.radius') },
+                  { value: 'polygon', label: t('modeSelector.polygon'), enterprise: true },
+                ] as { value: AreaMode; label: string; enterprise?: boolean }[]
+              ).map((opt) => (
                 <label
                   key={opt.value}
                   className={`flex items-center gap-2 flex-1 p-3 rounded-xl border-2 cursor-pointer transition-colors ${
@@ -143,13 +215,16 @@ export default function ServiceAreaPage() {
         {/* Province selection */}
         {settings.mode === 'province' && (
           <Card>
-            <CardHeader title="เลือกจังหวัด" subtitle="เลือกจังหวัดที่คุณให้บริการ" />
+            <CardHeader
+              title={t('provinceSelection.title')}
+              subtitle={t('provinceSelection.subtitle')}
+            />
             <CardBody className="space-y-4">
               {/* Province multi-select */}
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="เพิ่มจังหวัด..."
+                  placeholder={t('provinceSelection.addPlaceholder')}
                   value={provinceSearch}
                   onChange={(e) => {
                     setProvinceSearch(e.target.value)
@@ -188,17 +263,29 @@ export default function ServiceAreaPage() {
                         type="button"
                         onClick={() => removeProvince(province)}
                         className="text-orange-500 hover:text-orange-700 ml-0.5"
-                        aria-label={`ลบ ${province}`}
+                        aria-label={t('removeProvince', { province })}
                       >
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     </span>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-400 italic">ยังไม่ได้เลือกจังหวัด</p>
+                <p className="text-sm text-gray-400 italic">
+                  {t('provinceSelection.noneSelected')}
+                </p>
               )}
             </CardBody>
           </Card>
@@ -207,46 +294,73 @@ export default function ServiceAreaPage() {
         {/* Radius mode */}
         {settings.mode === 'radius' && (
           <Card>
-            <CardHeader title="รัศมีจากจุดศูนย์กลาง" subtitle="เลือกจังหวัดเป็นจุดศูนย์กลางและกำหนดรัศมี" />
+            <CardHeader title={t('radiusMode.title')} subtitle={t('radiusMode.subtitle')} />
             <CardBody className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">จังหวัดศูนย์กลาง</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t('radiusMode.centerProvince')}
+                  </label>
                   <select
                     value={settings.radius_center_province}
-                    onChange={(e) => setSettings((prev) => ({ ...prev, radius_center_province: e.target.value }))}
+                    onChange={(e) =>
+                      setSettings((prev) => ({ ...prev, radius_center_province: e.target.value }))
+                    }
                     className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     {THAI_PROVINCES.map((p) => (
-                      <option key={p} value={p}>{p}</option>
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">รัศมี (กม.)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t('radiusMode.radius')}
+                  </label>
                   <input
                     type="range"
                     min={10}
                     max={200}
                     step={10}
                     value={settings.radius_km}
-                    onChange={(e) => setSettings((prev) => ({ ...prev, radius_km: Number(e.target.value) }))}
+                    onChange={(e) =>
+                      setSettings((prev) => ({ ...prev, radius_km: Number(e.target.value) }))
+                    }
                     className="w-full accent-orange-500"
                   />
                   <div className="flex justify-between text-xs text-gray-400 mt-1">
-                    <span>10 กม.</span>
-                    <span className="font-semibold text-orange-600">{settings.radius_km} กม.</span>
-                    <span>200 กม.</span>
+                    <span>10 {t('radiusUnit')}</span>
+                    <span className="font-semibold text-orange-600">
+                      {settings.radius_km} {t('radiusUnit')}
+                    </span>
+                    <span>200 {t('radiusUnit')}</span>
                   </div>
                 </div>
               </div>
               {/* Static map placeholder */}
               <div className="h-40 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center text-gray-400">
                 <div className="text-center">
-                  <svg className="w-10 h-10 mx-auto mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6-7V4m6 16l4.553 2.276A1 1 0 0021 21.382V10.618a1 1 0 00-1.447-.894L15 12m0 0V4m0 0L9 7" />
+                  <svg
+                    className="w-10 h-10 mx-auto mb-2 opacity-40"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6-7V4m6 16l4.553 2.276A1 1 0 0021 21.382V10.618a1 1 0 00-1.447-.894L15 12m0 0V4m0 0L9 7"
+                    />
                   </svg>
-                  <p className="text-sm">แผนที่แสดงรัศมี {settings.radius_km} กม. จาก{settings.radius_center_province}</p>
+                  <p className="text-sm">
+                    {t('radiusMode.mapPlaceholder', {
+                      radius: settings.radius_km,
+                      province: settings.radius_center_province,
+                    })}
+                  </p>
                 </div>
               </div>
             </CardBody>
@@ -255,34 +369,44 @@ export default function ServiceAreaPage() {
 
         {/* Lead reception settings */}
         <Card>
-          <CardHeader title="ตั้งค่าการรับงาน" subtitle="กำหนดปริมาณและเวลารับ Lead" />
+          <CardHeader title={t('leadReception.title')} subtitle={t('leadReception.subtitle')} />
           <CardBody className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">รับ Lead สูงสุด/วัน</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('leadReception.maxPerDay')}
+                </label>
                 <input
                   type="number"
                   min={1}
                   max={100}
                   value={settings.max_leads_per_day}
-                  onChange={(e) => setSettings((prev) => ({ ...prev, max_leads_per_day: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setSettings((prev) => ({ ...prev, max_leads_per_day: Number(e.target.value) }))
+                  }
                   className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">เวลารับ Lead</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('leadReception.activeHours')}
+                </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="time"
                     value={settings.active_from}
-                    onChange={(e) => setSettings((prev) => ({ ...prev, active_from: e.target.value }))}
+                    onChange={(e) =>
+                      setSettings((prev) => ({ ...prev, active_from: e.target.value }))
+                    }
                     className="flex-1 rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
-                  <span className="text-gray-500 text-sm">ถึง</span>
+                  <span className="text-gray-500 text-sm">{t('leadReception.to')}</span>
                   <input
                     type="time"
                     value={settings.active_to}
-                    onChange={(e) => setSettings((prev) => ({ ...prev, active_to: e.target.value }))}
+                    onChange={(e) =>
+                      setSettings((prev) => ({ ...prev, active_to: e.target.value }))
+                    }
                     className="flex-1 rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
@@ -292,8 +416,10 @@ export default function ServiceAreaPage() {
             {/* Pause toggle */}
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
               <div>
-                <p className="text-sm font-medium text-gray-900">หยุดรับ Lead ชั่วคราว</p>
-                <p className="text-xs text-gray-500 mt-0.5">ระงับการส่ง Lead ใหม่มายังคุณชั่วคราว</p>
+                <p className="text-sm font-medium text-gray-900">{t('leadReception.pauseTitle')}</p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {t('leadReception.pauseDescription')}
+                </p>
               </div>
               <button
                 type="button"
@@ -314,18 +440,16 @@ export default function ServiceAreaPage() {
 
             {settings.paused && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-                ขณะนี้คุณหยุดรับ Lead ชั่วคราว Lead ใหม่จะไม่ถูกส่งมาจนกว่าจะเปิดใช้งานอีกครั้ง
+                {t('leadReception.pausedWarning')}
               </div>
             )}
           </CardBody>
           <CardFooter>
             <div className="flex items-center justify-between w-full">
-              {saved && (
-                <span className="text-sm text-green-600 font-medium">บันทึกเรียบร้อยแล้ว</span>
-              )}
+              {saved && <span className="text-sm text-green-600 font-medium">{t('saved')}</span>}
               {!saved && <span />}
               <Button variant="primary" size="sm" onClick={handleSave} disabled={isSaving}>
-                {isSaving ? 'กำลังบันทึก...' : 'บันทึก'}
+                {isSaving ? t('saving') : t('save')}
               </Button>
             </div>
           </CardFooter>

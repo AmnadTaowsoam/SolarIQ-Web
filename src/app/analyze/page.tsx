@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Component, type ReactNode, type ErrorInfo } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/context'
 import { AppLayout } from '@/components/layout'
 import { Card, CardHeader, CardBody, Button, Input } from '@/components/ui'
@@ -99,54 +100,19 @@ interface TabDef {
   icon: React.ReactNode
 }
 
-const TABS: TabDef[] = [
-  {
-    id: 'overview',
-    label: '\u0E20\u0E32\u0E1E\u0E23\u0E27\u0E21',
-    icon: <Sun className="w-4 h-4" />,
-  },
-  {
-    id: 'roof',
-    label: '\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32',
-    icon: <Building className="w-4 h-4" />,
-  },
-  {
-    id: 'solar',
-    label: '\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14',
-    icon: <Zap className="w-4 h-4" />,
-  },
-  {
-    id: 'financial',
-    label: '\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19',
-    icon: <Wallet className="w-4 h-4" />,
-  },
-  {
-    id: 'equipment',
-    label: '\u0E2D\u0E38\u0E1B\u0E01\u0E23\u0E13\u0E4C',
-    icon: <Cpu className="w-4 h-4" />,
-  },
-  {
-    id: 'incentives',
-    label: '\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E1B\u0E23\u0E30\u0E42\u0E22\u0E0A\u0E19\u0E4C',
-    icon: <Gift className="w-4 h-4" />,
-  },
-  {
-    id: 'data',
-    label: '\u0E2A\u0E48\u0E07\u0E2D\u0E2D\u0E01\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25',
-    icon: <Database className="w-4 h-4" />,
-  },
-  {
-    id: 'forecast',
-    label: '\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C',
-    icon: <CloudSun className="w-4 h-4" />,
-  },
-  {
-    id: 'reliability',
-    label:
-      '\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D',
-    icon: <ShieldCheck className="w-4 h-4" />,
-  },
-]
+function buildTabs(t: ReturnType<typeof useTranslations<'analyzePage'>>): TabDef[] {
+  return [
+    { id: 'overview', label: t('tabs.overview'), icon: <Sun className="w-4 h-4" /> },
+    { id: 'roof', label: t('tabs.roof'), icon: <Building className="w-4 h-4" /> },
+    { id: 'solar', label: t('tabs.solar'), icon: <Zap className="w-4 h-4" /> },
+    { id: 'financial', label: t('tabs.financial'), icon: <Wallet className="w-4 h-4" /> },
+    { id: 'equipment', label: t('tabs.equipment'), icon: <Cpu className="w-4 h-4" /> },
+    { id: 'incentives', label: t('tabs.incentives'), icon: <Gift className="w-4 h-4" /> },
+    { id: 'data', label: t('tabs.data'), icon: <Database className="w-4 h-4" /> },
+    { id: 'forecast', label: t('tabs.forecast'), icon: <CloudSun className="w-4 h-4" /> },
+    { id: 'reliability', label: t('tabs.reliability'), icon: <ShieldCheck className="w-4 h-4" /> },
+  ]
+}
 
 // ---- Tab Content Components ----
 
@@ -483,6 +449,56 @@ function SolarPotentialTab({ result }: { result: SolarAnalysisAdvanced }) {
         )}
     </div>
   )
+}
+
+class TabErrorBoundary extends Component<
+  { children: ReactNode; tabName: string },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: ReactNode; tabName: string }) {
+    super(props)
+    this.state = { hasError: false, error: null }
+  }
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error }
+  }
+  componentDidCatch(_error: Error, _info: ErrorInfo) {
+    // Error boundary caught a render error — displayed in fallback UI
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="rounded-xl border-2 border-dashed border-red-200 bg-red-50 p-8 text-center">
+          <svg
+            className="mx-auto h-10 w-10 text-red-400 mb-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+            />
+          </svg>
+          <h3 className="text-sm font-semibold text-red-700 mb-1">
+            Unable to load {this.props.tabName}
+          </h3>
+          <p className="text-xs text-red-500 mb-3">
+            {this.state.error?.message || 'An unexpected error occurred'}
+          </p>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="rounded-lg bg-red-100 px-4 py-2 text-xs font-medium text-red-700 hover:bg-red-200"
+          >
+            Try Again
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
 }
 
 function FinancialTab({
@@ -834,14 +850,16 @@ function ReliabilityTab({ result }: { result: SolarAnalysisAdvanced }) {
 function TabBar({
   activeTab,
   onTabChange,
+  tabs,
 }: {
   activeTab: TabId
   onTabChange: (tab: TabId) => void
+  tabs: TabDef[]
 }) {
   return (
     <div className="border-b border-[var(--brand-border)] overflow-x-auto">
       <nav className="flex -mb-px min-w-max" role="tablist">
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.id}
             role="tab"
@@ -868,6 +886,8 @@ export default function AnalyzePage() {
   const router = useRouter()
   const { user, isLoading: authLoading } = useAuth()
   const { addToast } = useToast()
+  const t = useTranslations('analyzePage')
+  const tabs = buildTabs(t)
 
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
@@ -888,10 +908,7 @@ export default function AnalyzePage() {
 
   const handleAnalyze = async () => {
     if (!latitude || !longitude || !monthlyBill) {
-      addToast(
-        'error',
-        '\u0E01\u0E23\u0E38\u0E13\u0E32\u0E01\u0E23\u0E2D\u0E01\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E43\u0E2B\u0E49\u0E04\u0E23\u0E1A\u0E16\u0E49\u0E27\u0E19'
-      )
+      addToast('error', t('messages.fillAllFields'))
       return
     }
 
@@ -900,26 +917,17 @@ export default function AnalyzePage() {
     const bill = parseFloat(monthlyBill)
 
     if (isNaN(lat) || lat < -90 || lat > 90) {
-      addToast(
-        'error',
-        '\u0E25\u0E30\u0E15\u0E34\u0E08\u0E39\u0E14\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07 (\u0E15\u0E49\u0E2D\u0E07\u0E2D\u0E22\u0E39\u0E48\u0E23\u0E30\u0E2B\u0E27\u0E48\u0E32\u0E07 -90 \u0E16\u0E36\u0E07 90)'
-      )
+      addToast('error', t('messages.invalidLatitude'))
       return
     }
 
     if (isNaN(lng) || lng < -180 || lng > 180) {
-      addToast(
-        'error',
-        '\u0E25\u0E2D\u0E07\u0E08\u0E34\u0E08\u0E39\u0E14\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07 (\u0E15\u0E49\u0E2D\u0E07\u0E2D\u0E22\u0E39\u0E48\u0E23\u0E30\u0E2B\u0E27\u0E48\u0E32\u0E07 -180 \u0E16\u0E36\u0E07 180)'
-      )
+      addToast('error', t('messages.invalidLongitude'))
       return
     }
 
     if (isNaN(bill) || bill <= 0) {
-      addToast(
-        'error',
-        '\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E1B\u0E47\u0E19\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02\u0E17\u0E35\u0E48\u0E21\u0E32\u0E01\u0E01\u0E27\u0E48\u0E32 0'
-      )
+      addToast('error', t('messages.invalidBill'))
       return
     }
 
@@ -938,24 +946,15 @@ export default function AnalyzePage() {
       })
       setResult(response as unknown as SolarAnalysisAdvanced)
       setActiveTab('overview')
-      addToast(
-        'success',
-        '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08!'
-      )
+      addToast('success', t('messages.analysisSuccess'))
     } catch {
-      addToast(
-        'error',
-        '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E44\u0E21\u0E48\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08 \u0E01\u0E23\u0E38\u0E13\u0E32\u0E25\u0E2D\u0E07\u0E43\u0E2B\u0E21\u0E48\u0E2D\u0E35\u0E01\u0E04\u0E23\u0E31\u0E49\u0E07'
-      )
+      addToast('error', t('messages.analysisFailed'))
     }
   }
 
   const useCurrentLocation = () => {
     if (!navigator.geolocation) {
-      addToast(
-        'error',
-        '\u0E40\u0E1A\u0E23\u0E32\u0E27\u0E4C\u0E40\u0E0B\u0E2D\u0E23\u0E4C\u0E44\u0E21\u0E48\u0E23\u0E2D\u0E07\u0E23\u0E31\u0E1A\u0E01\u0E32\u0E23\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07'
-      )
+      addToast('error', t('messages.geolocationNotSupported'))
       return
     }
 
@@ -963,16 +962,10 @@ export default function AnalyzePage() {
       (position) => {
         setLatitude(position.coords.latitude.toFixed(6))
         setLongitude(position.coords.longitude.toFixed(6))
-        addToast(
-          'success',
-          '\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08'
-        )
+        addToast('success', t('messages.locationSuccess'))
       },
       () => {
-        addToast(
-          'error',
-          '\u0E44\u0E21\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E14\u0E36\u0E07\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E44\u0E14\u0E49 \u0E01\u0E23\u0E38\u0E13\u0E32\u0E01\u0E23\u0E2D\u0E01\u0E40\u0E2D\u0E07'
-        )
+        addToast('error', t('messages.locationFailed'))
       }
     )
   }
@@ -1007,7 +1000,11 @@ export default function AnalyzePage() {
       case 'solar':
         return <SolarPotentialTab result={result} />
       case 'financial':
-        return <FinancialTab result={result} monthlyBill={parseFloat(monthlyBill) || 0} />
+        return (
+          <TabErrorBoundary tabName="Financial">
+            <FinancialTab result={result} monthlyBill={parseFloat(monthlyBill) || 0} />
+          </TabErrorBoundary>
+        )
       case 'equipment':
         return <EquipmentTab result={result} />
       case 'incentives':
@@ -1015,7 +1012,11 @@ export default function AnalyzePage() {
       case 'data':
         return <DataExportTab result={result} />
       case 'forecast':
-        return <ForecastTab result={result} />
+        return (
+          <TabErrorBoundary tabName="Forecast">
+            <ForecastTab result={result} />
+          </TabErrorBoundary>
+        )
       case 'reliability':
         return <ReliabilityTab result={result} />
       default:
@@ -1028,88 +1029,60 @@ export default function AnalyzePage() {
       <div className="space-y-6">
         {/* Page header */}
         <div>
-          <h1 className="text-2xl font-bold text-[var(--brand-text)]">
-            {
-              '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C'
-            }
-          </h1>
-          <p className="text-[var(--brand-text-secondary)] mt-1">
-            {
-              '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1E\u0E25\u0E31\u0E07\u0E07\u0E32\u0E19\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C\u0E04\u0E23\u0E1A\u0E27\u0E07\u0E08\u0E23 \u0E1E\u0E23\u0E49\u0E2D\u0E21\u0E41\u0E1C\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32, \u0E01\u0E32\u0E23\u0E1A\u0E31\u0E07\u0E41\u0E14\u0E14, \u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19 \u0E41\u0E25\u0E30\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C\u0E2A\u0E20\u0E32\u0E1E\u0E2D\u0E32\u0E01\u0E32\u0E28'
-            }
-          </p>
+          <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+          <p className="text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Input Form */}
         <Card>
-          <CardHeader
-            title={
-              '\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E17\u0E35\u0E48\u0E15\u0E31\u0E49\u0E07\u0E41\u0E25\u0E30\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32'
-            }
-          />
+          <CardHeader title={t('inputForm.title')} />
           <CardBody>
             <div className="space-y-4">
               {/* Quick actions */}
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={useCurrentLocation}>
                   <MapPin className="w-4 h-4 mr-2" />
-                  {
-                    '\u{1F4CD} \u0E43\u0E0A\u0E49\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E1B\u0E31\u0E08\u0E08\u0E38\u0E1A\u0E31\u0E19'
-                  }
+                  {t('inputForm.useCurrentLocation')}
                 </Button>
                 <Button variant="outline" size="sm" onClick={useDefaultLocation}>
-                  {
-                    '\u{1F3D9}\uFE0F \u0E43\u0E0A\u0E49\u0E01\u0E23\u0E38\u0E07\u0E40\u0E17\u0E1E\u0E2F'
-                  }
+                  {t('inputForm.useDefaultLocation')}
                 </Button>
               </div>
 
               {/* Coordinates */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
-                  label={'\u0E25\u0E30\u0E15\u0E34\u0E08\u0E39\u0E14'}
+                  label={t('inputForm.latitude')}
                   value={latitude}
                   onChange={(e) => setLatitude(e.target.value)}
                   placeholder="e.g., 13.7563"
-                  hint={
-                    '\u0E01\u0E23\u0E2D\u0E01\u0E25\u0E30\u0E15\u0E34\u0E08\u0E39\u0E14 (-90 \u0E16\u0E36\u0E07 90)'
-                  }
+                  hint={t('inputForm.latitudeHint')}
                 />
                 <Input
-                  label={'\u0E25\u0E2D\u0E07\u0E08\u0E34\u0E08\u0E39\u0E14'}
+                  label={t('inputForm.longitude')}
                   value={longitude}
                   onChange={(e) => setLongitude(e.target.value)}
                   placeholder="e.g., 100.5018"
-                  hint={
-                    '\u0E01\u0E23\u0E2D\u0E01\u0E25\u0E2D\u0E07\u0E08\u0E34\u0E08\u0E39\u0E14 (-180 \u0E16\u0E36\u0E07 180)'
-                  }
+                  hint={t('inputForm.longitudeHint')}
                 />
               </div>
 
               {/* Address */}
               <Input
-                label={
-                  '\u0E17\u0E35\u0E48\u0E2D\u0E22\u0E39\u0E48 (\u0E44\u0E21\u0E48\u0E1A\u0E31\u0E07\u0E04\u0E31\u0E1A)'
-                }
+                label={t('inputForm.address')}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder={
-                  '\u0E40\u0E0A\u0E48\u0E19 123 \u0E16.\u0E2A\u0E38\u0E02\u0E38\u0E21\u0E27\u0E34\u0E17 \u0E01\u0E23\u0E38\u0E07\u0E40\u0E17\u0E1E\u0E2F'
-                }
+                placeholder={t('inputForm.addressPlaceholder')}
               />
 
               {/* Monthly Bill */}
               <Input
-                label={
-                  '\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19 (\u0E1A\u0E32\u0E17)'
-                }
+                label={t('inputForm.monthlyBill')}
                 type="number"
                 value={monthlyBill}
                 onChange={(e) => setMonthlyBill(e.target.value)}
                 placeholder="e.g., 5000"
-                hint={
-                  '\u0E01\u0E23\u0E2D\u0E01\u0E04\u0E48\u0E32\u0E44\u0E1F\u0E1F\u0E49\u0E32\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19\u0E02\u0E2D\u0E07\u0E04\u0E38\u0E13'
-                }
+                hint={t('inputForm.monthlyBillHint')}
               />
             </div>
           </CardBody>
@@ -1127,8 +1100,8 @@ export default function AnalyzePage() {
         {latitude && longitude && !isNaN(parseFloat(latitude)) && !isNaN(parseFloat(longitude)) && (
           <Card className="border-2 border-dashed border-[var(--brand-primary)]/30 bg-[var(--brand-primary)]/5">
             <CardHeader
-              title="🗺️ ตัวอย่างข้อมูลที่ตั้ง"
-              subtitle="Preview จะอัปเดตอัตโนมัติเมื่อกรอกพิกัด"
+              title={t('locationPreview.title')}
+              subtitle={t('locationPreview.subtitle')}
             />
             <CardBody>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1146,7 +1119,7 @@ export default function AnalyzePage() {
                 <div className="space-y-3">
                   <div className="p-3 rounded-lg bg-[var(--brand-surface)]">
                     <div className="text-xs text-[var(--brand-text-secondary)]">
-                      {'\u{1F4CD} \u0E1E\u0E34\u0E01\u0E31\u0E14'}
+                      {t('locationPreview.coordinates')}
                     </div>
                     <div className="text-sm font-medium text-[var(--brand-text)]">
                       {parseFloat(latitude).toFixed(4)}, {parseFloat(longitude).toFixed(4)}
@@ -1154,21 +1127,19 @@ export default function AnalyzePage() {
                   </div>
                   <div className="p-3 rounded-lg bg-[var(--brand-surface)]">
                     <div className="text-xs text-[var(--brand-text-secondary)]">
-                      {'\u{1F30D} \u0E20\u0E39\u0E21\u0E34\u0E20\u0E32\u0E04'}
+                      {t('locationPreview.region')}
                     </div>
                     <div className="text-sm font-medium text-[var(--brand-text)]">
                       {parseFloat(latitude) > 15
-                        ? '\u0E20\u0E32\u0E04\u0E40\u0E2B\u0E19\u0E37\u0E2D/\u0E2D\u0E35\u0E2A\u0E32\u0E19'
+                        ? t('locationPreview.regionNorth')
                         : parseFloat(latitude) > 13
-                          ? '\u0E20\u0E32\u0E04\u0E01\u0E25\u0E32\u0E07'
-                          : '\u0E20\u0E32\u0E04\u0E43\u0E15\u0E49'}
+                          ? t('locationPreview.regionCentral')
+                          : t('locationPreview.regionSouth')}
                     </div>
                   </div>
                   <div className="p-3 rounded-lg bg-[var(--brand-surface)]">
                     <div className="text-xs text-[var(--brand-text-secondary)]">
-                      {
-                        '\u2600\uFE0F \u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14\u0E42\u0E14\u0E22\u0E40\u0E09\u0E25\u0E35\u0E48\u0E22'
-                      }
+                      {t('locationPreview.avgSolarPotential')}
                     </div>
                     <div className="text-sm font-medium text-[var(--brand-text)]">
                       {parseFloat(latitude) > 15
@@ -1176,42 +1147,22 @@ export default function AnalyzePage() {
                         : parseFloat(latitude) > 13
                           ? '1,600-1,700'
                           : '1,500-1,600'}{' '}
-                      {'\u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07/\u0E1B\u0E35'}
+                      {t('locationPreview.hoursPerYear')}
                     </div>
                   </div>
                 </div>
                 {/* Feature Highlights */}
                 <div className="space-y-2">
                   <div className="text-xs font-medium text-[var(--brand-text-secondary)] mb-2">
-                    {
-                      '\u{1F4CA} \u0E04\u0E38\u0E13\u0E08\u0E30\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25'
-                    }
+                    {t('locationPreview.youWillReceive')}
                   </div>
                   {[
-                    {
-                      icon: '\u{1F3E0}',
-                      text: '\u0E41\u0E1C\u0E19\u0E1C\u0E31\u0E07\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32\u0E41\u0E25\u0E30\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E41\u0E1C\u0E07\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C',
-                    },
-                    {
-                      icon: '\u{1F4B0}',
-                      text: '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1C\u0E25\u0E15\u0E2D\u0E1A\u0E41\u0E17\u0E19\u0E01\u0E32\u0E23\u0E25\u0E07\u0E17\u0E38\u0E19 25 \u0E1B\u0E35',
-                    },
-                    {
-                      icon: '\u{1F324}\uFE0F',
-                      text: '\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F 7 \u0E27\u0E31\u0E19',
-                    },
-                    {
-                      icon: '\u{1F32B}\uFE0F',
-                      text: '\u0E1C\u0E25\u0E01\u0E23\u0E30\u0E17\u0E1A PM2.5 \u0E15\u0E48\u0E2D\u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E',
-                    },
-                    {
-                      icon: '\u{1F4C8}',
-                      text: '\u0E14\u0E31\u0E0A\u0E19\u0E35\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D\u0E02\u0E2D\u0E07\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14',
-                    },
-                    {
-                      icon: '\u{1F3E6}',
-                      text: '\u0E40\u0E1B\u0E23\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E01\u0E32\u0E23\u0E25\u0E07\u0E17\u0E38\u0E19',
-                    },
+                    { icon: '\u{1F3E0}', text: t('locationPreview.roofPlan') },
+                    { icon: '\u{1F4B0}', text: t('locationPreview.investment25yr') },
+                    { icon: '\u{1F324}\uFE0F', text: t('locationPreview.forecast7day') },
+                    { icon: '\u{1F32B}\uFE0F', text: t('locationPreview.pm25impact') },
+                    { icon: '\u{1F4C8}', text: t('locationPreview.reliabilityIndex') },
+                    { icon: '\u{1F3E6}', text: t('locationPreview.financingComparison') },
                   ].map((item, i) => (
                     <div
                       key={i}
@@ -1236,15 +1187,9 @@ export default function AnalyzePage() {
             className="w-full md:w-auto px-12 py-4 text-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg hover:shadow-xl transition-all"
           >
             <Sun className="w-5 h-5 mr-2" />
-            {
-              '\u{1F50D} \u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C'
-            }
+            {t('analyzeButton')}
           </Button>
-          <p className="text-xs text-[var(--brand-text-secondary)]">
-            {
-              '\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C\u0E1F\u0E23\u0E35 \u2022 \u0E1C\u0E25\u0E25\u0E31\u0E1E\u0E18\u0E4C\u0E20\u0E32\u0E22\u0E43\u0E19 30 \u0E27\u0E34\u0E19\u0E32\u0E17\u0E35 \u2022 \u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E08\u0E32\u0E01 Google Solar API'
-            }
-          </p>
+          <p className="text-xs text-[var(--brand-text-secondary)]">{t('analyzeHint')}</p>
         </div>
 
         {/* Results */}
@@ -1252,12 +1197,37 @@ export default function AnalyzePage() {
           <div className="space-y-4">
             {/* Results Header with Export */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <h2 className="text-xl font-bold text-[var(--brand-text)]">
-                {
-                  '\u0E1C\u0E25\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C'
-                }
-              </h2>
+              <h2 className="text-xl font-bold text-[var(--brand-text)]">{t('results.title')}</h2>
               <AnalysisReportExport result={result} />
+              <button
+                onClick={async () => {
+                  try {
+                    const { apiClient } = await import('@/lib/api')
+                    await apiClient.post('/api/v1/leads', {
+                      name: address || 'New Lead',
+                      address: address,
+                      latitude: result.coordinates.latitude,
+                      longitude: result.coordinates.longitude,
+                      monthly_bill: parseFloat(monthlyBill) || 0,
+                      status: 'new',
+                      notes: `Solar Analysis: ${result.panelConfig.capacityKw.toFixed(1)} kWp, Payback: ${result.financialAnalysis.paybackYears.toFixed(1)} years`,
+                      solar_analysis: {
+                        system_size_kw: result.panelConfig.capacityKw,
+                        annual_production_kwh: result.annualProduction,
+                        yearly_savings: result.financialAnalysis.yearlySavings,
+                        payback_years: result.financialAnalysis.paybackYears,
+                        installation_cost: result.financialAnalysis.installationCost,
+                      },
+                    })
+                    addToast('Saved as Lead successfully!', 'success')
+                  } catch {
+                    addToast('Failed to save as Lead. Please try again.', 'error')
+                  }
+                }}
+                className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+              >
+                + Save as Lead
+              </button>
             </div>
 
             {/* Quick Summary Banner */}
@@ -1302,7 +1272,7 @@ export default function AnalyzePage() {
             </div>
 
             <Card className="overflow-hidden">
-              <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+              <TabBar activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
               <div className="p-6">{renderTabContent()}</div>
             </Card>
           </div>

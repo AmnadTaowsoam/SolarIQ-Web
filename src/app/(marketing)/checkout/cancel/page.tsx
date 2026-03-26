@@ -30,7 +30,7 @@ const faqs = [
   },
   {
     q: 'ต้องการความช่วยเหลือเพิ่มเติม?',
-    a: 'หากคุณพบปัญหาในการชำระเงินหรือต้องการความช่วยเหลือ สามารถติดต่อทีมสนับสนุนของเราได้ตลอดเวลาที่ contact@solariqapp.com หรือ 02-XXX-XXXX',
+    a: 'หากคุณพบปัญหาในการชำระเงินหรือต้องการความช่วยเหลือ สามารถติดต่อทีมสนับสนุนของเราได้ตลอดเวลาที่ contact@solariqapp.com หรือ 085-662-1113',
   },
 ]
 
@@ -54,9 +54,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         )}
       </button>
       {isOpen && (
-        <div className="pb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-          {a}
-        </div>
+        <div className="pb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{a}</div>
       )}
     </div>
   )
@@ -107,9 +105,7 @@ export default function CheckoutCancelPage() {
         <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 text-left shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <HelpCircle className="h-5 w-5 text-primary-500" />
-            <h2 className="text-base font-bold text-gray-900 dark:text-white">
-              คำถามที่พบบ่อย
-            </h2>
+            <h2 className="text-base font-bold text-gray-900 dark:text-white">คำถามที่พบบ่อย</h2>
           </div>
           <div className="divide-y divide-gray-200 dark:divide-gray-700 border-t border-gray-200 dark:border-gray-700">
             {faqs.map((faq) => (

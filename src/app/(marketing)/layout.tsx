@@ -39,9 +39,7 @@ function MarketingNavbar() {
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-amber-500">
               <Zap className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-white">
-              SolarIQ
-            </span>
+            <span className="text-xl font-bold text-gray-900 dark:text-white">SolarIQ</span>
           </Link>
 
           {/* Desktop links */}
@@ -179,11 +177,11 @@ function MarketingFooter() {
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <Phone className="h-4 w-4" />
-                <span>02-XXX-XXXX</span>
+                <span>085-662-1113</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <MapPin className="h-4 w-4" />
-                <span>กรุงเทพมหานคร, ประเทศไทย</span>
+                <span>นนทบุรี, ประเทศไทย</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <Clock className="h-4 w-4" />
@@ -264,11 +262,7 @@ function MarketingFooter() {
 /* ------------------------------------------------------------------ */
 /*  Marketing Layout                                                    */
 /* ------------------------------------------------------------------ */
-export default function MarketingLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950">
       <MarketingNavbar />

@@ -9,27 +9,22 @@ export default function RefundPolicyPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-4 text-center">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-            นโยบายการคืนเงิน
-          </h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">นโยบายการคืนเงิน</h1>
           <p className="mt-4 text-gray-300">
             Refund Policy | มีผลบังคับใช้ตั้งแต่วันที่ 1 มกราคม 2567
           </p>
-          <p className="mt-2 text-sm text-gray-400">
-            ปรับปรุงล่าสุด: 22 มีนาคม 2569
-          </p>
+          <p className="mt-2 text-sm text-gray-400">ปรับปรุงล่าสุด: 22 มีนาคม 2569</p>
         </div>
       </section>
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="prose prose-gray dark:prose-invert max-w-none">
-
           {/* Introduction */}
           <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-6 mb-10 not-prose">
             <p className="text-blue-800 dark:text-blue-300 text-sm leading-relaxed">
               <strong>สรุปสำคัญ:</strong> SolarIQ เสนอการทดลองใช้ฟรี 14 วัน ยกเลิกได้ตลอดเวลา
-              สำหรับแพ็กเกจรายปีสามารถขอคืนเงินได้ภายใน 30 วัน
-              เราต้องการให้คุณมั่นใจ 100% ก่อนตัดสินใจชำระเงิน
+              สำหรับแพ็กเกจรายปีสามารถขอคืนเงินได้ภายใน 30 วัน เราต้องการให้คุณมั่นใจ 100%
+              ก่อนตัดสินใจชำระเงิน
             </p>
           </div>
 
@@ -39,9 +34,15 @@ export default function RefundPolicyPage() {
               1. การทดลองใช้ฟรี (Free Trial)
             </h2>
             <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-              <li>ผู้ใช้ใหม่ทุกคนได้รับสิทธิ์ทดลองใช้งานฟรี <strong>14 วัน</strong> โดยไม่ต้องใช้บัตรเครดิต</li>
+              <li>
+                ผู้ใช้ใหม่ทุกคนได้รับสิทธิ์ทดลองใช้งานฟรี <strong>14 วัน</strong>{' '}
+                โดยไม่ต้องใช้บัตรเครดิต
+              </li>
               <li>ระหว่างช่วงทดลองใช้จะไม่มีการเรียกเก็บเงินใดๆ</li>
-              <li>เมื่อครบ 14 วัน ระบบจะไม่เรียกเก็บเงินอัตโนมัติ — คุณต้องเลือกแพ็กเกจและชำระเงินด้วยตนเอง</li>
+              <li>
+                เมื่อครบ 14 วัน ระบบจะไม่เรียกเก็บเงินอัตโนมัติ —
+                คุณต้องเลือกแพ็กเกจและชำระเงินด้วยตนเอง
+              </li>
               <li>ข้อมูลที่สร้างระหว่างช่วงทดลองจะถูกเก็บรักษาไว้ 30 วันหลังสิ้นสุดช่วงทดลอง</li>
             </ul>
           </section>
@@ -59,7 +60,10 @@ export default function RefundPolicyPage() {
               <li>ยกเลิกได้ตลอดเวลาจากหน้า Billing ในแพลตฟอร์ม</li>
               <li>ไม่มีค่าธรรมเนียมการยกเลิก</li>
               <li>เมื่อยกเลิก คุณจะยังใช้บริการได้จนสิ้นสุดรอบบิลปัจจุบัน</li>
-              <li><strong>ไม่มีการคืนเงิน</strong>สำหรับค่าบริการรายเดือนที่ชำระแล้ว เนื่องจากคุณยังใช้งานได้จนสิ้นรอบ</li>
+              <li>
+                <strong>ไม่มีการคืนเงิน</strong>สำหรับค่าบริการรายเดือนที่ชำระแล้ว
+                เนื่องจากคุณยังใช้งานได้จนสิ้นรอบ
+              </li>
             </ul>
 
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-6 mb-3">
@@ -68,7 +72,10 @@ export default function RefundPolicyPage() {
             <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
               <li>ยกเลิกได้ตลอดเวลาจากหน้า Billing ในแพลตฟอร์ม</li>
               <li>ไม่มีค่าธรรมเนียมการยกเลิก</li>
-              <li>สามารถขอคืนเงินได้ภายใน <strong>30 วัน</strong> นับจากวันที่ชำระเงิน (ดูรายละเอียดในข้อ 3)</li>
+              <li>
+                สามารถขอคืนเงินได้ภายใน <strong>30 วัน</strong> นับจากวันที่ชำระเงิน
+                (ดูรายละเอียดในข้อ 3)
+              </li>
               <li>หลังจาก 30 วัน จะไม่สามารถขอคืนเงินได้ แต่คุณยังใช้บริการได้จนครบรอบปี</li>
             </ul>
           </section>
@@ -83,36 +90,72 @@ export default function RefundPolicyPage() {
               <table className="w-full border-collapse border border-gray-200 dark:border-gray-700 text-sm">
                 <thead>
                   <tr className="bg-gray-50 dark:bg-gray-800">
-                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">กรณี</th>
-                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">การคืนเงิน</th>
-                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">ระยะเวลาดำเนินการ</th>
+                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">
+                      กรณี
+                    </th>
+                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">
+                      การคืนเงิน
+                    </th>
+                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">
+                      ระยะเวลาดำเนินการ
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">ยกเลิกรายปีภายใน 30 วัน</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">คืนเงินตามสัดส่วน (หักวันที่ใช้แล้ว)</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">5-14 วันทำการ</td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      ยกเลิกรายปีภายใน 30 วัน
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      คืนเงินตามสัดส่วน (หักวันที่ใช้แล้ว)
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      5-14 วันทำการ
+                    </td>
                   </tr>
                   <tr className="bg-gray-50/50 dark:bg-gray-800/50">
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">ยกเลิกรายปีหลัง 30 วัน</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">ไม่คืนเงิน (ใช้ได้จนครบรอบปี)</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">-</td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      ยกเลิกรายปีหลัง 30 วัน
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      ไม่คืนเงิน (ใช้ได้จนครบรอบปี)
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      -
+                    </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">ยกเลิกรายเดือน</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">ไม่คืนเงิน (ใช้ได้จนสิ้นรอบเดือน)</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">-</td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      ยกเลิกรายเดือน
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      ไม่คืนเงิน (ใช้ได้จนสิ้นรอบเดือน)
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      -
+                    </td>
                   </tr>
                   <tr className="bg-gray-50/50 dark:bg-gray-800/50">
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">ระบบขัดข้อง (SLA breach)</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">เครดิตชดเชยตาม SLA</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">ในรอบบิลถัดไป</td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      ระบบขัดข้อง (SLA breach)
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      เครดิตชดเชยตาม SLA
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      ในรอบบิลถัดไป
+                    </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">เรียกเก็บเงินซ้ำซ้อน</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">คืนเงินเต็มจำนวนที่เรียกเก็บซ้ำ</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">5-14 วันทำการ</td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      เรียกเก็บเงินซ้ำซ้อน
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      คืนเงินเต็มจำนวนที่เรียกเก็บซ้ำ
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      5-14 วันทำการ
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -131,8 +174,8 @@ export default function RefundPolicyPage() {
               </p>
             </div>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-              <strong>ตัวอย่าง:</strong> คุณสมัคร Professional รายปี (฿3,190/เดือน x 12 = ฿38,280/ปี)
-              แล้วยกเลิกหลังใช้ 1 เดือน:
+              <strong>ตัวอย่าง:</strong> คุณสมัคร Professional รายปี (฿3,190/เดือน x 12 =
+              ฿38,280/ปี) แล้วยกเลิกหลังใช้ 1 เดือน:
             </p>
             <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6 not-prose">
               <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
@@ -152,31 +195,48 @@ export default function RefundPolicyPage() {
             </h2>
             <div className="space-y-4">
               <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-sm font-bold text-primary-600 dark:text-primary-400">1</div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-sm font-bold text-primary-600 dark:text-primary-400">
+                  1
+                </div>
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">ยกเลิกแพ็กเกจ</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">ไปที่หน้า Billing &gt; Subscription &gt; กดยกเลิก</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    ไปที่หน้า Billing &gt; Subscription &gt; กดยกเลิก
+                  </p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-sm font-bold text-primary-600 dark:text-primary-400">2</div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-sm font-bold text-primary-600 dark:text-primary-400">
+                  2
+                </div>
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">ส่งคำขอคืนเงิน</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">ส่งอีเมลไปที่ billing@solariqapp.com พร้อมระบุ: ชื่อบัญชี, อีเมลที่ลงทะเบียน, เหตุผลในการขอคืนเงิน</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    ส่งอีเมลไปที่ billing@solariqapp.com พร้อมระบุ: ชื่อบัญชี, อีเมลที่ลงทะเบียน,
+                    เหตุผลในการขอคืนเงิน
+                  </p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-sm font-bold text-primary-600 dark:text-primary-400">3</div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-sm font-bold text-primary-600 dark:text-primary-400">
+                  3
+                </div>
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">รอการตรวจสอบ</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">ทีมงานจะตรวจสอบคำขอภายใน 3 วันทำการ</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    ทีมงานจะตรวจสอบคำขอภายใน 3 วันทำการ
+                  </p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-sm font-bold text-primary-600 dark:text-primary-400">4</div>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-sm font-bold text-primary-600 dark:text-primary-400">
+                  4
+                </div>
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">รับเงินคืน</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">เงินจะคืนผ่านช่องทางเดียวกับที่ชำระเงิน ภายใน 5-14 วันทำการ</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    เงินจะคืนผ่านช่องทางเดียวกับที่ชำระเงิน ภายใน 5-14 วันทำการ
+                  </p>
                 </div>
               </div>
             </div>
@@ -188,9 +248,17 @@ export default function RefundPolicyPage() {
               6. ช่องทางการคืนเงิน
             </h2>
             <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-              <li><strong>บัตรเครดิต/เดบิต:</strong> คืนเงินเข้าบัตรเดิมที่ใช้ชำระ (5-14 วันทำการ ขึ้นอยู่กับธนาคาร)</li>
-              <li><strong>พร้อมเพย์/Internet Banking:</strong> คืนเงินเข้าบัญชีธนาคารที่แจ้ง (3-7 วันทำการ)</li>
-              <li><strong>โอนผ่านธนาคาร:</strong> คืนเงินเข้าบัญชีธนาคารที่แจ้ง (3-7 วันทำการ)</li>
+              <li>
+                <strong>บัตรเครดิต/เดบิต:</strong> คืนเงินเข้าบัตรเดิมที่ใช้ชำระ (5-14 วันทำการ
+                ขึ้นอยู่กับธนาคาร)
+              </li>
+              <li>
+                <strong>พร้อมเพย์/Internet Banking:</strong> คืนเงินเข้าบัญชีธนาคารที่แจ้ง (3-7
+                วันทำการ)
+              </li>
+              <li>
+                <strong>โอนผ่านธนาคาร:</strong> คืนเงินเข้าบัญชีธนาคารที่แจ้ง (3-7 วันทำการ)
+              </li>
             </ul>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3 text-sm">
               หมายเหตุ: ระยะเวลาอาจแตกต่างกันตามนโยบายของธนาคารผู้ออกบัตร
@@ -223,22 +291,38 @@ export default function RefundPolicyPage() {
               <table className="w-full border-collapse border border-gray-200 dark:border-gray-700 text-sm">
                 <thead>
                   <tr className="bg-gray-50 dark:bg-gray-800">
-                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">Uptime ต่อเดือน</th>
-                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">เครดิตชดเชย</th>
+                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">
+                      Uptime ต่อเดือน
+                    </th>
+                    <th className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">
+                      เครดิตชดเชย
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">99.0% - 99.9%</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">10% ของค่าบริการเดือนนั้น</td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      99.0% - 99.9%
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      10% ของค่าบริการเดือนนั้น
+                    </td>
                   </tr>
                   <tr className="bg-gray-50/50 dark:bg-gray-800/50">
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">95.0% - 99.0%</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">25% ของค่าบริการเดือนนั้น</td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      95.0% - 99.0%
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      25% ของค่าบริการเดือนนั้น
+                    </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">ต่ำกว่า 95.0%</td>
-                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">50% ของค่าบริการเดือนนั้น</td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      ต่ำกว่า 95.0%
+                    </td>
+                    <td className="border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-600 dark:text-gray-400">
+                      50% ของค่าบริการเดือนนั้น
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -262,15 +346,13 @@ export default function RefundPolicyPage() {
 
           {/* Contact */}
           <section className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              10. การติดต่อ
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">10. การติดต่อ</h2>
             <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6 not-prose">
               <p className="font-semibold text-gray-900 dark:text-white">ฝ่ายการเงินและชำระเงิน</p>
               <div className="mt-3 space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
                 <p>บริษัท SolarIQ จำกัด</p>
                 <p>อีเมล: billing@solariqapp.com</p>
-                <p>โทรศัพท์: 02-XXX-XXXX</p>
+                <p>โทรศัพท์: 085-662-1113</p>
                 <p>เวลาทำการ: จันทร์ - ศุกร์ 9:00 - 18:00 น.</p>
               </div>
             </div>
@@ -278,21 +360,35 @@ export default function RefundPolicyPage() {
 
           {/* Related Links */}
           <div className="mt-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6 not-prose">
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-3">เอกสารที่เกี่ยวข้อง</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+              เอกสารที่เกี่ยวข้อง
+            </h3>
             <div className="flex flex-wrap gap-3">
-              <Link href="/terms" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
+              <Link
+                href="/terms"
+                className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+              >
                 ข้อกำหนดการใช้งาน
               </Link>
               <span className="text-gray-300">|</span>
-              <Link href="/privacy" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
+              <Link
+                href="/privacy"
+                className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+              >
                 นโยบายความเป็นส่วนตัว
               </Link>
               <span className="text-gray-300">|</span>
-              <Link href="/pricing-plans" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
+              <Link
+                href="/pricing-plans"
+                className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+              >
                 แพ็กเกจและราคา
               </Link>
               <span className="text-gray-300">|</span>
-              <Link href="/contact" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
+              <Link
+                href="/contact"
+                className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+              >
                 ติดต่อเรา
               </Link>
             </div>

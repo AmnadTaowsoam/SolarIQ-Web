@@ -26,7 +26,32 @@ import type {
 } from '@/types'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapApiResponse(raw: any): SolarAnalysisAdvanced {
+function mapRoofSegment(seg: any) {
+  return {
+    pitchDegrees: seg.pitchDegrees ?? seg.pitch_degrees ?? 0,
+    azimuthDegrees: seg.azimuthDegrees ?? seg.azimuth_degrees ?? 0,
+    areaM2: seg.areaM2 ?? seg.area_m2 ?? 0,
+    panelCount: seg.panelCount ?? seg.panel_count ?? 0,
+    yearlyEnergyDcKwh: seg.yearlyEnergyDcKwh ?? seg.yearly_energy_dc_kwh ?? 0,
+    centerLat: seg.centerLat ?? seg.center_lat ?? 0,
+    centerLng: seg.centerLng ?? seg.center_lng ?? 0,
+    boundingBox: seg.boundingBox ?? seg.bounding_box ?? undefined,
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapSolarPanel(panel: any) {
+  return {
+    centerLat: panel.centerLat ?? panel.center_lat ?? panel.center?.latitude ?? 0,
+    centerLng: panel.centerLng ?? panel.center_lng ?? panel.center?.longitude ?? 0,
+    orientation: panel.orientation ?? 'LANDSCAPE',
+    yearlyEnergyDcKwh: panel.yearlyEnergyDcKwh ?? panel.yearly_energy_dc_kwh ?? 0,
+    segmentIndex: panel.segmentIndex ?? panel.segment_index ?? 0,
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapApiResponse(raw: any, inputLat?: number, inputLng?: number): SolarAnalysisAdvanced {
   const sp = raw.solar_potential || {}
   const pc = sp.panel_configs?.[0] || {}
   const systemKw = raw.system_size_kw || 0
@@ -38,9 +63,13 @@ function mapApiResponse(raw: any): SolarAnalysisAdvanced {
     {}
   const installCost = recOpt.installation_cost_thb || systemKw * 35000
 
+  // Use API coordinates, falling back to input coordinates
+  const lat = sp.latitude || raw.latitude || inputLat || 0
+  const lng = sp.longitude || raw.longitude || inputLng || 0
+
   return {
     analysisId: raw.analysis_id || '',
-    coordinates: { latitude: sp.latitude || 0, longitude: sp.longitude || 0 },
+    coordinates: { latitude: lat, longitude: lng },
     address: raw.address || '',
     solarPotential: {
       maxSunshineHoursPerYear: sp.sunshine_hours_per_year || 0,
@@ -75,8 +104,8 @@ function mapApiResponse(raw: any): SolarAnalysisAdvanced {
         yearlyEnergyDcKwh: c.yearly_energy_dc_kwh,
       })
     ),
-    roofSegments: raw.roof_segments || [],
-    solarPanels: raw.solar_panels || [],
+    roofSegments: (raw.roof_segments || []).map(mapRoofSegment),
+    solarPanels: (raw.solar_panels || []).map(mapSolarPanel),
     shadeAnalysis: raw.shade_analysis
       ? {
           monthlyShadePercent: raw.shade_analysis.monthly_shade_percent || [],
@@ -197,7 +226,7 @@ export function useSolarAnalysisAdvanced() {
       const resp = await api.post(API_ENDPOINTS.SOLAR.ANALYZE_ADVANCED, request)
       // axios returns { data, status, ... } — extract .data for the mapper
       const raw = resp?.data ?? resp
-      return mapApiResponse(raw)
+      return mapApiResponse(raw, request.latitude, request.longitude)
     },
   })
 }

@@ -1,0 +1,42 @@
+# SolarIQ
+
+> AI-powered solar energy analysis platform for solar contractors and installers in Thailand.
+
+SolarIQ is a B2B SaaS platform that helps solar panel installation companies manage their business end-to-end: from lead capture and solar analysis to proposal generation, deal management, and post-installation maintenance tracking.
+
+## Core Features
+
+- **Solar Analysis**: AI-powered rooftop analysis using satellite imagery, solar irradiance data, and financial modeling to recommend optimal solar panel configurations
+- **Lead Management**: CRM with 6-stage pipeline (New → Qualified → Analyzing → Proposal → Negotiation → Won)
+- **Auto Proposal Generator**: PDF proposals with system sizing, ROI analysis, and carbon offset calculations
+- **Deal Pipeline**: Track installation projects from contract signing through grid connection
+- **Maintenance & Warranty**: Post-installation tracking with automated maintenance reminders
+- **Customer Service Portal**: Handle repair requests, complaints, and feedback
+- **Work Calendar**: Schedule installations, site surveys, and maintenance activities
+- **Analytics Dashboard**: Revenue trends, conversion funnels, lead scoring, and AI insights
+- **Commission Tracking**: Sales team commission calculations
+- **Billing & Subscriptions**: Plan management with Omise payment integration
+
+## Technology
+
+- Frontend: Next.js 14, React, TypeScript, Tailwind CSS
+- Backend: Python FastAPI, PostgreSQL, Firebase Auth
+- AI: Google Gemini for solar analysis, lead scoring, and recommendations
+- Integrations: LINE Messaging API, Google Maps, Omise Payments
+
+## API
+
+- REST API at /api/v1/*
+- Firebase Authentication
+- Developer portal with API keys and sandbox
+
+## Target Market
+
+Solar panel installation contractors, EPC companies, and solar distributors in Thailand.
+
+## Contact
+
+- Website: https://www.solariqapp.com
+- Email: contact@solariqapp.com
+- Phone: 085-662-1113
+- Location: Nonthaburi, Thailand

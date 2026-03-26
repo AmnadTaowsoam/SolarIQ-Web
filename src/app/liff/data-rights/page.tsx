@@ -1,40 +1,40 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface DataSummary {
-  name: string;
-  phone: string;
-  email: string;
-  address: string;
-  province: string;
-  analysis_count: number;
-  consent_count: number;
+  name: string
+  phone: string
+  email: string
+  address: string
+  province: string
+  analysis_count: number
+  consent_count: number
 }
 
 export default function DataRightsPage(): React.ReactElement {
-  const router = useRouter();
-  const [dataSummary, setDataSummary] = useState<DataSummary | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter()
+  const [dataSummary, setDataSummary] = useState<DataSummary | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [deleteSuccess, setDeleteSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchDataSummary = useCallback(async () => {
     try {
-      const lineUserId = localStorage.getItem('line_user_id');
+      const lineUserId = localStorage.getItem('line_user_id')
       if (!lineUserId) {
-        router.push('/liff/login');
-        return;
+        router.push('/liff/login')
+        return
       }
-      const response = await fetch(`/api/liff/data-summary/${lineUserId}`);
+      const response = await fetch(`/api/liff/data-summary/${lineUserId}`)
       if (response.ok) {
-        const data: DataSummary = await response.json();
-        setDataSummary(data);
+        const data: DataSummary = await response.json()
+        setDataSummary(data)
       } else {
         // Use placeholder data if endpoint not yet implemented
         setDataSummary({
@@ -45,7 +45,7 @@ export default function DataRightsPage(): React.ReactElement {
           province: '-',
           analysis_count: 0,
           consent_count: 0,
-        });
+        })
       }
     } catch {
       setDataSummary({
@@ -56,58 +56,62 @@ export default function DataRightsPage(): React.ReactElement {
         province: '-',
         analysis_count: 0,
         consent_count: 0,
-      });
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [router]);
+  }, [router])
 
   useEffect(() => {
-    fetchDataSummary();
-  }, [fetchDataSummary]);
+    fetchDataSummary()
+  }, [fetchDataSummary])
 
   const handleDownload = async () => {
-    setIsDownloading(true);
-    setError(null);
+    setIsDownloading(true)
+    setError(null)
     try {
-      const lineUserId = localStorage.getItem('line_user_id');
-      const response = await fetch(`/api/v1/liff/data-export?line_user_id=${lineUserId}`);
-      if (!response.ok) throw new Error('ไม่สามารถดาวน์โหลดข้อมูลได้');
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'my-data.json';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
+      const lineUserId = localStorage.getItem('line_user_id')
+      const response = await fetch(`/api/v1/liff/data-export?line_user_id=${lineUserId}`)
+      if (!response.ok) {
+        throw new Error('ไม่สามารถดาวน์โหลดข้อมูลได้')
+      }
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'my-data.json'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.URL.revokeObjectURL(url)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด');
+      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด')
     } finally {
-      setIsDownloading(false);
+      setIsDownloading(false)
     }
-  };
+  }
 
   const handleDeleteConfirm = async () => {
-    setIsDeleting(true);
-    setError(null);
+    setIsDeleting(true)
+    setError(null)
     try {
-      const lineUserId = localStorage.getItem('line_user_id');
+      const lineUserId = localStorage.getItem('line_user_id')
       const response = await fetch('/api/v1/liff/data-deletion-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ line_user_id: lineUserId }),
-      });
-      if (!response.ok) throw new Error('ไม่สามารถส่งคำขอได้');
-      setDeleteSuccess(true);
-      setShowDeleteModal(false);
+      })
+      if (!response.ok) {
+        throw new Error('ไม่สามารถส่งคำขอได้')
+      }
+      setDeleteSuccess(true)
+      setShowDeleteModal(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด');
+      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด')
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -117,7 +121,7 @@ export default function DataRightsPage(): React.ReactElement {
           <p className="mt-4 text-gray-600">กำลังโหลด...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -125,9 +129,17 @@ export default function DataRightsPage(): React.ReactElement {
       {/* Header */}
       <header className="bg-green-600 text-white p-4 shadow-md">
         <div className="flex items-center gap-3">
-          <button onClick={() => router.back()} className="p-1 rounded hover:bg-green-700 transition-colors">
+          <button
+            onClick={() => router.back()}
+            className="p-1 rounded hover:bg-green-700 transition-colors"
+          >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
           <h1 className="text-xl font-bold">สิทธิของคุณตาม PDPA</h1>
@@ -237,8 +249,8 @@ export default function DataRightsPage(): React.ReactElement {
             </p>
             <p>
               <span className="text-gray-500">โทร: </span>
-              <a href="tel:02-XXX-XXXX" className="text-green-600 hover:underline">
-                02-XXX-XXXX
+              <a href="tel:085-662-1113" className="text-green-600 hover:underline">
+                085-662-1113
               </a>
             </p>
           </div>
@@ -282,5 +294,5 @@ export default function DataRightsPage(): React.ReactElement {
         </div>
       )}
     </div>
-  );
+  )
 }

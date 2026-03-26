@@ -1,14 +1,25 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useAnalyticsDashboard } from '@/hooks/useAnalytics'
 import { Card, CardBody, CardHeader, Badge } from '@/components/ui'
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, BarChart, Bar } from 'recharts'
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  BarChart,
+  Bar,
+} from 'recharts'
 
 function formatThb(value: number) {
   return `฿${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
 }
 
 export default function AnalyticsOverviewPage() {
+  const t = useTranslations('analyticsPage')
   const { data } = useAnalyticsDashboard()
 
   const kpis = data.kpis
@@ -19,20 +30,47 @@ export default function AnalyticsOverviewPage() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4">
         {[
-          { label: 'Revenue', value: formatThb(kpis.revenue.value), change: kpis.revenue.change },
-          { label: 'Deals Won', value: kpis.dealsWon.value.toLocaleString('en-US'), change: kpis.dealsWon.change },
-          { label: 'Conversion', value: `${kpis.conversionRate.value.toFixed(1)}%`, change: kpis.conversionRate.change },
-          { label: 'Avg Deal', value: formatThb(kpis.avgDealValue.value), change: kpis.avgDealValue.change },
-          { label: 'CSAT', value: kpis.satisfaction.value.toFixed(1), change: kpis.satisfaction.change },
-          { label: 'Resp Time', value: `${kpis.responseTime.value.toFixed(0)} min`, change: kpis.responseTime.change },
+          {
+            label: t('kpis.revenue'),
+            value: formatThb(kpis.revenue.value),
+            change: kpis.revenue.change,
+          },
+          {
+            label: t('kpis.dealsWon'),
+            value: kpis.dealsWon.value.toLocaleString('en-US'),
+            change: kpis.dealsWon.change,
+          },
+          {
+            label: t('kpis.conversion'),
+            value: `${kpis.conversionRate.value.toFixed(1)}%`,
+            change: kpis.conversionRate.change,
+          },
+          {
+            label: t('kpis.avgDeal'),
+            value: formatThb(kpis.avgDealValue.value),
+            change: kpis.avgDealValue.change,
+          },
+          {
+            label: t('kpis.csat'),
+            value: kpis.satisfaction.value.toFixed(1),
+            change: kpis.satisfaction.change,
+          },
+          {
+            label: t('kpis.responseTime'),
+            value: `${kpis.responseTime.value.toFixed(0)} min`,
+            change: kpis.responseTime.change,
+          },
         ].map((item) => (
           <Card key={item.label}>
             <CardBody>
               <p className="text-xs text-gray-500 uppercase">{item.label}</p>
               <p className="text-xl font-bold text-gray-900 mt-2">{item.value}</p>
               {item.change !== null && item.change !== undefined && (
-                <p className={`text-xs mt-1 ${item.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                  {item.change >= 0 ? '+' : ''}{item.change.toFixed(1)}%
+                <p
+                  className={`text-xs mt-1 ${item.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}
+                >
+                  {item.change >= 0 ? '+' : ''}
+                  {item.change.toFixed(1)}%
                 </p>
               )}
             </CardBody>
@@ -42,7 +80,7 @@ export default function AnalyticsOverviewPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <Card>
-          <CardHeader title="Revenue Trend" subtitle="Last 30 days" />
+          <CardHeader title={t('charts.revenueTrend')} subtitle={t('charts.last30Days')} />
           <CardBody>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -50,7 +88,13 @@ export default function AnalyticsOverviewPage() {
                   <XAxis dataKey="day" hide />
                   <YAxis hide />
                   <Tooltip />
-                  <Line type="monotone" dataKey="value" stroke="#f97316" strokeWidth={2} dot={false} />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#f97316"
+                    strokeWidth={2}
+                    dot={false}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -58,7 +102,7 @@ export default function AnalyticsOverviewPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Top Lead Sources" subtitle="Share by channel" />
+          <CardHeader title={t('charts.topLeadSources')} subtitle={t('charts.shareByChannel')} />
           <CardBody>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
@@ -75,14 +119,20 @@ export default function AnalyticsOverviewPage() {
       </div>
 
       <Card>
-        <CardHeader title="AI Insights" subtitle="Latest insights from analytics engine" />
+        <CardHeader title={t('aiInsights.title')} subtitle={t('aiInsights.subtitle')} />
         <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {data.recentInsights.map((insight) => (
               <div key={insight.id} className="border border-gray-100 rounded-lg p-4 bg-white">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold text-gray-900">{insight.title}</p>
-                  <Badge className={insight.severity === 'warning' ? 'bg-yellow-100 text-yellow-800' : 'bg-emerald-100 text-emerald-700'}>
+                  <Badge
+                    className={
+                      insight.severity === 'warning'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-emerald-100 text-emerald-700'
+                    }
+                  >
                     {insight.type}
                   </Badge>
                 </div>

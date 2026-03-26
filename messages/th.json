@@ -436,5 +436,1004 @@
     "actions": {
       "cancelConfirm": "ยืนยันการยกเลิกแพ็กเกจใช่หรือไม่?"
     }
+  },
+  "maintenancePage": {
+    "title": "บำรุงรักษาและการรับประกัน",
+    "subtitle": "ติดตามการรับประกันและกำหนดการบำรุงรักษา",
+    "addInstallation": "+ เพิ่มงานติดตั้ง",
+    "filters": {
+      "active": "ใช้งาน",
+      "inactive": "หยุดใช้",
+      "all": "ทั้งหมด"
+    },
+    "upcomingMaintenance": "งานบำรุงรักษาที่กำลังจะถึง ({count} รายการ)",
+    "overdue": "เลยกำหนด!",
+    "daysUntilDue": "อีก {days} วัน",
+    "empty": {
+      "title": "ยังไม่มีงานติดตั้ง",
+      "description": "เพิ่มงานติดตั้งที่เสร็จแล้วเพื่อติดตามการรับประกันและบำรุงรักษา"
+    }
+  },
+  "serviceRequestsPage": {
+    "title": "ศูนย์บริการลูกค้า",
+    "subtitle": "จัดการคำร้อง แจ้งซ่อม และข้อเสนอแนะจากลูกค้า",
+    "createRequest": "+ สร้างคำร้อง",
+    "types": {
+      "repair": "แจ้งซ่อม",
+      "complaint": "ร้องเรียน",
+      "feedback": "ข้อเสนอแนะ",
+      "inquiry": "สอบถาม"
+    },
+    "statuses": {
+      "open": "รอดำเนินการ",
+      "in_progress": "กำลังดำเนินการ",
+      "resolved": "แก้ไขแล้ว",
+      "closed": "ปิดแล้ว"
+    },
+    "priority": {
+      "urgent": "เร่งด่วน",
+      "high": "สูง",
+      "medium": "ปานกลาง",
+      "low": "ต่ำ"
+    },
+    "stats": {
+      "total": "ทั้งหมด",
+      "open": "รอดำเนินการ",
+      "inProgress": "กำลังดำเนินการ",
+      "resolved": "แก้ไขแล้ว",
+      "avgResolutionTime": "เวลาแก้ไขเฉลี่ย",
+      "hours": "ชม."
+    },
+    "form": {
+      "title": "สร้างคำร้องใหม่",
+      "customerName": "ชื่อลูกค้า *",
+      "phone": "เบอร์โทร",
+      "email": "อีเมล",
+      "subject": "หัวข้อ *",
+      "description": "รายละเอียด *",
+      "submitting": "กำลังส่ง...",
+      "submit": "ส่งคำร้อง"
+    },
+    "filters": {
+      "all": "ทั้งหมด",
+      "open": "รอดำเนินการ",
+      "inProgress": "กำลังดำเนินการ",
+      "resolved": "แก้ไขแล้ว"
+    },
+    "empty": {
+      "title": "ยังไม่มีคำร้อง",
+      "description": "สร้างคำร้องแรกเมื่อมีลูกค้าติดต่อเข้ามา"
+    }
+  },
+  "calendarPage": {
+    "title": "ปฏิทินงาน",
+    "subtitle": "ดูแผนงานติดตั้ง บำรุงรักษา และคำร้องลูกค้า",
+    "addActivity": "เพิ่มกิจกรรม",
+    "daysShort": {
+      "sun": "อา",
+      "mon": "จ",
+      "tue": "อ",
+      "wed": "พ",
+      "thu": "พฤ",
+      "fri": "ศ",
+      "sat": "ส"
+    },
+    "months": {
+      "january": "มกราคม",
+      "february": "กุมภาพันธ์",
+      "march": "มีนาคม",
+      "april": "เมษายน",
+      "may": "พฤษภาคม",
+      "june": "มิถุนายน",
+      "july": "กรกฎาคม",
+      "august": "สิงหาคม",
+      "september": "กันยายน",
+      "october": "ตุลาคม",
+      "november": "พฤศจิกายน",
+      "december": "ธันวาคม"
+    },
+    "eventTypes": {
+      "maintenance": "บำรุงรักษา",
+      "service_request": "คำร้องลูกค้า",
+      "installation": "งานติดตั้ง"
+    },
+    "eventsForDate": "งานวันที่ {date}",
+    "selectDatePrompt": "เลือกวันที่เพื่อดูงาน",
+    "noEventsToday": "ไม่มีงานในวันนี้",
+    "upcomingEvents": "งานที่กำลังจะมาถึง:",
+    "overdue": "เลยกำหนด"
+  },
+  "messagesPage": {
+    "title": "ข้อความ",
+    "filters": {
+      "all": "ทั้งหมด",
+      "unread": "ยังไม่อ่าน",
+      "active": "กำลังดำเนินการ",
+      "completed": "เสร็จสิ้น"
+    },
+    "searchPlaceholder": "ค้นหาชื่อลูกค้า...",
+    "noConversations": "ไม่พบการสนทนา",
+    "noMessages": "ยังไม่มีข้อความ",
+    "startConversation": "เริ่มการสนทนา",
+    "selectConversation": "เลือกการสนทนา",
+    "selectConversationHint": "เลือกการสนทนาจากรายการด้านซ้ายเพื่อเริ่มพูดคุย",
+    "startNewConversation": "เริ่มการสนทนา",
+    "sendMessagePrompt": "ส่งข้อความเพื่อเริ่มคุยกับลูกค้า",
+    "typingIndicator": "กำลังพิมพ์...",
+    "inputPlaceholder": "พิมพ์ข้อความ...",
+    "conversationCompleted": "การสนทนานี้เสร็จสิ้นแล้ว",
+    "status": {
+      "active": "กำลังดำเนินการ",
+      "completed": "เสร็จสิ้น",
+      "pending": "รอดำเนินการ"
+    },
+    "infoPanel": {
+      "customerInfo": "ข้อมูลลูกค้า",
+      "internalNotes": "บันทึกภายใน",
+      "relatedLeadDeal": "Lead / Deal ที่เกี่ยวข้อง",
+      "viewLead": "ดู Lead",
+      "viewDeal": "ดู Deal",
+      "notesVisibleToTeam": "บันทึกภายใน (มองเห็นเฉพาะทีม)",
+      "noNotesYet": "ยังไม่มีบันทึก",
+      "addNotePlaceholder": "เพิ่มบันทึก...",
+      "saveNote": "บันทึก",
+      "pinned": "ปักหมุด"
+    },
+    "demoMode": "Demo Mode — แสดงข้อมูลตัวอย่าง API ยังไม่เชื่อมต่อ",
+    "yesterday": "เมื่อวาน",
+    "today": "วันนี้",
+    "viewLeadDetail": "ดูรายละเอียด Lead",
+    "leadStatus": {
+      "new": "ใหม่",
+      "quoted": "เสนอราคาแล้ว",
+      "won": "ปิดการขาย"
+    },
+    "dealStage": {
+      "closed_won": "ปิดการขายสำเร็จ"
+    }
+  },
+  "dealsPage": {
+    "title": "Deals",
+    "subtitle": "ติดตามงานติดตั้งทั้งหมดของคุณ",
+    "stats": {
+      "total": "งานทั้งหมด",
+      "inProgress": "กำลังดำเนินการ",
+      "completed": "เสร็จสิ้นแล้ว"
+    },
+    "totalValue": "มูลค่างานรวม",
+    "progress": "ความคืบหน้า",
+    "steps": "{completed}/{total} ขั้นตอน",
+    "all": "ทั้งหมด",
+    "createDeal": "สร้าง Deal",
+    "empty": {
+      "title": "ยังไม่มี Deal",
+      "description": "เมื่อลูกค้ายอมรับใบเสนอราคา Deal จะถูกสร้างขึ้นที่นี่"
+    }
+  },
+  "analyticsPage": {
+    "title": "วิเคราะห์",
+    "subtitle": "ตัวชี้วัดประสิทธิภาพธุรกิจและข้อมูลเชิงลึก",
+    "kpis": {
+      "revenue": "รายได้",
+      "dealsWon": "ดีลที่ชนะ",
+      "conversion": "อัตราแปลง",
+      "avgDeal": "มูลค่าเฉลี่ย",
+      "csat": "ความพึงพอใจ",
+      "responseTime": "เวลาตอบ"
+    },
+    "charts": {
+      "revenueTrend": "แนวโน้มรายได้",
+      "last30Days": "30 วันที่ผ่านมา",
+      "topLeadSources": "แหล่งที่มาลีดยอดนิยม",
+      "shareByChannel": "สัดส่วนตามช่องทาง"
+    },
+    "aiInsights": {
+      "title": "AI Insights",
+      "subtitle": "ข้อมูลเชิงลึกล่าสุดจากระบบวิเคราะห์"
+    }
+  },
+  "commissionsPage": {
+    "title": "คอมมิชชัน",
+    "subtitle": "ติดตามรายได้คอมมิชชันและสถานะใบแจ้งหนี้",
+    "viewInvoices": "ดูใบแจ้งหนี้",
+    "currentMonth": "เดือนปัจจุบัน",
+    "previousMonth": "เดือนก่อน",
+    "change": "เปลี่ยนแปลง",
+    "vsLastMonth": "เทียบกับเดือนที่แล้ว",
+    "deals": "ดีล",
+    "history": {
+      "title": "ประวัติคอมมิชชัน",
+      "subtitle": "คอมมิชชันล่าสุดจากดีลที่เสร็จสิ้น"
+    },
+    "table": {
+      "deal": "ดีล",
+      "dealValue": "มูลค่าดีล",
+      "rate": "อัตรา",
+      "commission": "คอมมิชชัน",
+      "status": "สถานะ",
+      "date": "วันที่"
+    },
+    "status": {
+      "pending": "รอดำเนินการ",
+      "invoiced": "ออกใบแจ้งหนี้แล้ว",
+      "paid": "จ่ายแล้ว",
+      "disputed": "มีข้อพิพาท",
+      "voided": "ยกเลิกแล้ว",
+      "adjusted": "ปรับปรุงแล้ว"
+    },
+    "empty": "ยังไม่มีคอมมิชชัน"
+  },
+  "invoicesPage": {
+    "title": "ใบแจ้งหนี้",
+    "subtitle": "ใบแจ้งหนี้คอมมิชชันรายเดือนและสถานะการชำระเงิน",
+    "history": {
+      "title": "ประวัติใบแจ้งหนี้",
+      "subtitle": "ใบแจ้งหนี้ล่าสุด"
+    },
+    "table": {
+      "invoiceNumber": "เลขที่ใบแจ้งหนี้",
+      "period": "ช่วงเวลา",
+      "total": "ยอดรวม",
+      "status": "สถานะ",
+      "action": "จัดการ"
+    },
+    "view": "ดู",
+    "status": {
+      "draft": "ร่าง",
+      "sent": "ส่งแล้ว",
+      "viewed": "เปิดดูแล้ว",
+      "paid": "จ่ายแล้ว",
+      "overdue": "เกินกำหนด",
+      "disputed": "มีข้อพิพาท",
+      "voided": "ยกเลิกแล้ว"
+    },
+    "empty": "ยังไม่มีใบแจ้งหนี้"
+  },
+  "settingsPage": {
+    "tabs": {
+      "company": "ข้อมูลบริษัท",
+      "line": "LINE OA",
+      "notifications": "การแจ้งเตือน",
+      "team": "สมาชิกทีม",
+      "api": "API Keys",
+      "branding": "White-Label"
+    },
+    "title": "ตั้งค่า",
+    "subtitle": "จัดการข้อมูลบริษัท การเชื่อมต่อ และสิทธิ์การใช้งาน",
+    "company": {
+      "title": "ข้อมูลบริษัท",
+      "subtitle": "ข้อมูลพื้นฐานของบริษัทที่แสดงบน Proposal และเอกสาร",
+      "companyName": "ชื่อบริษัท",
+      "companyNamePlaceholder": "ชื่อบริษัทของคุณ",
+      "taxId": "เลขประจำตัวผู้เสียภาษี",
+      "taxIdPlaceholder": "0-0000-00000-00-0",
+      "address": "ที่อยู่",
+      "addressPlaceholder": "ที่อยู่บริษัท",
+      "phone": "เบอร์โทรศัพท์",
+      "phonePlaceholder": "02-xxx-xxxx",
+      "email": "อีเมลบริษัท",
+      "emailPlaceholder": "info@company.com",
+      "website": "เว็บไซต์",
+      "websitePlaceholder": "https://www.company.com",
+      "logo": "โลโก้บริษัท",
+      "uploadLogo": "อัปโหลดโลโก้",
+      "logoHint": "PNG, JPG ขนาดไม่เกิน 2MB",
+      "cancel": "ยกเลิก",
+      "save": "บันทึกข้อมูล"
+    },
+    "line": {
+      "title": "เชื่อมต่อ LINE OA",
+      "subtitle": "เชื่อมต่อ LINE Official Account เพื่อรับ Lead อัตโนมัติ",
+      "channelId": "Channel ID",
+      "channelSecret": "Channel Secret",
+      "accessToken": "Access Token",
+      "liffId": "LIFF ID",
+      "webhookUrl": "Webhook URL",
+      "copyToLineDevs": "คัดลอกไปใส่ใน LINE Developers",
+      "testConnection": "ทดสอบการเชื่อมต่อ",
+      "testing": "กำลังทดสอบ...",
+      "connectionSuccess": "เชื่อมต่อสำเร็จ!",
+      "connectionFailed": "ไม่สามารถเชื่อมต่อได้ — ทดสอบอีกครั้ง",
+      "connected": "เชื่อมต่อแล้ว",
+      "disconnected": "ไม่ได้เชื่อมต่อ",
+      "copied": "คัดลอกแล้ว",
+      "copy": "คัดลอก",
+      "cancel": "ยกเลิก",
+      "save": "บันทึก"
+    },
+    "notifications": {
+      "title": "การแจ้งเตือน",
+      "subtitle": "กำหนดช่องทางการแจ้งเตือนสำหรับแต่ละเหตุการณ์",
+      "event": "เหตุการณ์",
+      "newLead": "แจ้งเตือน Lead ใหม่",
+      "statusChange": "Lead เปลี่ยนสถานะ",
+      "proposalViewed": "ลูกค้าเปิดดูใบเสนอราคา",
+      "paymentReceived": "ได้รับชำระเงิน",
+      "weeklySummary": "รายงานสรุปรายสัปดาห์",
+      "channels": {
+        "line": "LINE",
+        "email": "อีเมล",
+        "sms": "SMS",
+        "webPush": "Web Push"
+      },
+      "resetDefaults": "รีเซ็ตค่าเริ่มต้น",
+      "saveSettings": "บันทึกการตั้งค่า"
+    },
+    "team": {
+      "title": "สมาชิกทีม",
+      "subtitle": "จัดการสมาชิกและสิทธิ์การเข้าถึงระบบ",
+      "inviteMember": "เชิญสมาชิก",
+      "inviteNewMember": "เชิญสมาชิกใหม่",
+      "memberEmailPlaceholder": "อีเมลสมาชิก",
+      "name": "ชื่อ",
+      "email": "อีเมล",
+      "role": "บทบาท",
+      "status": "สถานะ",
+      "manage": "จัดการ",
+      "roles": {
+        "admin": "ผู้ดูแลระบบ",
+        "contractor": "ช่างติดตั้ง"
+      },
+      "sendInvite": "ส่งคำเชิญ",
+      "deleteMember": "ลบสมาชิก",
+      "memberStatus": {
+        "active": "ใช้งาน",
+        "pending": "รอยืนยัน",
+        "inactive": "ปิดใช้งาน"
+      }
+    },
+    "api": {
+      "title": "API Keys",
+      "subtitle": "จัดการ API Key สำหรับเชื่อมต่อกับระบบภายนอก",
+      "enterprise": "Enterprise",
+      "apiKey": "API Key",
+      "show": "แสดง",
+      "hide": "ซ่อน",
+      "regenerateConfirm": "คุณแน่ใจหรือไม่? การสร้าง API Key ใหม่จะทำให้ Key เดิมใช้งานไม่ได้ทันที",
+      "confirmRegenerate": "ยืนยันสร้างใหม่",
+      "cancel": "ยกเลิก",
+      "regenerateKey": "สร้าง API Key ใหม่",
+      "webhookEndpoints": "Webhook Endpoints",
+      "usageThisMonth": "สถิติการใช้งานเดือนนี้",
+      "requestsUsed": "Requests ใช้ไป",
+      "monthlyLimit": "Limit ต่อเดือน",
+      "usagePercent": "ใช้ไป {percent}% ของ Limit"
+    },
+    "branding": {
+      "title": "White-Label Branding",
+      "subtitle": "ปรับแต่งแบรนด์สำหรับ Proposal และหน้าลูกค้า",
+      "enterprise": "Enterprise",
+      "orgOnly": "White-label branding ใช้งานได้เฉพาะบัญชีที่เป็นสมาชิกองค์กรเท่านั้น",
+      "selectBrand": "เลือกแบรนด์",
+      "setDefault": "ตั้งเป็น Default",
+      "brandName": "ชื่อแบรนด์",
+      "displayCompanyName": "ชื่อบริษัทที่แสดง",
+      "logoLight": "Logo (Light URL)",
+      "logoDark": "Logo (Dark URL)",
+      "uploading": "กำลังอัปโหลด...",
+      "uploadLogo": "อัปโหลดโลโก้ (PNG/JPG/SVG)",
+      "faviconUrl": "Favicon URL",
+      "borderRadius": "Border Radius",
+      "primaryColor": "Primary Color",
+      "secondaryColor": "Secondary Color",
+      "accentColor": "Accent Color",
+      "fontHeading": "Font Heading",
+      "fontBody": "Font Body (Live Preview)",
+      "customDomain": "Custom Domain",
+      "customDomainHint": "ชี้ CNAME record มาที่ custom.solariq.app",
+      "setupDomain": "ตั้งค่า Domain",
+      "verifyDns": "ตรวจสอบ DNS",
+      "dnsRecords": "DNS Records",
+      "preview": "ตัวอย่าง",
+      "createNewBrand": "สร้างแบรนด์ใหม่",
+      "newBrandName": "ชื่อแบรนด์ใหม่",
+      "newCompanyName": "ชื่อบริษัท",
+      "creating": "กำลังสร้าง...",
+      "createBrand": "สร้างแบรนด์",
+      "customizationNote": "การปรับแต่งมีผลกับ UI, Proposal, และอีเมล",
+      "saving": "กำลังบันทึก...",
+      "saveSettings": "บันทึกการตั้งค่า"
+    }
+  },
+  "serviceAreaPage": {
+    "title": "พื้นที่ให้บริการ",
+    "subtitle": "กำหนดพื้นที่และกฎการรับ Lead อัตโนมัติ",
+    "modeSelector": {
+      "title": "วิธีกำหนดพื้นที่",
+      "subtitle": "เลือกรูปแบบการกำหนดพื้นที่ให้บริการ",
+      "province": "เลือกจังหวัด",
+      "radius": "รัศมี (กม.)",
+      "polygon": "วาด Polygon (Enterprise)",
+      "enterprise": "Enterprise"
+    },
+    "provinceSelection": {
+      "title": "เลือกจังหวัด",
+      "subtitle": "เลือกจังหวัดที่คุณให้บริการ",
+      "addPlaceholder": "เพิ่มจังหวัด...",
+      "noneSelected": "ยังไม่ได้เลือกจังหวัด"
+    },
+    "radiusMode": {
+      "title": "รัศมีจากจุดศูนย์กลาง",
+      "subtitle": "เลือกจังหวัดเป็นจุดศูนย์กลางและกำหนดรัศมี",
+      "centerProvince": "จังหวัดศูนย์กลาง",
+      "radius": "รัศมี (กม.)",
+      "mapPlaceholder": "แผนที่แสดงรัศมี {radius} กม. จาก{province}"
+    },
+    "leadReception": {
+      "title": "ตั้งค่าการรับงาน",
+      "subtitle": "กำหนดปริมาณและเวลารับ Lead",
+      "maxPerDay": "รับ Lead สูงสุด/วัน",
+      "activeHours": "เวลารับ Lead",
+      "to": "ถึง",
+      "pauseTitle": "หยุดรับ Lead ชั่วคราว",
+      "pauseDescription": "ระงับการส่ง Lead ใหม่มายังคุณชั่วคราว",
+      "pausedWarning": "ขณะนี้คุณหยุดรับ Lead ชั่วคราว Lead ใหม่จะไม่ถูกส่งมาจนกว่าจะเปิดใช้งานอีกครั้ง"
+    },
+    "saving": "กำลังบันทึก...",
+    "save": "บันทึก",
+    "saved": "บันทึกเรียบร้อยแล้ว",
+    "removeProvince": "ลบ {province}",
+    "radiusUnit": "กม.",
+    "mapPlaceholder": "แผนที่แสดงรัศมี {radius} กม. จาก{province}"
+  },
+  "profilePage": {
+    "title": "ตั้งค่าโปรไฟล์",
+    "subtitle": "จัดการข้อมูลส่วนตัวและการตั้งค่าบัญชี",
+    "photoSection": {
+      "title": "รูปโปรไฟล์และข้อมูลพื้นฐาน",
+      "profilePhoto": "รูปโปรไฟล์",
+      "photoHint": "JPG, PNG หรือ GIF ขนาดไม่เกิน 5MB",
+      "displayName": "ชื่อที่แสดง",
+      "displayNamePlaceholder": "ชื่อที่แสดง",
+      "email": "อีเมล",
+      "emailVerified": "ยืนยันแล้ว",
+      "phone": "เบอร์โทรศัพท์",
+      "phonePlaceholder": "0xx-xxx-xxxx",
+      "role": "บทบาท",
+      "firstName": "ชื่อ",
+      "firstNamePlaceholder": "ชื่อ",
+      "lastName": "นามสกุล",
+      "lastNamePlaceholder": "นามสกุล",
+      "position": "ตำแหน่ง",
+      "positionPlaceholder": "ตำแหน่งงาน",
+      "company": "บริษัท",
+      "companyLinked": "เชื่อมโยงกับองค์กร ไม่สามารถแก้ไขได้",
+      "lineId": "LINE ID",
+      "lineIdOptional": "(ไม่บังคับ)",
+      "bio": "เกี่ยวกับตัวคุณ",
+      "bioPlaceholder": "แนะนำตัวคุณสั้น ๆ ...",
+      "saving": "กำลังบันทึก...",
+      "save": "บันทึกข้อมูล"
+    },
+    "personalInfo": {
+      "title": "ข้อมูลส่วนบุคคล"
+    },
+    "roles": {
+      "admin": "ผู้ดูแลระบบ",
+      "contractor": "ผู้รับเหมา",
+      "viewer": "ผู้ชม"
+    },
+    "notificationPrefs": {
+      "title": "การตั้งค่าแจ้งเตือน",
+      "subtitle": "เลือกช่องทางที่ต้องการรับการแจ้งเตือน",
+      "emailNotifications": "แจ้งเตือนทางอีเมล",
+      "emailNotificationsDesc": "รับการแจ้งเตือนสำคัญทางอีเมล",
+      "pushNotifications": "แจ้งเตือนแบบ Push",
+      "pushNotificationsDesc": "รับ Push Notification บนเบราว์เซอร์",
+      "lineNotifications": "แจ้งเตือนทาง LINE",
+      "lineNotificationsDesc": "รับการแจ้งเตือนผ่าน LINE Official",
+      "weeklyDigest": "สรุปรายสัปดาห์",
+      "weeklyDigestDesc": "รับรายงานสรุปประจำสัปดาห์ทุกวันจันทร์",
+      "marketingEmails": "อีเมลการตลาด",
+      "marketingEmailsDesc": "รับข่าวสาร โปรโมชัน และอัปเดตจากเรา",
+      "saveSettings": "บันทึกการตั้งค่า"
+    },
+    "security": {
+      "title": "ความปลอดภัย",
+      "subtitle": "จัดการรหัสผ่านและการยืนยันตัวตน",
+      "changePassword": "เปลี่ยนรหัสผ่าน",
+      "changePasswordDesc": "แนะนำให้เปลี่ยนรหัสผ่านทุก 3 เดือน",
+      "changePasswordButton": "เปลี่ยนรหัสผ่าน",
+      "twoFactor": "ยืนยันตัวตนสองชั้น (2FA)",
+      "twoFactorDesc": "เพิ่มความปลอดภัยด้วยรหัส OTP จากแอปยืนยันตัวตน",
+      "twoFactorQrHint": "สแกน QR Code ด้วยแอป Authenticator\n(Google Authenticator, Authy, ฯลฯ)",
+      "lastLogin": "ข้อมูลการเข้าสู่ระบบล่าสุด",
+      "lastLoginIp": "IP: {ip}",
+      "lastLoginDevice": "อุปกรณ์: {device}",
+      "lastLoginTime": "เวลา: {time}",
+      "currentPassword": "รหัสผ่านปัจจุบัน",
+      "currentPasswordPlaceholder": "รหัสผ่านปัจจุบัน",
+      "newPassword": "รหัสผ่านใหม่",
+      "newPasswordPlaceholder": "รหัสผ่านใหม่ (อย่างน้อย 8 ตัวอักษร)",
+      "confirmPassword": "ยืนยันรหัสผ่านใหม่",
+      "confirmPasswordPlaceholder": "ยืนยันรหัสผ่านใหม่",
+      "cancel": "ยกเลิก",
+      "changing": "กำลังเปลี่ยน...",
+      "modalTitle": "เปลี่ยนรหัสผ่าน"
+    },
+    "dangerZone": {
+      "title": "โซนอันตราย",
+      "subtitle": "การดำเนินการเหล่านี้ไม่สามารถย้อนกลับได้",
+      "exportData": "ส่งออกข้อมูลทั้งหมด",
+      "exportDescription": "ดาวน์โหลดข้อมูลทั้งหมดของคุณในรูปแบบ JSON",
+      "exporting": "กำลังส่งออก...",
+      "exportButton": "ส่งออกข้อมูล",
+      "deleteAccount": "ลบบัญชี",
+      "deleteAccountDesc": "ลบบัญชีและข้อมูลทั้งหมดอย่างถาวร",
+      "deleteAccountButton": "ลบบัญชี",
+      "deleteConfirmTitle": "ยืนยันการลบบัญชี",
+      "deleteConfirmWarning": "การดำเนินการนี้ไม่สามารถย้อนกลับได้ ข้อมูลทั้งหมดของคุณจะถูกลบอย่างถาวร",
+      "deleteConfirmation": "พิมพ์ DELETE เพื่อยืนยัน",
+      "cancel": "ยกเลิก",
+      "deleting": "กำลังลบ...",
+      "deleteForever": "ลบบัญชีถาวร"
+    },
+    "saveProfile": "บันทึกโปรไฟล์",
+    "saveNotifications": "บันทึกการตั้งค่าแจ้งเตือน",
+    "messages": {
+      "profileSaved": "บันทึกข้อมูลโปรไฟล์เรียบร้อยแล้ว",
+      "profileSaveError": "ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่",
+      "notificationsSaved": "บันทึกการตั้งค่าแจ้งเตือนเรียบร้อยแล้ว",
+      "notificationsSaveError": "ไม่สามารถบันทึกการตั้งค่าได้",
+      "passwordChanged": "เปลี่ยนรหัสผ่านเรียบร้อยแล้ว",
+      "passwordChangeError": "ไม่สามารถเปลี่ยนรหัสผ่านได้ กรุณาตรวจสอบรหัสผ่านปัจจุบัน",
+      "passwordMinLength": "รหัสผ่านใหม่ต้องมีอย่างน้อย 8 ตัวอักษร",
+      "passwordMismatch": "รหัสผ่านใหม่ไม่ตรงกัน",
+      "accountDeleted": "ลบบัญชีเรียบร้อยแล้ว",
+      "accountDeleteError": "ไม่สามารถลบบัญชีได้ กรุณาลองใหม่",
+      "dataExported": "ส่งออกข้อมูลเรียบร้อยแล้ว ระบบจะส่งไฟล์ไปยังอีเมลของคุณ",
+      "dataExportError": "ไม่สามารถส่งออกข้อมูลได้",
+      "fileTooLarge": "ขนาดไฟล์ต้องไม่เกิน 5MB"
+    }
+  },
+  "onboardingPage": {
+    "steps": {
+      "companyInfo": "ข้อมูลบริษัท",
+      "lineOa": "LINE OA",
+      "team": "เชิญทีม",
+      "demoLead": "Lead แรก",
+      "complete": "เสร็จสิ้น"
+    },
+    "step1": {
+      "title": "ข้อมูลบริษัท",
+      "subtitle": "กรอกข้อมูลพื้นฐานของบริษัทคุณ",
+      "logo": "โลโก้",
+      "uploadLogo": "อัพโหลดโลโก้บริษัท",
+      "logoHint": "รองรับ JPG, PNG (ไม่บังคับ)",
+      "companyName": "ชื่อบริษัท",
+      "companyNameRequired": "ชื่อบริษัท *",
+      "taxId": "เลขประจำตัวผู้เสียภาษี",
+      "taxIdOptional": "(ไม่บังคับ)",
+      "taxIdFormat": "รูปแบบเลขประจำตัวผู้เสียภาษี: 13 หลัก",
+      "taxIdFormatError": "รูปแบบเลขประจำตัวผู้เสียภาษีไม่ถูกต้อง (13 หลัก)",
+      "taxIdValid": "รูปแบบถูกต้อง",
+      "address": "ที่อยู่",
+      "addressPlaceholder": "เลขที่, ถนน, แขวง/ตำบล, เขต/อำเภอ",
+      "province": "จังหวัด",
+      "selectProvince": "-- เลือกจังหวัด --",
+      "phone": "เบอร์โทรศัพท์",
+      "saving": "กำลังบันทึก...",
+      "next": "ถัดไป →"
+    },
+    "step2": {
+      "title": "เชื่อมต่อ LINE OA",
+      "subtitle": "เชื่อมต่อ LINE Official Account เพื่อรับ Lead อัตโนมัติ",
+      "channelId": "Channel ID",
+      "channelSecret": "Channel Secret",
+      "webhookUrl": "Webhook URL",
+      "webhookHint": "คัดลอกไปใส่ใน LINE Developers",
+      "copy": "คัดลอก",
+      "testConnection": "ทดสอบการเชื่อมต่อ",
+      "testing": "กำลังทดสอบ...",
+      "connectionSuccess": "เชื่อมต่อสำเร็จ!",
+      "connectionFailed": "ไม่สามารถเชื่อมต่อได้ — ทดสอบอีกครั้ง",
+      "saving": "กำลังบันทึก...",
+      "next": "ถัดไป →",
+      "skip": "ข้ามขั้นตอนนี้"
+    },
+    "step3": {
+      "title": "เชิญทีม",
+      "subtitle": "เชิญสมาชิกเข้าร่วมทีม"
+    },
+    "step4": {
+      "title": "Lead แรก",
+      "subtitle": "สร้าง Lead ตัวอย่างเพื่อทดลองใช้ระบบ"
+    },
+    "step5": {
+      "title": "ตั้งค่าเสร็จสิ้น!",
+      "subtitle": "พื้นที่ทำงานของคุณพร้อมใช้งานแล้ว"
+    },
+    "header": {
+      "setupTitle": "ตั้งค่าบัญชีของคุณ",
+      "stepOf": "ขั้นตอนที่ {current} จาก {total}"
+    },
+    "errors": {
+      "saveCompanyFailed": "ไม่สามารถบันทึกข้อมูลบริษัทได้",
+      "saveLineFailed": "ไม่สามารถบันทึกการตั้งค่า LINE ได้",
+      "sendInvitesFailed": "ไม่สามารถส่งคำเชิญได้",
+      "createLeadFailed": "ไม่สามารถสร้าง Lead ทดสอบได้"
+    }
+  },
+  "analyzePage": {
+    "title": "วิเคราะห์พลังงานแสงอาทิตย์",
+    "subtitle": "วิเคราะห์ศักยภาพพลังงานแสงอาทิตย์ในทุกพื้นที่",
+    "addressInput": "ที่อยู่ / ตำแหน่ง",
+    "addressPlaceholder": "กรอกที่อยู่หรือตำแหน่ง",
+    "monthlyBill": "ค่าไฟรายเดือน",
+    "analyzeButton": "วิเคราะห์",
+    "analyzing": "กำลังวิเคราะห์...",
+    "results": {
+      "title": "ผลการวิเคราะห์",
+      "systemSize": "ขนาดระบบที่แนะนำ",
+      "monthlySavings": "ประหยัดต่อเดือนโดยประมาณ",
+      "paybackPeriod": "ระยะเวลาคืนทุน",
+      "roi": "ผลตอบแทนการลงทุน (ROI)",
+      "co2Reduction": "ลดการปล่อย CO2",
+      "panels": "แผงโซลาร์",
+      "inverter": "อินเวอร์เตอร์",
+      "estimatedCost": "ราคาประมาณ"
+    },
+    "inputForm": {
+      "title": "ข้อมูลที่ตั้งและค่าไฟ",
+      "useCurrentLocation": "ใช้ตำแหน่งปัจจุบัน",
+      "useDefaultLocation": "ใช้ตำแหน่งเริ่มต้น",
+      "latitude": "ละติจูด",
+      "latitudeHint": "เช่น 13.7563",
+      "longitude": "ลองจิจูด",
+      "longitudeHint": "เช่น 100.5018",
+      "monthlyBillLabel": "ค่าไฟรายเดือน (บาท)",
+      "monthlyBillHint": "กรอกค่าไฟเฉลี่ยต่อเดือน"
+    },
+    "analyzeHint": "วิเคราะห์ฟรี · ผลลัพธ์ภายใน 30 วินาที · ข้อมูลจาก Google Solar API",
+    "tabs": {
+      "overview": "ภาพรวม",
+      "roof": "หลังคา",
+      "solar": "แผงโซลาร์",
+      "financial": "การเงิน",
+      "equipment": "อุปกรณ์"
+    },
+    "overview": {
+      "systemSize": "ขนาดระบบ",
+      "panels": "จำนวนแผง",
+      "annualProduction": "ผลิตไฟฟ้าต่อปี",
+      "perYear": "ต่อปี",
+      "paybackPeriod": "คืนทุน",
+      "yearsUnit": "ปี",
+      "co2Savings": "ลด CO₂",
+      "tonsPerYear": "ตัน/ปี"
+    },
+    "financial": {
+      "consumptionAndMaintenance": "การใช้ไฟและบำรุงรักษา",
+      "selfConsumptionRate": "อัตราการใช้เอง",
+      "netBillingRate": "อัตรา Net Billing",
+      "annualMaintenance": "ค่าบำรุงรักษาต่อปี",
+      "netSavingsAfterMaintenance": "ประหยัดสุทธิหลังหักค่าบำรุงรักษา"
+    },
+    "dataExport": {
+      "reportTitle": "รายงานการวิเคราะห์",
+      "reportSubtitle": "รายงานการวิเคราะห์โซลาร์เซลล์",
+      "noDataLayers": "ไม่มีชั้นข้อมูลที่จะแสดง"
+    },
+    "locationPreview": {
+      "title": "ตำแหน่งที่ตั้ง",
+      "subtitle": "ตรวจสอบตำแหน่งที่จะติดตั้ง",
+      "coordinates": "พิกัด",
+      "region": "ภูมิภาค",
+      "regionNorth": "ภาคเหนือ",
+      "regionNortheast": "ภาคตะวันออกเฉียงเหนือ",
+      "regionCentral": "ภาคกลาง",
+      "regionEast": "ภาคตะวันออก",
+      "regionWest": "ภาคตะวันตก",
+      "regionSouth": "ภาคใต้"
+    },
+    "messages": {
+      "fillAllFields": "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+      "invalidLatitude": "ละติจูดไม่ถูกต้อง",
+      "invalidLongitude": "ลองจิจูดไม่ถูกต้อง",
+      "invalidBill": "ค่าไฟต้องมากกว่า 0",
+      "analysisSuccess": "วิเคราะห์สำเร็จ!",
+      "analysisFailed": "การวิเคราะห์ล้มเหลว กรุณาลองใหม่"
+    }
+  },
+  "knowledgePage": {
+    "title": "คลังความรู้",
+    "subtitle": "จัดการเอกสารสำหรับฐานความรู้ RAG",
+    "uploadDocument": "อัปโหลดเอกสาร",
+    "uploadFirstDocument": "อัปโหลดเอกสารแรก",
+    "table": {
+      "filename": "ชื่อไฟล์",
+      "type": "ประเภท",
+      "size": "ขนาด",
+      "status": "สถานะ",
+      "uploaded": "อัปโหลดเมื่อ",
+      "actions": "จัดการ",
+      "chunks": "{count} chunks"
+    },
+    "status": {
+      "processing": "กำลังประมวลผล",
+      "ready": "พร้อมใช้งาน",
+      "error": "ผิดพลาด"
+    },
+    "uploadModal": {
+      "title": "อัปโหลดเอกสาร",
+      "description": "อัปโหลดไฟล์ PDF หรือ DOCX เพื่อเพิ่มในฐานความรู้",
+      "clickToUpload": "คลิกเพื่ออัปโหลด",
+      "dragAndDrop": "หรือลากไฟล์มาวาง",
+      "fileHint": "PDF, DOC, DOCX ไม่เกิน 10MB",
+      "upload": "อัปโหลด"
+    },
+    "deleteModal": {
+      "title": "ลบเอกสาร",
+      "confirmMessage": "คุณแน่ใจหรือไม่ที่จะลบ {filename}? การกระทำนี้ไม่สามารถยกเลิกได้"
+    },
+    "empty": {
+      "title": "ยังไม่มีเอกสาร",
+      "description": "อัปโหลดเอกสารเพื่อสร้างฐานความรู้"
+    },
+    "permissionError": "คุณไม่มีสิทธิ์เข้าถึงหน้านี้",
+    "validation": {
+      "fileTooLarge": "ขนาดไฟล์เกินขีดจำกัด 10MB",
+      "invalidFileType": "ประเภทไฟล์ไม่ถูกต้อง อนุญาตเฉพาะ PDF และ DOCX",
+      "contentMismatch": "เนื้อหาไฟล์ไม่ตรงกับนามสกุลไฟล์",
+      "validationFailed": "ไม่สามารถตรวจสอบไฟล์ได้"
+    },
+    "messages": {
+      "uploadSuccess": "อัปโหลดเอกสารสำเร็จ",
+      "uploadError": "ไม่สามารถอัปโหลดเอกสารได้",
+      "deleteSuccess": "ลบเอกสารสำเร็จ",
+      "deleteError": "ไม่สามารถลบเอกสารได้"
+    }
+  },
+  "developersPage": {
+    "title": "Developer Portal",
+    "welcomeTitle": "ยินดีต้อนรับนักพัฒนา!",
+    "welcomeSubtitle": "เชื่อมต่อ SolarIQ กับระบบของคุณผ่าน REST API",
+    "todayUsage": "สรุปการใช้งานวันนี้",
+    "stats": {
+      "apiCallsToday": "API Calls วันนี้",
+      "fromDailyLimit": "จาก 10,000 req/วัน",
+      "successRate": "Success Rate",
+      "avg30Days": "เฉลี่ย 30 วันที่ผ่านมา",
+      "avgLatency": "Avg Latency",
+      "avgResponseTime": "ค่าเฉลี่ยตอบสนอง"
+    },
+    "gettingStarted": "เริ่มต้นใช้งาน",
+    "steps": {
+      "createKey": "สร้าง API Key",
+      "createKeyDesc": "สร้าง key สำหรับ Live หรือ Test environment",
+      "readDocs": "อ่านเอกสาร API",
+      "readDocsDesc": "ศึกษา endpoints, parameters และ responses",
+      "testSandbox": "ทดสอบใน Sandbox",
+      "testSandboxDesc": "ทดสอบ API ด้วยข้อมูลตัวอย่างก่อน go live"
+    },
+    "quickLinks": "ลิงก์ด่วน",
+    "links": {
+      "manageKeys": "จัดการ API Keys",
+      "manageKeysDesc": "สร้าง แก้ไข และเพิกถอน API Keys",
+      "viewUsage": "ดูสถิติการใช้งาน",
+      "viewUsageDesc": "ติดตาม API calls และ quota",
+      "openSandbox": "เปิด Sandbox",
+      "openSandboxDesc": "ทดสอบ API ด้วยข้อมูลตัวอย่าง"
+    },
+    "keys": {
+      "title": "API Keys",
+      "subtitle": "จัดการ keys สำหรับเข้าถึง SolarIQ API",
+      "createNew": "สร้าง Key ใหม่",
+      "createModal": {
+        "title": "สร้าง API Key ใหม่",
+        "created": "API Key สร้างแล้ว",
+        "keyName": "ชื่อ Key",
+        "keyNamePlaceholder": "เช่น Production Key, Test Server",
+        "environment": "Environment",
+        "liveData": "ข้อมูลจริง",
+        "testData": "ข้อมูลทดสอบ",
+        "permissions": "สิทธิ์การเข้าถึง",
+        "creating": "กำลังสร้าง...",
+        "create": "สร้าง Key",
+        "done": "เสร็จสิ้น",
+        "successMessage": "Key สร้างสำเร็จ!",
+        "copyWarning": "คัดลอก key ด้านล่างและเก็บไว้ในที่ปลอดภัย — จะแสดงครั้งเดียวเท่านั้น",
+        "copied": "คัดลอกแล้ว!",
+        "copy": "คัดลอก"
+      },
+      "revokeModal": {
+        "title": "เพิกถอน API Key",
+        "confirmMessage": "คุณแน่ใจหรือไม่? Key \"{name}\" จะถูกเพิกถอนและไม่สามารถใช้งานได้อีก",
+        "revoke": "เพิกถอน"
+      },
+      "table": {
+        "name": "ชื่อ",
+        "key": "Key",
+        "created": "สร้างเมื่อ",
+        "lastUsed": "ใช้ล่าสุด",
+        "calls": "Calls",
+        "status": "สถานะ",
+        "manage": "จัดการ",
+        "neverUsed": "ไม่เคยใช้"
+      },
+      "status": {
+        "active": "ใช้งานได้",
+        "revoked": "เพิกถอนแล้ว"
+      },
+      "empty": "ยังไม่มี API Key",
+      "createFirst": "สร้าง Key แรก",
+      "securityNote": {
+        "title": "ความปลอดภัย",
+        "message": "อย่าเปิดเผย API Key ในโค้ดสาธารณะ ใช้ environment variables เสมอ Key จะแสดงเต็มครั้งเดียวเมื่อสร้าง"
+      },
+      "demoMode": "Demo Mode — แสดงข้อมูลตัวอย่าง",
+      "permissions": {
+        "leadsRead": "ลีด — อ่าน",
+        "leadsWrite": "ลีด — เขียน",
+        "solarAnalyze": "วิเคราะห์โซลาร์",
+        "proposalsRead": "ใบเสนอราคา — อ่าน",
+        "proposalsWrite": "ใบเสนอราคา — เขียน",
+        "dealsRead": "Deal — อ่าน",
+        "dealsWrite": "Deal — เขียน",
+        "webhooksManage": "จัดการ Webhooks"
+      }
+    },
+    "sandbox": {
+      "title": "Sandbox Environment",
+      "subtitle": "ทดสอบ API ด้วยข้อมูลตัวอย่าง ไม่กระทบข้อมูลจริง",
+      "resetData": "Reset Sandbox Data",
+      "resetting": "กำลัง Reset...",
+      "sandboxKey": "Sandbox Key",
+      "sandboxKeyHint": "ใช้ key นี้สำหรับทดสอบเท่านั้น ไม่มีผลกับข้อมูล production",
+      "quickTests": "Quick Tests",
+      "tests": {
+        "analyzeBill": "วิเคราะห์บิลค่าไฟ",
+        "analyzeBillDesc": "ส่งข้อมูลบิลค่าไฟและรับการวิเคราะห์โซลาร์",
+        "createLead": "สร้าง Lead",
+        "createLeadDesc": "สร้าง lead ใหม่ในระบบ",
+        "getQuote": "รับใบเสนอราคา",
+        "getQuoteDesc": "คำนวณและรับใบเสนอราคาโซลาร์"
+      },
+      "showPayload": "ดู Payload",
+      "hidePayload": "ซ่อน",
+      "requestPayload": "Request Payload",
+      "run": "รัน",
+      "running": "กำลังส่ง...",
+      "demoSimulated": "Demo mode — simulated response",
+      "notes": {
+        "title": "หมายเหตุเกี่ยวกับ Sandbox",
+        "autoReset": "ข้อมูลใน sandbox จะถูก reset ทุก 24 ชั่วโมงโดยอัตโนมัติ",
+        "rateLimit": "Rate limit ใน sandbox คือ 100 requests/นาที",
+        "noRealNotifications": "ไม่มีการส่ง notification จริงในสภาพแวดล้อม sandbox",
+        "testWebhooks": "Webhook ใน sandbox จะส่งไปยัง endpoint ที่ลงทะเบียนด้วย test events"
+      }
+    }
+  },
+  "leadsPage": {
+    "title": "ลีด",
+    "subtitle": "จัดการลีดงานติดตั้งโซลาร์ของคุณ",
+    "newAnalysis": "วิเคราะห์ใหม่",
+    "searchPlaceholder": "ค้นหาจากชื่อ เบอร์โทร หรือที่อยู่...",
+    "allStatuses": "ทุกสถานะ",
+    "table": {
+      "name": "ชื่อ",
+      "contact": "ช่องทางติดต่อ",
+      "address": "ที่อยู่",
+      "monthlyBill": "ค่าไฟต่อเดือน",
+      "status": "สถานะ",
+      "created": "สร้างเมื่อ",
+      "actions": "จัดการ"
+    },
+    "updateStatus": "อัปเดตสถานะ",
+    "updateStatusModal": {
+      "title": "อัปเดตสถานะลีด",
+      "description": "อัปเดตสถานะสำหรับลีด: {name}",
+      "newStatus": "สถานะใหม่"
+    },
+    "empty": {
+      "title": "ไม่พบลีด",
+      "description": "ลองปรับตัวกรองหรือสร้างการวิเคราะห์ใหม่",
+      "createNew": "สร้างการวิเคราะห์ใหม่"
+    },
+    "pagination": {
+      "rowsPerPage": "แถวต่อหน้า:",
+      "pageInfo": "หน้า {page} จาก {totalPages} ({total} รายการ)"
+    },
+    "messages": {
+      "statusUpdated": "อัปเดตสถานะลีดสำเร็จ",
+      "statusUpdateError": "ไม่สามารถอัปเดตสถานะลีดได้"
+    }
+  },
+  "maintenanceNewPage": {
+    "title": "เพิ่มงานติดตั้งใหม่",
+    "subtitle": "บันทึกงานติดตั้งที่เสร็จแล้วเพื่อติดตามการรับประกันและบำรุงรักษา",
+    "sections": {
+      "customer": "ข้อมูลลูกค้า",
+      "system": "ข้อมูลระบบ",
+      "installation": "รายละเอียดการติดตั้ง"
+    },
+    "fields": {
+      "customerName": "ชื่อลูกค้า",
+      "phone": "เบอร์โทร",
+      "email": "อีเมล",
+      "address": "ที่อยู่",
+      "systemSize": "ขนาดระบบ (kW)",
+      "panelCount": "จำนวนแผง",
+      "panelBrand": "ยี่ห้อแผง",
+      "panelModel": "รุ่นแผง",
+      "inverterBrand": "ยี่ห้อ Inverter",
+      "inverterModel": "รุ่น Inverter",
+      "installationDate": "วันที่ติดตั้ง",
+      "warrantyYears": "ระยะประกัน",
+      "years": "ปี",
+      "notes": "หมายเหตุ",
+      "selectBrand": "เลือกยี่ห้อ"
+    },
+    "cancel": "ยกเลิก",
+    "submit": "บันทึกงานติดตั้ง",
+    "submitting": "กำลังบันทึก...",
+    "submitError": "ไม่สามารถบันทึกงานติดตั้งได้ กรุณาลองใหม่"
+  },
+  "dealDetailPage": {
+    "notFound": "ไม่พบข้อมูล Deal",
+    "backToDeals": "กลับไปหน้า Deals",
+    "stageUpdated": "อัพเดตสถานะเป็น \"{stage}\" เรียบร้อยแล้ว",
+    "systemSize": "ขนาดระบบ",
+    "panels": "แผง",
+    "dealValue": "มูลค่างาน",
+    "inverter": "อินเวอร์เตอร์",
+    "installDate": "วันเริ่มติดตั้ง",
+    "phone": "โทรศัพท์",
+    "updateTo": "อัพเดตเป็น",
+    "installProgress": "ความคืบหน้าการติดตั้ง",
+    "currentStep": "ขั้นตอนปัจจุบัน",
+    "completed": "งานเสร็จสมบูรณ์!",
+    "completedDesc": "การติดตั้งระบบโซลาร์เซลล์เสร็จสิ้นเรียบร้อยแล้ว",
+    "updateStatus": "อัพเดตสถานะ",
+    "changeFrom": "เปลี่ยนจาก",
+    "changeTo": "เป็น",
+    "notesOptional": "หมายเหตุ (ไม่บังคับ)",
+    "notesPlaceholder": "ระบุรายละเอียดเพิ่มเติม...",
+    "cancel": "ยกเลิก",
+    "updating": "กำลังอัพเดต...",
+    "confirm": "ยืนยัน"
+  },
+  "createDealModal": {
+    "title": "สร้าง Deal ใหม่",
+    "fields": {
+      "customerName": "ชื่อลูกค้า",
+      "address": "ที่อยู่",
+      "systemSize": "ขนาดระบบ (kW)",
+      "totalValue": "มูลค่า Deal (บาท)",
+      "stage": "สถานะ",
+      "notes": "หมายเหตุ"
+    },
+    "stages": {
+      "accepted": "ตกลง",
+      "survey_scheduled": "นัดสำรวจ",
+      "contract_signed": "เซ็นสัญญา",
+      "installation_started": "เริ่มติดตั้ง"
+    },
+    "cancel": "ยกเลิก",
+    "create": "สร้าง Deal",
+    "creating": "กำลังสร้าง...",
+    "error": "ไม่สามารถสร้าง Deal ได้ กรุณาลองใหม่"
+  },
+  "addActivityModal": {
+    "title": "เพิ่มกิจกรรม",
+    "fields": {
+      "activityName": "ชื่อกิจกรรม",
+      "type": "ประเภท",
+      "date": "วันที่",
+      "time": "เวลา",
+      "customerName": "ชื่อลูกค้า",
+      "notes": "หมายเหตุ"
+    },
+    "types": {
+      "appointment": "นัดหมาย",
+      "survey": "สำรวจหน้างาน",
+      "installation": "ติดตั้ง",
+      "maintenance": "บำรุงรักษา",
+      "followup": "ติดตามผล"
+    },
+    "cancel": "ยกเลิก",
+    "add": "เพิ่มกิจกรรม",
+    "adding": "กำลังเพิ่ม...",
+    "error": "ไม่สามารถเพิ่มกิจกรรมได้ กรุณาลองใหม่"
   }
 }

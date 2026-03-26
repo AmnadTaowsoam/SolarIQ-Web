@@ -34,9 +34,7 @@ export default function TermsPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-4 text-center">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-            ข้อกำหนดการใช้งาน
-          </h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">ข้อกำหนดการใช้งาน</h1>
           <p className="mt-4 text-gray-300">
             Terms of Service | มีผลบังคับใช้ตั้งแต่วันที่ 1 มกราคม 2567
           </p>
@@ -88,8 +86,9 @@ export default function TermsPage() {
                 1. ข้อกำหนดทั่วไป
               </h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                ข้อกำหนดการใช้งานนี้ (&quot;ข้อกำหนด&quot;) เป็นข้อตกลงระหว่างบริษัท SolarIQ จำกัด (&quot;บริษัท&quot;, &quot;เรา&quot;)
-                กับผู้ใช้บริการ (&quot;ผู้ใช้&quot;, &quot;คุณ&quot;) ในการใช้งานแพลตฟอร์ม SolarIQ รวมถึงเว็บไซต์ แอปพลิเคชัน
+                ข้อกำหนดการใช้งานนี้ (&quot;ข้อกำหนด&quot;) เป็นข้อตกลงระหว่างบริษัท SolarIQ จำกัด
+                (&quot;บริษัท&quot;, &quot;เรา&quot;) กับผู้ใช้บริการ (&quot;ผู้ใช้&quot;,
+                &quot;คุณ&quot;) ในการใช้งานแพลตฟอร์ม SolarIQ รวมถึงเว็บไซต์ แอปพลิเคชัน
                 และบริการทั้งหมดที่เกี่ยวข้อง
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
@@ -117,8 +116,8 @@ export default function TermsPage() {
                 <li>การพยากรณ์สภาพอากาศและคุณภาพอากาศ</li>
               </ul>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
-                ผู้ใช้ตกลงที่จะใช้บริการเพื่อวัตถุประสงค์ที่ถูกกฎหมายเท่านั้น และจะไม่ใช้บริการในทางที่
-                อาจก่อให้เกิดความเสียหายต่อบริษัทหรือบุคคลที่สาม
+                ผู้ใช้ตกลงที่จะใช้บริการเพื่อวัตถุประสงค์ที่ถูกกฎหมายเท่านั้น
+                และจะไม่ใช้บริการในทางที่ อาจก่อให้เกิดความเสียหายต่อบริษัทหรือบุคคลที่สาม
               </p>
             </section>
 
@@ -150,7 +149,9 @@ export default function TermsPage() {
                 <li>ราคาแสดงเป็นสกุลเงินบาทไทย (THB) และยังไม่รวมภาษีมูลค่าเพิ่ม 7%</li>
                 <li>การชำระเงินจะเรียกเก็บโดยอัตโนมัติตามรอบบิล</li>
                 <li>รองรับการชำระผ่านบัตรเครดิต/เดบิต, โอนผ่านธนาคาร และพร้อมเพย์</li>
-                <li>บริษัทขอสงวนสิทธิ์ในการเปลี่ยนแปลงราคาโดยจะแจ้งให้ทราบล่วงหน้าอย่างน้อย 30 วัน</li>
+                <li>
+                  บริษัทขอสงวนสิทธิ์ในการเปลี่ยนแปลงราคาโดยจะแจ้งให้ทราบล่วงหน้าอย่างน้อย 30 วัน
+                </li>
                 <li>หากการชำระเงินล้มเหลว บริษัทจะพยายามเรียกเก็บซ้ำภายใน 3 วันทำการ</li>
               </ul>
             </section>
@@ -164,12 +165,12 @@ export default function TermsPage() {
                 และทรัพย์สินทางปัญญาทั้งหมดเป็นของบริษัท SolarIQ จำกัด แต่เพียงผู้เดียว
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                ผู้ใช้ได้รับสิทธิ์ใช้งานแบบไม่ผูกขาด (non-exclusive) ไม่สามารถถ่ายโอนได้ (non-transferable)
-                ตามระยะเวลาของแพ็กเกจที่สมัครใช้บริการ
+                ผู้ใช้ได้รับสิทธิ์ใช้งานแบบไม่ผูกขาด (non-exclusive) ไม่สามารถถ่ายโอนได้
+                (non-transferable) ตามระยะเวลาของแพ็กเกจที่สมัครใช้บริการ
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                ข้อมูลที่ผู้ใช้ป้อนเข้าสู่ระบบยังคงเป็นทรัพย์สินของผู้ใช้ บริษัทจะไม่ใช้ข้อมูลดังกล่าว
-                เพื่อวัตถุประสงค์อื่นนอกเหนือจากการให้บริการ
+                ข้อมูลที่ผู้ใช้ป้อนเข้าสู่ระบบยังคงเป็นทรัพย์สินของผู้ใช้
+                บริษัทจะไม่ใช้ข้อมูลดังกล่าว เพื่อวัตถุประสงค์อื่นนอกเหนือจากการให้บริการ
               </p>
             </section>
 
@@ -178,7 +179,8 @@ export default function TermsPage() {
                 6. ข้อจำกัดความรับผิดชอบ
               </h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                บริการ SolarIQ ให้บริการในสภาพ &quot;ตามที่เป็น&quot; (as is) โดยบริษัทไม่รับประกันว่า:
+                บริการ SolarIQ ให้บริการในสภาพ &quot;ตามที่เป็น&quot; (as is)
+                โดยบริษัทไม่รับประกันว่า:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
                 <li>บริการจะไม่มีข้อผิดพลาดหรือหยุดชะงัก</li>
@@ -186,11 +188,13 @@ export default function TermsPage() {
                 <li>บริการจะเหมาะสมกับความต้องการเฉพาะของผู้ใช้ทุกราย</li>
               </ul>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
-                ผลการวิเคราะห์โซลาร์เป็นการประมาณการเท่านั้น ไม่ควรใช้เป็นข้อมูลเดียวในการตัดสินใจลงทุน
+                ผลการวิเคราะห์โซลาร์เป็นการประมาณการเท่านั้น
+                ไม่ควรใช้เป็นข้อมูลเดียวในการตัดสินใจลงทุน
                 บริษัทไม่รับผิดชอบต่อความเสียหายที่เกิดจากการตัดสินใจบนพื้นฐานของผลการวิเคราะห์
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
-                ความรับผิดชอบสูงสุดของบริษัทจำกัดอยู่ที่จำนวนค่าบริการที่ผู้ใช้ชำระในรอบ 12 เดือนที่ผ่านมา
+                ความรับผิดชอบสูงสุดของบริษัทจำกัดอยู่ที่จำนวนค่าบริการที่ผู้ใช้ชำระในรอบ 12
+                เดือนที่ผ่านมา
               </p>
             </section>
 
@@ -201,10 +205,16 @@ export default function TermsPage() {
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
                 <li>ผู้ใช้สามารถยกเลิกแพ็กเกจได้ตลอดเวลาจากหน้าตั้งค่าบัญชี</li>
                 <li>เมื่อยกเลิก ผู้ใช้จะยังสามารถใช้บริการได้จนสิ้นสุดรอบบิลปัจจุบัน</li>
-                <li>สำหรับแพ็กเกจรายปี สามารถขอคืนเงินได้ภายใน 30 วันหลังการสมัคร โดยหักค่าบริการตามวันที่ใช้งาน</li>
+                <li>
+                  สำหรับแพ็กเกจรายปี สามารถขอคืนเงินได้ภายใน 30 วันหลังการสมัคร
+                  โดยหักค่าบริการตามวันที่ใช้งาน
+                </li>
                 <li>ไม่มีการคืนเงินสำหรับแพ็กเกจรายเดือนที่ใช้งานไปแล้ว</li>
                 <li>บริษัทขอสงวนสิทธิ์ในการยกเลิกบัญชีที่ละเมิดข้อกำหนดโดยไม่มีการคืนเงิน</li>
-                <li>หลังจากยกเลิก ข้อมูลของผู้ใช้จะถูกเก็บรักษาเป็นเวลา 90 วัน ก่อนที่จะถูกลบออกจากระบบ</li>
+                <li>
+                  หลังจากยกเลิก ข้อมูลของผู้ใช้จะถูกเก็บรักษาเป็นเวลา 90 วัน
+                  ก่อนที่จะถูกลบออกจากระบบ
+                </li>
               </ul>
             </section>
 
@@ -217,16 +227,21 @@ export default function TermsPage() {
                 ของบริษัท ซึ่งเป็นส่วนหนึ่งของข้อกำหนดนี้
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                บริษัทปฏิบัติตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)
-                อย่างเคร่งครัด
+                บริษัทปฏิบัติตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) อย่างเคร่งครัด
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                 สามารถอ่านรายละเอียดเพิ่มเติมได้ที่{' '}
-                <Link href="/privacy" className="text-primary-600 dark:text-primary-400 hover:underline">
+                <Link
+                  href="/privacy"
+                  className="text-primary-600 dark:text-primary-400 hover:underline"
+                >
                   นโยบายความเป็นส่วนตัว
-                </Link>
-                {' '}และ{' '}
-                <Link href="/refund-policy" className="text-primary-600 dark:text-primary-400 hover:underline">
+                </Link>{' '}
+                และ{' '}
+                <Link
+                  href="/refund-policy"
+                  className="text-primary-600 dark:text-primary-400 hover:underline"
+                >
                   นโยบายการคืนเงิน
                 </Link>
               </p>
@@ -278,8 +293,8 @@ export default function TermsPage() {
                 <p className="font-semibold text-gray-900 dark:text-white">บริษัท SolarIQ จำกัด</p>
                 <div className="mt-3 space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
                   <p>อีเมล: legal@solariqapp.com</p>
-                  <p>โทรศัพท์: 02-XXX-XXXX</p>
-                  <p>ที่อยู่: กรุงเทพมหานคร, ประเทศไทย</p>
+                  <p>โทรศัพท์: 085-662-1113</p>
+                  <p>ที่อยู่: นนทบุรี, ประเทศไทย</p>
                   <p>เวลาทำการ: จันทร์ - ศุกร์ 9:00 - 18:00 น.</p>
                 </div>
               </div>

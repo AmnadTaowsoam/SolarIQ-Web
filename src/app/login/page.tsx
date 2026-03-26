@@ -19,15 +19,15 @@ export default function LoginPage() {
   const searchParams = useSearchParams()
   const { isAuthenticated, isLoading, isDevLoginEnabled, loginWithDevCredentials } = useAuth()
   const { addToast } = useToast()
-  const devLoginEmail = process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || 'admin@solariq.local'
-  const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || 'Solariq123'
-  const devLoginRole = process.env.NEXT_PUBLIC_DEV_LOGIN_ROLE === 'contractor' ? 'contractor' : 'admin'
+  const devLoginEmail = process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || ''
+  const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || ''
+  const devLoginRole =
+    process.env.NEXT_PUBLIC_DEV_LOGIN_ROLE === 'contractor' ? 'contractor' : 'admin'
   const locale = extractLocaleFromPath(pathname).locale ?? defaultLocale
   const t = useTranslations('authPages.login')
   const requestedRedirect = searchParams.get('redirect')
-  const targetPath = requestedRedirect && requestedRedirect.startsWith('/')
-    ? requestedRedirect
-    : ROUTES.DASHBOARD
+  const targetPath =
+    requestedRedirect && requestedRedirect.startsWith('/') ? requestedRedirect : ROUTES.DASHBOARD
   const signupPath = buildLocalizedPath(ROUTES.SIGNUP, locale)
   const forgotPasswordPath = buildLocalizedPath(ROUTES.FORGOT_PASSWORD, locale)
   const redirectAfterAuth = buildLocalizedPath(targetPath, locale)
@@ -151,8 +151,18 @@ export default function LoginPage() {
         {/* Logo and title */}
         <div className="text-center">
           <div className="mx-auto h-16 w-16 bg-primary-600 rounded-xl flex items-center justify-center">
-            <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            <svg
+              className="w-10 h-10 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              />
             </svg>
           </div>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">SolarIQ</h2>
@@ -201,7 +211,10 @@ export default function LoginPage() {
                   />
                   <span className="ml-2 text-sm text-gray-600">{t('rememberMe')}</span>
                 </label>
-                <Link href={forgotPasswordPath} className="text-sm font-medium text-primary-600 hover:text-primary-500">
+                <Link
+                  href={forgotPasswordPath}
+                  className="text-sm font-medium text-primary-600 hover:text-primary-500"
+                >
                   {t('forgotPassword')}
                 </Link>
               </div>
@@ -227,9 +240,7 @@ export default function LoginPage() {
           </Link>
         </p>
 
-        <p className="text-center text-xs text-gray-400">
-          {t('provisionedAccountsHint')}
-        </p>
+        <p className="text-center text-xs text-gray-400">{t('provisionedAccountsHint')}</p>
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
 import {
@@ -10,27 +11,6 @@ import {
 } from '@/hooks/useServiceRequests'
 import Link from 'next/link'
 
-const TYPE_LABELS: Record<string, string> = {
-  repair: 'แจ้งซ่อม',
-  complaint: 'ร้องเรียน',
-  feedback: 'ข้อเสนอแนะ',
-  inquiry: 'สอบถาม',
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  open: 'รอดำเนินการ',
-  in_progress: 'กำลังดำเนินการ',
-  resolved: 'แก้ไขแล้ว',
-  closed: 'ปิดแล้ว',
-}
-
-const PRIORITY_CONFIG: Record<string, { label: string; color: string }> = {
-  urgent: { label: 'เร่งด่วน', color: 'bg-red-100 text-red-700' },
-  high: { label: 'สูง', color: 'bg-orange-100 text-orange-700' },
-  medium: { label: 'ปานกลาง', color: 'bg-amber-100 text-amber-700' },
-  low: { label: 'ต่ำ', color: 'bg-gray-100 text-gray-600' },
-}
-
 const STATUS_CONFIG: Record<string, { color: string }> = {
   open: { color: 'bg-blue-100 text-blue-700' },
   in_progress: { color: 'bg-amber-100 text-amber-700' },
@@ -38,8 +18,17 @@ const STATUS_CONFIG: Record<string, { color: string }> = {
   closed: { color: 'bg-gray-100 text-gray-600' },
 }
 
+const PRIORITY_COLORS: Record<string, string> = {
+  urgent: 'bg-red-100 text-red-700',
+  high: 'bg-orange-100 text-orange-700',
+  medium: 'bg-amber-100 text-amber-700',
+  low: 'bg-gray-100 text-gray-600',
+}
+
 export default function ServiceRequestsPage() {
   const { user } = useAuth()
+  const t = useTranslations('serviceRequestsPage')
+  const tc = useTranslations('common')
   const [statusFilter, setStatusFilter] = useState('')
   const { data: requests, isLoading } = useServiceRequests(statusFilter || undefined)
   const { data: stats } = useServiceRequestStats()
@@ -56,16 +45,14 @@ export default function ServiceRequestsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">ศูนย์บริการลูกค้า</h1>
-            <p className="mt-0.5 text-sm text-gray-500">
-              จัดการคำร้อง แจ้งซ่อม และข้อเสนอแนะจากลูกค้า
-            </p>
+            <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
+            <p className="mt-0.5 text-sm text-gray-500">{t('subtitle')}</p>
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
             className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600"
           >
-            + สร้างคำร้อง
+            {t('createRequest')}
           </button>
         </div>
 
@@ -73,14 +60,14 @@ export default function ServiceRequestsPage() {
         {stats && (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
             {[
-              { label: 'ทั้งหมด', value: stats.total, color: 'text-gray-900' },
-              { label: 'รอดำเนินการ', value: stats.open, color: 'text-blue-600' },
-              { label: 'กำลังดำเนินการ', value: stats.in_progress, color: 'text-amber-600' },
-              { label: 'แก้ไขแล้ว', value: stats.resolved, color: 'text-green-600' },
+              { label: t('stats.total'), value: stats.total, color: 'text-gray-900' },
+              { label: t('stats.open'), value: stats.open, color: 'text-blue-600' },
+              { label: t('stats.inProgress'), value: stats.in_progress, color: 'text-amber-600' },
+              { label: t('stats.resolved'), value: stats.resolved, color: 'text-green-600' },
               {
-                label: 'เวลาแก้ไขเฉลี่ย',
+                label: t('stats.avgResolutionTime'),
                 value: stats.avg_resolution_hours
-                  ? `${Math.round(stats.avg_resolution_hours)}ชม.`
+                  ? `${Math.round(stats.avg_resolution_hours)}${t('stats.hours')}`
                   : '-',
                 color: 'text-purple-600',
               },
@@ -114,48 +101,48 @@ export default function ServiceRequestsPage() {
               form.reset()
             }}
           >
-            <h3 className="mb-3 font-semibold text-gray-900">สร้างคำร้องใหม่</h3>
+            <h3 className="mb-3 font-semibold text-gray-900">{t('form.title')}</h3>
             <div className="grid gap-3 md:grid-cols-3">
               <input
                 name="customer_name"
-                placeholder="ชื่อลูกค้า *"
+                placeholder={t('form.customerName')}
                 required
                 className="rounded-lg border px-3 py-2 text-sm"
               />
               <input
                 name="phone"
-                placeholder="เบอร์โทร"
+                placeholder={t('form.phone')}
                 className="rounded-lg border px-3 py-2 text-sm"
               />
               <input
                 name="email"
-                placeholder="อีเมล"
+                placeholder={t('form.email')}
                 className="rounded-lg border px-3 py-2 text-sm"
               />
             </div>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               <select name="type" required className="rounded-lg border px-3 py-2 text-sm">
-                <option value="repair">แจ้งซ่อม</option>
-                <option value="complaint">ร้องเรียน</option>
-                <option value="feedback">ข้อเสนอแนะ</option>
-                <option value="inquiry">สอบถาม</option>
+                <option value="repair">{t('types.repair')}</option>
+                <option value="complaint">{t('types.complaint')}</option>
+                <option value="feedback">{t('types.feedback')}</option>
+                <option value="inquiry">{t('types.inquiry')}</option>
               </select>
               <select name="priority" className="rounded-lg border px-3 py-2 text-sm">
-                <option value="medium">ปานกลาง</option>
-                <option value="low">ต่ำ</option>
-                <option value="high">สูง</option>
-                <option value="urgent">เร่งด่วน</option>
+                <option value="medium">{t('priority.medium')}</option>
+                <option value="low">{t('priority.low')}</option>
+                <option value="high">{t('priority.high')}</option>
+                <option value="urgent">{t('priority.urgent')}</option>
               </select>
               <input
                 name="subject"
-                placeholder="หัวข้อ *"
+                placeholder={t('form.subject')}
                 required
                 className="rounded-lg border px-3 py-2 text-sm"
               />
             </div>
             <textarea
               name="description"
-              placeholder="รายละเอียด *"
+              placeholder={t('form.description')}
               required
               className="mt-3 w-full rounded-lg border px-3 py-2 text-sm"
               rows={3}
@@ -166,14 +153,14 @@ export default function ServiceRequestsPage() {
                 disabled={createRequest.isPending}
                 className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600 disabled:opacity-50"
               >
-                {createRequest.isPending ? 'กำลังส่ง...' : 'ส่งคำร้อง'}
+                {createRequest.isPending ? t('form.submitting') : t('form.submit')}
               </button>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
                 className="rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-600 hover:bg-gray-200"
               >
-                ยกเลิก
+                {tc('cancel')}
               </button>
             </div>
           </form>
@@ -182,10 +169,10 @@ export default function ServiceRequestsPage() {
         {/* Filter */}
         <div className="flex gap-2">
           {[
-            { value: '', label: 'ทั้งหมด' },
-            { value: 'open', label: 'รอดำเนินการ' },
-            { value: 'in_progress', label: 'กำลังดำเนินการ' },
-            { value: 'resolved', label: 'แก้ไขแล้ว' },
+            { value: '', label: t('filters.all') },
+            { value: 'open', label: t('filters.open') },
+            { value: 'in_progress', label: t('filters.inProgress') },
+            { value: 'resolved', label: t('filters.resolved') },
           ].map((f) => (
             <button
               key={f.value}
@@ -223,18 +210,18 @@ export default function ServiceRequestsPage() {
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_CONFIG[req.status]?.color || ''}`}
                       >
-                        {STATUS_LABELS[req.status] || req.status}
+                        {t(`statuses.${req.status}`)}
                       </span>
                       <span
-                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_CONFIG[req.priority]?.color || ''}`}
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_COLORS[req.priority] || ''}`}
                       >
-                        {PRIORITY_CONFIG[req.priority]?.label || req.priority}
+                        {t(`priority.${req.priority}`)}
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-gray-500 line-clamp-1">{req.description}</p>
                     <div className="mt-2 flex items-center gap-3 text-xs text-gray-400">
                       <span>{req.customer_name}</span>
-                      <span>{TYPE_LABELS[req.request_type] || req.request_type}</span>
+                      <span>{t(`types.${req.request_type}`)}</span>
                       <span>{new Date(req.created_at).toLocaleDateString('th-TH')}</span>
                     </div>
                   </div>
@@ -250,8 +237,8 @@ export default function ServiceRequestsPage() {
           </div>
         ) : (
           <div className="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
-            <h3 className="text-sm font-medium text-gray-900">ยังไม่มีคำร้อง</h3>
-            <p className="mt-1 text-sm text-gray-500">สร้างคำร้องแรกเมื่อมีลูกค้าติดต่อเข้ามา</p>
+            <h3 className="text-sm font-medium text-gray-900">{t('empty.title')}</h3>
+            <p className="mt-1 text-sm text-gray-500">{t('empty.description')}</p>
           </div>
         )}
       </div>

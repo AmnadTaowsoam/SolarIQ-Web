@@ -16,13 +16,13 @@ const contactCards = [
   {
     icon: Phone,
     title: 'โทรศัพท์',
-    detail: '02-XXX-XXXX',
+    detail: '085-662-1113',
     sub: 'จ.-ศ. 9:00-18:00',
   },
   {
     icon: MapPin,
     title: 'ที่อยู่',
-    detail: 'กรุงเทพมหานคร',
+    detail: 'นนทบุรี',
     sub: 'ประเทศไทย',
   },
   {
@@ -236,15 +236,13 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 ที่ตั้งสำนักงาน
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                กรุงเทพมหานคร ประเทศไทย
-              </p>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">นนทบุรี ประเทศไทย</p>
 
               {/* Map placeholder */}
               <div className="overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
                 <iframe
                   title="SolarIQ Office Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248066.3444348728!2d100.35413!3d13.7563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d6032280d61f3%3A0x10100b25de24820!2sBangkok!5e0!3m2!1sen!2sth!4v1700000000000!5m2!1sen!2sth"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62004.19453988828!2d100.48!3d13.86!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29d4e3c6b2e5f%3A0x4019a6a5b4b9460!2sNonthaburi!5e0!3m2!1sen!2sth!4v1700000000000!5m2!1sen!2sth"
                   width="100%"
                   height="350"
                   style={{ border: 0 }}
@@ -260,30 +258,24 @@ export default function ContactPage() {
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
                   ติดตามเราบนโซเชียลมีเดีย
                 </h3>
-                <div className="flex items-center gap-4">
-                  <a
-                    href="#"
-                    className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#06C755] text-white">
+                <div className="flex items-center gap-4 flex-wrap">
+                  <span className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-default">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 dark:bg-gray-600 text-white">
                       <span className="text-xs font-bold">LINE</span>
                     </div>
                     LINE Official
-                  </a>
-                  <a
-                    href="#"
-                    className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    <Facebook className="h-5 w-5 text-blue-600" />
+                    <span className="ml-1 text-xs text-gray-400">(เร็วๆ นี้)</span>
+                  </span>
+                  <span className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-default">
+                    <Facebook className="h-5 w-5 text-gray-400" />
                     Facebook
-                  </a>
-                  <a
-                    href="#"
-                    className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    <Linkedin className="h-5 w-5 text-blue-700" />
+                    <span className="ml-1 text-xs text-gray-400">(เร็วๆ นี้)</span>
+                  </span>
+                  <span className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-default">
+                    <Linkedin className="h-5 w-5 text-gray-400" />
                     LinkedIn
-                  </a>
+                    <span className="ml-1 text-xs text-gray-400">(เร็วๆ นี้)</span>
+                  </span>
                 </div>
               </div>
             </div>

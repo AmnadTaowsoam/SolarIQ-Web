@@ -436,5 +436,1083 @@
     "actions": {
       "cancelConfirm": "Are you sure you want to cancel your subscription?"
     }
+  },
+  "maintenancePage": {
+    "title": "Maintenance & Warranty",
+    "subtitle": "Track warranties and maintenance schedules",
+    "addInstallation": "+ Add Installation",
+    "filters": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "all": "All"
+    },
+    "upcomingMaintenance": "Upcoming maintenance ({count} items)",
+    "overdue": "Overdue!",
+    "daysUntilDue": "{days} days left",
+    "empty": {
+      "title": "No installations yet",
+      "description": "Add completed installations to track warranties and maintenance"
+    }
+  },
+  "serviceRequestsPage": {
+    "title": "Customer Service Center",
+    "subtitle": "Manage requests, repairs, and customer feedback",
+    "createRequest": "+ Create Request",
+    "types": {
+      "repair": "Repair Request",
+      "complaint": "Complaint",
+      "feedback": "Feedback",
+      "inquiry": "Inquiry"
+    },
+    "statuses": {
+      "open": "Pending",
+      "in_progress": "In Progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "priority": {
+      "urgent": "Urgent",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "stats": {
+      "total": "Total",
+      "open": "Pending",
+      "inProgress": "In Progress",
+      "resolved": "Resolved",
+      "avgResolutionTime": "Avg Resolution Time",
+      "hours": "hrs"
+    },
+    "form": {
+      "title": "Create New Request",
+      "customerName": "Customer Name *",
+      "phone": "Phone",
+      "email": "Email",
+      "subject": "Subject *",
+      "description": "Details *",
+      "submitting": "Submitting...",
+      "submit": "Submit Request"
+    },
+    "filters": {
+      "all": "All",
+      "open": "Pending",
+      "inProgress": "In Progress",
+      "resolved": "Resolved"
+    },
+    "empty": {
+      "title": "No requests yet",
+      "description": "Create the first request when a customer contacts you"
+    }
+  },
+  "calendarPage": {
+    "title": "Work Calendar",
+    "subtitle": "View installation, maintenance, and service request schedules",
+    "addActivity": "Add Activity",
+    "daysShort": {
+      "sun": "Su",
+      "mon": "Mo",
+      "tue": "Tu",
+      "wed": "We",
+      "thu": "Th",
+      "fri": "Fr",
+      "sat": "Sa"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "eventTypes": {
+      "maintenance": "Maintenance",
+      "service_request": "Service Request",
+      "installation": "Installation"
+    },
+    "eventsForDate": "Events for {date}",
+    "selectDatePrompt": "Select a date to view events",
+    "noEventsToday": "No events for this day",
+    "upcomingEvents": "Upcoming events:",
+    "overdue": "Overdue"
+  },
+  "messagesPage": {
+    "title": "Messages",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "active": "In Progress",
+      "completed": "Completed"
+    },
+    "searchPlaceholder": "Search customer name...",
+    "noConversations": "No conversations found",
+    "noMessages": "No messages yet",
+    "startConversation": "Start a Conversation",
+    "selectConversation": "Select a Conversation",
+    "selectConversationHint": "Select a conversation from the list on the left to start chatting",
+    "startNewConversation": "Start a conversation",
+    "sendMessagePrompt": "Send a message to start talking with the customer",
+    "typingIndicator": "Typing...",
+    "inputPlaceholder": "Type a message...",
+    "conversationCompleted": "This conversation has been completed",
+    "status": {
+      "active": "In Progress",
+      "completed": "Completed",
+      "pending": "Pending"
+    },
+    "infoPanel": {
+      "customerInfo": "Customer Info",
+      "internalNotes": "Internal Notes",
+      "relatedLeadDeal": "Related Lead / Deal",
+      "viewLead": "View Lead",
+      "viewDeal": "View Deal",
+      "notesVisibleToTeam": "Internal notes (visible to team only)",
+      "noNotesYet": "No notes yet",
+      "addNotePlaceholder": "Add a note...",
+      "saveNote": "Save",
+      "pinned": "Pinned"
+    },
+    "demoMode": "Demo Mode — Showing sample data. API not connected.",
+    "yesterday": "Yesterday",
+    "today": "Today",
+    "viewLeadDetail": "View Lead Details",
+    "leadStatus": {
+      "new": "New",
+      "quoted": "Quoted",
+      "won": "Won"
+    },
+    "dealStage": {
+      "closed_won": "Closed Won"
+    }
+  },
+  "dealsPage": {
+    "title": "Deals",
+    "subtitle": "Track all your installation projects",
+    "stats": {
+      "total": "Total Deals",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "totalValue": "Total Deal Value",
+    "progress": "Progress",
+    "steps": "{completed}/{total} steps",
+    "all": "All",
+    "createDeal": "Create Deal",
+    "empty": {
+      "title": "No Deals Yet",
+      "description": "When a customer accepts a proposal, a deal will be created here"
+    }
+  },
+  "analyticsPage": {
+    "title": "Analytics",
+    "subtitle": "Business performance metrics and insights",
+    "kpis": {
+      "revenue": "Revenue",
+      "dealsWon": "Deals Won",
+      "conversion": "Conversion",
+      "avgDeal": "Avg Deal",
+      "csat": "CSAT",
+      "responseTime": "Resp Time"
+    },
+    "charts": {
+      "revenueTrend": "Revenue Trend",
+      "last30Days": "Last 30 days",
+      "topLeadSources": "Top Lead Sources",
+      "shareByChannel": "Share by channel"
+    },
+    "aiInsights": {
+      "title": "AI Insights",
+      "subtitle": "Latest insights from analytics engine"
+    }
+  },
+  "commissionsPage": {
+    "title": "Commissions",
+    "subtitle": "Track commission earnings and invoice status",
+    "viewInvoices": "View Invoices",
+    "currentMonth": "Current Month",
+    "previousMonth": "Previous Month",
+    "change": "Change",
+    "vsLastMonth": "vs last month",
+    "deals": "deals",
+    "history": {
+      "title": "Commission History",
+      "subtitle": "Latest commissions across your completed deals"
+    },
+    "table": {
+      "deal": "Deal",
+      "dealValue": "Deal Value",
+      "rate": "Rate",
+      "commission": "Commission",
+      "status": "Status",
+      "date": "Date"
+    },
+    "status": {
+      "pending": "Pending",
+      "invoiced": "Invoiced",
+      "paid": "Paid",
+      "disputed": "Disputed",
+      "voided": "Voided",
+      "adjusted": "Adjusted"
+    },
+    "empty": "No commissions yet"
+  },
+  "invoicesPage": {
+    "title": "Invoices",
+    "subtitle": "Monthly commission invoices and payment status",
+    "history": {
+      "title": "Invoice History",
+      "subtitle": "Latest invoices"
+    },
+    "table": {
+      "invoiceNumber": "Invoice #",
+      "period": "Period",
+      "total": "Total",
+      "status": "Status",
+      "action": "Action"
+    },
+    "view": "View",
+    "status": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "viewed": "Viewed",
+      "paid": "Paid",
+      "overdue": "Overdue",
+      "disputed": "Disputed",
+      "voided": "Voided"
+    },
+    "empty": "No invoices yet"
+  },
+  "settingsPage": {
+    "tabs": {
+      "company": "Company Info",
+      "line": "LINE OA",
+      "notifications": "Notifications",
+      "team": "Team Members",
+      "api": "API Keys",
+      "branding": "White-Label"
+    },
+    "title": "Settings",
+    "subtitle": "Manage company info, integrations, and access",
+    "company": {
+      "title": "Company Info",
+      "subtitle": "Basic company information displayed on proposals and documents",
+      "companyName": "Company Name",
+      "companyNamePlaceholder": "Your company name",
+      "taxId": "Tax ID",
+      "taxIdPlaceholder": "0-0000-00000-00-0",
+      "address": "Address",
+      "addressPlaceholder": "Company address",
+      "phone": "Phone",
+      "phonePlaceholder": "02-xxx-xxxx",
+      "email": "Email",
+      "emailPlaceholder": "info@company.com",
+      "website": "Website",
+      "websitePlaceholder": "https://www.company.com",
+      "logo": "Company Logo",
+      "uploadLogo": "Upload Logo",
+      "logoHint": "PNG, JPG max 2MB",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "line": {
+      "title": "LINE OA Integration",
+      "subtitle": "Connect LINE Official Account to receive leads automatically",
+      "channelId": "Channel ID",
+      "channelSecret": "Channel Secret",
+      "accessToken": "Access Token",
+      "liffId": "LIFF ID",
+      "webhookUrl": "Webhook URL",
+      "copyToLineDevs": "Copy to LINE Developers",
+      "testConnection": "Test Connection",
+      "testing": "Testing...",
+      "connectionSuccess": "Connection successful!",
+      "connectionFailed": "Unable to connect — try again",
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "copied": "Copied",
+      "copy": "Copy",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Configure how you receive alerts",
+      "event": "Event",
+      "newLead": "New Lead Notification",
+      "statusChange": "Lead Status Change",
+      "proposalViewed": "Customer Viewed Proposal",
+      "paymentReceived": "Payment Received",
+      "weeklySummary": "Weekly Summary Report",
+      "channels": {
+        "line": "LINE",
+        "email": "Email",
+        "sms": "SMS",
+        "webPush": "Web Push"
+      },
+      "resetDefaults": "Reset Defaults",
+      "saveSettings": "Save Settings"
+    },
+    "team": {
+      "title": "Team Members",
+      "subtitle": "Manage team members and their roles",
+      "inviteMember": "Invite Member",
+      "inviteNewMember": "Invite New Member",
+      "memberEmailPlaceholder": "Member email",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "manage": "Manage",
+      "roles": {
+        "admin": "Administrator",
+        "contractor": "Installer"
+      },
+      "sendInvite": "Send Invite",
+      "deleteMember": "Delete member",
+      "memberStatus": {
+        "active": "Active",
+        "pending": "Pending",
+        "inactive": "Inactive"
+      }
+    },
+    "api": {
+      "title": "API Keys",
+      "subtitle": "Manage API keys for integrations",
+      "enterprise": "Enterprise",
+      "apiKey": "API Key",
+      "show": "Show",
+      "hide": "Hide",
+      "regenerateConfirm": "Are you sure? Regenerating a new API Key will immediately invalidate the current key.",
+      "confirmRegenerate": "Confirm Regenerate",
+      "cancel": "Cancel",
+      "regenerateKey": "Regenerate API Key",
+      "webhookEndpoints": "Webhook Endpoints",
+      "usageThisMonth": "Usage This Month",
+      "requestsUsed": "Requests Used",
+      "monthlyLimit": "Monthly Limit",
+      "usagePercent": "Used {percent}% of Limit"
+    },
+    "branding": {
+      "title": "White-Label Branding",
+      "subtitle": "Customize branding for proposals and customer pages",
+      "enterprise": "Enterprise",
+      "orgOnly": "White-label branding is only available for organization member accounts.",
+      "selectBrand": "Select Brand",
+      "setDefault": "Set as Default",
+      "brandName": "Brand Name",
+      "displayCompanyName": "Display Company Name",
+      "logoLight": "Logo (Light URL)",
+      "logoDark": "Logo (Dark URL)",
+      "uploading": "Uploading...",
+      "uploadLogo": "Upload Logo (PNG/JPG/SVG)",
+      "faviconUrl": "Favicon URL",
+      "borderRadius": "Border Radius",
+      "primaryColor": "Primary Color",
+      "secondaryColor": "Secondary Color",
+      "accentColor": "Accent Color",
+      "fontHeading": "Font Heading",
+      "fontBody": "Font Body (Live Preview)",
+      "customDomain": "Custom Domain",
+      "customDomainHint": "Point CNAME record to custom.solariq.app",
+      "setupDomain": "Setup Domain",
+      "verifyDns": "Verify DNS",
+      "dnsRecords": "DNS Records",
+      "preview": "Preview",
+      "createNewBrand": "Create New Brand",
+      "newBrandName": "New Brand Name",
+      "newCompanyName": "Company Name",
+      "creating": "Creating...",
+      "createBrand": "Create Brand",
+      "customizationNote": "Customization applies to UI, Proposals, and Email",
+      "saving": "Saving...",
+      "saveSettings": "Save Settings"
+    }
+  },
+  "serviceAreaPage": {
+    "title": "Service Area",
+    "subtitle": "Configure service area and automatic lead routing rules",
+    "modeSelector": {
+      "title": "Area Method",
+      "subtitle": "Choose how to define your service area",
+      "province": "Select Provinces",
+      "radius": "Radius (km)",
+      "polygon": "Draw Polygon (Enterprise)",
+      "enterprise": "Enterprise"
+    },
+    "provinceSelection": {
+      "title": "Select Provinces",
+      "subtitle": "Choose the provinces you serve",
+      "addPlaceholder": "Add province...",
+      "noneSelected": "No provinces selected yet"
+    },
+    "radiusMode": {
+      "title": "Radius from Center",
+      "subtitle": "Select a province as center point and set radius",
+      "centerProvince": "Center Province",
+      "radius": "Radius (km)",
+      "mapPlaceholder": "Map showing {radius} km radius from {province}"
+    },
+    "leadReception": {
+      "title": "Lead Reception Settings",
+      "subtitle": "Configure lead volume and reception hours",
+      "maxPerDay": "Max Leads per Day",
+      "activeHours": "Lead Reception Hours",
+      "to": "to",
+      "pauseTitle": "Pause Lead Reception",
+      "pauseDescription": "Temporarily stop sending new leads to you",
+      "pausedWarning": "You have paused lead reception. New leads will not be sent to you until you enable it again."
+    },
+    "saving": "Saving...",
+    "save": "Save",
+    "saved": "Saved successfully",
+    "removeProvince": "Remove {province}",
+    "radiusUnit": "km",
+    "mapPlaceholder": "Map showing {radius} km radius from {province}"
+  },
+  "profilePage": {
+    "title": "Profile Settings",
+    "subtitle": "Manage your personal information and account settings",
+    "photoSection": {
+      "title": "Profile Photo & Basic Info",
+      "profilePhoto": "Profile Photo",
+      "photoHint": "JPG, PNG or GIF up to 5MB",
+      "displayName": "Display Name",
+      "displayNamePlaceholder": "Display name",
+      "email": "Email",
+      "emailVerified": "Verified",
+      "phone": "Phone",
+      "phonePlaceholder": "0xx-xxx-xxxx",
+      "role": "Role",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "First name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Last name",
+      "position": "Position",
+      "positionPlaceholder": "Job title",
+      "company": "Company",
+      "companyLinked": "Linked to organization, cannot be edited",
+      "lineId": "LINE ID",
+      "lineIdOptional": "(optional)",
+      "bio": "Bio",
+      "bioPlaceholder": "Introduce yourself briefly...",
+      "saving": "Saving...",
+      "save": "Save"
+    },
+    "personalInfo": {
+      "title": "Personal Information"
+    },
+    "roles": {
+      "admin": "Administrator",
+      "contractor": "Contractor",
+      "viewer": "Viewer"
+    },
+    "notificationPrefs": {
+      "title": "Notification Preferences",
+      "subtitle": "Choose your preferred notification channels",
+      "emailNotifications": "Email Notifications",
+      "emailNotificationsDesc": "Receive important notifications via email",
+      "pushNotifications": "Push Notifications",
+      "pushNotificationsDesc": "Receive push notifications on your browser",
+      "lineNotifications": "LINE Notifications",
+      "lineNotificationsDesc": "Receive notifications via LINE Official",
+      "weeklyDigest": "Weekly Digest",
+      "weeklyDigestDesc": "Receive weekly summary report every Monday",
+      "marketingEmails": "Marketing Emails",
+      "marketingEmailsDesc": "Receive news, promotions, and updates from us",
+      "saveSettings": "Save Notification Settings"
+    },
+    "security": {
+      "title": "Security",
+      "subtitle": "Manage your password and authentication",
+      "changePassword": "Change Password",
+      "changePasswordDesc": "Recommended to change every 3 months",
+      "changePasswordButton": "Change Password",
+      "twoFactor": "Two-Factor Authentication (2FA)",
+      "twoFactorDesc": "Add security with OTP code from an authenticator app",
+      "twoFactorQrHint": "Scan QR Code with an Authenticator app\n(Google Authenticator, Authy, etc.)",
+      "lastLogin": "Last Login Info",
+      "lastLoginIp": "IP: {ip}",
+      "lastLoginDevice": "Device: {device}",
+      "lastLoginTime": "Time: {time}",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Current password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "New password (at least 8 characters)",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "cancel": "Cancel",
+      "changing": "Changing...",
+      "modalTitle": "Change Password"
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "subtitle": "These actions cannot be undone",
+      "exportData": "Export All Data",
+      "exportDescription": "Download all your data as a JSON file",
+      "exporting": "Exporting...",
+      "exportButton": "Export Data",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDesc": "Permanently delete your account and all data",
+      "deleteAccountButton": "Delete Account",
+      "deleteConfirmTitle": "Confirm Account Deletion",
+      "deleteConfirmWarning": "This action cannot be undone. All your data will be permanently deleted.",
+      "deleteConfirmation": "Type DELETE to confirm",
+      "cancel": "Cancel",
+      "deleting": "Deleting...",
+      "deleteForever": "Delete Account Forever"
+    },
+    "saveProfile": "Save Profile",
+    "saveNotifications": "Save Notification Settings",
+    "messages": {
+      "profileSaved": "Profile saved successfully",
+      "profileSaveError": "Unable to save profile. Please try again.",
+      "notificationsSaved": "Notification settings saved successfully",
+      "notificationsSaveError": "Unable to save settings",
+      "passwordChanged": "Password changed successfully",
+      "passwordChangeError": "Unable to change password. Please check your current password.",
+      "passwordMinLength": "New password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "accountDeleted": "Account deleted successfully",
+      "accountDeleteError": "Unable to delete account. Please try again.",
+      "dataExported": "Data exported successfully. The file will be sent to your email.",
+      "dataExportError": "Unable to export data",
+      "fileTooLarge": "File size must not exceed 5MB"
+    }
+  },
+  "onboardingPage": {
+    "steps": {
+      "companyInfo": "Company Info",
+      "lineOa": "LINE OA",
+      "team": "Invite Team",
+      "demoLead": "First Lead",
+      "complete": "Complete"
+    },
+    "step1": {
+      "title": "Company Info",
+      "subtitle": "Fill in your company's basic information",
+      "logo": "Logo",
+      "uploadLogo": "Upload Company Logo",
+      "logoHint": "Supports JPG, PNG (optional)",
+      "companyName": "Company Name",
+      "companyNameRequired": "Company Name *",
+      "taxId": "Tax ID",
+      "taxIdOptional": "(optional)",
+      "taxIdFormat": "Tax ID format: 13 digits",
+      "taxIdFormatError": "Invalid tax ID format (13 digits required)",
+      "taxIdValid": "Format is valid",
+      "address": "Address",
+      "addressPlaceholder": "Number, Street, Sub-district, District",
+      "province": "Province",
+      "selectProvince": "-- Select Province --",
+      "phone": "Phone",
+      "saving": "Saving...",
+      "next": "Next"
+    },
+    "step2": {
+      "title": "Connect LINE OA",
+      "subtitle": "Connect LINE Official Account to receive leads automatically",
+      "channelId": "Channel ID",
+      "channelSecret": "Channel Secret",
+      "webhookUrl": "Webhook URL",
+      "webhookHint": "Copy to LINE Developers",
+      "copy": "Copy",
+      "testConnection": "Test Connection",
+      "testing": "Testing...",
+      "connectionSuccess": "Connection successful!",
+      "connectionFailed": "Unable to connect — try again",
+      "saving": "Saving...",
+      "next": "Next",
+      "skip": "Skip this step"
+    },
+    "step3": {
+      "title": "Invite Team",
+      "subtitle": "Add your team members (up to 5 people)",
+      "noMembers": "No team members yet",
+      "memberNumber": "Member {number}",
+      "roleMember": "Member",
+      "roleAdmin": "Admin",
+      "addMember": "Add member {current}/5",
+      "sendingInvites": "Sending invites...",
+      "sendInvites": "Send {count} invite(s)",
+      "skip": "Skip this step"
+    },
+    "step4": {
+      "title": "Create First Lead",
+      "subtitle": "Try creating a sample customer lead to test the system",
+      "infoMessage": "This lead will be real data in the system. You can try the workflow right away.",
+      "customerName": "Customer Name",
+      "customerNameRequired": "Customer Name *",
+      "phone": "Phone",
+      "phoneRequired": "Phone *",
+      "monthlyBill": "Average Monthly Electricity Bill (THB)",
+      "monthlyBillRequired": "Average Monthly Electricity Bill (THB) *",
+      "baht": "THB",
+      "province": "Province",
+      "selectProvince": "-- Select Province --",
+      "creatingLead": "Creating Lead...",
+      "createLead": "Create Lead",
+      "skip": "Skip this step"
+    },
+    "step5": {
+      "title": "Setup Complete!",
+      "subtitle": "SolarIQ is ready for your team",
+      "setupSummary": "Setup Summary",
+      "company": "Company: {name}",
+      "lineConnected": "Connected",
+      "lineNotConnected": "Not connected",
+      "lineLabel": "LINE OA: {status}",
+      "teamInvited": "Invited {count} people",
+      "teamNotInvited": "Not invited yet",
+      "teamLabel": "Team: {status}",
+      "leadCreated": "Created",
+      "leadNotCreated": "Not created yet",
+      "leadLabel": "First Lead: {status}",
+      "skipped": "Skipped",
+      "preparingDashboard": "Preparing Dashboard...",
+      "goToDashboard": "Go to Dashboard"
+    },
+    "header": {
+      "setupTitle": "Setup SolarIQ",
+      "stepOf": "Step {step}/{total}"
+    },
+    "errors": {
+      "saveCompanyFailed": "Unable to save company data. Please try again.",
+      "saveLineFailed": "Unable to save LINE OA. Please check Channel ID and Secret.",
+      "sendInvitesFailed": "Unable to send invites. Please try again.",
+      "createLeadFailed": "Unable to create Lead. Please try again."
+    }
+  },
+  "analyzePage": {
+    "title": "Solar Analysis",
+    "subtitle": "Comprehensive solar potential analysis with rooftop, shading, financial, and weather forecasts",
+    "addressInput": "Address / Location",
+    "addressPlaceholder": "Enter address or location",
+    "monthlyBill": "Monthly Electricity Bill",
+    "analyzeButton": "Analyze Solar Potential",
+    "analyzing": "Analyzing...",
+    "results": {
+      "title": "Analysis Results",
+      "systemSize": "Recommended System Size",
+      "monthlySavings": "Estimated Monthly Savings",
+      "paybackPeriod": "Payback Period",
+      "roi": "Return on Investment (ROI)",
+      "co2Reduction": "CO2 Reduction",
+      "panels": "Panels",
+      "inverter": "Inverter",
+      "estimatedCost": "Estimated Cost"
+    },
+    "inputForm": {
+      "title": "Location & Electricity Bill",
+      "useCurrentLocation": "Use current location",
+      "useDefaultLocation": "Use Bangkok",
+      "latitude": "Latitude",
+      "latitudeHint": "Enter latitude (-90 to 90)",
+      "longitude": "Longitude",
+      "longitudeHint": "Enter longitude (-180 to 180)",
+      "address": "Address (optional)",
+      "addressPlaceholder": "e.g. 123 Sukhumvit Rd, Bangkok",
+      "monthlyBill": "Average Monthly Electricity Bill (THB)",
+      "monthlyBillHint": "Enter your average monthly electricity bill"
+    },
+    "analyzeHint": "Free analysis • Results within 30 seconds • Data from Google Solar API",
+    "tabs": {
+      "overview": "Overview",
+      "roof": "Rooftop",
+      "solar": "Solar Potential",
+      "financial": "Financial",
+      "equipment": "Equipment",
+      "incentives": "Incentives",
+      "data": "Data Export",
+      "forecast": "Weather",
+      "reliability": "Reliability"
+    },
+    "overview": {
+      "systemSize": "System Size",
+      "panels": "panels",
+      "annualProduction": "Annual Production",
+      "perYear": "per year",
+      "paybackPeriod": "Payback Period",
+      "years": "years",
+      "carbonReduction": "Carbon Reduction",
+      "tons": "tons",
+      "financialSummary": "Financial Summary",
+      "installationCost": "Installation Cost",
+      "netPrice": "Net Price",
+      "monthlySavings": "Monthly Savings",
+      "yearlySavings": "Yearly Savings",
+      "solarPotential": "Solar Potential",
+      "maxSunshineHours": "Peak Sunshine Hours",
+      "roofArea": "Roof Area",
+      "maxPanels": "Max Panels",
+      "dataQuality": "Data Quality",
+      "location": "Location",
+      "address": "Address",
+      "coordinates": "Coordinates",
+      "electricityRate": "Electricity Rate",
+      "imageryDate": "Imagery Date",
+      "advancedFinancials": "Advanced Financial Metrics",
+      "roi25Year": "ROI 25 years"
+    },
+    "financial": {
+      "consumptionAndMaintenance": "Consumption & Maintenance",
+      "selfConsumptionRate": "Self-consumption Rate",
+      "netBillingRate": "Net Billing Rate",
+      "annualMaintenance": "Annual Maintenance",
+      "netSavingsAfterMaintenance": "Net Savings After Maintenance",
+      "financialDetails": "Financial Details",
+      "costSection": "Cost",
+      "installationCost": "Installation Cost",
+      "netPriceAfterIncentives": "Net Price (after incentives)",
+      "pricePerKwp": "Price per kWp",
+      "maintenancePerYear": "Maintenance/year",
+      "returnsSection": "Returns",
+      "monthlySavings": "Monthly Savings",
+      "yearlySavings": "Yearly Savings",
+      "totalNetSavings": "Total Net Savings (after maintenance)",
+      "npv25Years": "NPV (25 years)",
+      "noSolarData": "No solar potential data available for this location"
+    },
+    "dataExport": {
+      "reportTitle": "Analysis Report",
+      "reportSubtitle": "Download or share the report",
+      "noDataLayers": "No data layers available for download"
+    },
+    "locationPreview": {
+      "title": "Location Preview",
+      "subtitle": "Preview updates automatically when coordinates are entered",
+      "coordinates": "Coordinates",
+      "region": "Region",
+      "regionNorth": "North/Northeast",
+      "regionCentral": "Central",
+      "regionSouth": "South",
+      "avgSolarPotential": "Average Solar Potential",
+      "hoursPerYear": "hours/year",
+      "youWillReceive": "You will receive",
+      "roofPlan": "Rooftop layout and solar panel placement",
+      "investment25yr": "25-year investment return analysis",
+      "forecast7day": "7-day energy production forecast",
+      "pm25impact": "PM2.5 impact on performance",
+      "reliabilityIndex": "Solar reliability index",
+      "financingComparison": "Financing comparison"
+    },
+    "messages": {
+      "fillAllFields": "Please fill in all required fields",
+      "invalidLatitude": "Invalid latitude (must be between -90 and 90)",
+      "invalidLongitude": "Invalid longitude (must be between -180 and 180)",
+      "invalidBill": "Electricity bill must be a number greater than 0",
+      "analysisSuccess": "Solar analysis completed successfully!",
+      "analysisFailed": "Analysis failed. Please try again.",
+      "geolocationNotSupported": "Browser does not support geolocation",
+      "locationSuccess": "Location retrieved successfully",
+      "locationFailed": "Unable to retrieve location. Please enter manually."
+    }
+  },
+  "knowledgePage": {
+    "title": "Knowledge Base",
+    "subtitle": "Manage documents for the RAG knowledge base",
+    "uploadDocument": "Upload Document",
+    "uploadFirstDocument": "Upload First Document",
+    "table": {
+      "filename": "Filename",
+      "type": "Type",
+      "size": "Size",
+      "status": "Status",
+      "uploaded": "Uploaded",
+      "actions": "Actions",
+      "chunks": "{count} chunks"
+    },
+    "status": {
+      "processing": "Processing",
+      "ready": "Ready",
+      "error": "Error"
+    },
+    "uploadModal": {
+      "title": "Upload Document",
+      "description": "Upload a PDF or DOCX file to add to the knowledge base",
+      "clickToUpload": "Click to upload",
+      "dragAndDrop": "or drag and drop",
+      "fileHint": "PDF, DOC, DOCX up to 10MB",
+      "upload": "Upload"
+    },
+    "deleteModal": {
+      "title": "Delete Document",
+      "confirmMessage": "Are you sure you want to delete {filename}? This action cannot be undone."
+    },
+    "empty": {
+      "title": "No documents",
+      "description": "Upload documents to build your knowledge base"
+    },
+    "permissionError": "You do not have permission to access this page",
+    "validation": {
+      "fileTooLarge": "File size exceeds 10MB limit",
+      "invalidFileType": "Invalid file type. Only PDF and DOCX are allowed.",
+      "contentMismatch": "File content does not match its extension.",
+      "validationFailed": "Failed to validate file"
+    },
+    "messages": {
+      "uploadSuccess": "Document uploaded successfully",
+      "uploadError": "Failed to upload document",
+      "deleteSuccess": "Document deleted successfully",
+      "deleteError": "Failed to delete document"
+    }
+  },
+  "developersPage": {
+    "title": "Developer Portal",
+    "welcomeTitle": "Welcome, Developer!",
+    "welcomeSubtitle": "Connect SolarIQ with your system via REST API",
+    "todayUsage": "Today's Usage Summary",
+    "stats": {
+      "apiCallsToday": "API Calls Today",
+      "fromDailyLimit": "of 10,000 req/day",
+      "successRate": "Success Rate",
+      "avg30Days": "Average over 30 days",
+      "avgLatency": "Avg Latency",
+      "avgResponseTime": "Average response time"
+    },
+    "gettingStarted": "Getting Started",
+    "steps": {
+      "createKey": "Create API Key",
+      "createKeyDesc": "Create a key for Live or Test environment",
+      "readDocs": "Read API Docs",
+      "readDocsDesc": "Study endpoints, parameters, and responses",
+      "testSandbox": "Test in Sandbox",
+      "testSandboxDesc": "Test API with sample data before going live"
+    },
+    "quickLinks": "Quick Links",
+    "links": {
+      "manageKeys": "Manage API Keys",
+      "manageKeysDesc": "Create, edit, and revoke API keys",
+      "viewUsage": "View Usage Stats",
+      "viewUsageDesc": "Track API calls and quota",
+      "openSandbox": "Open Sandbox",
+      "openSandboxDesc": "Test API with sample data"
+    },
+    "keys": {
+      "title": "API Keys",
+      "subtitle": "Manage keys for accessing SolarIQ API",
+      "createNew": "Create New Key",
+      "createModal": {
+        "title": "Create New API Key",
+        "created": "API Key Created",
+        "keyName": "Key Name",
+        "keyNamePlaceholder": "e.g. Production Key, Test Server",
+        "environment": "Environment",
+        "liveData": "Live data",
+        "testData": "Test data",
+        "permissions": "Access Permissions",
+        "creating": "Creating...",
+        "create": "Create Key",
+        "done": "Done",
+        "successMessage": "Key created successfully!",
+        "copyWarning": "Copy the key below and store it safely — it will only be shown once",
+        "copied": "Copied!",
+        "copy": "Copy"
+      },
+      "revokeModal": {
+        "title": "Revoke API Key",
+        "confirmMessage": "Are you sure? Key \"{name}\" will be revoked and cannot be used again.",
+        "revoke": "Revoke"
+      },
+      "table": {
+        "name": "Name",
+        "key": "Key",
+        "created": "Created",
+        "lastUsed": "Last Used",
+        "calls": "Calls",
+        "status": "Status",
+        "manage": "Manage",
+        "neverUsed": "Never used"
+      },
+      "status": {
+        "active": "Active",
+        "revoked": "Revoked"
+      },
+      "empty": "No API keys yet",
+      "createFirst": "Create First Key",
+      "securityNote": {
+        "title": "Security",
+        "message": "Do not expose API keys in public code. Always use environment variables. Keys are shown in full only once when created."
+      },
+      "demoMode": "Demo Mode — Showing sample data",
+      "permissions": {
+        "leadsRead": "Leads — Read",
+        "leadsWrite": "Leads — Write",
+        "solarAnalyze": "Solar Analysis",
+        "proposalsRead": "Proposals — Read",
+        "proposalsWrite": "Proposals — Write",
+        "dealsRead": "Deals — Read",
+        "dealsWrite": "Deals — Write",
+        "webhooksManage": "Manage Webhooks"
+      }
+    },
+    "sandbox": {
+      "title": "Sandbox Environment",
+      "subtitle": "Test API with sample data without affecting production data",
+      "resetData": "Reset Sandbox Data",
+      "resetting": "Resetting...",
+      "sandboxKey": "Sandbox Key",
+      "sandboxKeyHint": "Use this key for testing only. Does not affect production data.",
+      "quickTests": "Quick Tests",
+      "tests": {
+        "analyzeBill": "Analyze Electricity Bill",
+        "analyzeBillDesc": "Submit bill data and receive solar analysis",
+        "createLead": "Create Lead",
+        "createLeadDesc": "Create a new lead in the system",
+        "getQuote": "Get Quote",
+        "getQuoteDesc": "Calculate and receive a solar quote"
+      },
+      "showPayload": "Show Payload",
+      "hidePayload": "Hide",
+      "requestPayload": "Request Payload",
+      "run": "Run",
+      "running": "Sending...",
+      "demoSimulated": "Demo mode — simulated response",
+      "notes": {
+        "title": "Sandbox Notes",
+        "autoReset": "Sandbox data is automatically reset every 24 hours",
+        "rateLimit": "Sandbox rate limit is 100 requests/minute",
+        "noRealNotifications": "No real notifications are sent in sandbox environment",
+        "testWebhooks": "Sandbox webhooks send test events to registered endpoints"
+      }
+    }
+  },
+  "leadsPage": {
+    "title": "Leads",
+    "subtitle": "Manage your solar installation leads",
+    "newAnalysis": "New Analysis",
+    "searchPlaceholder": "Search by name, phone, or address...",
+    "allStatuses": "All Statuses",
+    "table": {
+      "name": "Name",
+      "contact": "Contact",
+      "address": "Address",
+      "monthlyBill": "Monthly Bill",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "updateStatus": "Update Status",
+    "updateStatusModal": {
+      "title": "Update Lead Status",
+      "description": "Update status for lead: {name}",
+      "newStatus": "New Status"
+    },
+    "empty": {
+      "title": "No leads found",
+      "description": "Try adjusting your filters or create a new analysis",
+      "createNew": "Create New Analysis"
+    },
+    "pagination": {
+      "rowsPerPage": "Rows per page:",
+      "pageInfo": "Page {page} of {totalPages} ({total} total)"
+    },
+    "messages": {
+      "statusUpdated": "Lead status updated successfully",
+      "statusUpdateError": "Failed to update lead status"
+    }
+  },
+  "maintenanceNewPage": {
+    "title": "Add New Installation",
+    "subtitle": "Record a completed installation for warranty and maintenance tracking",
+    "sections": {
+      "customer": "Customer Information",
+      "system": "System Specifications",
+      "installation": "Installation Details"
+    },
+    "fields": {
+      "customerName": "Customer Name",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "systemSize": "System Size (kW)",
+      "panelCount": "Number of Panels",
+      "panelBrand": "Panel Brand",
+      "panelModel": "Panel Model",
+      "inverterBrand": "Inverter Brand",
+      "inverterModel": "Inverter Model",
+      "installationDate": "Installation Date",
+      "warrantyYears": "Warranty Period",
+      "years": "years",
+      "notes": "Notes",
+      "selectBrand": "Select brand"
+    },
+    "cancel": "Cancel",
+    "submit": "Save Installation",
+    "submitting": "Saving...",
+    "submitError": "Failed to save installation. Please try again."
+  },
+  "dealDetailPage": {
+    "notFound": "Deal not found",
+    "backToDeals": "Back to Deals",
+    "stageUpdated": "Stage updated to \"{stage}\" successfully",
+    "systemSize": "System Size",
+    "panels": "panels",
+    "dealValue": "Deal Value",
+    "inverter": "Inverter",
+    "installDate": "Installation Start Date",
+    "phone": "Phone",
+    "updateTo": "Update to",
+    "installProgress": "Installation Progress",
+    "currentStep": "Current Step",
+    "completed": "Completed!",
+    "completedDesc": "Solar panel system installation has been completed successfully",
+    "updateStatus": "Update Status",
+    "changeFrom": "Change from",
+    "changeTo": "to",
+    "notesOptional": "Notes (optional)",
+    "notesPlaceholder": "Add additional details...",
+    "cancel": "Cancel",
+    "updating": "Updating...",
+    "confirm": "Confirm"
+  },
+  "createDealModal": {
+    "title": "Create New Deal",
+    "fields": {
+      "customerName": "Customer Name",
+      "address": "Address",
+      "systemSize": "System Size (kW)",
+      "totalValue": "Deal Value (THB)",
+      "stage": "Stage",
+      "notes": "Notes"
+    },
+    "stages": {
+      "accepted": "Accepted",
+      "survey_scheduled": "Survey Scheduled",
+      "contract_signed": "Contract Signed",
+      "installation_started": "Installation Started"
+    },
+    "cancel": "Cancel",
+    "create": "Create Deal",
+    "creating": "Creating...",
+    "error": "Failed to create deal. Please try again."
+  },
+  "addActivityModal": {
+    "title": "Add Activity",
+    "fields": {
+      "activityName": "Activity Name",
+      "type": "Type",
+      "date": "Date",
+      "time": "Time",
+      "customerName": "Customer Name",
+      "notes": "Notes"
+    },
+    "types": {
+      "appointment": "Appointment",
+      "survey": "Site Survey",
+      "installation": "Installation",
+      "maintenance": "Maintenance",
+      "followup": "Follow-up"
+    },
+    "cancel": "Cancel",
+    "add": "Add Activity",
+    "adding": "Adding...",
+    "error": "Failed to add activity. Please try again."
   }
 }

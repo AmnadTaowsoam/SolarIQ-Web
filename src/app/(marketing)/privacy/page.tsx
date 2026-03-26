@@ -36,15 +36,11 @@ export default function PrivacyPolicyPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-4 text-center">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-            นโยบายความเป็นส่วนตัว
-          </h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">นโยบายความเป็นส่วนตัว</h1>
           <p className="mt-4 text-gray-300">
             Privacy Policy | มีผลบังคับใช้ตั้งแต่วันที่ 1 มกราคม 2567
           </p>
-          <p className="mt-2 text-sm text-gray-400">
-            ปรับปรุงล่าสุด: 22 มีนาคม 2569
-          </p>
+          <p className="mt-2 text-sm text-gray-400">ปรับปรุงล่าสุด: 22 มีนาคม 2569</p>
         </div>
       </section>
 
@@ -90,20 +86,20 @@ export default function PrivacyPolicyPage() {
 
             {/* 1. Overview */}
             <section id="overview" className="scroll-mt-24 mb-10">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                1. ภาพรวม
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">1. ภาพรวม</h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                บริษัท SolarIQ จำกัด (&quot;บริษัท&quot;, &quot;เรา&quot;) เคารพสิทธิความเป็นส่วนตัวของผู้ใช้บริการ
-                (&quot;ผู้ใช้&quot;, &quot;คุณ&quot;) นโยบายความเป็นส่วนตัวฉบับนี้อธิบายวิธีที่เราเก็บรวบรวม ใช้ เปิดเผย
+                บริษัท SolarIQ จำกัด (&quot;บริษัท&quot;, &quot;เรา&quot;)
+                เคารพสิทธิความเป็นส่วนตัวของผู้ใช้บริการ (&quot;ผู้ใช้&quot;, &quot;คุณ&quot;)
+                นโยบายความเป็นส่วนตัวฉบับนี้อธิบายวิธีที่เราเก็บรวบรวม ใช้ เปิดเผย
                 และปกป้องข้อมูลส่วนบุคคลของคุณเมื่อคุณใช้งานแพลตฟอร์ม SolarIQ
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-                นโยบายฉบับนี้จัดทำขึ้นตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562
-                (Personal Data Protection Act: PDPA) แห่งราชอาณาจักรไทย
+                นโยบายฉบับนี้จัดทำขึ้นตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (Personal
+                Data Protection Act: PDPA) แห่งราชอาณาจักรไทย
               </p>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                โดยการใช้บริการของเรา คุณตกลงยินยอมให้เราเก็บรวบรวมและใช้ข้อมูลของคุณตามที่ระบุไว้ในนโยบายฉบับนี้
+                โดยการใช้บริการของเรา
+                คุณตกลงยินยอมให้เราเก็บรวบรวมและใช้ข้อมูลของคุณตามที่ระบุไว้ในนโยบายฉบับนี้
               </p>
             </section>
 
@@ -156,13 +152,27 @@ export default function PrivacyPolicyPage() {
                 เราใช้ข้อมูลของคุณเพื่อ:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-                <li><strong>ให้บริการ:</strong> วิเคราะห์ศักยภาพโซลาร์เซลล์ คำนวณ ROI สร้างรายงาน</li>
-                <li><strong>จัดการบัญชี:</strong> สร้างและจัดการบัญชีผู้ใช้ ยืนยันตัวตน</li>
-                <li><strong>ประมวลผลการชำระเงิน:</strong> เรียกเก็บค่าบริการ ออกใบเสร็จ</li>
-                <li><strong>สื่อสาร:</strong> ส่งอีเมลยืนยัน แจ้งเตือนสำคัญ ข่าวสารบริการ</li>
-                <li><strong>ปรับปรุงบริการ:</strong> วิเคราะห์การใช้งาน พัฒนาฟีเจอร์ใหม่</li>
-                <li><strong>รักษาความปลอดภัย:</strong> ป้องกันการฉ้อโกง ตรวจจับการเข้าถึงที่ผิดปกติ</li>
-                <li><strong>ปฏิบัติตามกฎหมาย:</strong> ปฏิบัติตามข้อบังคับทางกฎหมายและภาษี</li>
+                <li>
+                  <strong>ให้บริการ:</strong> วิเคราะห์ศักยภาพโซลาร์เซลล์ คำนวณ ROI สร้างรายงาน
+                </li>
+                <li>
+                  <strong>จัดการบัญชี:</strong> สร้างและจัดการบัญชีผู้ใช้ ยืนยันตัวตน
+                </li>
+                <li>
+                  <strong>ประมวลผลการชำระเงิน:</strong> เรียกเก็บค่าบริการ ออกใบเสร็จ
+                </li>
+                <li>
+                  <strong>สื่อสาร:</strong> ส่งอีเมลยืนยัน แจ้งเตือนสำคัญ ข่าวสารบริการ
+                </li>
+                <li>
+                  <strong>ปรับปรุงบริการ:</strong> วิเคราะห์การใช้งาน พัฒนาฟีเจอร์ใหม่
+                </li>
+                <li>
+                  <strong>รักษาความปลอดภัย:</strong> ป้องกันการฉ้อโกง ตรวจจับการเข้าถึงที่ผิดปกติ
+                </li>
+                <li>
+                  <strong>ปฏิบัติตามกฎหมาย:</strong> ปฏิบัติตามข้อบังคับทางกฎหมายและภาษี
+                </li>
               </ul>
             </section>
 
@@ -176,11 +186,21 @@ export default function PrivacyPolicyPage() {
                 ยกเว้นในกรณีต่อไปนี้:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-                <li><strong>ผู้ให้บริการที่ได้รับอนุญาต:</strong> Google Cloud Platform (โครงสร้างพื้นฐาน),
-                  Opn Payments/Omise (ชำระเงิน), SendGrid (อีเมล), Cloudflare (CDN/DNS)</li>
-                <li><strong>ตามคำสั่งศาลหรือกฎหมาย:</strong> เมื่อมีคำสั่งจากหน่วยงานราชการที่มีอำนาจ</li>
-                <li><strong>ป้องกันการฉ้อโกง:</strong> เพื่อปกป้องสิทธิและความปลอดภัยของผู้ใช้</li>
-                <li><strong>โดยได้รับความยินยอม:</strong> เมื่อคุณอนุญาตให้เปิดเผยข้อมูลเป็นลายลักษณ์อักษร</li>
+                <li>
+                  <strong>ผู้ให้บริการที่ได้รับอนุญาต:</strong> Google Cloud Platform
+                  (โครงสร้างพื้นฐาน), Opn Payments/Omise (ชำระเงิน), SendGrid (อีเมล), Cloudflare
+                  (CDN/DNS)
+                </li>
+                <li>
+                  <strong>ตามคำสั่งศาลหรือกฎหมาย:</strong> เมื่อมีคำสั่งจากหน่วยงานราชการที่มีอำนาจ
+                </li>
+                <li>
+                  <strong>ป้องกันการฉ้อโกง:</strong> เพื่อปกป้องสิทธิและความปลอดภัยของผู้ใช้
+                </li>
+                <li>
+                  <strong>โดยได้รับความยินยอม:</strong>{' '}
+                  เมื่อคุณอนุญาตให้เปิดเผยข้อมูลเป็นลายลักษณ์อักษร
+                </li>
               </ul>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
                 ผู้ให้บริการทุกรายต้องลงนามข้อตกลงการประมวลผลข้อมูล (Data Processing Agreement)
@@ -197,12 +217,29 @@ export default function PrivacyPolicyPage() {
                 เราใช้มาตรการรักษาความปลอดภัยที่เหมาะสมเพื่อปกป้องข้อมูลของคุณ:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-                <li><strong>การเข้ารหัส:</strong> ข้อมูลถูกเข้ารหัสด้วย AES-256 ทั้งขณะจัดเก็บ (at rest) และขณะส่ง (in transit) ผ่าน TLS 1.3</li>
-                <li><strong>การเข้าถึง:</strong> ระบบ Role-Based Access Control (RBAC) จำกัดการเข้าถึงข้อมูลเฉพาะบุคลากรที่มีสิทธิ์</li>
-                <li><strong>โครงสร้างพื้นฐาน:</strong> จัดเก็บบน Google Cloud Platform ที่ได้รับมาตรฐาน ISO 27001, SOC 2</li>
-                <li><strong>การสำรองข้อมูล:</strong> สำรองข้อมูลอัตโนมัติทุกวัน พร้อมระบบกู้คืนเมื่อเกิดเหตุฉุกเฉิน</li>
-                <li><strong>การตรวจสอบ:</strong> มีระบบ Audit Log ติดตามการเข้าถึงข้อมูลทุกครั้ง</li>
-                <li><strong>รหัสผ่าน:</strong> รหัสผ่านถูกเข้ารหัสด้วย bcrypt ไม่มีการจัดเก็บรหัสผ่านในรูปแบบข้อความ</li>
+                <li>
+                  <strong>การเข้ารหัส:</strong> ข้อมูลถูกเข้ารหัสด้วย AES-256 ทั้งขณะจัดเก็บ (at
+                  rest) และขณะส่ง (in transit) ผ่าน TLS 1.3
+                </li>
+                <li>
+                  <strong>การเข้าถึง:</strong> ระบบ Role-Based Access Control (RBAC)
+                  จำกัดการเข้าถึงข้อมูลเฉพาะบุคลากรที่มีสิทธิ์
+                </li>
+                <li>
+                  <strong>โครงสร้างพื้นฐาน:</strong> จัดเก็บบน Google Cloud Platform
+                  ที่ได้รับมาตรฐาน ISO 27001, SOC 2
+                </li>
+                <li>
+                  <strong>การสำรองข้อมูล:</strong> สำรองข้อมูลอัตโนมัติทุกวัน
+                  พร้อมระบบกู้คืนเมื่อเกิดเหตุฉุกเฉิน
+                </li>
+                <li>
+                  <strong>การตรวจสอบ:</strong> มีระบบ Audit Log ติดตามการเข้าถึงข้อมูลทุกครั้ง
+                </li>
+                <li>
+                  <strong>รหัสผ่าน:</strong> รหัสผ่านถูกเข้ารหัสด้วย bcrypt
+                  ไม่มีการจัดเก็บรหัสผ่านในรูปแบบข้อความ
+                </li>
               </ul>
             </section>
 
@@ -215,12 +252,21 @@ export default function PrivacyPolicyPage() {
                 เราใช้คุกกี้และเทคโนโลยีที่คล้ายกันเพื่อ:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-                <li><strong>คุกกี้ที่จำเป็น:</strong> สำหรับการเข้าสู่ระบบ ความปลอดภัย และการทำงานพื้นฐาน</li>
-                <li><strong>คุกกี้วิเคราะห์:</strong> เพื่อเข้าใจวิธีที่คุณใช้งานเว็บไซต์และปรับปรุงประสบการณ์</li>
-                <li><strong>คุกกี้การตั้งค่า:</strong> เพื่อจดจำการตั้งค่าและความชอบของคุณ</li>
+                <li>
+                  <strong>คุกกี้ที่จำเป็น:</strong> สำหรับการเข้าสู่ระบบ ความปลอดภัย
+                  และการทำงานพื้นฐาน
+                </li>
+                <li>
+                  <strong>คุกกี้วิเคราะห์:</strong>{' '}
+                  เพื่อเข้าใจวิธีที่คุณใช้งานเว็บไซต์และปรับปรุงประสบการณ์
+                </li>
+                <li>
+                  <strong>คุกกี้การตั้งค่า:</strong> เพื่อจดจำการตั้งค่าและความชอบของคุณ
+                </li>
               </ul>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
-                คุณสามารถปิดการใช้งานคุกกี้ได้ผ่านการตั้งค่าเบราว์เซอร์ แต่อาจส่งผลกระทบต่อการทำงานบางส่วนของเว็บไซต์
+                คุณสามารถปิดการใช้งานคุกกี้ได้ผ่านการตั้งค่าเบราว์เซอร์
+                แต่อาจส่งผลกระทบต่อการทำงานบางส่วนของเว็บไซต์
               </p>
             </section>
 
@@ -230,14 +276,26 @@ export default function PrivacyPolicyPage() {
                 7. ระยะเวลาเก็บรักษาข้อมูล
               </h2>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-                <li><strong>ข้อมูลบัญชี:</strong> เก็บตลอดระยะเวลาที่คุณใช้บริการ + 90 วันหลังยกเลิกบัญชี</li>
-                <li><strong>ข้อมูลการชำระเงิน:</strong> เก็บรักษา 7 ปีตามข้อกำหนดทางภาษีของประเทศไทย</li>
-                <li><strong>ข้อมูลการวิเคราะห์โซลาร์:</strong> เก็บตลอดระยะเวลาที่ใช้บริการ</li>
-                <li><strong>ข้อมูล Log:</strong> เก็บรักษา 1 ปี เพื่อวัตถุประสงค์ด้านความปลอดภัย</li>
-                <li><strong>ข้อมูลทางการตลาด:</strong> จนกว่าคุณจะยกเลิกการรับข่าวสาร</li>
+                <li>
+                  <strong>ข้อมูลบัญชี:</strong> เก็บตลอดระยะเวลาที่คุณใช้บริการ + 90
+                  วันหลังยกเลิกบัญชี
+                </li>
+                <li>
+                  <strong>ข้อมูลการชำระเงิน:</strong> เก็บรักษา 7 ปีตามข้อกำหนดทางภาษีของประเทศไทย
+                </li>
+                <li>
+                  <strong>ข้อมูลการวิเคราะห์โซลาร์:</strong> เก็บตลอดระยะเวลาที่ใช้บริการ
+                </li>
+                <li>
+                  <strong>ข้อมูล Log:</strong> เก็บรักษา 1 ปี เพื่อวัตถุประสงค์ด้านความปลอดภัย
+                </li>
+                <li>
+                  <strong>ข้อมูลทางการตลาด:</strong> จนกว่าคุณจะยกเลิกการรับข่าวสาร
+                </li>
               </ul>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
-                เมื่อครบกำหนดระยะเวลาเก็บรักษา ข้อมูลจะถูกลบหรือทำให้ไม่สามารถระบุตัวตนได้ (anonymization)
+                เมื่อครบกำหนดระยะเวลาเก็บรักษา ข้อมูลจะถูกลบหรือทำให้ไม่สามารถระบุตัวตนได้
+                (anonymization)
               </p>
             </section>
 
@@ -250,18 +308,36 @@ export default function PrivacyPolicyPage() {
                 ภายใต้พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (PDPA) คุณมีสิทธิ์:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-                <li><strong>สิทธิในการเข้าถึง:</strong> ขอสำเนาข้อมูลส่วนบุคคลที่เราเก็บรวบรวม</li>
-                <li><strong>สิทธิในการแก้ไข:</strong> ขอให้แก้ไขข้อมูลที่ไม่ถูกต้องหรือไม่สมบูรณ์</li>
-                <li><strong>สิทธิในการลบ:</strong> ขอให้ลบข้อมูลส่วนบุคคล (ภายใต้ข้อจำกัดทางกฎหมาย)</li>
-                <li><strong>สิทธิในการระงับ:</strong> ขอให้ระงับการใช้ข้อมูลชั่วคราว</li>
-                <li><strong>สิทธิในการโอนย้าย:</strong> ขอรับข้อมูลในรูปแบบที่อ่านได้ด้วยเครื่อง</li>
-                <li><strong>สิทธิในการคัดค้าน:</strong> คัดค้านการประมวลผลข้อมูลเพื่อวัตถุประสงค์ทางการตลาด</li>
-                <li><strong>สิทธิในการถอนความยินยอม:</strong> ถอนความยินยอมที่เคยให้ไว้ได้ตลอดเวลา</li>
-                <li><strong>สิทธิในการร้องเรียน:</strong> ร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล</li>
+                <li>
+                  <strong>สิทธิในการเข้าถึง:</strong> ขอสำเนาข้อมูลส่วนบุคคลที่เราเก็บรวบรวม
+                </li>
+                <li>
+                  <strong>สิทธิในการแก้ไข:</strong> ขอให้แก้ไขข้อมูลที่ไม่ถูกต้องหรือไม่สมบูรณ์
+                </li>
+                <li>
+                  <strong>สิทธิในการลบ:</strong> ขอให้ลบข้อมูลส่วนบุคคล (ภายใต้ข้อจำกัดทางกฎหมาย)
+                </li>
+                <li>
+                  <strong>สิทธิในการระงับ:</strong> ขอให้ระงับการใช้ข้อมูลชั่วคราว
+                </li>
+                <li>
+                  <strong>สิทธิในการโอนย้าย:</strong> ขอรับข้อมูลในรูปแบบที่อ่านได้ด้วยเครื่อง
+                </li>
+                <li>
+                  <strong>สิทธิในการคัดค้าน:</strong>{' '}
+                  คัดค้านการประมวลผลข้อมูลเพื่อวัตถุประสงค์ทางการตลาด
+                </li>
+                <li>
+                  <strong>สิทธิในการถอนความยินยอม:</strong> ถอนความยินยอมที่เคยให้ไว้ได้ตลอดเวลา
+                </li>
+                <li>
+                  <strong>สิทธิในการร้องเรียน:</strong>{' '}
+                  ร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล
+                </li>
               </ul>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
-                เพื่อใช้สิทธิ์เหล่านี้ กรุณาติดต่อเจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล (DPO) ที่ dpo@solariqapp.com
-                เราจะดำเนินการตามคำขอภายใน 30 วัน
+                เพื่อใช้สิทธิ์เหล่านี้ กรุณาติดต่อเจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล (DPO) ที่
+                dpo@solariqapp.com เราจะดำเนินการตามคำขอภายใน 30 วัน
               </p>
             </section>
 
@@ -275,10 +351,21 @@ export default function PrivacyPolicyPage() {
                 ซึ่งเป็นผู้ให้บริการชำระเงินที่ได้รับอนุญาตจากธนาคารแห่งประเทศไทย
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 dark:text-gray-400">
-                <li><strong>เราไม่จัดเก็บ</strong>ข้อมูลบัตรเครดิต/เดบิตในระบบของเรา</li>
-                <li>ข้อมูลบัตรถูกเข้ารหัสและจัดเก็บโดย Opn Payments ตามมาตรฐาน <strong>PCI DSS Level 1</strong></li>
-                <li>รองรับช่องทางชำระเงิน: บัตรเครดิต/เดบิต (Visa, Mastercard, JCB), พร้อมเพย์ (PromptPay), Internet Banking (SCB, KBANK, BBL)</li>
-                <li>ข้อมูลธุรกรรมที่เราจัดเก็บ: วันที่ชำระ จำนวนเงิน สถานะ รหัสอ้างอิง (ไม่รวมข้อมูลบัตร)</li>
+                <li>
+                  <strong>เราไม่จัดเก็บ</strong>ข้อมูลบัตรเครดิต/เดบิตในระบบของเรา
+                </li>
+                <li>
+                  ข้อมูลบัตรถูกเข้ารหัสและจัดเก็บโดย Opn Payments ตามมาตรฐาน{' '}
+                  <strong>PCI DSS Level 1</strong>
+                </li>
+                <li>
+                  รองรับช่องทางชำระเงิน: บัตรเครดิต/เดบิต (Visa, Mastercard, JCB), พร้อมเพย์
+                  (PromptPay), Internet Banking (SCB, KBANK, BBL)
+                </li>
+                <li>
+                  ข้อมูลธุรกรรมที่เราจัดเก็บ: วันที่ชำระ จำนวนเงิน สถานะ รหัสอ้างอิง
+                  (ไม่รวมข้อมูลบัตร)
+                </li>
               </ul>
             </section>
 
@@ -288,8 +375,9 @@ export default function PrivacyPolicyPage() {
                 10. ข้อมูลเด็กและเยาวชน
               </h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                บริการ SolarIQ ไม่ได้มุ่งเป้าหมายไปที่บุคคลที่มีอายุต่ำกว่า 18 ปี เราไม่เก็บรวบรวมข้อมูล
-                จากเด็กและเยาวชนโดยเจตนา หากเราทราบว่าได้เก็บข้อมูลจากบุคคลที่มีอายุต่ำกว่า 18 ปี
+                บริการ SolarIQ ไม่ได้มุ่งเป้าหมายไปที่บุคคลที่มีอายุต่ำกว่า 18 ปี
+                เราไม่เก็บรวบรวมข้อมูล จากเด็กและเยาวชนโดยเจตนา
+                หากเราทราบว่าได้เก็บข้อมูลจากบุคคลที่มีอายุต่ำกว่า 18 ปี
                 เราจะดำเนินการลบข้อมูลดังกล่าวทันที
               </p>
             </section>
@@ -337,13 +425,15 @@ export default function PrivacyPolicyPage() {
                 หากมีคำถามเกี่ยวกับนโยบายความเป็นส่วนตัว หรือต้องการใช้สิทธิ์ตาม PDPA:
               </p>
               <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6 not-prose">
-                <p className="font-semibold text-gray-900 dark:text-white">เจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล (DPO)</p>
+                <p className="font-semibold text-gray-900 dark:text-white">
+                  เจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล (DPO)
+                </p>
                 <div className="mt-3 space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
                   <p>บริษัท SolarIQ จำกัด</p>
                   <p>อีเมล: dpo@solariqapp.com</p>
                   <p>อีเมลทั่วไป: privacy@solariqapp.com</p>
-                  <p>โทรศัพท์: 02-XXX-XXXX</p>
-                  <p>ที่อยู่: กรุงเทพมหานคร, ประเทศไทย</p>
+                  <p>โทรศัพท์: 085-662-1113</p>
+                  <p>ที่อยู่: นนทบุรี, ประเทศไทย</p>
                   <p>เวลาทำการ: จันทร์ - ศุกร์ 9:00 - 18:00 น.</p>
                 </div>
               </div>
@@ -355,17 +445,28 @@ export default function PrivacyPolicyPage() {
 
             {/* Related Links */}
             <div className="mt-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6 not-prose">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">เอกสารที่เกี่ยวข้อง</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+                เอกสารที่เกี่ยวข้อง
+              </h3>
               <div className="flex flex-wrap gap-3">
-                <Link href="/terms" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
+                <Link
+                  href="/terms"
+                  className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+                >
                   ข้อกำหนดการใช้งาน
                 </Link>
                 <span className="text-gray-300">|</span>
-                <Link href="/refund-policy" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
+                <Link
+                  href="/refund-policy"
+                  className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+                >
                   นโยบายการคืนเงิน
                 </Link>
                 <span className="text-gray-300">|</span>
-                <Link href="/contact" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
+                <Link
+                  href="/contact"
+                  className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+                >
                   ติดต่อเรา
                 </Link>
               </div>

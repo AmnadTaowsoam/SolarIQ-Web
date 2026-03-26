@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { Card, CardBody, CardHeader, Badge } from '@/components/ui'
 import { useCommissions, useCommissionSummary } from '@/hooks/useCommissions'
@@ -20,13 +21,16 @@ function formatThb(value: number) {
 }
 
 export default function CommissionsPage() {
+  const t = useTranslations('commissionsPage')
   const { data, isLoading } = useCommissions()
   const { data: summary } = useCommissionSummary()
 
   const rows = data?.commissions || []
 
   const totals = useMemo(() => {
-    if (!summary) return null
+    if (!summary) {
+      return null
+    }
     return {
       current: summary.currentMonth.totalAmount,
       previous: summary.previousMonth.totalAmount,
@@ -39,56 +43,66 @@ export default function CommissionsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Commissions</h1>
-            <p className="text-sm text-gray-500 mt-1">Track commission earnings and invoice status</p>
+            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+            <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
           </div>
           <Link
             href="/invoices"
             className="px-4 py-2 text-sm font-semibold bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition"
           >
-            View Invoices
+            {t('viewInvoices')}
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">Current Month</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{formatThb(totals?.current || 0)}</p>
-              <p className="text-xs text-gray-400 mt-1">{summary?.currentMonth.count || 0} deals</p>
+              <p className="text-xs text-gray-500 uppercase">{t('currentMonth')}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-2">
+                {formatThb(totals?.current || 0)}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {summary?.currentMonth.count || 0} {t('deals')}
+              </p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">Previous Month</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{formatThb(totals?.previous || 0)}</p>
-              <p className="text-xs text-gray-400 mt-1">{summary?.previousMonth.count || 0} deals</p>
+              <p className="text-xs text-gray-500 uppercase">{t('previousMonth')}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-2">
+                {formatThb(totals?.previous || 0)}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {summary?.previousMonth.count || 0} {t('deals')}
+              </p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">Change</p>
-              <p className={`text-2xl font-bold mt-2 ${totals && totals.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+              <p className="text-xs text-gray-500 uppercase">{t('change')}</p>
+              <p
+                className={`text-2xl font-bold mt-2 ${totals && totals.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}
+              >
                 {totals ? `${totals.change.toFixed(1)}%` : '0%'}
               </p>
-              <p className="text-xs text-gray-400 mt-1">vs last month</p>
+              <p className="text-xs text-gray-400 mt-1">{t('vsLastMonth')}</p>
             </CardBody>
           </Card>
         </div>
 
         <Card>
-          <CardHeader title="Commission History" subtitle="Latest commissions across your completed deals" />
+          <CardHeader title={t('history.title')} subtitle={t('history.subtitle')} />
           <CardBody className="p-0">
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead>
                   <tr className="border-b border-gray-100 text-left text-xs text-gray-500">
-                    <th className="px-6 py-3">Deal</th>
-                    <th className="px-6 py-3">Deal Value</th>
-                    <th className="px-6 py-3">Rate</th>
-                    <th className="px-6 py-3">Commission</th>
-                    <th className="px-6 py-3">Status</th>
-                    <th className="px-6 py-3">Date</th>
+                    <th className="px-6 py-3">{t('table.deal')}</th>
+                    <th className="px-6 py-3">{t('table.dealValue')}</th>
+                    <th className="px-6 py-3">{t('table.rate')}</th>
+                    <th className="px-6 py-3">{t('table.commission')}</th>
+                    <th className="px-6 py-3">{t('table.status')}</th>
+                    <th className="px-6 py-3">{t('table.date')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -99,11 +113,15 @@ export default function CommissionsPage() {
                           {row.dealId || row.id}
                         </Link>
                       </td>
-                      <td className="px-6 py-3 text-sm text-gray-700">{formatThb(row.dealValue)}</td>
+                      <td className="px-6 py-3 text-sm text-gray-700">
+                        {formatThb(row.dealValue)}
+                      </td>
                       <td className="px-6 py-3 text-sm text-gray-700">
                         {row.commissionRate ? `${(row.commissionRate * 100).toFixed(1)}%` : '-'}
                       </td>
-                      <td className="px-6 py-3 text-sm font-semibold text-gray-900">{formatThb(row.commissionAmount)}</td>
+                      <td className="px-6 py-3 text-sm font-semibold text-gray-900">
+                        {formatThb(row.commissionAmount)}
+                      </td>
                       <td className="px-6 py-3">
                         <Badge className={statusColors[row.status] || 'bg-gray-100 text-gray-600'}>
                           {row.status}
@@ -118,7 +136,7 @@ export default function CommissionsPage() {
               </table>
             </div>
             {rows.length === 0 && !isLoading && (
-              <div className="text-center py-10 text-sm text-gray-500">No commissions yet</div>
+              <div className="text-center py-10 text-sm text-gray-500">{t('empty')}</div>
             )}
           </CardBody>
         </Card>

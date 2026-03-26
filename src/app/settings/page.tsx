@@ -1,12 +1,19 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { useAuth, useBrand } from '@/context'
-import { addBrandDomain, createBrand, setDefaultBrand, updateBrand, verifyBrandDomain } from '@/hooks/useBranding'
+import {
+  addBrandDomain,
+  createBrand,
+  setDefaultBrand,
+  updateBrand,
+  verifyBrandDomain,
+} from '@/hooks/useBranding'
 import apiClient from '@/lib/api'
 import type { BrandDomain } from '@/types/branding'
 import clsx from 'clsx'
@@ -22,13 +29,7 @@ const FONT_OPTIONS = [
 // Types
 // ---------------------------------------------------------------------------
 
-type SettingsTab =
-  | 'company'
-  | 'line'
-  | 'notifications'
-  | 'team'
-  | 'api'
-  | 'branding'
+type SettingsTab = 'company' | 'line' | 'notifications' | 'team' | 'api' | 'branding'
 
 interface TeamMember {
   id: string
@@ -56,79 +57,152 @@ interface NotificationPreference {
 // ---------------------------------------------------------------------------
 
 const DEMO_TEAM: TeamMember[] = [
-  { id: '1', name: 'สมชาย วงศ์สวัสดิ์', email: 'somchai@solariq.co', role: 'admin', status: 'active' },
-  { id: '2', name: 'วิภา สุขสันต์', email: 'wipa@solariq.co', role: 'contractor', status: 'active' },
-  { id: '3', name: 'ประเสริฐ ทองคำ', email: 'prasert@solariq.co', role: 'contractor', status: 'pending' },
+  {
+    id: '1',
+    name: 'สมชาย วงศ์สวัสดิ์',
+    email: 'somchai@solariq.co',
+    role: 'admin',
+    status: 'active',
+  },
+  {
+    id: '2',
+    name: 'วิภา สุขสันต์',
+    email: 'wipa@solariq.co',
+    role: 'contractor',
+    status: 'active',
+  },
+  {
+    id: '3',
+    name: 'ประเสริฐ ทองคำ',
+    email: 'prasert@solariq.co',
+    role: 'contractor',
+    status: 'pending',
+  },
   { id: '4', name: 'นภา ศรีสุข', email: 'napa@solariq.co', role: 'contractor', status: 'inactive' },
 ]
 
 const DEFAULT_NOTIFICATIONS: NotificationPreference[] = [
-  { key: 'new_lead', label: 'แจ้งเตือน Lead ใหม่', channels: { line: true, email: true, sms: false, webPush: true } },
-  { key: 'status_change', label: 'Lead เปลี่ยนสถานะ', channels: { line: true, email: false, sms: false, webPush: true } },
-  { key: 'proposal_viewed', label: 'ลูกค้าเปิดดูใบเสนอราคา', channels: { line: true, email: true, sms: false, webPush: true } },
-  { key: 'payment_received', label: 'ได้รับชำระเงิน', channels: { line: true, email: true, sms: true, webPush: false } },
-  { key: 'weekly_summary', label: 'รายงานสรุปรายสัปดาห์', channels: { line: false, email: true, sms: false, webPush: false } },
+  {
+    key: 'new_lead',
+    label: 'newLead',
+    channels: { line: true, email: true, sms: false, webPush: true },
+  },
+  {
+    key: 'status_change',
+    label: 'statusChange',
+    channels: { line: true, email: false, sms: false, webPush: true },
+  },
+  {
+    key: 'proposal_viewed',
+    label: 'proposalViewed',
+    channels: { line: true, email: true, sms: false, webPush: true },
+  },
+  {
+    key: 'payment_received',
+    label: 'paymentReceived',
+    channels: { line: true, email: true, sms: true, webPush: false },
+  },
+  {
+    key: 'weekly_summary',
+    label: 'weeklySummary',
+    channels: { line: false, email: true, sms: false, webPush: false },
+  },
 ]
 
 // ---------------------------------------------------------------------------
 // Tabs config
 // ---------------------------------------------------------------------------
 
-const TABS: { key: SettingsTab; label: string; icon: React.ReactNode; adminOnly?: boolean; enterpriseOnly?: boolean }[] = [
+const TABS: {
+  key: SettingsTab
+  labelKey: string
+  icon: React.ReactNode
+  adminOnly?: boolean
+  enterpriseOnly?: boolean
+}[] = [
   {
     key: 'company',
-    label: 'ข้อมูลบริษัท',
+    labelKey: 'tabs.company',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"
+        />
       </svg>
     ),
   },
   {
     key: 'line',
-    label: 'LINE OA',
+    labelKey: 'tabs.line',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+        />
       </svg>
     ),
   },
   {
     key: 'notifications',
-    label: 'การแจ้งเตือน',
+    labelKey: 'tabs.notifications',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+        />
       </svg>
     ),
   },
   {
     key: 'team',
-    label: 'สมาชิกทีม',
+    labelKey: 'tabs.team',
     adminOnly: true,
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+        />
       </svg>
     ),
   },
   {
     key: 'api',
-    label: 'API Keys',
+    labelKey: 'tabs.api',
     enterpriseOnly: true,
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
+        />
       </svg>
     ),
   },
   {
     key: 'branding',
-    label: 'White-Label',
-    enterpriseOnly: true,
+    labelKey: 'tabs.branding',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"
+        />
       </svg>
     ),
   },
@@ -165,82 +239,99 @@ function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean
 // ---------------------------------------------------------------------------
 
 function CompanyProfileSection() {
+  const t = useTranslations('settingsPage')
   const [companyName, setCompanyName] = useState('SolarIQ Thailand Co., Ltd.')
   const [taxId, setTaxId] = useState('0105563012345')
-  const [address, setAddress] = useState('123/45 อาคารกรีนทาวเวอร์ ชั้น 15 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110')
+  const [address, setAddress] = useState(
+    '123/45 อาคารกรีนทาวเวอร์ ชั้น 15 ถ.สุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110'
+  )
   const [phone, setPhone] = useState('02-123-4567')
   const [email, setEmail] = useState('info@solariq.co')
   const [website, setWebsite] = useState('https://www.solariq.co')
 
   return (
     <Card>
-      <CardHeader title="ข้อมูลบริษัท" subtitle="ข้อมูลพื้นฐานของบริษัทที่แสดงบน Proposal และเอกสาร" />
+      <CardHeader title={t('company.title')} subtitle={t('company.subtitle')} />
       <CardBody className="space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Input
-            label="ชื่อบริษัท"
+            label={t('company.companyName')}
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
-            placeholder="ชื่อบริษัทของคุณ"
+            placeholder={t('company.companyNamePlaceholder')}
           />
           <Input
-            label="เลขประจำตัวผู้เสียภาษี"
+            label={t('company.taxId')}
             value={taxId}
             onChange={(e) => setTaxId(e.target.value)}
-            placeholder="0-0000-00000-00-0"
+            placeholder={t('company.taxIdPlaceholder')}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">ที่อยู่</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {t('company.address')}
+          </label>
           <textarea
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             rows={3}
             className="block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
-            placeholder="ที่อยู่บริษัท"
+            placeholder={t('company.addressPlaceholder')}
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Input
-            label="เบอร์โทรศัพท์"
+            label={t('company.phone')}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="02-xxx-xxxx"
+            placeholder={t('company.phonePlaceholder')}
           />
           <Input
-            label="อีเมลบริษัท"
+            label={t('company.email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="info@company.com"
+            placeholder={t('company.emailPlaceholder')}
             type="email"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Input
-            label="เว็บไซต์"
+            label={t('company.website')}
             value={website}
             onChange={(e) => setWebsite(e.target.value)}
-            placeholder="https://www.company.com"
+            placeholder={t('company.websitePlaceholder')}
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">โลโก้บริษัท</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t('company.logo')}
+            </label>
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center text-gray-400">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"
+                  />
                 </svg>
               </div>
               <div>
                 <button
                   type="button"
+                  onClick={() =>
+                    alert(
+                      'Logo upload will be available after setting up White-Label Branding in the Branding tab.'
+                    )
+                  }
                   className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors"
                 >
-                  อัปโหลดโลโก้
+                  {t('company.uploadLogo')}
                 </button>
-                <p className="text-xs text-gray-400 mt-0.5">PNG, JPG ขนาดไม่เกิน 2MB</p>
+                <p className="text-xs text-gray-400 mt-0.5">{t('company.logoHint')}</p>
               </div>
             </div>
           </div>
@@ -248,8 +339,12 @@ function CompanyProfileSection() {
       </CardBody>
       <CardFooter>
         <div className="flex justify-end gap-3">
-          <Button variant="outline" size="sm">ยกเลิก</Button>
-          <Button variant="primary" size="sm">บันทึกข้อมูล</Button>
+          <Button variant="outline" size="sm">
+            {t('company.cancel')}
+          </Button>
+          <Button variant="primary" size="sm">
+            {t('company.save')}
+          </Button>
         </div>
       </CardFooter>
     </Card>
@@ -261,6 +356,7 @@ function CompanyProfileSection() {
 // ---------------------------------------------------------------------------
 
 function LineIntegrationSection() {
+  const t = useTranslations('settingsPage')
   const [channelId, setChannelId] = useState('17xxxxxxxx')
   const [channelSecret, setChannelSecret] = useState('a1b2c3d4e5f6g7h8')
   const [accessToken, setAccessToken] = useState('eyJhbGciOiJIUzI1NiJ9...')
@@ -287,8 +383,8 @@ function LineIntegrationSection() {
   return (
     <Card>
       <CardHeader
-        title="LINE OA Integration"
-        subtitle="เชื่อมต่อ LINE Official Account เพื่อรับ Lead อัตโนมัติ"
+        title={t('line.title')}
+        subtitle={t('line.subtitle')}
         action={
           <div className="flex items-center gap-2">
             <span
@@ -297,8 +393,13 @@ function LineIntegrationSection() {
                 isConnected ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
               )}
             >
-              <span className={clsx('w-2 h-2 rounded-full', isConnected ? 'bg-green-500' : 'bg-red-500')} />
-              {isConnected ? 'เชื่อมต่อแล้ว' : 'ไม่ได้เชื่อมต่อ'}
+              <span
+                className={clsx(
+                  'w-2 h-2 rounded-full',
+                  isConnected ? 'bg-green-500' : 'bg-red-500'
+                )}
+              />
+              {isConnected ? t('line.connected') : t('line.disconnected')}
             </span>
           </div>
         }
@@ -327,12 +428,27 @@ function LineIntegrationSection() {
                 >
                   {showSecret ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
+                      />
                     </svg>
                   ) : (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -357,12 +473,27 @@ function LineIntegrationSection() {
                 >
                   {showToken ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
+                      />
                     </svg>
                   ) : (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -390,17 +521,32 @@ function LineIntegrationSection() {
             >
               {copied ? (
                 <>
-                  <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.5 12.75l6 6 9-13.5" />
+                  <svg
+                    className="w-4 h-4 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
                   </svg>
-                  คัดลอกแล้ว
+                  {t('line.copied')}
                 </>
               ) : (
                 <>
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
+                    />
                   </svg>
-                  คัดลอก
+                  {t('line.copy')}
                 </>
               )}
             </button>
@@ -409,17 +555,16 @@ function LineIntegrationSection() {
       </CardBody>
       <CardFooter>
         <div className="flex justify-between items-center">
-          <Button
-            variant="outline"
-            size="sm"
-            isLoading={isTesting}
-            onClick={handleTestConnection}
-          >
-            {isTesting ? 'กำลังทดสอบ...' : 'ทดสอบการเชื่อมต่อ'}
+          <Button variant="outline" size="sm" isLoading={isTesting} onClick={handleTestConnection}>
+            {isTesting ? t('line.testing') : t('line.testConnection')}
           </Button>
           <div className="flex gap-3">
-            <Button variant="outline" size="sm">ยกเลิก</Button>
-            <Button variant="primary" size="sm">บันทึก</Button>
+            <Button variant="outline" size="sm">
+              {t('line.cancel')}
+            </Button>
+            <Button variant="primary" size="sm">
+              {t('line.save')}
+            </Button>
           </div>
         </div>
       </CardFooter>
@@ -432,55 +577,78 @@ function LineIntegrationSection() {
 // ---------------------------------------------------------------------------
 
 function NotificationPreferencesSection() {
+  const t = useTranslations('settingsPage')
   const [preferences, setPreferences] = useState<NotificationPreference[]>(DEFAULT_NOTIFICATIONS)
 
   const toggleChannel = (prefIndex: number, channel: keyof NotificationChannel) => {
     setPreferences((prev) =>
       prev.map((p, i) =>
-        i === prefIndex
-          ? { ...p, channels: { ...p.channels, [channel]: !p.channels[channel] } }
-          : p
+        i === prefIndex ? { ...p, channels: { ...p.channels, [channel]: !p.channels[channel] } } : p
       )
     )
   }
 
   return (
     <Card>
-      <CardHeader title="การแจ้งเตือน" subtitle="กำหนดช่องทางการแจ้งเตือนสำหรับแต่ละเหตุการณ์" />
+      <CardHeader title={t('notifications.title')} subtitle={t('notifications.subtitle')} />
       <CardBody>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">เหตุการณ์</th>
-                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">LINE</th>
-                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Email</th>
-                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">SMS</th>
-                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Web Push</th>
+                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  {t('notifications.event')}
+                </th>
+                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
+                  LINE
+                </th>
+                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
+                  Email
+                </th>
+                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
+                  SMS
+                </th>
+                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
+                  Web Push
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {preferences.map((pref, index) => (
                 <tr key={pref.key} className="hover:bg-gray-50/50">
-                  <td className="py-3.5 px-2 text-sm font-medium text-gray-900">{pref.label}</td>
+                  <td className="py-3.5 px-2 text-sm font-medium text-gray-900">
+                    {t(`notifications.${pref.label}`)}
+                  </td>
                   <td className="py-3.5 px-2 text-center">
                     <div className="flex justify-center">
-                      <Toggle enabled={pref.channels.line} onChange={() => toggleChannel(index, 'line')} />
+                      <Toggle
+                        enabled={pref.channels.line}
+                        onChange={() => toggleChannel(index, 'line')}
+                      />
                     </div>
                   </td>
                   <td className="py-3.5 px-2 text-center">
                     <div className="flex justify-center">
-                      <Toggle enabled={pref.channels.email} onChange={() => toggleChannel(index, 'email')} />
+                      <Toggle
+                        enabled={pref.channels.email}
+                        onChange={() => toggleChannel(index, 'email')}
+                      />
                     </div>
                   </td>
                   <td className="py-3.5 px-2 text-center">
                     <div className="flex justify-center">
-                      <Toggle enabled={pref.channels.sms} onChange={() => toggleChannel(index, 'sms')} />
+                      <Toggle
+                        enabled={pref.channels.sms}
+                        onChange={() => toggleChannel(index, 'sms')}
+                      />
                     </div>
                   </td>
                   <td className="py-3.5 px-2 text-center">
                     <div className="flex justify-center">
-                      <Toggle enabled={pref.channels.webPush} onChange={() => toggleChannel(index, 'webPush')} />
+                      <Toggle
+                        enabled={pref.channels.webPush}
+                        onChange={() => toggleChannel(index, 'webPush')}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -491,8 +659,31 @@ function NotificationPreferencesSection() {
       </CardBody>
       <CardFooter>
         <div className="flex justify-end gap-3">
-          <Button variant="outline" size="sm">รีเซ็ตค่าเริ่มต้น</Button>
-          <Button variant="primary" size="sm">บันทึกการตั้งค่า</Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setPreferences(DEFAULT_NOTIFICATIONS)
+            }}
+          >
+            {t('notifications.resetDefaults')}
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={async () => {
+              try {
+                const { apiClient } = await import('@/lib/api')
+                await apiClient.put('/api/v1/users/notification-preferences', { preferences })
+                alert('Notification settings saved!')
+              } catch {
+                localStorage.setItem('solariq_notification_prefs', JSON.stringify(preferences))
+                alert('Settings saved locally. Will sync when online.')
+              }
+            }}
+          >
+            {t('notifications.saveSettings')}
+          </Button>
         </div>
       </CardFooter>
     </Card>
@@ -504,33 +695,39 @@ function NotificationPreferencesSection() {
 // ---------------------------------------------------------------------------
 
 function TeamMembersSection() {
+  const t = useTranslations('settingsPage')
   const [members] = useState<TeamMember[]>(DEMO_TEAM)
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteRole, setInviteRole] = useState<'admin' | 'contractor'>('contractor')
   const [showInvite, setShowInvite] = useState(false)
 
   const statusLabel: Record<TeamMember['status'], { text: string; className: string }> = {
-    active: { text: 'ใช้งาน', className: 'bg-green-50 text-green-700' },
-    pending: { text: 'รอยืนยัน', className: 'bg-yellow-50 text-yellow-700' },
-    inactive: { text: 'ปิดใช้งาน', className: 'bg-gray-100 text-gray-600' },
+    active: { text: t('team.memberStatus.active'), className: 'bg-green-50 text-green-700' },
+    pending: { text: t('team.memberStatus.pending'), className: 'bg-yellow-50 text-yellow-700' },
+    inactive: { text: t('team.memberStatus.inactive'), className: 'bg-gray-100 text-gray-600' },
   }
 
   const roleLabel: Record<string, string> = {
-    admin: 'ผู้ดูแลระบบ',
-    contractor: 'ช่างติดตั้ง',
+    admin: t('team.roles.admin'),
+    contractor: t('team.roles.contractor'),
   }
 
   return (
     <Card>
       <CardHeader
-        title="สมาชิกทีม"
-        subtitle="จัดการสมาชิกและสิทธิ์การเข้าถึงระบบ"
+        title={t('team.title')}
+        subtitle={t('team.subtitle')}
         action={
           <Button variant="primary" size="sm" onClick={() => setShowInvite(!showInvite)}>
             <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+              />
             </svg>
-            เชิญสมาชิก
+            {t('team.inviteMember')}
           </Button>
         }
       />
@@ -538,11 +735,11 @@ function TeamMembersSection() {
         {/* Invite form */}
         {showInvite && (
           <div className="p-4 bg-orange-50/50 border border-orange-100 rounded-xl space-y-3">
-            <p className="text-sm font-semibold text-gray-900">เชิญสมาชิกใหม่</p>
+            <p className="text-sm font-semibold text-gray-900">{t('team.inviteNewMember')}</p>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
                 <Input
-                  placeholder="อีเมลสมาชิก"
+                  placeholder={t('team.memberEmailPlaceholder')}
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   type="email"
@@ -553,10 +750,12 @@ function TeamMembersSection() {
                 onChange={(e) => setInviteRole(e.target.value as 'admin' | 'contractor')}
                 className="rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               >
-                <option value="contractor">ช่างติดตั้ง</option>
-                <option value="admin">ผู้ดูแลระบบ</option>
+                <option value="contractor">{t('team.roles.contractor')}</option>
+                <option value="admin">{t('team.roles.admin')}</option>
               </select>
-              <Button variant="primary" size="md">ส่งคำเชิญ</Button>
+              <Button variant="primary" size="md">
+                {t('team.sendInvite')}
+              </Button>
             </div>
           </div>
         )}
@@ -566,11 +765,21 @@ function TeamMembersSection() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">ชื่อ</th>
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">อีเมล</th>
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">บทบาท</th>
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">สถานะ</th>
-                <th className="text-right py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">จัดการ</th>
+                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  {t('team.name')}
+                </th>
+                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                  {t('team.email')}
+                </th>
+                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  {t('team.role')}
+                </th>
+                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  {t('team.status')}
+                </th>
+                <th className="text-right py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">
+                  {t('team.manage')}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -579,7 +788,9 @@ function TeamMembersSection() {
                   <td className="py-3 px-2">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-gray-600 to-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs font-semibold text-white">{member.name.charAt(0)}</span>
+                        <span className="text-xs font-semibold text-white">
+                          {member.name.charAt(0)}
+                        </span>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-900">{member.name}</p>
@@ -587,10 +798,17 @@ function TeamMembersSection() {
                       </div>
                     </div>
                   </td>
-                  <td className="py-3 px-2 text-sm text-gray-600 hidden sm:table-cell">{member.email}</td>
+                  <td className="py-3 px-2 text-sm text-gray-600 hidden sm:table-cell">
+                    {member.email}
+                  </td>
                   <td className="py-3 px-2 text-sm text-gray-700">{roleLabel[member.role]}</td>
                   <td className="py-3 px-2">
-                    <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-medium', statusLabel[member.status].className)}>
+                    <span
+                      className={clsx(
+                        'inline-flex px-2 py-0.5 rounded-full text-xs font-medium',
+                        statusLabel[member.status].className
+                      )}
+                    >
                       {statusLabel[member.status].text}
                     </span>
                   </td>
@@ -598,10 +816,20 @@ function TeamMembersSection() {
                     <button
                       type="button"
                       className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="ลบสมาชิก"
+                      title={t('team.deleteMember')}
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
                       </svg>
                     </button>
                   </td>
@@ -620,6 +848,7 @@ function TeamMembersSection() {
 // ---------------------------------------------------------------------------
 
 function ApiKeysSection() {
+  const t = useTranslations('settingsPage')
   const [showKey, setShowKey] = useState(false)
   const [copied, setCopied] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -634,10 +863,10 @@ function ApiKeysSection() {
 
   return (
     <Card>
-      <CardHeader title="API Keys" subtitle="จัดการ API Key สำหรับเชื่อมต่อกับระบบภายนอก" />
+      <CardHeader title={t('api.title')} subtitle={t('api.subtitle')} />
       <CardBody className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">API Key</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('api.apiKey')}</label>
           <div className="flex items-center gap-2">
             <div className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono text-gray-600 truncate">
               {showKey ? apiKey : maskedKey}
@@ -646,16 +875,31 @@ function ApiKeysSection() {
               type="button"
               onClick={() => setShowKey(!showKey)}
               className="flex-shrink-0 p-2.5 border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors"
-              title={showKey ? 'ซ่อน' : 'แสดง'}
+              title={showKey ? t('api.hide') : t('api.show')}
             >
               {showKey ? (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
+                  />
                 </svg>
               ) : (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
                 </svg>
               )}
             </button>
@@ -665,12 +909,27 @@ function ApiKeysSection() {
               className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
               {copied ? (
-                <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.5 12.75l6 6 9-13.5" />
+                <svg
+                  className="w-4 h-4 text-green-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.5 12.75l6 6 9-13.5"
+                  />
                 </svg>
               ) : (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
+                  />
                 </svg>
               )}
             </button>
@@ -681,43 +940,74 @@ function ApiKeysSection() {
         <div>
           {showConfirm ? (
             <div className="p-4 bg-red-50 border border-red-100 rounded-xl space-y-3">
-              <p className="text-sm font-medium text-red-800">
-                คุณแน่ใจหรือไม่? การสร้าง API Key ใหม่จะทำให้ Key เดิมใช้งานไม่ได้ทันที
-              </p>
+              <p className="text-sm font-medium text-red-800">{t('api.regenerateConfirm')}</p>
               <div className="flex gap-2">
-                <Button variant="danger" size="sm" onClick={() => setShowConfirm(false)}>ยืนยันสร้างใหม่</Button>
-                <Button variant="outline" size="sm" onClick={() => setShowConfirm(false)}>ยกเลิก</Button>
+                <Button variant="danger" size="sm" onClick={() => setShowConfirm(false)}>
+                  {t('api.confirmRegenerate')}
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setShowConfirm(false)}>
+                  {t('api.cancel')}
+                </Button>
               </div>
             </div>
           ) : (
             <Button variant="outline" size="sm" onClick={() => setShowConfirm(true)}>
               <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"
+                />
               </svg>
-              สร้าง API Key ใหม่
+              {t('api.regenerateKey')}
             </Button>
           )}
         </div>
 
         {/* Webhook endpoints */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Webhook Endpoints</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t('api.webhookEndpoints')}
+          </label>
           <div className="space-y-2">
             {[
-              { event: 'lead.created', url: 'https://api.solariq.co/webhook/lead-created', active: true },
-              { event: 'proposal.viewed', url: 'https://api.solariq.co/webhook/proposal-viewed', active: true },
-              { event: 'payment.received', url: 'https://api.solariq.co/webhook/payment-received', active: false },
+              {
+                event: 'lead.created',
+                url: 'https://api.solariq.co/webhook/lead-created',
+                active: true,
+              },
+              {
+                event: 'proposal.viewed',
+                url: 'https://api.solariq.co/webhook/proposal-viewed',
+                active: true,
+              },
+              {
+                event: 'payment.received',
+                url: 'https://api.solariq.co/webhook/payment-received',
+                active: false,
+              },
             ].map((endpoint) => (
-              <div key={endpoint.event} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg">
+              <div
+                key={endpoint.event}
+                className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg"
+              >
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-gray-900">{endpoint.event}</p>
                   <p className="text-xs text-gray-500 font-mono truncate">{endpoint.url}</p>
                 </div>
-                <span className={clsx(
-                  'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ml-3',
-                  endpoint.active ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-500'
-                )}>
-                  <span className={clsx('w-1.5 h-1.5 rounded-full', endpoint.active ? 'bg-green-500' : 'bg-gray-400')} />
+                <span
+                  className={clsx(
+                    'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ml-3',
+                    endpoint.active ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-500'
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'w-1.5 h-1.5 rounded-full',
+                      endpoint.active ? 'bg-green-500' : 'bg-gray-400'
+                    )}
+                  />
                   {endpoint.active ? 'Active' : 'Inactive'}
                 </span>
               </div>
@@ -727,21 +1017,25 @@ function ApiKeysSection() {
 
         {/* Usage stats */}
         <div className="p-4 bg-gray-50 rounded-xl">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">สถิติการใช้งานเดือนนี้</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            {t('api.usageThisMonth')}
+          </p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-2xl font-bold text-gray-900">1,247</p>
-              <p className="text-xs text-gray-500">Requests ใช้ไป</p>
+              <p className="text-xs text-gray-500">{t('api.requestsUsed')}</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">10,000</p>
-              <p className="text-xs text-gray-500">Limit ต่อเดือน</p>
+              <p className="text-xs text-gray-500">{t('api.monthlyLimit')}</p>
             </div>
           </div>
           <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
             <div className="bg-orange-500 h-2 rounded-full" style={{ width: '12.47%' }} />
           </div>
-          <p className="text-xs text-gray-400 mt-1.5">ใช้ไป 12.47% ของ Limit</p>
+          <p className="text-xs text-gray-400 mt-1.5">
+            {t('api.usagePercent', { percent: '12.47' })}
+          </p>
         </div>
       </CardBody>
     </Card>
@@ -753,6 +1047,7 @@ function ApiKeysSection() {
 // ---------------------------------------------------------------------------
 
 function WhiteLabelSection() {
+  const t = useTranslations('settingsPage')
   const { brand, brands, switchBrand, refresh } = useBrand()
   const manageableBrand = brand && 'id' in brand ? brand : null
   const [activeBrandId, setActiveBrandId] = useState(manageableBrand?.id ?? '')
@@ -762,7 +1057,9 @@ function WhiteLabelSection() {
   const [logoDarkUrl, setLogoDarkUrl] = useState(manageableBrand?.logo_dark_url ?? '')
   const [faviconUrl, setFaviconUrl] = useState(manageableBrand?.favicon_ico_url ?? '')
   const [primaryColor, setPrimaryColor] = useState(manageableBrand?.colors?.primary ?? '#f97316')
-  const [secondaryColor, setSecondaryColor] = useState(manageableBrand?.colors?.secondary ?? '#1A1A2E')
+  const [secondaryColor, setSecondaryColor] = useState(
+    manageableBrand?.colors?.secondary ?? '#1A1A2E'
+  )
   const [accentColor, setAccentColor] = useState(manageableBrand?.colors?.accent ?? '#FFB800')
   const [fontBody, setFontBody] = useState(manageableBrand?.fonts?.body ?? 'Sarabun')
   const [fontHeading, setFontHeading] = useState(manageableBrand?.fonts?.heading ?? 'Prompt')
@@ -772,7 +1069,9 @@ function WhiteLabelSection() {
 
   // Live preview: inject CSS vars when colors change
   useEffect(() => {
-    if (typeof document === 'undefined') return
+    if (typeof document === 'undefined') {
+      return
+    }
     const root = document.documentElement
     root.style.setProperty('--color-primary', primaryColor)
     root.style.setProperty('--brand-primary', primaryColor)
@@ -789,30 +1088,40 @@ function WhiteLabelSection() {
   }, [primaryColor])
 
   useEffect(() => {
-    if (typeof document === 'undefined') return
+    if (typeof document === 'undefined') {
+      return
+    }
     document.documentElement.style.setProperty('--color-secondary', secondaryColor)
     document.documentElement.style.setProperty('--brand-secondary', secondaryColor)
   }, [secondaryColor])
 
   useEffect(() => {
-    if (typeof document === 'undefined') return
+    if (typeof document === 'undefined') {
+      return
+    }
     document.documentElement.style.setProperty('--font-brand', fontBody)
   }, [fontBody])
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (!file || !manageableBrand) return
+    if (!file || !manageableBrand) {
+      return
+    }
     setIsUploadingLogo(true)
     try {
       const formData = new FormData()
       formData.append('file', file)
-      const res = await apiClient.post<{ url: string }>(`/brands/${manageableBrand.id}/logo`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      const res = await apiClient.post<{ url: string }>(
+        `/brands/${manageableBrand.id}/logo`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }
+      )
       setLogoLightUrl(res.data.url)
       await refresh()
     } catch {
-      // silent fail — user can still enter URL manually
+      alert('Logo upload failed. Please check file size (max 2MB) and try again.')
     } finally {
       setIsUploadingLogo(false)
     }
@@ -825,7 +1134,9 @@ function WhiteLabelSection() {
   const [newCompanyName, setNewCompanyName] = useState('')
 
   useEffect(() => {
-    if (!manageableBrand) return
+    if (!manageableBrand) {
+      return
+    }
     setActiveBrandId(manageableBrand.id)
     setBrandName(manageableBrand.name)
     setCompanyName(manageableBrand.company_name)
@@ -839,6 +1150,7 @@ function WhiteLabelSection() {
     setFontBody(manageableBrand.fonts?.body ?? 'Sarabun')
     setBorderRadius(manageableBrand.border_radius ?? 8)
     setCustomDomain(manageableBrand.domain ?? '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manageableBrand?.id])
 
   const handleSwitchBrand = (id: string) => {
@@ -847,7 +1159,9 @@ function WhiteLabelSection() {
   }
 
   const handleSave = async () => {
-    if (!manageableBrand) return
+    if (!manageableBrand) {
+      return
+    }
     setIsSaving(true)
     try {
       await updateBrand(manageableBrand.id, {
@@ -866,7 +1180,9 @@ function WhiteLabelSection() {
   }
 
   const handleCreateBrand = async () => {
-    if (!newBrandName || !newCompanyName) return
+    if (!newBrandName || !newCompanyName) {
+      return
+    }
     setIsCreating(true)
     try {
       await createBrand({
@@ -884,7 +1200,9 @@ function WhiteLabelSection() {
   }
 
   const handleSetDefault = async () => {
-    if (!manageableBrand) return
+    if (!manageableBrand) {
+      return
+    }
     setIsSaving(true)
     try {
       await setDefaultBrand(manageableBrand.id)
@@ -895,7 +1213,9 @@ function WhiteLabelSection() {
   }
 
   const handleDomainSave = async () => {
-    if (!manageableBrand || !customDomain) return
+    if (!manageableBrand || !customDomain) {
+      return
+    }
     setIsSaving(true)
     try {
       const info = await addBrandDomain(manageableBrand.id, customDomain)
@@ -906,11 +1226,22 @@ function WhiteLabelSection() {
   }
 
   const handleVerifyDomain = async () => {
-    if (!manageableBrand) return
+    if (!manageableBrand) {
+      return
+    }
     setIsSaving(true)
     try {
       const result = await verifyBrandDomain(manageableBrand.id)
-      setDomainInfo((prev) => prev ? { ...prev, status: result.status, ssl_status: result.ssl_status, dns_verified: result.verified } : prev)
+      setDomainInfo((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: result.status,
+              ssl_status: result.ssl_status,
+              dns_verified: result.verified,
+            }
+          : prev
+      )
     } finally {
       setIsSaving(false)
     }
@@ -919,9 +1250,9 @@ function WhiteLabelSection() {
   if (!manageableBrand) {
     return (
       <Card>
-        <CardHeader title="White-Label Branding" subtitle="ปรับแต่งแบรนด์สำหรับ Proposal และหน้าลูกค้า" />
+        <CardHeader title={t('branding.title')} subtitle={t('branding.subtitle')} />
         <CardBody>
-          <p className="text-sm text-[var(--brand-text-secondary)]">White-label branding ใช้งานได้เฉพาะบัญชีที่เป็นสมาชิกองค์กรเท่านั้น</p>
+          <p className="text-sm text-[var(--brand-text-secondary)]">{t('branding.orgOnly')}</p>
         </CardBody>
       </Card>
     )
@@ -929,11 +1260,13 @@ function WhiteLabelSection() {
 
   return (
     <Card>
-      <CardHeader title="White-Label Branding" subtitle="ปรับแต่งแบรนด์สำหรับ Proposal และหน้าลูกค้า" />
+      <CardHeader title={t('branding.title')} subtitle={t('branding.subtitle')} />
       <CardBody className="space-y-6">
         <div className="flex flex-wrap items-center gap-3">
           <div className="min-w-[200px]">
-            <label className="block text-xs font-medium text-[var(--brand-text-secondary)] mb-1">เลือกแบรนด์</label>
+            <label className="block text-xs font-medium text-[var(--brand-text-secondary)] mb-1">
+              {t('branding.selectBrand')}
+            </label>
             <select
               value={activeBrandId}
               onChange={(e) => handleSwitchBrand(e.target.value)}
@@ -947,18 +1280,30 @@ function WhiteLabelSection() {
             </select>
           </div>
           <Button variant="outline" size="sm" onClick={handleSetDefault} disabled={isSaving}>
-            ตั้งเป็น Default
+            {t('branding.setDefault')}
           </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Input label="ชื่อแบรนด์" value={brandName} onChange={(e) => setBrandName(e.target.value)} />
-          <Input label="ชื่อบริษัทที่แสดง" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+          <Input
+            label={t('branding.brandName')}
+            value={brandName}
+            onChange={(e) => setBrandName(e.target.value)}
+          />
+          <Input
+            label={t('branding.displayCompanyName')}
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <Input label="Logo (Light URL)" value={logoLightUrl} onChange={(e) => setLogoLightUrl(e.target.value)} />
+            <Input
+              label={t('branding.logoLight')}
+              value={logoLightUrl}
+              onChange={(e) => setLogoLightUrl(e.target.value)}
+            />
             <div className="mt-2 flex items-center gap-2">
               <input
                 type="file"
@@ -973,7 +1318,7 @@ function WhiteLabelSection() {
                 disabled={isUploadingLogo}
                 className="text-xs text-[var(--brand-primary)] hover:underline disabled:opacity-50"
               >
-                {isUploadingLogo ? 'กำลังอัปโหลด...' : 'อัปโหลดโลโก้ (PNG/JPG/SVG)'}
+                {isUploadingLogo ? t('branding.uploading') : t('branding.uploadLogo')}
               </button>
               {logoLightUrl && (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -981,13 +1326,21 @@ function WhiteLabelSection() {
               )}
             </div>
           </div>
-          <Input label="Logo (Dark URL)" value={logoDarkUrl} onChange={(e) => setLogoDarkUrl(e.target.value)} />
+          <Input
+            label={t('branding.logoDark')}
+            value={logoDarkUrl}
+            onChange={(e) => setLogoDarkUrl(e.target.value)}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Input label="Favicon URL" value={faviconUrl} onChange={(e) => setFaviconUrl(e.target.value)} />
           <Input
-            label="Border Radius"
+            label={t('branding.faviconUrl')}
+            value={faviconUrl}
+            onChange={(e) => setFaviconUrl(e.target.value)}
+          />
+          <Input
+            label={t('branding.borderRadius')}
             value={borderRadius.toString()}
             onChange={(e) => setBorderRadius(Number(e.target.value) || 0)}
             type="number"
@@ -998,7 +1351,9 @@ function WhiteLabelSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Primary Color</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+              {t('branding.primaryColor')}
+            </label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
@@ -1006,11 +1361,17 @@ function WhiteLabelSection() {
                 onChange={(e) => setPrimaryColor(e.target.value)}
                 className="w-10 h-10 rounded-lg border border-[var(--brand-border)] cursor-pointer p-0.5"
               />
-              <Input value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="flex-1 font-mono" />
+              <Input
+                value={primaryColor}
+                onChange={(e) => setPrimaryColor(e.target.value)}
+                className="flex-1 font-mono"
+              />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Secondary Color</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+              {t('branding.secondaryColor')}
+            </label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
@@ -1018,11 +1379,17 @@ function WhiteLabelSection() {
                 onChange={(e) => setSecondaryColor(e.target.value)}
                 className="w-10 h-10 rounded-lg border border-[var(--brand-border)] cursor-pointer p-0.5"
               />
-              <Input value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} className="flex-1 font-mono" />
+              <Input
+                value={secondaryColor}
+                onChange={(e) => setSecondaryColor(e.target.value)}
+                className="flex-1 font-mono"
+              />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Accent Color</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+              {t('branding.accentColor')}
+            </label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
@@ -1030,33 +1397,45 @@ function WhiteLabelSection() {
                 onChange={(e) => setAccentColor(e.target.value)}
                 className="w-10 h-10 rounded-lg border border-[var(--brand-border)] cursor-pointer p-0.5"
               />
-              <Input value={accentColor} onChange={(e) => setAccentColor(e.target.value)} className="flex-1 font-mono" />
+              <Input
+                value={accentColor}
+                onChange={(e) => setAccentColor(e.target.value)}
+                className="flex-1 font-mono"
+              />
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Font Heading</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+              {t('branding.fontHeading')}
+            </label>
             <select
               value={fontHeading}
               onChange={(e) => setFontHeading(e.target.value)}
               className="w-full rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 py-2.5 text-sm text-[var(--brand-text)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]"
             >
               {FONT_OPTIONS.map((f) => (
-                <option key={f.value} value={f.value}>{f.label}</option>
+                <option key={f.value} value={f.value}>
+                  {f.label}
+                </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">Font Body (Live Preview)</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+              {t('branding.fontBody')}
+            </label>
             <select
               value={fontBody}
               onChange={(e) => setFontBody(e.target.value)}
               className="w-full rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 py-2.5 text-sm text-[var(--brand-text)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]"
             >
               {FONT_OPTIONS.map((f) => (
-                <option key={f.value} value={f.value}>{f.label}</option>
+                <option key={f.value} value={f.value}>
+                  {f.label}
+                </option>
               ))}
             </select>
           </div>
@@ -1068,21 +1447,23 @@ function WhiteLabelSection() {
             value={customDomain}
             onChange={(e) => setCustomDomain(e.target.value)}
             placeholder="solar.yourdomain.com"
-            hint="ชี้ CNAME record มาที่ custom.solariq.app"
+            hint={t('branding.customDomainHint')}
           />
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={handleDomainSave} disabled={isSaving}>
-              ตั้งค่า Domain
+              {t('branding.setupDomain')}
             </Button>
             <Button variant="ghost" size="sm" onClick={handleVerifyDomain} disabled={isSaving}>
-              ตรวจสอบ DNS
+              {t('branding.verifyDns')}
             </Button>
           </div>
         </div>
 
         {domainInfo && (
           <div className="rounded-xl border border-[var(--brand-border)] p-4 text-sm">
-            <p className="font-semibold text-[var(--brand-text)] mb-2">DNS Records</p>
+            <p className="font-semibold text-[var(--brand-text)] mb-2">
+              {t('branding.dnsRecords')}
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[var(--brand-text-secondary)]">
               <div>Type: {domainInfo.dns_record_type}</div>
               <div>Name: {domainInfo.dns_record_name}</div>
@@ -1095,41 +1476,65 @@ function WhiteLabelSection() {
         )}
 
         <div>
-          <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">ตัวอย่าง</label>
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+            {t('branding.preview')}
+          </label>
           <div className="p-6 border border-[var(--brand-border)] rounded-xl">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: primaryColor }}>
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: primaryColor }}
+              >
                 <span className="text-white text-sm font-bold">{companyName.charAt(0) || 'B'}</span>
               </div>
               <div>
-                <p className="text-sm font-bold" style={{ color: primaryColor }}>{companyName || 'Your Company'}</p>
-                <p className="text-xs text-[var(--brand-text-secondary)]">{customDomain || 'solar.yourdomain.com'}</p>
+                <p className="text-sm font-bold" style={{ color: primaryColor }}>
+                  {companyName || 'Your Company'}
+                </p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">
+                  {customDomain || 'solar.yourdomain.com'}
+                </p>
               </div>
             </div>
-            <div className="h-2 rounded-full" style={{ backgroundColor: primaryColor, opacity: 0.2 }}>
+            <div
+              className="h-2 rounded-full"
+              style={{ backgroundColor: primaryColor, opacity: 0.2 }}
+            >
               <div className="h-2 rounded-full w-3/4" style={{ backgroundColor: primaryColor }} />
             </div>
           </div>
         </div>
 
         <div className="rounded-xl border border-[var(--brand-border)] p-4">
-          <p className="text-sm font-semibold text-[var(--brand-text)] mb-3">สร้างแบรนด์ใหม่</p>
+          <p className="text-sm font-semibold text-[var(--brand-text)] mb-3">
+            {t('branding.createNewBrand')}
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="ชื่อแบรนด์ใหม่" value={newBrandName} onChange={(e) => setNewBrandName(e.target.value)} />
-            <Input label="ชื่อบริษัท" value={newCompanyName} onChange={(e) => setNewCompanyName(e.target.value)} />
+            <Input
+              label={t('branding.newBrandName')}
+              value={newBrandName}
+              onChange={(e) => setNewBrandName(e.target.value)}
+            />
+            <Input
+              label={t('branding.newCompanyName')}
+              value={newCompanyName}
+              onChange={(e) => setNewCompanyName(e.target.value)}
+            />
           </div>
           <div className="flex justify-end mt-3">
             <Button variant="outline" size="sm" onClick={handleCreateBrand} disabled={isCreating}>
-              {isCreating ? 'กำลังสร้าง...' : 'สร้างแบรนด์'}
+              {isCreating ? t('branding.creating') : t('branding.createBrand')}
             </Button>
           </div>
         </div>
       </CardBody>
       <CardFooter>
         <div className="flex justify-between items-center w-full">
-          <div className="text-xs text-[var(--brand-text-secondary)]">การปรับแต่งมีผลกับ UI, Proposal, และอีเมล</div>
+          <div className="text-xs text-[var(--brand-text-secondary)]">
+            {t('branding.customizationNote')}
+          </div>
           <Button variant="primary" size="sm" onClick={handleSave} disabled={isSaving}>
-            {isSaving ? 'กำลังบันทึก...' : 'บันทึกการตั้งค่า'}
+            {isSaving ? t('branding.saving') : t('branding.saveSettings')}
           </Button>
         </div>
       </CardFooter>
@@ -1142,12 +1547,15 @@ function WhiteLabelSection() {
 // ---------------------------------------------------------------------------
 
 export default function SettingsPage() {
+  const t = useTranslations('settingsPage')
   const { user } = useAuth()
   const [activeTab, setActiveTab] = useState<SettingsTab>('company')
   const isAdmin = user?.role === 'admin'
 
   const visibleTabs = TABS.filter((tab) => {
-    if (tab.adminOnly && !isAdmin) return false
+    if (tab.adminOnly && !isAdmin) {
+      return false
+    }
     // Enterprise tabs still shown but can be gated with a badge
     return true
   })
@@ -1176,8 +1584,8 @@ export default function SettingsPage() {
       <div className="max-w-5xl space-y-6">
         {/* Page header */}
         <div>
-          <h1 className="text-xl font-bold text-gray-900">ตั้งค่า</h1>
-          <p className="text-sm text-gray-500 mt-1">จัดการข้อมูลบริษัท การเชื่อมต่อ และสิทธิ์การใช้งาน</p>
+          <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Tabs */}
@@ -1197,7 +1605,7 @@ export default function SettingsPage() {
                 <span className={clsx(activeTab === tab.key ? 'text-orange-500' : 'text-gray-400')}>
                   {tab.icon}
                 </span>
-                {tab.label}
+                {t(tab.labelKey)}
                 {tab.enterpriseOnly && (
                   <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-purple-50 text-purple-600 rounded-full">
                     Enterprise

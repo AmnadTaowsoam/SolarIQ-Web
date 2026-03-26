@@ -1,37 +1,17 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
 import { useCalendarEvents } from '@/hooks/useCalendar'
 import Link from 'next/link'
-
-const DAYS_TH = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
-const MONTHS_TH = [
-  'มกราคม',
-  'กุมภาพันธ์',
-  'มีนาคม',
-  'เมษายน',
-  'พฤษภาคม',
-  'มิถุนายน',
-  'กรกฎาคม',
-  'สิงหาคม',
-  'กันยายน',
-  'ตุลาคม',
-  'พฤศจิกายน',
-  'ธันวาคม',
-]
+import { apiClient } from '@/lib/api'
 
 const TYPE_COLORS: Record<string, string> = {
   maintenance: 'bg-blue-500',
   service_request: 'bg-red-500',
   installation: 'bg-green-500',
-}
-
-const TYPE_LABELS: Record<string, string> = {
-  maintenance: 'บำรุงรักษา',
-  service_request: 'คำร้องลูกค้า',
-  installation: 'งานติดตั้ง',
 }
 
 function getDaysInMonth(year: number, month: number) {
@@ -44,11 +24,44 @@ function getFirstDayOfMonth(year: number, month: number) {
 
 export default function CalendarPage() {
   const { user } = useAuth()
+  const t = useTranslations('calendarPage')
   const events = useCalendarEvents()
   const today = new Date()
   const [currentMonth, setCurrentMonth] = useState(today.getMonth())
   const [currentYear, setCurrentYear] = useState(today.getFullYear())
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [showAddModal, setShowAddModal] = useState(false)
+
+  const DAYS = [
+    t('daysShort.sun'),
+    t('daysShort.mon'),
+    t('daysShort.tue'),
+    t('daysShort.wed'),
+    t('daysShort.thu'),
+    t('daysShort.fri'),
+    t('daysShort.sat'),
+  ]
+
+  const MONTHS = [
+    t('months.january'),
+    t('months.february'),
+    t('months.march'),
+    t('months.april'),
+    t('months.may'),
+    t('months.june'),
+    t('months.july'),
+    t('months.august'),
+    t('months.september'),
+    t('months.october'),
+    t('months.november'),
+    t('months.december'),
+  ]
+
+  const TYPE_LABELS: Record<string, string> = {
+    maintenance: t('eventTypes.maintenance'),
+    service_request: t('eventTypes.service_request'),
+    installation: t('eventTypes.installation'),
+  }
 
   const daysInMonth = getDaysInMonth(currentYear, currentMonth)
   const firstDay = getFirstDayOfMonth(currentYear, currentMonth)
@@ -93,9 +106,17 @@ export default function CalendarPage() {
   return (
     <AppLayout user={user}>
       <div className="max-w-7xl space-y-6">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">ปฏิทินงาน</h1>
-          <p className="mt-0.5 text-sm text-gray-500">ดูแผนงานติดตั้ง บำรุงรักษา และคำร้องลูกค้า</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
+            <p className="mt-0.5 text-sm text-gray-500">{t('subtitle')}</p>
+          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600"
+          >
+            + {t('addActivity')}
+          </button>
         </div>
 
         {/* Legend */}
@@ -125,7 +146,7 @@ export default function CalendarPage() {
                   </svg>
                 </button>
                 <h2 className="text-lg font-semibold">
-                  {MONTHS_TH[currentMonth]} {currentYear + 543}
+                  {MONTHS[currentMonth]} {currentYear + 543}
                 </h2>
                 <button onClick={nextMonth} className="rounded-lg p-2 hover:bg-gray-100">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -141,7 +162,7 @@ export default function CalendarPage() {
 
               {/* Day headers */}
               <div className="mb-2 grid grid-cols-7 text-center text-xs font-medium text-gray-500">
-                {DAYS_TH.map((d) => (
+                {DAYS.map((d) => (
                   <div key={d}>{d}</div>
                 ))}
               </div>
@@ -196,8 +217,8 @@ export default function CalendarPage() {
           <div className="rounded-xl border bg-white p-4">
             <h3 className="mb-3 font-semibold text-gray-900">
               {selectedDate
-                ? `งานวันที่ ${new Date(selectedDate).toLocaleDateString('th-TH')}`
-                : 'เลือกวันที่เพื่อดูงาน'}
+                ? t('eventsForDate', { date: new Date(selectedDate).toLocaleDateString('th-TH') })
+                : t('selectDatePrompt')}
             </h3>
             {selectedEvents.length > 0 ? (
               <div className="space-y-3">
@@ -223,7 +244,7 @@ export default function CalendarPage() {
                                 : 'bg-gray-100 text-gray-600'
                           }`}
                         >
-                          {event.status === 'overdue' ? 'เลยกำหนด' : event.status}
+                          {event.status === 'overdue' ? t('overdue') : event.status}
                         </span>
                       </div>
                     </div>
@@ -231,10 +252,10 @@ export default function CalendarPage() {
                 ))}
               </div>
             ) : selectedDate ? (
-              <p className="text-sm text-gray-500">ไม่มีงานในวันนี้</p>
+              <p className="text-sm text-gray-500">{t('noEventsToday')}</p>
             ) : (
               <div className="space-y-2">
-                <p className="text-sm text-gray-500">งานที่กำลังจะมาถึง:</p>
+                <p className="text-sm text-gray-500">{t('upcomingEvents')}</p>
                 {events.slice(0, 5).map((event) => (
                   <Link
                     key={event.id}
@@ -254,7 +275,173 @@ export default function CalendarPage() {
             )}
           </div>
         </div>
+        {/* Add Activity Modal */}
+        {showAddModal && (
+          <AddActivityModal selectedDate={selectedDate} onClose={() => setShowAddModal(false)} />
+        )}
       </div>
     </AppLayout>
+  )
+}
+
+function AddActivityModal({
+  selectedDate,
+  onClose,
+}: {
+  selectedDate: string | null
+  onClose: () => void
+}) {
+  const t = useTranslations('addActivityModal')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [form, setForm] = useState({
+    title: '',
+    type: 'appointment',
+    date: selectedDate || new Date().toISOString().split('T')[0],
+    time: '09:00',
+    customer_name: '',
+    notes: '',
+  })
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setError(null)
+    try {
+      await apiClient.post('/api/v1/calendar/events', {
+        title: form.title,
+        type: form.type,
+        date: form.date,
+        time: form.time,
+        customer_name: form.customer_name || undefined,
+        notes: form.notes || undefined,
+      })
+      onClose()
+      window.location.reload()
+    } catch {
+      setError(t('error'))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">{t('title')}</h2>
+        {error && (
+          <div className="mb-3 rounded-lg bg-red-50 border border-red-200 p-2 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t('fields.activityName')} *
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              required
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t('fields.type')}
+            </label>
+            <select
+              name="type"
+              value={form.type}
+              onChange={handleChange}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+            >
+              {(['appointment', 'survey', 'installation', 'maintenance', 'followup'] as const).map(
+                (tp) => (
+                  <option key={tp} value={tp}>
+                    {t(`types.${tp}`)}
+                  </option>
+                )
+              )}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t('fields.date')} *
+              </label>
+              <input
+                type="date"
+                name="date"
+                value={form.date}
+                onChange={handleChange}
+                required
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t('fields.time')}
+              </label>
+              <input
+                type="time"
+                name="time"
+                value={form.time}
+                onChange={handleChange}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t('fields.customerName')}
+            </label>
+            <input
+              type="text"
+              name="customer_name"
+              value={form.customer_name}
+              onChange={handleChange}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t('fields.notes')}
+            </label>
+            <textarea
+              name="notes"
+              value={form.notes}
+              onChange={handleChange}
+              rows={2}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500 resize-none"
+            />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 rounded-lg border border-gray-300 bg-white py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              {t('cancel')}
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex-1 rounded-lg bg-amber-500 py-2.5 text-sm font-medium text-white hover:bg-amber-600 disabled:opacity-50"
+            >
+              {isSubmitting ? t('adding') : t('add')}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   )
 }

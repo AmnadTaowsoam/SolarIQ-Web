@@ -4,6 +4,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/context/AuthContext'
 import { api } from '@/lib/api'
 import type { AxiosRequestConfig } from 'axios'
@@ -12,22 +13,83 @@ import type { AxiosRequestConfig } from 'axios'
 // Thai provinces list
 // ---------------------------------------------------------------------------
 const THAI_PROVINCES = [
-  'กระบี่', 'กรุงเทพมหานคร', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร',
-  'ขอนแก่น', 'จันทบุรี', 'ฉะเชิงเทรา', 'ชลบุรี', 'ชัยนาท',
-  'ชัยภูมิ', 'ชุมพร', 'เชียงราย', 'เชียงใหม่', 'ตรัง',
-  'ตราด', 'ตาก', 'นครนายก', 'นครปฐม', 'นครพนม',
-  'นครราชสีมา', 'นครศรีธรรมราช', 'นครสวรรค์', 'นนทบุรี', 'นราธิวาส',
-  'น่าน', 'บึงกาฬ', 'บุรีรัมย์', 'ปทุมธานี', 'ประจวบคีรีขันธ์',
-  'ปราจีนบุรี', 'ปัตตานี', 'พระนครศรีอยุธยา', 'พะเยา', 'พังงา',
-  'พัทลุง', 'พิจิตร', 'พิษณุโลก', 'เพชรบุรี', 'เพชรบูรณ์',
-  'แพร่', 'ภูเก็ต', 'มหาสารคาม', 'มุกดาหาร', 'แม่ฮ่องสอน',
-  'ยโสธร', 'ยะลา', 'ร้อยเอ็ด', 'ระนอง', 'ระยอง',
-  'ราชบุรี', 'ลพบุรี', 'ลำปาง', 'ลำพูน', 'เลย',
-  'ศรีสะเกษ', 'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรปราการ',
-  'สมุทรสงคราม', 'สมุทรสาคร', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี',
-  'สุโขทัย', 'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์', 'หนองคาย',
-  'หนองบัวลำภู', 'อ่างทอง', 'อำนาจเจริญ', 'อุดรธานี', 'อุตรดิตถ์',
-  'อุทัยธานี', 'อุบลราชธานี',
+  'กระบี่',
+  'กรุงเทพมหานคร',
+  'กาญจนบุรี',
+  'กาฬสินธุ์',
+  'กำแพงเพชร',
+  'ขอนแก่น',
+  'จันทบุรี',
+  'ฉะเชิงเทรา',
+  'ชลบุรี',
+  'ชัยนาท',
+  'ชัยภูมิ',
+  'ชุมพร',
+  'เชียงราย',
+  'เชียงใหม่',
+  'ตรัง',
+  'ตราด',
+  'ตาก',
+  'นครนายก',
+  'นครปฐม',
+  'นครพนม',
+  'นครราชสีมา',
+  'นครศรีธรรมราช',
+  'นครสวรรค์',
+  'นนทบุรี',
+  'นราธิวาส',
+  'น่าน',
+  'บึงกาฬ',
+  'บุรีรัมย์',
+  'ปทุมธานี',
+  'ประจวบคีรีขันธ์',
+  'ปราจีนบุรี',
+  'ปัตตานี',
+  'พระนครศรีอยุธยา',
+  'พะเยา',
+  'พังงา',
+  'พัทลุง',
+  'พิจิตร',
+  'พิษณุโลก',
+  'เพชรบุรี',
+  'เพชรบูรณ์',
+  'แพร่',
+  'ภูเก็ต',
+  'มหาสารคาม',
+  'มุกดาหาร',
+  'แม่ฮ่องสอน',
+  'ยโสธร',
+  'ยะลา',
+  'ร้อยเอ็ด',
+  'ระนอง',
+  'ระยอง',
+  'ราชบุรี',
+  'ลพบุรี',
+  'ลำปาง',
+  'ลำพูน',
+  'เลย',
+  'ศรีสะเกษ',
+  'สกลนคร',
+  'สงขลา',
+  'สตูล',
+  'สมุทรปราการ',
+  'สมุทรสงคราม',
+  'สมุทรสาคร',
+  'สระแก้ว',
+  'สระบุรี',
+  'สิงห์บุรี',
+  'สุโขทัย',
+  'สุพรรณบุรี',
+  'สุราษฎร์ธานี',
+  'สุรินทร์',
+  'หนองคาย',
+  'หนองบัวลำภู',
+  'อ่างทอง',
+  'อำนาจเจริญ',
+  'อุดรธานี',
+  'อุตรดิตถ์',
+  'อุทัยธานี',
+  'อุบลราชธานี',
 ]
 
 // ---------------------------------------------------------------------------
@@ -85,25 +147,41 @@ function validateTaxId(value: string): boolean {
 
 function formatTaxId(raw: string): string {
   const digits = raw.replace(/\D/g, '').slice(0, 13)
-  if (digits.length <= 1) return digits
-  if (digits.length <= 8) return `${digits.slice(0, 1)}-${digits.slice(1)}`
-  if (digits.length <= 10) return `${digits.slice(0, 1)}-${digits.slice(1, 8)}-${digits.slice(8)}`
-  if (digits.length <= 12) return `${digits.slice(0, 1)}-${digits.slice(1, 8)}-${digits.slice(8, 10)}-${digits.slice(10)}`
+  if (digits.length <= 1) {
+    return digits
+  }
+  if (digits.length <= 8) {
+    return `${digits.slice(0, 1)}-${digits.slice(1)}`
+  }
+  if (digits.length <= 10) {
+    return `${digits.slice(0, 1)}-${digits.slice(1, 8)}-${digits.slice(8)}`
+  }
+  if (digits.length <= 12) {
+    return `${digits.slice(0, 1)}-${digits.slice(1, 8)}-${digits.slice(8, 10)}-${digits.slice(10)}`
+  }
   return `${digits.slice(0, 1)}-${digits.slice(1, 8)}-${digits.slice(8, 10)}-${digits.slice(10)}`
 }
 
 // ---------------------------------------------------------------------------
 // Step indicator
 // ---------------------------------------------------------------------------
-const STEP_LABELS = [
-  'ข้อมูลบริษัท',
-  'LINE OA',
-  'เชิญทีม',
-  'Lead แรก',
-  'เสร็จสิ้น',
-]
+function StepIndicator({
+  currentStep,
+  totalSteps,
+  t,
+}: {
+  currentStep: number
+  totalSteps: number
+  t: ReturnType<typeof useTranslations<'onboardingPage'>>
+}) {
+  const STEP_LABELS = [
+    t('steps.companyInfo'),
+    t('steps.lineOa'),
+    t('steps.team'),
+    t('steps.demoLead'),
+    t('steps.complete'),
+  ]
 
-function StepIndicator({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
   return (
     <div className="w-full">
       {/* Progress bar */}
@@ -126,19 +204,27 @@ function StepIndicator({ currentStep, totalSteps }: { currentStep: number; total
                   isCompleted
                     ? 'bg-white text-orange-600'
                     : isCurrent
-                    ? 'bg-white text-orange-600 ring-2 ring-white ring-offset-2 ring-offset-orange-500'
-                    : 'bg-orange-400 text-orange-100'
+                      ? 'bg-white text-orange-600 ring-2 ring-white ring-offset-2 ring-offset-orange-500'
+                      : 'bg-orange-400 text-orange-100'
                 }`}
               >
                 {isCompleted ? (
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
                 ) : (
                   stepNum
                 )}
               </div>
-              <span className={`text-[10px] text-center leading-tight ${isCurrent ? 'text-white font-semibold' : 'text-orange-200'}`}>
+              <span
+                className={`text-[10px] text-center leading-tight ${isCurrent ? 'text-white font-semibold' : 'text-orange-200'}`}
+              >
                 {label}
               </span>
             </div>
@@ -158,32 +244,35 @@ function Step1Company({
   onNext,
   isLoading,
   error,
+  t,
 }: {
   data: CompanyData
   onChange: (d: Partial<CompanyData>) => void
   onNext: () => void
   isLoading: boolean
   error: string
+  t: ReturnType<typeof useTranslations<'onboardingPage'>>
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (!file) return
+    if (!file) {
+      return
+    }
     const preview = URL.createObjectURL(file)
     onChange({ logoFile: file, logoPreview: preview })
   }
 
-  const taxIdError =
-    data.taxId && !validateTaxId(data.taxId) ? 'รูปแบบเลขประจำตัวผู้เสียภาษีไม่ถูกต้อง (13 หลัก)' : ''
+  const taxIdError = data.taxId && !validateTaxId(data.taxId) ? t('step1.taxIdFormatError') : ''
 
   const canProceed = !!data.name.trim() && (!data.taxId || validateTaxId(data.taxId))
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">ข้อมูลบริษัท</h2>
-        <p className="text-gray-500 text-sm">กรอกข้อมูลพื้นฐานของบริษัทคุณ</p>
+        <h2 className="text-xl font-bold text-gray-900 mb-1">{t('step1.title')}</h2>
+        <p className="text-gray-500 text-sm">{t('step1.subtitle')}</p>
       </div>
 
       {/* Logo upload */}
@@ -193,13 +282,24 @@ function Step1Company({
           className="w-20 h-20 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-orange-400 transition-colors overflow-hidden bg-gray-50 flex-shrink-0"
         >
           {data.logoPreview ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={data.logoPreview} alt="logo preview" className="w-full h-full object-cover" />
           ) : (
             <div className="text-center">
-              <svg className="w-6 h-6 text-gray-400 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              <svg
+                className="w-6 h-6 text-gray-400 mx-auto mb-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                />
               </svg>
-              <span className="text-[10px] text-gray-400">โลโก้</span>
+              <span className="text-[10px] text-gray-400">{t('step1.logo')}</span>
             </div>
           )}
         </div>
@@ -211,18 +311,16 @@ function Step1Company({
           onChange={handleLogoChange}
         />
         <div className="text-sm text-gray-500">
-          <p className="font-medium text-gray-700 mb-0.5">อัพโหลดโลโก้บริษัท</p>
-          <p>รองรับ JPG, PNG (ไม่บังคับ)</p>
-          {data.logoFile && (
-            <p className="text-orange-600 text-xs mt-1">{data.logoFile.name}</p>
-          )}
+          <p className="font-medium text-gray-700 mb-0.5">{t('step1.uploadLogo')}</p>
+          <p>{t('step1.logoHint')}</p>
+          {data.logoFile && <p className="text-orange-600 text-xs mt-1">{data.logoFile.name}</p>}
         </div>
       </div>
 
       {/* Company name */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          ชื่อบริษัท <span className="text-red-500">*</span>
+          {t('step1.companyName')} <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -236,8 +334,8 @@ function Step1Company({
       {/* Tax ID */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          เลขประจำตัวผู้เสียภาษี
-          <span className="text-gray-400 font-normal ml-1">(ไม่บังคับ)</span>
+          {t('step1.taxId')}
+          <span className="text-gray-400 font-normal ml-1">{t('step1.taxIdOptional')}</span>
         </label>
         <input
           type="text"
@@ -250,17 +348,17 @@ function Step1Company({
         />
         {taxIdError && <p className="mt-1 text-xs text-red-600">{taxIdError}</p>}
         {!taxIdError && data.taxId && (
-          <p className="mt-1 text-xs text-green-600">รูปแบบถูกต้อง</p>
+          <p className="mt-1 text-xs text-green-600">{t('step1.taxIdValid')}</p>
         )}
       </div>
 
       {/* Address */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">ที่อยู่</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('step1.address')}</label>
         <textarea
           value={data.address}
           onChange={(e) => onChange({ address: e.target.value })}
-          placeholder="เลขที่, ถนน, แขวง/ตำบล, เขต/อำเภอ"
+          placeholder={t('step1.addressPlaceholder')}
           rows={2}
           className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
         />
@@ -268,27 +366,31 @@ function Step1Company({
 
       {/* Province */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">จังหวัด</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          {t('step1.province')}
+        </label>
         <select
           value={data.province}
           onChange={(e) => onChange({ province: e.target.value })}
           className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white"
         >
-          <option value="">-- เลือกจังหวัด --</option>
+          <option value="">{t('step1.selectProvince')}</option>
           {THAI_PROVINCES.map((p) => (
-            <option key={p} value={p}>{p}</option>
+            <option key={p} value={p}>
+              {p}
+            </option>
           ))}
         </select>
       </div>
 
       {/* Phone */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('step1.phone')}</label>
         <input
           type="tel"
           value={data.phone}
           onChange={(e) => onChange({ phone: e.target.value })}
-          placeholder="02-XXX-XXXX"
+          placeholder="085-662-1113"
           className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
       </div>
@@ -307,10 +409,10 @@ function Step1Company({
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            กำลังบันทึก...
+            {t('step1.saving')}
           </span>
         ) : (
-          'ถัดไป →'
+          `${t('step1.next')} →`
         )}
       </button>
     </div>
@@ -328,6 +430,7 @@ function Step2Line({
   onSkip,
   isLoading,
   error,
+  t,
 }: {
   data: LineData
   orgId: string
@@ -336,6 +439,7 @@ function Step2Line({
   onSkip: () => void
   isLoading: boolean
   error: string
+  t: ReturnType<typeof useTranslations<'onboardingPage'>>
 }) {
   const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'ok' | 'fail'>('idle')
   const [showSecret, setShowSecret] = useState(false)
@@ -363,13 +467,15 @@ function Step2Line({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">เชื่อมต่อ LINE OA</h2>
-        <p className="text-gray-500 text-sm">เชื่อมต่อ LINE Official Account เพื่อรับ Lead อัตโนมัติ</p>
+        <h2 className="text-xl font-bold text-gray-900 mb-1">{t('step2.title')}</h2>
+        <p className="text-gray-500 text-sm">{t('step2.subtitle')}</p>
       </div>
 
       {/* Channel ID */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Channel ID</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          {t('step2.channelId')}
+        </label>
         <input
           type="text"
           value={data.channelId}
@@ -381,7 +487,9 @@ function Step2Line({
 
       {/* Channel Secret */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Channel Secret</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          {t('step2.channelSecret')}
+        </label>
         <div className="relative">
           <input
             type={showSecret ? 'text' : 'password'}
@@ -397,12 +505,27 @@ function Step2Line({
           >
             {showSecret ? (
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
+                />
               </svg>
             ) : (
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
             )}
           </button>
@@ -412,8 +535,8 @@ function Step2Line({
       {/* Webhook URL */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Webhook URL
-          <span className="text-gray-400 font-normal ml-1">(คัดลอกไปใส่ใน LINE Developers)</span>
+          {t('step2.webhookUrl')}
+          <span className="text-gray-400 font-normal ml-1">({t('step2.webhookHint')})</span>
         </label>
         <div className="flex gap-2">
           <input
@@ -427,9 +550,14 @@ function Step2Line({
             className="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-medium text-gray-700 transition-colors flex-shrink-0 flex items-center gap-1.5"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+              />
             </svg>
-            คัดลอก
+            {t('step2.copy')}
           </button>
         </div>
       </div>
@@ -444,24 +572,36 @@ function Step2Line({
           {testStatus === 'testing' ? (
             <span className="flex items-center justify-center gap-2">
               <div className="w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full animate-spin" />
-              กำลังทดสอบ...
+              {t('step2.testing')}
             </span>
           ) : testStatus === 'ok' ? (
             <span className="flex items-center justify-center gap-2 text-green-600">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
-              เชื่อมต่อสำเร็จ!
+              {t('step2.connectionSuccess')}
             </span>
           ) : testStatus === 'fail' ? (
             <span className="flex items-center justify-center gap-2 text-red-600">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
-              ไม่สามารถเชื่อมต่อได้ — ทดสอบอีกครั้ง
+              {t('step2.connectionFailed')}
             </span>
           ) : (
-            'ทดสอบการเชื่อมต่อ'
+            t('step2.testConnection')
           )}
         </button>
       )}
@@ -480,14 +620,17 @@ function Step2Line({
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            กำลังบันทึก...
+            {t('step2.saving')}
           </span>
         ) : (
-          'ถัดไป →'
+          `${t('step2.next')} →`
         )}
       </button>
-      <button onClick={onSkip} className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-        ข้ามขั้นตอนนี้
+      <button
+        onClick={onSkip}
+        className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+      >
+        {t('step2.skip')}
       </button>
     </div>
   )
@@ -503,6 +646,7 @@ function Step3Team({
   onSkip,
   isLoading,
   error,
+  t,
 }: {
   data: TeamData
   onChange: (d: Partial<TeamData>) => void
@@ -510,9 +654,12 @@ function Step3Team({
   onSkip: () => void
   isLoading: boolean
   error: string
+  t: ReturnType<typeof useTranslations<'onboardingPage'>>
 }) {
   const addMember = () => {
-    if (data.members.length >= 5) return
+    if (data.members.length >= 5) {
+      return
+    }
     onChange({ members: [...data.members, { email: '', role: 'member' }] })
   }
 
@@ -530,28 +677,46 @@ function Step3Team({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">เชิญสมาชิกทีม</h2>
-        <p className="text-gray-500 text-sm">เพิ่มสมาชิกทีมของคุณ (สูงสุด 5 คน)</p>
+        <h2 className="text-xl font-bold text-gray-900 mb-1">{t('step3.title')}</h2>
+        <p className="text-gray-500 text-sm">{t('step3.subtitle')}</p>
       </div>
 
       {data.members.length === 0 ? (
         <div className="bg-gray-50 rounded-2xl p-6 text-center">
-          <svg className="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+          <svg
+            className="w-10 h-10 text-gray-300 mx-auto mb-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+            />
           </svg>
-          <p className="text-gray-400 text-sm">ยังไม่มีสมาชิกทีม</p>
+          <p className="text-gray-400 text-sm">{t('step3.noMembers')}</p>
         </div>
       ) : (
         <div className="space-y-3">
           {data.members.map((member, idx) => (
             <div key={idx} className="bg-gray-50 rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">สมาชิกที่ {idx + 1}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  {t('step3.memberNumber', { number: idx + 1 })}
+                </span>
                 <button
                   onClick={() => removeMember(idx)}
                   className="text-gray-400 hover:text-red-500 transition-colors"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -574,7 +739,7 @@ function Step3Team({
                         : 'border-gray-200 text-gray-600 hover:border-orange-200'
                     }`}
                   >
-                    {role === 'member' ? 'สมาชิก' : 'ผู้ดูแล'}
+                    {role === 'member' ? t('step3.roleMember') : t('step3.roleAdmin')}
                   </button>
                 ))}
               </div>
@@ -588,10 +753,16 @@ function Step3Team({
           onClick={addMember}
           className="w-full py-3 border-2 border-dashed border-gray-300 rounded-2xl text-sm text-gray-500 hover:border-orange-400 hover:text-orange-600 transition-colors flex items-center justify-center gap-2"
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
-          เพิ่มสมาชิก {data.members.length}/5
+          {t('step3.addMember', { current: data.members.length })}
         </button>
       )}
 
@@ -610,15 +781,18 @@ function Step3Team({
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              กำลังส่งคำเชิญ...
+              {t('step3.sendingInvites')}
             </span>
           ) : (
-            `ส่งคำเชิญ ${validMembers.length} คน →`
+            `${t('step3.sendInvites', { count: validMembers.length })} →`
           )}
         </button>
       )}
-      <button onClick={onSkip} className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-        ข้ามขั้นตอนนี้
+      <button
+        onClick={onSkip}
+        className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+      >
+        {t('step3.skip')}
       </button>
     </div>
   )
@@ -634,6 +808,7 @@ function Step4Lead({
   onSkip,
   isLoading,
   error,
+  t,
 }: {
   data: DemoLeadData
   onChange: (d: Partial<DemoLeadData>) => void
@@ -641,28 +816,39 @@ function Step4Lead({
   onSkip: () => void
   isLoading: boolean
   error: string
+  t: ReturnType<typeof useTranslations<'onboardingPage'>>
 }) {
   const canProceed = !!data.name.trim() && !!data.phone.trim() && !!data.monthlyBill.trim()
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">สร้าง Lead แรก</h2>
-        <p className="text-gray-500 text-sm">ลองสร้าง Lead ลูกค้าตัวอย่างเพื่อทดลองใช้งาน</p>
+        <h2 className="text-xl font-bold text-gray-900 mb-1">{t('step4.title')}</h2>
+        <p className="text-gray-500 text-sm">{t('step4.subtitle')}</p>
       </div>
 
       <div className="bg-orange-50 rounded-2xl p-4 border border-orange-100">
         <div className="flex items-start gap-3">
-          <svg className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+          <svg
+            className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
           </svg>
-          <p className="text-sm text-orange-700">Lead นี้จะเป็นข้อมูลจริงในระบบ คุณสามารถทดลองขั้นตอนการทำงานได้เลย</p>
+          <p className="text-sm text-orange-700">{t('step4.infoMessage')}</p>
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          ชื่อลูกค้า <span className="text-red-500">*</span>
+          {t('step4.customerName')} <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -675,7 +861,7 @@ function Step4Lead({
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          เบอร์โทรศัพท์ <span className="text-red-500">*</span>
+          {t('step4.phone')} <span className="text-red-500">*</span>
         </label>
         <input
           type="tel"
@@ -688,7 +874,7 @@ function Step4Lead({
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          ค่าไฟฟ้าเฉลี่ยต่อเดือน (บาท) <span className="text-red-500">*</span>
+          {t('step4.monthlyBill')} <span className="text-red-500">*</span>
         </label>
         <div className="relative">
           <input
@@ -699,20 +885,26 @@ function Step4Lead({
             min={0}
             className="w-full rounded-xl border border-gray-300 px-4 py-2.5 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">บาท</span>
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+            {t('step4.baht')}
+          </span>
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">จังหวัด</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          {t('step4.province')}
+        </label>
         <select
           value={data.province}
           onChange={(e) => onChange({ province: e.target.value })}
           className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white"
         >
-          <option value="">-- เลือกจังหวัด --</option>
+          <option value="">{t('step4.selectProvince')}</option>
           {THAI_PROVINCES.map((p) => (
-            <option key={p} value={p}>{p}</option>
+            <option key={p} value={p}>
+              {p}
+            </option>
           ))}
         </select>
       </div>
@@ -731,14 +923,17 @@ function Step4Lead({
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            กำลังสร้าง Lead...
+            {t('step4.creatingLead')}
           </span>
         ) : (
-          'สร้าง Lead →'
+          `${t('step4.createLead')} →`
         )}
       </button>
-      <button onClick={onSkip} className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-        ข้ามขั้นตอนนี้
+      <button
+        onClick={onSkip}
+        className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+      >
+        {t('step3.skip')}
       </button>
     </div>
   )
@@ -751,10 +946,12 @@ function Step5Complete({
   summary,
   onFinish,
   isLoading,
+  t,
 }: {
   summary: SetupSummary
   onFinish: () => void
   isLoading: boolean
+  t: ReturnType<typeof useTranslations<'onboardingPage'>>
 }) {
   return (
     <div className="space-y-6 text-center">
@@ -762,7 +959,13 @@ function Step5Complete({
       <div className="relative">
         <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto animate-bounce-slow">
           <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
-            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg
+              className="w-8 h-8 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </div>
@@ -771,79 +974,162 @@ function Step5Complete({
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">ตั้งค่าเสร็จสิ้น!</h2>
-        <p className="text-gray-500 text-sm">SolarIQ พร้อมใช้งานแล้วสำหรับทีมของคุณ</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('step5.title')}</h2>
+        <p className="text-gray-500 text-sm">{t('step5.subtitle')}</p>
       </div>
 
       {/* Summary */}
       <div className="bg-gray-50 rounded-2xl p-5 text-left space-y-3">
-        <h3 className="font-semibold text-gray-800 text-sm mb-3">สรุปการตั้งค่า</h3>
+        <h3 className="font-semibold text-gray-800 text-sm mb-3">{t('step5.setupSummary')}</h3>
 
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <svg className="w-4 h-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+            <svg
+              className="w-4 h-4 text-orange-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"
+              />
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-800">บริษัท: {summary.companyName}</p>
+            <p className="text-sm font-medium text-gray-800">
+              {t('step5.company', { name: summary.companyName })}
+            </p>
           </div>
-          <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="w-4 h-4 text-green-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.lineConnected ? 'bg-green-100' : 'bg-gray-100'}`}>
-            <svg className={`w-4 h-4 ${summary.lineConnected ? 'text-green-600' : 'text-gray-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.lineConnected ? 'bg-green-100' : 'bg-gray-100'}`}
+          >
+            <svg
+              className={`w-4 h-4 ${summary.lineConnected ? 'text-green-600' : 'text-gray-400'}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+              />
             </svg>
           </div>
           <p className="text-sm text-gray-700 flex-1">
-            LINE OA: {summary.lineConnected ? 'เชื่อมต่อแล้ว' : 'ยังไม่ได้เชื่อมต่อ'}
+            {t('step5.lineLabel', {
+              status: summary.lineConnected
+                ? t('step5.lineConnected')
+                : t('step5.lineNotConnected'),
+            })}
           </p>
           {summary.lineConnected ? (
-            <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg
+              className="w-4 h-4 text-green-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           ) : (
-            <span className="text-xs text-gray-400">ข้าม</span>
+            <span className="text-xs text-gray-400">{t('step5.skipped')}</span>
           )}
         </div>
 
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.teamInvited > 0 ? 'bg-blue-100' : 'bg-gray-100'}`}>
-            <svg className={`w-4 h-4 ${summary.teamInvited > 0 ? 'text-blue-600' : 'text-gray-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.teamInvited > 0 ? 'bg-blue-100' : 'bg-gray-100'}`}
+          >
+            <svg
+              className={`w-4 h-4 ${summary.teamInvited > 0 ? 'text-blue-600' : 'text-gray-400'}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+              />
             </svg>
           </div>
           <p className="text-sm text-gray-700 flex-1">
-            ทีม: {summary.teamInvited > 0 ? `เชิญ ${summary.teamInvited} คน` : 'ยังไม่ได้เชิญ'}
+            {t('step5.teamLabel', {
+              status:
+                summary.teamInvited > 0
+                  ? t('step5.teamInvited', { count: summary.teamInvited })
+                  : t('step5.teamNotInvited'),
+            })}
           </p>
           {summary.teamInvited > 0 ? (
-            <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg
+              className="w-4 h-4 text-green-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           ) : (
-            <span className="text-xs text-gray-400">ข้าม</span>
+            <span className="text-xs text-gray-400">{t('step5.skipped')}</span>
           )}
         </div>
 
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.demoLeadCreated ? 'bg-purple-100' : 'bg-gray-100'}`}>
-            <svg className={`w-4 h-4 ${summary.demoLeadCreated ? 'text-purple-600' : 'text-gray-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.demoLeadCreated ? 'bg-purple-100' : 'bg-gray-100'}`}
+          >
+            <svg
+              className={`w-4 h-4 ${summary.demoLeadCreated ? 'text-purple-600' : 'text-gray-400'}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+              />
             </svg>
           </div>
           <p className="text-sm text-gray-700 flex-1">
-            Lead แรก: {summary.demoLeadCreated ? 'สร้างแล้ว' : 'ยังไม่ได้สร้าง'}
+            {t('step5.leadLabel', {
+              status: summary.demoLeadCreated ? t('step5.leadCreated') : t('step5.leadNotCreated'),
+            })}
           </p>
           {summary.demoLeadCreated ? (
-            <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg
+              className="w-4 h-4 text-green-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           ) : (
-            <span className="text-xs text-gray-400">ข้าม</span>
+            <span className="text-xs text-gray-400">{t('step5.skipped')}</span>
           )}
         </div>
       </div>
@@ -856,10 +1142,10 @@ function Step5Complete({
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            กำลังเตรียม Dashboard...
+            {t('step5.preparingDashboard')}
           </span>
         ) : (
-          'ไปยัง Dashboard →'
+          `${t('step5.goToDashboard')} →`
         )}
       </button>
     </div>
@@ -873,6 +1159,7 @@ function Step5Complete({
 export default function OnboardingPage() {
   const { user } = useAuth()
   const router = useRouter()
+  const t = useTranslations('onboardingPage')
 
   const [step, setStep] = useState(1)
   const totalSteps = 5
@@ -917,7 +1204,9 @@ export default function OnboardingPage() {
   })
 
   useEffect(() => {
-    if (!user) router.push('/login')
+    if (!user) {
+      router.push('/login')
+    }
   }, [user, router])
 
   const orgId = (user as { orgId?: string } | null)?.orgId || ''
@@ -949,7 +1238,7 @@ export default function OnboardingPage() {
       setSummary((prev) => ({ ...prev, companyName: companyData.name }))
       setStep(2)
     } catch {
-      setError('ไม่สามารถบันทึกข้อมูลบริษัทได้ กรุณาลองใหม่')
+      setError(t('errors.saveCompanyFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -969,7 +1258,7 @@ export default function OnboardingPage() {
       setSummary((prev) => ({ ...prev, lineConnected: true }))
       setStep(3)
     } catch {
-      setError('ไม่สามารถบันทึก LINE OA ได้ กรุณาตรวจสอบ Channel ID และ Secret')
+      setError(t('errors.saveLineFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -999,7 +1288,7 @@ export default function OnboardingPage() {
       setSummary((prev) => ({ ...prev, teamInvited: validMembers.length }))
       setStep(4)
     } catch {
-      setError('ไม่สามารถส่งคำเชิญได้ กรุณาลองใหม่')
+      setError(t('errors.sendInvitesFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -1027,7 +1316,7 @@ export default function OnboardingPage() {
       setSummary((prev) => ({ ...prev, demoLeadCreated: true }))
       setStep(5)
     } catch {
-      setError('ไม่สามารถสร้าง Lead ได้ กรุณาลองใหม่')
+      setError(t('errors.createLeadFailed'))
     } finally {
       setIsLoading(false)
     }
@@ -1052,7 +1341,9 @@ export default function OnboardingPage() {
     }
   }
 
-  if (!user) return null
+  if (!user) {
+    return null
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-8">
@@ -1069,16 +1360,23 @@ export default function OnboardingPage() {
                 className="w-8 h-8 flex items-center justify-center hover:bg-orange-400 rounded-full transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
             )}
             <div className="flex-1">
-              <h1 className="text-lg font-bold">ตั้งค่า SolarIQ</h1>
-              <p className="text-orange-100 text-xs">ขั้นตอน {step}/{totalSteps}</p>
+              <h1 className="text-lg font-bold">{t('header.setupTitle')}</h1>
+              <p className="text-orange-100 text-xs">
+                {t('header.stepOf', { step, total: totalSteps })}
+              </p>
             </div>
           </div>
-          <StepIndicator currentStep={step} totalSteps={totalSteps} />
+          <StepIndicator currentStep={step} totalSteps={totalSteps} t={t} />
         </div>
       </div>
 
@@ -1092,6 +1390,7 @@ export default function OnboardingPage() {
               onNext={handleStep1Next}
               isLoading={isLoading}
               error={error}
+              t={t}
             />
           )}
           {step === 2 && (
@@ -1103,6 +1402,7 @@ export default function OnboardingPage() {
               onSkip={handleStep2Skip}
               isLoading={isLoading}
               error={error}
+              t={t}
             />
           )}
           {step === 3 && (
@@ -1113,6 +1413,7 @@ export default function OnboardingPage() {
               onSkip={handleStep3Skip}
               isLoading={isLoading}
               error={error}
+              t={t}
             />
           )}
           {step === 4 && (
@@ -1123,14 +1424,11 @@ export default function OnboardingPage() {
               onSkip={handleStep4Skip}
               isLoading={isLoading}
               error={error}
+              t={t}
             />
           )}
           {step === 5 && (
-            <Step5Complete
-              summary={summary}
-              onFinish={handleFinish}
-              isLoading={isLoading}
-            />
+            <Step5Complete summary={summary} onFinish={handleFinish} isLoading={isLoading} t={t} />
           )}
         </div>
       </div>

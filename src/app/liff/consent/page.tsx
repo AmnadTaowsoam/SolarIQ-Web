@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface ConsentType {
-  id: string;
-  type: string;
-  label: string;
-  description: string;
-  granted: boolean;
-  granted_at: string | null;
+  id: string
+  type: string
+  label: string
+  description: string
+  granted: boolean
+  granted_at: string | null
 }
 
 interface ConsentData {
-  line_user_id: string;
-  consents: ConsentType[];
+  line_user_id: string
+  consents: ConsentType[]
 }
 
 const CONSENT_DEFINITIONS = [
@@ -42,15 +42,15 @@ const CONSENT_DEFINITIONS = [
     description: 'ยินยอมรับใบเสนอราคาและข้อเสนอจากผู้ติดตั้งผ่านระบบ',
     icon: '📋',
   },
-];
+]
 
 export default function ConsentPage(): React.ReactElement {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+
   const [consentTypes, setConsentTypes] = useState<ConsentType[]>(
     CONSENT_DEFINITIONS.map((def) => ({
       id: def.type,
@@ -60,22 +60,22 @@ export default function ConsentPage(): React.ReactElement {
       granted: false,
       granted_at: null,
     }))
-  );
+  )
 
   const fetchConsents = useCallback(async () => {
     try {
-      const lineUserId = localStorage.getItem('line_user_id');
+      const lineUserId = localStorage.getItem('line_user_id')
       if (!lineUserId) {
-        router.push('/liff/login');
-        return;
+        router.push('/liff/login')
+        return
       }
 
-      const response = await fetch(`/api/liff/consent/${lineUserId}`);
+      const response = await fetch(`/api/liff/consent/${lineUserId}`)
       if (response.ok) {
-        const data: ConsentData = await response.json();
-        
+        const data: ConsentData = await response.json()
+
         const mergedConsents = CONSENT_DEFINITIONS.map((def) => {
-          const existingConsent = data.consents.find((c) => c.type === def.type);
+          const existingConsent = data.consents.find((c) => c.type === def.type)
           return {
             id: def.type,
             type: def.type,
@@ -83,45 +83,44 @@ export default function ConsentPage(): React.ReactElement {
             description: def.description,
             granted: existingConsent?.granted ?? false,
             granted_at: existingConsent?.granted_at ?? null,
-          };
-        });
-        
-        setConsentTypes(mergedConsents);
+          }
+        })
+
+        setConsentTypes(mergedConsents)
       }
     } catch (err) {
-      console.error('Error fetching consents:', err);
+      // eslint-disable-next-line no-console
+      console.error('Error fetching consents:', err)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [router]);
+  }, [router])
 
   useEffect(() => {
-    fetchConsents();
-  }, [fetchConsents]);
+    fetchConsents()
+  }, [fetchConsents])
 
   const handleConsentToggle = (consentType: string) => {
     setConsentTypes((prev) =>
       prev.map((consent) =>
-        consent.type === consentType
-          ? { ...consent, granted: !consent.granted }
-          : consent
+        consent.type === consentType ? { ...consent, granted: !consent.granted } : consent
       )
-    );
-  };
+    )
+  }
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
-    setError(null);
+    setIsSubmitting(true)
+    setError(null)
 
     try {
-      const lineUserId = localStorage.getItem('line_user_id');
+      const lineUserId = localStorage.getItem('line_user_id')
       if (!lineUserId) {
-        router.push('/liff/login');
-        return;
+        router.push('/liff/login')
+        return
       }
 
-      const grantedConsents = consentTypes.filter((c) => c.granted);
-      
+      const grantedConsents = consentTypes.filter((c) => c.granted)
+
       for (const consent of grantedConsents) {
         const response = await fetch('/api/liff/consent', {
           method: 'POST',
@@ -133,29 +132,29 @@ export default function ConsentPage(): React.ReactElement {
             consent_type: consent.type,
             granted: true,
           }),
-        });
+        })
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'เกิดข้อผิดพลาดในการบันทึกความยินยอม');
+          const errorData = await response.json()
+          throw new Error(errorData.detail || 'เกิดข้อผิดพลาดในการบันทึกความยินยอม')
         }
       }
 
-      setSuccess(true);
-      
+      setSuccess(true)
+
       setTimeout(() => {
-        router.push('/liff');
-      }, 2000);
+        router.push('/liff')
+      }, 2000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด');
+      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const handleSkip = () => {
-    router.push('/liff');
-  };
+    router.push('/liff')
+  }
 
   if (isLoading) {
     return (
@@ -165,7 +164,7 @@ export default function ConsentPage(): React.ReactElement {
           <p className="mt-4 text-gray-600">กำลังโหลด...</p>
         </div>
       </div>
-    );
+    )
   }
 
   if (success) {
@@ -173,18 +172,28 @@ export default function ConsentPage(): React.ReactElement {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center p-6">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-8 h-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
           <h2 className="mt-4 text-xl font-semibold text-gray-900">บันทึกความยินยอมสำเร็จ!</h2>
           <p className="mt-2 text-gray-600">กำลังนำคุณไปยังหน้าหลัก...</p>
         </div>
       </div>
-    );
+    )
   }
 
-  const grantedCount = consentTypes.filter((c) => c.granted).length;
+  const grantedCount = consentTypes.filter((c) => c.granted).length
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -201,7 +210,8 @@ export default function ConsentPage(): React.ReactElement {
               การให้ความยินยอมข้อมูลส่วนบุคคล
             </h2>
             <p className="text-sm text-gray-600">
-              เลือกสิ่งที่คุณต้องการยินยอมให้เราดำเนินการได้ คุณสามารถเปลี่ยนแปลงได้ทุกเมื่อในหน้าการตั้งค่า
+              เลือกสิ่งที่คุณต้องการยินยอมให้เราดำเนินการได้
+              คุณสามารถเปลี่ยนแปลงได้ทุกเมื่อในหน้าการตั้งค่า
             </p>
           </div>
 
@@ -213,7 +223,7 @@ export default function ConsentPage(): React.ReactElement {
 
           <div className="space-y-4">
             {consentTypes.map((consent) => {
-              const definition = CONSENT_DEFINITIONS.find((d) => d.type === consent.type);
+              const definition = CONSENT_DEFINITIONS.find((d) => d.type === consent.type)
               return (
                 <div
                   key={consent.type}
@@ -250,19 +260,30 @@ export default function ConsentPage(): React.ReactElement {
                     </div>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
 
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <div className="flex items-start gap-2">
-              <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-5 h-5 text-blue-600 mt-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <div>
                 <p className="text-sm text-blue-800 font-medium">สิทธิ์ของคุณ</p>
                 <p className="text-xs text-blue-600 mt-1">
-                  คุณมีสิทธิ์ขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลของคุณได้ตลอดเวลา ติดต่อเราที่ privacy@solariqapp.com
+                  คุณมีสิทธิ์ขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลของคุณได้ตลอดเวลา ติดต่อเราที่
+                  privacy@solariqapp.com
                 </p>
               </div>
             </div>
@@ -276,9 +297,25 @@ export default function ConsentPage(): React.ReactElement {
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   กำลังบันทึก...
                 </span>
@@ -322,13 +359,13 @@ export default function ConsentPage(): React.ReactElement {
             </p>
             <p>
               โทร:{' '}
-              <a href="tel:02-XXX-XXXX" className="text-green-600 hover:underline">
-                02-XXX-XXXX
+              <a href="tel:085-662-1113" className="text-green-600 hover:underline">
+                085-662-1113
               </a>
             </p>
           </div>
         </div>
       </main>
     </div>
-  );
+  )
 }

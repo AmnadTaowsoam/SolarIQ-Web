@@ -101,6 +101,47 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: 'SolarIQ',
+              applicationCategory: 'BusinessApplication',
+              operatingSystem: 'Web',
+              description:
+                'AI-powered solar energy analysis platform for contractors and installers in Thailand. Calculate ROI, generate proposals, manage leads.',
+              url: appUrl,
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'THB',
+                description: '14-day free trial',
+              },
+              provider: {
+                '@type': 'Organization',
+                name: 'SolarIQ',
+                url: appUrl,
+                logo: `${appUrl}/logo.svg`,
+                contactPoint: {
+                  '@type': 'ContactPoint',
+                  telephone: '+66-85-662-1113',
+                  contactType: 'customer service',
+                  availableLanguage: ['Thai', 'English'],
+                  areaServed: 'TH',
+                },
+                address: {
+                  '@type': 'PostalAddress',
+                  addressLocality: 'Nonthaburi',
+                  addressCountry: 'TH',
+                },
+              },
+            }),
+          }}
+        />
+      </head>
       <body className={`${inter.variable} ${notoSansThai.variable} font-sans`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ErrorBoundary>

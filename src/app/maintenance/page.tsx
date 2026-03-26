@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
 import { useInstallations, useUpcomingMaintenance } from '@/hooks/useMaintenance'
@@ -9,6 +10,7 @@ import Link from 'next/link'
 
 export default function MaintenancePage() {
   const { user } = useAuth()
+  const t = useTranslations('maintenancePage')
   const [statusFilter, setStatusFilter] = useState<string>('active')
   const { data: installations, isLoading } = useInstallations(statusFilter)
   const { data: upcoming } = useUpcomingMaintenance(30)
@@ -23,14 +25,14 @@ export default function MaintenancePage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">บำรุงรักษาและการรับประกัน</h1>
-            <p className="mt-0.5 text-sm text-gray-500">ติดตามการรับประกันและกำหนดการบำรุงรักษา</p>
+            <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
+            <p className="mt-0.5 text-sm text-gray-500">{t('subtitle')}</p>
           </div>
           <Link
             href="/maintenance/new"
             className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600"
           >
-            + เพิ่มงานติดตั้ง
+            {t('addInstallation')}
           </Link>
         </div>
 
@@ -38,7 +40,7 @@ export default function MaintenancePage() {
         {upcoming && upcoming.length > 0 && (
           <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
             <h2 className="mb-2 text-sm font-semibold text-amber-800">
-              งานบำรุงรักษาที่กำลังจะถึง ({upcoming.length} รายการ)
+              {t('upcomingMaintenance', { count: upcoming.length })}
             </h2>
             <div className="space-y-2">
               {upcoming.slice(0, 5).map((item, i) => (
@@ -56,7 +58,9 @@ export default function MaintenancePage() {
                   <span
                     className={`text-xs font-medium ${item.days_until_due <= 7 ? 'text-red-600' : 'text-amber-600'}`}
                   >
-                    {item.days_until_due <= 0 ? 'เลยกำหนด!' : `อีก ${item.days_until_due} วัน`}
+                    {item.days_until_due <= 0
+                      ? t('overdue')
+                      : t('daysUntilDue', { days: item.days_until_due })}
                   </span>
                 </Link>
               ))}
@@ -67,9 +71,9 @@ export default function MaintenancePage() {
         {/* Filter */}
         <div className="flex gap-2">
           {[
-            { value: 'active', label: 'ใช้งาน' },
-            { value: 'inactive', label: 'หยุดใช้' },
-            { value: '', label: 'ทั้งหมด' },
+            { value: 'active', label: t('filters.active') },
+            { value: 'inactive', label: t('filters.inactive') },
+            { value: '', label: t('filters.all') },
           ].map((f) => (
             <button
               key={f.value}
@@ -113,10 +117,8 @@ export default function MaintenancePage() {
                 d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
               />
             </svg>
-            <h3 className="mt-3 text-sm font-medium text-gray-900">ยังไม่มีงานติดตั้ง</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              เพิ่มงานติดตั้งที่เสร็จแล้วเพื่อติดตามการรับประกันและบำรุงรักษา
-            </p>
+            <h3 className="mt-3 text-sm font-medium text-gray-900">{t('empty.title')}</h3>
+            <p className="mt-1 text-sm text-gray-500">{t('empty.description')}</p>
           </div>
         )}
       </div>

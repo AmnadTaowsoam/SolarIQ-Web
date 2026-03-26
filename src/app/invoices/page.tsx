@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { Card, CardBody, CardHeader, Badge } from '@/components/ui'
 import { useInvoices } from '@/hooks/useCommissions'
@@ -20,6 +21,7 @@ function formatThb(value: number) {
 }
 
 export default function InvoicesPage() {
+  const t = useTranslations('invoicesPage')
   const { data, isLoading } = useInvoices()
   const invoices = data?.invoices || []
 
@@ -27,28 +29,30 @@ export default function InvoicesPage() {
     <AppLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Invoices</h1>
-          <p className="text-sm text-gray-500 mt-1">Monthly commission invoices and payment status</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
         </div>
 
         <Card>
-          <CardHeader title="Invoice History" subtitle="Latest invoices" />
+          <CardHeader title={t('history.title')} subtitle={t('history.subtitle')} />
           <CardBody className="p-0">
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead>
                   <tr className="border-b border-gray-100 text-left text-xs text-gray-500">
-                    <th className="px-6 py-3">Invoice #</th>
-                    <th className="px-6 py-3">Period</th>
-                    <th className="px-6 py-3">Total</th>
-                    <th className="px-6 py-3">Status</th>
-                    <th className="px-6 py-3">Action</th>
+                    <th className="px-6 py-3">{t('table.invoiceNumber')}</th>
+                    <th className="px-6 py-3">{t('table.period')}</th>
+                    <th className="px-6 py-3">{t('table.total')}</th>
+                    <th className="px-6 py-3">{t('table.status')}</th>
+                    <th className="px-6 py-3">{t('table.action')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {invoices.map((invoice) => (
                     <tr key={invoice.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-3 text-sm font-medium text-gray-900">{invoice.invoiceNumber}</td>
+                      <td className="px-6 py-3 text-sm font-medium text-gray-900">
+                        {invoice.invoiceNumber}
+                      </td>
                       <td className="px-6 py-3 text-sm text-gray-700">
                         {invoice.periodStart} - {invoice.periodEnd}
                       </td>
@@ -56,13 +60,18 @@ export default function InvoicesPage() {
                         {formatThb(invoice.grandTotal)}
                       </td>
                       <td className="px-6 py-3">
-                        <Badge className={statusColors[invoice.status] || 'bg-gray-100 text-gray-600'}>
+                        <Badge
+                          className={statusColors[invoice.status] || 'bg-gray-100 text-gray-600'}
+                        >
                           {invoice.status}
                         </Badge>
                       </td>
                       <td className="px-6 py-3 text-sm">
-                        <Link href={`/invoices/${invoice.id}`} className="text-orange-600 hover:text-orange-700">
-                          View
+                        <Link
+                          href={`/invoices/${invoice.id}`}
+                          className="text-orange-600 hover:text-orange-700"
+                        >
+                          {t('view')}
                         </Link>
                       </td>
                     </tr>
@@ -71,7 +80,7 @@ export default function InvoicesPage() {
               </table>
             </div>
             {invoices.length === 0 && !isLoading && (
-              <div className="text-center py-10 text-sm text-gray-500">No invoices yet</div>
+              <div className="text-center py-10 text-sm text-gray-500">{t('empty')}</div>
             )}
           </CardBody>
         </Card>

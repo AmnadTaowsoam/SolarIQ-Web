@@ -49,7 +49,13 @@ const STATUS_TO_PIPELINE_INDEX: Record<string, number> = {
 
 function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
     </svg>
   )
@@ -57,121 +63,275 @@ function ArrowLeftIcon({ className = 'w-5 h-5' }: { className?: string }) {
 
 function UserIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+      />
     </svg>
   )
 }
 
 function PhoneIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"
+      />
     </svg>
   )
 }
 
 function EnvelopeIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+      />
     </svg>
   )
 }
 
 function MapPinIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+      />
     </svg>
   )
 }
 
 function SunIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+      />
     </svg>
   )
 }
 
 function CurrencyIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z"
+      />
     </svg>
   )
 }
 
 function DocumentArrowDownIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+      />
     </svg>
   )
 }
 
 function ChatBubbleIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
+      />
     </svg>
   )
 }
 
 function PencilIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+      />
     </svg>
   )
 }
 
 function TrashIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+      />
     </svg>
   )
 }
 
 function ClockIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+      />
     </svg>
   )
 }
 
 function CheckCircleIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+      />
     </svg>
   )
 }
 
-function ExclamationTriangleIcon({ className = 'w-5 h-5' }: { className?: string }) {
+function _ExclamationTriangleIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+      />
     </svg>
   )
 }
 
 function LeafIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-3.314 0-6-4.03-6-9S8.686 3 12 3c5.523 0 10 4.477 10 10 0 3.314-4.03 6-9 6H3" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 21c-3.314 0-6-4.03-6-9S8.686 3 12 3c5.523 0 10 4.477 10 10 0 3.314-4.03 6-9 6H3"
+      />
     </svg>
   )
 }
 
 function BuildingIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"
+      />
     </svg>
   )
 }
@@ -193,7 +353,10 @@ function formatCurrency(amount: number): string {
 }
 
 function formatNumber(n: number, decimals = 0): string {
-  return n.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+  return n.toLocaleString(undefined, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })
 }
 
 // ---------------------------------------------------------------------------
@@ -211,7 +374,8 @@ const DEMO_LEAD: Lead = {
   monthlyBill: 8500,
   status: 'quoted',
   assignedTo: 'contractor-01',
-  notes: 'Interested in rooftop solar. Has a large flat roof area. Prefers to schedule installation on weekends.',
+  notes:
+    'Interested in rooftop solar. Has a large flat roof area. Prefers to schedule installation on weekends.',
   createdAt: '2025-12-15T09:30:00Z',
   updatedAt: '2026-01-20T14:15:00Z',
   solarAnalysis: {
@@ -325,23 +489,47 @@ function activityIconElement(icon: ActivityEvent['icon']) {
 // Sub-components
 // ---------------------------------------------------------------------------
 
-function InfoRow({ label, value, icon }: { label: string; value: React.ReactNode; icon?: React.ReactNode }) {
+function InfoRow({
+  label,
+  value,
+  icon,
+}: {
+  label: string
+  value: React.ReactNode
+  icon?: React.ReactNode
+}) {
   return (
     <div className="flex items-start gap-3 py-2.5">
       {icon && <span className="mt-0.5 text-gray-400 flex-shrink-0">{icon}</span>}
       <div className="min-w-0">
         <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">{label}</dt>
-        <dd className="mt-0.5 text-sm text-gray-900 break-words">{value || <span className="text-gray-400">--</span>}</dd>
+        <dd className="mt-0.5 text-sm text-gray-900 break-words">
+          {value || <span className="text-gray-400">--</span>}
+        </dd>
       </div>
     </div>
   )
 }
 
-function StatBlock({ label, value, sub, highlight }: { label: string; value: string; sub?: string; highlight?: boolean }) {
+function StatBlock({
+  label,
+  value,
+  sub,
+  highlight,
+}: {
+  label: string
+  value: string
+  sub?: string
+  highlight?: boolean
+}) {
   return (
-    <div className={`rounded-lg p-4 ${highlight ? 'bg-orange-50 ring-1 ring-orange-200' : 'bg-gray-50'}`}>
+    <div
+      className={`rounded-lg p-4 ${highlight ? 'bg-orange-50 ring-1 ring-orange-200' : 'bg-gray-50'}`}
+    >
       <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{label}</p>
-      <p className={`mt-1 text-2xl font-bold ${highlight ? 'text-orange-700' : 'text-gray-900'}`}>{value}</p>
+      <p className={`mt-1 text-2xl font-bold ${highlight ? 'text-orange-700' : 'text-gray-900'}`}>
+        {value}
+      </p>
       {sub && <p className="mt-0.5 text-xs text-gray-500">{sub}</p>}
     </div>
   )
@@ -407,11 +595,12 @@ function PipelineBar({
                   disabled={disabled}
                   className={`
                     relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all
-                    ${isCurrent
-                      ? 'bg-orange-500 text-white shadow-md shadow-orange-200'
-                      : isCompleted
-                        ? 'bg-orange-100 text-orange-800'
-                        : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                    ${
+                      isCurrent
+                        ? 'bg-orange-500 text-white shadow-md shadow-orange-200'
+                        : isCompleted
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                     }
                     disabled:opacity-50
                   `}
@@ -422,9 +611,11 @@ function PipelineBar({
                   <span className="whitespace-nowrap">{step.label}</span>
                 </button>
                 {idx < PIPELINE_STEPS.length - 1 && (
-                  <div className={`w-6 lg:w-10 h-0.5 flex-shrink-0 ${
-                    !isLost && currentIndex > idx ? 'bg-orange-400' : 'bg-gray-200'
-                  }`} />
+                  <div
+                    className={`w-6 lg:w-10 h-0.5 flex-shrink-0 ${
+                      !isLost && currentIndex > idx ? 'bg-orange-400' : 'bg-gray-200'
+                    }`}
+                  />
                 )}
               </div>
             )
@@ -437,9 +628,10 @@ function PipelineBar({
               disabled={disabled}
               className={`
                 px-4 py-2.5 rounded-lg text-sm font-medium transition-all
-                ${isLost
-                  ? 'bg-red-600 text-white shadow-md shadow-red-200'
-                  : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
+                ${
+                  isLost
+                    ? 'bg-red-600 text-white shadow-md shadow-red-200'
+                    : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
                 }
                 disabled:opacity-50
               `}
@@ -461,11 +653,12 @@ function PipelineBar({
                   disabled={disabled}
                   className={`
                     px-2.5 py-1.5 rounded-md text-xs font-medium transition-all
-                    ${isCurrent
-                      ? 'bg-orange-500 text-white shadow-sm'
-                      : isCompleted
-                        ? 'bg-orange-100 text-orange-800'
-                        : 'bg-gray-100 text-gray-500'
+                    ${
+                      isCurrent
+                        ? 'bg-orange-500 text-white shadow-sm'
+                        : isCompleted
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-gray-100 text-gray-500'
                     }
                     disabled:opacity-50
                   `}
@@ -473,9 +666,11 @@ function PipelineBar({
                   {step.label}
                 </button>
                 {idx < PIPELINE_STEPS.length - 1 && (
-                  <div className={`w-3 h-0.5 flex-shrink-0 ${
-                    !isLost && currentIndex > idx ? 'bg-orange-400' : 'bg-gray-200'
-                  }`} />
+                  <div
+                    className={`w-3 h-0.5 flex-shrink-0 ${
+                      !isLost && currentIndex > idx ? 'bg-orange-400' : 'bg-gray-200'
+                    }`}
+                  />
                 )}
               </div>
             )
@@ -485,10 +680,7 @@ function PipelineBar({
             disabled={disabled}
             className={`
               ml-1 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all flex-shrink-0
-              ${isLost
-                ? 'bg-red-600 text-white'
-                : 'bg-red-50 text-red-600 border border-red-200'
-              }
+              ${isLost ? 'bg-red-600 text-white' : 'bg-red-50 text-red-600 border border-red-200'}
               disabled:opacity-50
             `}
           >
@@ -512,13 +704,15 @@ export default function LeadDetailPage() {
   const { user, isLoading: authLoading } = useAuth()
   const { addToast } = useToast()
 
-  const { data: apiLead, isLoading, error, refetch } = useLead(id)
+  const { data: apiLead, isLoading } = useLead(id)
   const updateStatusMutation = useUpdateLeadStatus()
   const deleteMutation = useDeleteLead()
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [noteText, setNoteText] = useState('')
-  const [localNotes, setLocalNotes] = useState<Array<{ id: string; text: string; date: string }>>([])
+  const [localNotes, setLocalNotes] = useState<Array<{ id: string; text: string; date: string }>>(
+    []
+  )
 
   // Use API data if available, fallback to demo data
   const lead: Lead = apiLead ?? DEMO_LEAD
@@ -544,12 +738,20 @@ export default function LeadDetailPage() {
   // Electricity rate and usage estimates
   const electricityRate = solar?.electricityRate ?? 4.5
   const estMonthlyUsageKwh = lead.monthlyBill / electricityRate
-  const peakUsageKwh = isDemoMode ? DEMO_EXTENDED.peakUsageKwh : Math.round(estMonthlyUsageKwh * 0.63)
-  const offPeakUsageKwh = isDemoMode ? DEMO_EXTENDED.offPeakUsageKwh : Math.round(estMonthlyUsageKwh * 0.37)
+  const peakUsageKwh = isDemoMode
+    ? DEMO_EXTENDED.peakUsageKwh
+    : Math.round(estMonthlyUsageKwh * 0.63)
+  const offPeakUsageKwh = isDemoMode
+    ? DEMO_EXTENDED.offPeakUsageKwh
+    : Math.round(estMonthlyUsageKwh * 0.37)
   const touRate = isDemoMode ? DEMO_EXTENDED.touRate : electricityRate * 1.15
 
   // Solar estimates
-  const roofAreaSqm = isDemoMode ? DEMO_EXTENDED.roofAreaSqm : (panel ? Math.round(panel.panelsCount * 2.0) : 0)
+  const roofAreaSqm = isDemoMode
+    ? DEMO_EXTENDED.roofAreaSqm
+    : panel
+      ? Math.round(panel.panelsCount * 2.0)
+      : 0
 
   // Carbon offset estimate: ~0.5 kg CO2 per kWh in Thailand grid
   const yearlyKwh = panel?.yearlyEnergyDcKwh ?? 0
@@ -557,7 +759,11 @@ export default function LeadDetailPage() {
   const treesEquivalent = Math.round(co2PerYearTons / 0.022) // ~22 kg CO2 per tree per year
 
   // IRR estimate
-  const irr = isDemoMode ? DEMO_EXTENDED.irr : (finance ? Math.round((finance.yearlySavings / finance.installationCost) * 100 * 10) / 10 : 0)
+  const irr = isDemoMode
+    ? DEMO_EXTENDED.irr
+    : finance
+      ? Math.round((finance.yearlySavings / finance.installationCost) * 100 * 10) / 10
+      : 0
 
   // Extended fields
   const company = isDemoMode ? DEMO_EXTENDED.company : null
@@ -581,7 +787,9 @@ export default function LeadDetailPage() {
 
   const handleStepClick = async (stepKey: string) => {
     const newStatus = STEP_TO_STATUS[stepKey]
-    if (!newStatus || !lead) return
+    if (!newStatus || !lead) {
+      return
+    }
     try {
       await updateStatusMutation.mutateAsync({ id: lead.id, status: newStatus })
       addToast('success', `Status updated to ${LEAD_STATUS_LABELS[newStatus]}`)
@@ -592,7 +800,9 @@ export default function LeadDetailPage() {
 
   // Delete handler
   const handleDelete = async () => {
-    if (!lead) return
+    if (!lead) {
+      return
+    }
     try {
       await deleteMutation.mutateAsync(lead.id)
       addToast('success', 'Lead deleted')
@@ -605,7 +815,9 @@ export default function LeadDetailPage() {
   // Add note (local only — no backend endpoint)
   const handleAddNote = () => {
     const trimmed = noteText.trim()
-    if (!trimmed) return
+    if (!trimmed) {
+      return
+    }
     setLocalNotes((prev) => [
       { id: crypto.randomUUID(), text: trimmed, date: new Date().toISOString() },
       ...prev,
@@ -626,7 +838,9 @@ export default function LeadDetailPage() {
     )
   }
 
-  if (!user) return null
+  if (!user) {
+    return null
+  }
 
   // ---------- Data loading state ----------
   if (isLoading) {
@@ -648,10 +862,22 @@ export default function LeadDetailPage() {
         {/* ============================================================== */}
         {isDemoMode && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 flex items-center gap-2 text-sm">
-            <svg className="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-4 h-4 text-amber-500 flex-shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
-            <span className="text-amber-800">Demo Mode — Showing sample data. Connect your backend API to see real data.</span>
+            <span className="text-amber-800">
+              Demo Mode — Showing sample data. Connect your backend API to see real data.
+            </span>
           </div>
         )}
 
@@ -676,7 +902,11 @@ export default function LeadDetailPage() {
                   {company}
                 </span>
               )}
-              <Badge className={LEAD_STATUS_COLORS[lead.status as LeadStatus] ?? 'bg-gray-100 text-gray-800'}>
+              <Badge
+                className={
+                  LEAD_STATUS_COLORS[lead.status as LeadStatus] ?? 'bg-gray-100 text-gray-800'
+                }
+              >
                 {LEAD_STATUS_LABELS[lead.status as LeadStatus] ?? lead.status}
               </Badge>
             </div>
@@ -698,16 +928,26 @@ export default function LeadDetailPage() {
             </Button>
             <Button
               size="sm"
-              onClick={() => addToast('info', 'Proposal generation coming soon')}
+              onClick={async () => {
+                try {
+                  addToast('info', 'Generating proposal...')
+                  const { apiClient } = await import('@/lib/api')
+                  const res = await apiClient.post(`/proposals/generate`, { lead_id: lead.id })
+                  if (res?.url) {
+                    window.open(res.url, '_blank')
+                    addToast('success', 'Proposal generated successfully!')
+                  } else {
+                    addToast('success', 'Proposal generated! Check the proposals section.')
+                  }
+                } catch {
+                  addToast('error', 'Failed to generate proposal. Please try again.')
+                }
+              }}
             >
               <DocumentArrowDownIcon className="w-4 h-4 mr-1.5" />
               Generate Proposal
             </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => setIsDeleteModalOpen(true)}
-            >
+            <Button variant="danger" size="sm" onClick={() => setIsDeleteModalOpen(true)}>
               <TrashIcon className="w-4 h-4 mr-1.5" />
               Delete
             </Button>
@@ -744,23 +984,54 @@ export default function LeadDetailPage() {
               />
               <CardBody>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
-                  <InfoRow icon={<UserIcon className="w-4 h-4" />} label="Full Name" value={lead.name} />
+                  <InfoRow
+                    icon={<UserIcon className="w-4 h-4" />}
+                    label="Full Name"
+                    value={lead.name}
+                  />
                   {company && (
-                    <InfoRow icon={<BuildingIcon className="w-4 h-4" />} label="Company" value={company} />
+                    <InfoRow
+                      icon={<BuildingIcon className="w-4 h-4" />}
+                      label="Company"
+                      value={company}
+                    />
                   )}
-                  <InfoRow icon={<EnvelopeIcon className="w-4 h-4" />} label="Email" value={
-                    lead.email ? (
-                      <a href={`mailto:${lead.email}`} className="text-orange-600 hover:underline">{lead.email}</a>
-                    ) : null
-                  } />
-                  <InfoRow icon={<PhoneIcon className="w-4 h-4" />} label="Phone" value={
-                    lead.phone ? (
-                      <a href={`tel:${lead.phone}`} className="text-orange-600 hover:underline">{lead.phone}</a>
-                    ) : null
-                  } />
-                  <InfoRow icon={<MapPinIcon className="w-4 h-4" />} label="Address" value={lead.address} />
+                  <InfoRow
+                    icon={<EnvelopeIcon className="w-4 h-4" />}
+                    label="Email"
+                    value={
+                      lead.email ? (
+                        <a
+                          href={`mailto:${lead.email}`}
+                          className="text-orange-600 hover:underline"
+                        >
+                          {lead.email}
+                        </a>
+                      ) : null
+                    }
+                  />
+                  <InfoRow
+                    icon={<PhoneIcon className="w-4 h-4" />}
+                    label="Phone"
+                    value={
+                      lead.phone ? (
+                        <a href={`tel:${lead.phone}`} className="text-orange-600 hover:underline">
+                          {lead.phone}
+                        </a>
+                      ) : null
+                    }
+                  />
+                  <InfoRow
+                    icon={<MapPinIcon className="w-4 h-4" />}
+                    label="Address"
+                    value={lead.address}
+                  />
                   {lineId && (
-                    <InfoRow icon={<LineIcon className="w-4 h-4" />} label="LINE ID" value={lineId} />
+                    <InfoRow
+                      icon={<LineIcon className="w-4 h-4" />}
+                      label="LINE ID"
+                      value={lineId}
+                    />
                   )}
                 </div>
               </CardBody>
@@ -808,9 +1079,13 @@ export default function LeadDetailPage() {
                 subtitle={solar ? 'Analysis complete' : 'Analysis pending'}
                 action={
                   solar ? (
-                    <Badge variant="success" size="sm">Complete</Badge>
+                    <Badge variant="success" size="sm">
+                      Complete
+                    </Badge>
                   ) : (
-                    <Badge variant="warning" size="sm">Pending</Badge>
+                    <Badge variant="warning" size="sm">
+                      Pending
+                    </Badge>
                   )
                 }
               />
@@ -820,18 +1095,18 @@ export default function LeadDetailPage() {
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <StatBlock
                         label="System Size"
-                        value={`${panel!.capacityKw.toFixed(1)} kW`}
+                        value={`${panel?.capacityKw.toFixed(1) ?? '0'} kW`}
                         sub="Recommended"
                         highlight
                       />
                       <StatBlock
                         label="Panel Count"
-                        value={`${panel!.panelsCount}`}
+                        value={`${panel?.panelsCount ?? 0}`}
                         sub="Solar panels"
                       />
                       <StatBlock
                         label="Annual Production"
-                        value={formatNumber(panel!.yearlyEnergyDcKwh)}
+                        value={formatNumber(panel?.yearlyEnergyDcKwh ?? 0)}
                         sub="kWh / year"
                       />
                       <StatBlock
@@ -914,17 +1189,18 @@ export default function LeadDetailPage() {
                         value={formatCurrency(finance.roi25Year)}
                         sub="Total net savings"
                       />
-                      <StatBlock
-                        label="IRR"
-                        value={`${irr}%`}
-                        sub="Internal Rate of Return"
-                      />
+                      <StatBlock label="IRR" value={`${irr}%`} sub="Internal Rate of Return" />
                     </div>
 
                     {/* Savings comparison bar */}
                     <div className="border-t border-gray-100 pt-4">
-                      <h4 className="text-sm font-semibold text-gray-700 mb-1">Monthly Bill Comparison</h4>
-                      <SavingsBar currentBill={lead.monthlyBill} afterSolar={Math.max(0, afterSolarBill)} />
+                      <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                        Monthly Bill Comparison
+                      </h4>
+                      <SavingsBar
+                        currentBill={lead.monthlyBill}
+                        afterSolar={Math.max(0, afterSolarBill)}
+                      />
                     </div>
                   </div>
                 ) : (
@@ -991,7 +1267,21 @@ export default function LeadDetailPage() {
               <CardBody className="space-y-2.5">
                 <Button
                   className="w-full justify-center"
-                  onClick={() => addToast('info', 'PDF generation coming soon')}
+                  onClick={async () => {
+                    try {
+                      addToast('info', 'Generating proposal...')
+                      const { apiClient } = await import('@/lib/api')
+                      const res = await apiClient.post(`/proposals/generate`, { lead_id: lead.id })
+                      if (res?.url) {
+                        window.open(res.url, '_blank')
+                        addToast('success', 'Proposal generated!')
+                      } else {
+                        addToast('success', 'Proposal generated! Check proposals section.')
+                      }
+                    } catch {
+                      addToast('error', 'Failed to generate proposal.')
+                    }
+                  }}
                 >
                   <DocumentArrowDownIcon className="w-4 h-4 mr-2" />
                   Generate Proposal
@@ -1061,7 +1351,10 @@ export default function LeadDetailPage() {
 
             {/* D3) Notes */}
             <Card>
-              <CardHeader title="Notes" subtitle={`${localNotes.length + (lead.notes ? 1 : 0)} note(s)`} />
+              <CardHeader
+                title="Notes"
+                subtitle={`${localNotes.length + (lead.notes ? 1 : 0)} note(s)`}
+              />
               <CardBody className="space-y-4">
                 {/* Add note form */}
                 <div>
@@ -1121,7 +1414,8 @@ export default function LeadDetailPage() {
         >
           <div className="space-y-3">
             <p className="text-sm text-gray-600">
-              Are you sure you want to delete <strong>{lead.name}</strong>? This action cannot be undone.
+              Are you sure you want to delete <strong>{lead.name}</strong>? This action cannot be
+              undone.
             </p>
           </div>
           <ModalFooter>

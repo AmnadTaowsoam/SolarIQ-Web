@@ -61,10 +61,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
   const isDevLoginEnabled = process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true'
-  const devLoginEmail = (process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || 'admin@solariq.local')
-    .trim()
-    .toLowerCase()
-  const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || 'Solariq123!'
+  const devLoginEmail = (process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || '').trim().toLowerCase()
+  const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || ''
   const devLoginRole =
     process.env.NEXT_PUBLIC_DEV_LOGIN_ROLE === 'contractor' ? 'contractor' : 'admin'
   const devAuthStorageKey = 'solariq_dev_auth_user'
@@ -77,9 +75,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const normalizedEmail = email.trim().toLowerCase()
       const normalizedPassword = password.trim()
-      const acceptedPasswords = new Set([devLoginPassword, 'Solariq123', 'Solariq123!'])
+      if (!devLoginEmail || !devLoginPassword) {
+        return false
+      }
 
-      if (normalizedEmail !== devLoginEmail || !acceptedPasswords.has(normalizedPassword)) {
+      if (normalizedEmail !== devLoginEmail || normalizedPassword !== devLoginPassword) {
         return false
       }
 
