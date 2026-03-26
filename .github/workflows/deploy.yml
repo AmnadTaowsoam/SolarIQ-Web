@@ -13,6 +13,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+      - run: npm install -g pnpm
       - run: npm ci --legacy-peer-deps
       - name: Build with next-on-pages
         run: npx @cloudflare/next-on-pages
