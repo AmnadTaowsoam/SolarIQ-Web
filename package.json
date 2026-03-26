@@ -41,8 +41,8 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@next/bundle-analyzer": "^15.2.1",
+    "@opennextjs/cloudflare": "^1.17.3",
     "@playwright/test": "^1.42.1",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",

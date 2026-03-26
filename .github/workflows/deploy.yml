@@ -7,6 +7,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      HUSKY: '0'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -14,8 +16,8 @@ jobs:
           node-version: '18'
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
-      - name: Build for Cloudflare Pages
-        run: npx @cloudflare/next-on-pages
+      - name: Build for Cloudflare
+        run: npx cloudflare
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
@@ -31,4 +33,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .vercel/output/static --project-name=solariq-web
+          command: pages deploy .open-next/assets --project-name=solariq-web
