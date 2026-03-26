@@ -190,7 +190,7 @@ export default function CheckoutPage() {
       const statusResponse = await api.get<{ status: string }>(
         `${API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ?? '/api/v1/billing/create-checkout-session'}/${chargeId}/status`
       )
-      if ((statusResponse as { status: string }).status === 'successful') {
+      if ((statusResponse as unknown as { status: string }).status === 'successful') {
         window.location.href = `${window.location.origin}/checkout/success?charge_id=${chargeId}`
       }
     } catch {
@@ -218,7 +218,7 @@ export default function CheckoutPage() {
         }
       )
 
-      const data = response as Record<string, string>
+      const data = response as unknown as Record<string, string>
       if (data.qr_code_uri) {
         // PromptPay: show QR code
         setQrCodeUri(data.qr_code_uri)

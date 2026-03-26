@@ -15,20 +15,17 @@ export default function NewReportPage() {
   const handleCreate = async () => {
     setIsSaving(true)
     try {
-      const payload = {
+      const report = await createReport({
         name,
         description,
         category: 'sales',
         config: {
           dataSources: ['leads'],
-          fields: [
-            { source: 'leads', field: 'status', aggregation: 'COUNT', alias: 'count' },
-          ],
+          fields: [{ source: 'leads', field: 'status', aggregation: 'COUNT', alias: 'count' }],
           groupBy: ['status'],
-          visualization: 'table',
+          visualization: 'table' as const,
         },
-      }
-      const report = await createReport(payload)
+      })
       router.push(`${ROUTES.ANALYTICS_REPORTS}/${report.id}`)
     } catch {
       setIsSaving(false)
@@ -40,7 +37,11 @@ export default function NewReportPage() {
       <CardHeader title="Create Report" subtitle="Start from a simple template" />
       <CardBody className="space-y-4">
         <Input label="Report name" value={name} onChange={(e) => setName(e.target.value)} />
-        <Input label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <Input
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <Button onClick={handleCreate} disabled={isSaving}>
           {isSaving ? 'Creating...' : 'Create Report'}
         </Button>
