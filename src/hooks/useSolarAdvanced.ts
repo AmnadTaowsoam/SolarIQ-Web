@@ -320,10 +320,68 @@ export function useEnvironmentalImpact(annualProductionKwh: number) {
 export function useWeatherForecast(lat: number, lng: number) {
   return useQuery({
     queryKey: ['weather-forecast', lat, lng],
-    queryFn: () =>
-      api.get<DynamicYieldForecast>(API_ENDPOINTS.SOLAR.FORECAST_WEATHER, {
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const raw: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_WEATHER, {
         params: { lat, lng },
-      }),
+      })
+      // API returns array of daily forecasts, map to DynamicYieldForecast
+      const days = Array.isArray(raw) ? raw : (raw?.daily ?? [])
+      const hourly = days.flatMap(
+        (d: {
+          hourly?: {
+            hour: number
+            timestamp: string
+            predicted_output_factor: number
+            temp_c: number
+            cloud_cover_pct: number
+          }[]
+        }) =>
+          (d.hourly ?? []).map(
+            (h: {
+              hour: number
+              timestamp: string
+              predicted_output_factor: number
+              temp_c: number
+              cloud_cover_pct: number
+            }) => ({
+              time: h.timestamp,
+              predictedKwh: (h.predicted_output_factor ?? 0) * 5, // Approximate for system
+              tempC: h.temp_c,
+              cloudCover: h.cloud_cover_pct,
+            })
+          )
+      )
+      const daily = days.map(
+        (d: {
+          date: string
+          temp_max_c: number
+          temp_min_c: number
+          avg_cloud_cover_pct: number
+          total_rain_mm: number
+          daily_yield_factor: number
+        }) => ({
+          date: d.date,
+          tempMax: d.temp_max_c,
+          tempMin: d.temp_min_c,
+          cloudCover: d.avg_cloud_cover_pct,
+          rainMm: d.total_rain_mm,
+          predictedKwh: (d.daily_yield_factor ?? 0) * 5 * 5, // factor * kWp * peak hours
+          idealKwh: 5 * 5, // kWp * peak hours
+        })
+      )
+      const totalPredicted = daily.reduce(
+        (s: number, d: { predictedKwh: number }) => s + d.predictedKwh,
+        0
+      )
+      const totalIdeal = daily.reduce((s: number, d: { idealKwh: number }) => s + d.idealKwh, 0)
+      return {
+        hourly,
+        daily,
+        totalPredicted7Day: totalPredicted,
+        totalIdeal7Day: totalIdeal,
+      }
+    },
     enabled: lat !== 0 && lng !== 0,
   })
 }
@@ -342,12 +400,28 @@ export function useDynamicYield(lat: number, lng: number, yearlyKwh: number) {
 export function useLiveConditions(lat: number, lng: number) {
   return useQuery({
     queryKey: ['live-conditions', lat, lng],
-    queryFn: () =>
-      api.get<LiveConditions>(API_ENDPOINTS.SOLAR.FORECAST_LIVE_CONDITIONS, {
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const raw: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_LIVE_CONDITIONS, {
         params: { lat, lng },
-      }),
+      })
+      // Map API response to LiveConditions format
+      return {
+        weather: {
+          temp: raw.temp_c ?? raw.temp ?? 0,
+          clouds: raw.cloud_cover_pct ?? raw.clouds ?? 0,
+          humidity: raw.humidity_pct ?? raw.humidity ?? 0,
+          windSpeed: raw.wind_speed_ms ?? raw.windSpeed ?? 0,
+          description: raw.weather_desc ?? raw.description ?? '',
+          icon: raw.weather_icon ?? raw.icon ?? '01d',
+        },
+        predictedOutputNow: raw.current_output_factor ?? raw.predictedOutputNow ?? 0,
+        predicted24h: raw.predicted_24h ?? raw.predicted24h ?? 0,
+        tempEfficiency: raw.temp_efficiency ?? raw.tempEfficiency ?? 0.95,
+      } as LiveConditions
+    },
     enabled: lat !== 0 && lng !== 0,
-    refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
+    refetchInterval: 5 * 60 * 1000,
   })
 }
 
