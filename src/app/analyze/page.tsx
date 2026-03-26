@@ -1213,7 +1213,7 @@ export default function AnalyzePage() {
                       notes: `Solar Analysis: ${result.panelConfig.capacityKw.toFixed(1)} kWp, Payback: ${result.financialAnalysis.paybackYears.toFixed(1)} years`,
                       solar_analysis: {
                         system_size_kw: result.panelConfig.capacityKw,
-                        annual_production_kwh: result.annualProduction,
+                        annual_production_kwh: result.panelConfig.yearlyEnergyDcKwh,
                         yearly_savings: result.financialAnalysis.yearlySavings,
                         payback_years: result.financialAnalysis.paybackYears,
                         installation_cost: result.financialAnalysis.installationCost,
