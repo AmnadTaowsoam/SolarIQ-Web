@@ -14,8 +14,8 @@ jobs:
           node-version: '18'
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
-      - name: Build Next.js
-        run: npm run build
+      - name: Build with next-on-pages
+        run: npx @cloudflare/next-on-pages
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
@@ -26,10 +26,7 @@ jobs:
           NEXT_PUBLIC_LIFF_URL: ${{ secrets.NEXT_PUBLIC_LIFF_URL }}
           NEXT_PUBLIC_LINE_CHANNEL_ID: ${{ secrets.NEXT_PUBLIC_LINE_CHANNEL_ID }}
           NODE_ENV: production
-      - name: Convert to Cloudflare Pages format
-        run: npx @cloudflare/next-on-pages --skip-build
-      - name: Remove build cache
-        run: rm -rf .next/cache
+          INSTALL_COMMAND: npm ci --legacy-peer-deps
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
