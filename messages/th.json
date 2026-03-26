@@ -93,6 +93,82 @@
     "settings": {
       "title": "ตั้งค่า",
       "description": "จัดการข้อมูลบริษัท การเชื่อมต่อ และสิทธิ์การใช้งาน"
+    },
+    "analytics": {
+      "title": "วิเคราะห์",
+      "description": "วิเคราะห์ผลประกอบการและข้อมูลเชิงลึก"
+    },
+    "deals": {
+      "title": "ดีล",
+      "description": "จัดการ pipeline การขายและดีล"
+    },
+    "messages": {
+      "title": "ข้อความ",
+      "description": "ศูนย์สื่อสารกับลูกค้า"
+    },
+    "commissions": {
+      "title": "ค่าคอมมิชชัน",
+      "description": "ติดตามค่าคอมมิชชันและการจ่ายเงิน"
+    },
+    "invoices": {
+      "title": "ใบแจ้งหนี้",
+      "description": "จัดการใบแจ้งหนี้และเอกสารเรียกเก็บเงิน"
+    },
+    "developers": {
+      "title": "นักพัฒนา",
+      "description": "API keys, sandbox และเครื่องมือสำหรับนักพัฒนา"
+    },
+    "admin": {
+      "title": "ผู้ดูแลระบบ",
+      "description": "การจัดการแพลตฟอร์ม"
+    },
+    "calendar": {
+      "title": "ปฏิทิน",
+      "description": "จัดการตารางนัดหมาย"
+    },
+    "maintenance": {
+      "title": "บำรุงรักษา",
+      "description": "ติดตามการติดตั้งและการรับประกัน"
+    },
+    "service-requests": {
+      "title": "ศูนย์บริการ",
+      "description": "คำร้องขอบริการลูกค้า"
+    },
+    "service-area": {
+      "title": "พื้นที่ให้บริการ",
+      "description": "กำหนดพื้นที่ให้บริการ"
+    },
+    "sessions": {
+      "title": "เซสชัน",
+      "description": "เซสชันที่ล็อกอินอยู่"
+    },
+    "onboarding": {
+      "title": "ตั้งค่าเริ่มต้น",
+      "description": "ตั้งค่าบัญชีของคุณ"
+    },
+    "verify-email": {
+      "title": "ยืนยันอีเมล",
+      "description": "ยืนยันที่อยู่อีเมลของคุณ"
+    },
+    "forgot-password": {
+      "title": "ลืมรหัสผ่าน",
+      "description": "รีเซ็ตรหัสผ่านของคุณ"
+    },
+    "signup": {
+      "title": "สมัครสมาชิก",
+      "description": "สร้างบัญชีใหม่"
+    },
+    "login": {
+      "title": "เข้าสู่ระบบ",
+      "description": "เข้าสู่ระบบบัญชีของคุณ"
+    },
+    "contact": {
+      "title": "ติดต่อเรา",
+      "description": "ติดต่อเรา"
+    },
+    "about": {
+      "title": "เกี่ยวกับเรา",
+      "description": "เกี่ยวกับ SolarIQ"
     }
   },
   "auth": {

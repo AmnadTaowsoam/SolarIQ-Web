@@ -93,6 +93,82 @@
     "settings": {
       "title": "Settings",
       "description": "Manage company info, integrations, and access"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Business performance analytics and insights"
+    },
+    "deals": {
+      "title": "Deals",
+      "description": "Manage your sales pipeline and deals"
+    },
+    "messages": {
+      "title": "Messages",
+      "description": "Customer communication hub"
+    },
+    "commissions": {
+      "title": "Commissions",
+      "description": "Track sales commissions and payouts"
+    },
+    "invoices": {
+      "title": "Invoices",
+      "description": "Manage invoices and billing documents"
+    },
+    "developers": {
+      "title": "Developers",
+      "description": "API keys, sandbox, and developer tools"
+    },
+    "admin": {
+      "title": "Admin",
+      "description": "Platform administration"
+    },
+    "calendar": {
+      "title": "Calendar",
+      "description": "Schedule and manage appointments"
+    },
+    "maintenance": {
+      "title": "Maintenance",
+      "description": "Track installations and warranty"
+    },
+    "service-requests": {
+      "title": "Service Center",
+      "description": "Customer service requests"
+    },
+    "service-area": {
+      "title": "Service Area",
+      "description": "Define your service coverage area"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "description": "Active login sessions"
+    },
+    "onboarding": {
+      "title": "Onboarding",
+      "description": "Setup your account"
+    },
+    "verify-email": {
+      "title": "Verify Email",
+      "description": "Confirm your email address"
+    },
+    "forgot-password": {
+      "title": "Forgot Password",
+      "description": "Reset your password"
+    },
+    "signup": {
+      "title": "Sign Up",
+      "description": "Create a new account"
+    },
+    "login": {
+      "title": "Login",
+      "description": "Sign in to your account"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "Get in touch with us"
+    },
+    "about": {
+      "title": "About",
+      "description": "About SolarIQ"
     }
   },
   "auth": {
