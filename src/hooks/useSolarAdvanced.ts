@@ -322,9 +322,10 @@ export function useWeatherForecast(lat: number, lng: number) {
     queryKey: ['weather-forecast', lat, lng],
     queryFn: async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const raw: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_WEATHER, {
+      const resp: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_WEATHER, {
         params: { lat, lng },
       })
+      const raw = resp.data ?? resp
       // API returns array of daily forecasts, map to DynamicYieldForecast
       const days = Array.isArray(raw) ? raw : (raw?.daily ?? [])
       const hourly = days.flatMap(
@@ -402,9 +403,10 @@ export function useLiveConditions(lat: number, lng: number) {
     queryKey: ['live-conditions', lat, lng],
     queryFn: async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const raw: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_LIVE_CONDITIONS, {
+      const resp: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_LIVE_CONDITIONS, {
         params: { lat, lng },
       })
+      const raw = resp.data ?? resp
       // Map API response to LiveConditions format
       return {
         weather: {
