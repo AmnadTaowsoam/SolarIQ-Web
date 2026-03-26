@@ -49,8 +49,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   icons: {
-    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
-    apple: '/favicon.svg',
+    icon: [{ url: '/SolarIQ/4.png', type: 'image/png' }],
+    apple: '/SolarIQ/4.png',
   },
   openGraph: {
     type: 'website',

@@ -193,8 +193,8 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 </div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
                   {(
-                    (result.panelConfig.yearlyEnergyDcKwh *
-                      result.solarPotential.carbonOffsetFactorKgPerMwh) /
+                    ((result.panelConfig.yearlyEnergyDcKwh ?? 0) *
+                      (result.solarPotential.carbonOffsetFactorKgPerMwh ?? 0)) /
                     1000
                   ).toFixed(1)}{' '}
                   {'\u0E15\u0E31\u0E19'}
@@ -324,7 +324,7 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                   </div>
                   <div className="text-sm font-medium text-[var(--brand-text)]">
                     {'\u0E3F'}
-                    {result.electricityRate.toFixed(2)}/kWh
+                    {(result.electricityRate ?? 0).toFixed(2)}/kWh
                   </div>
                 </div>
               </div>
@@ -508,16 +508,17 @@ function FinancialTab({
   result: SolarAnalysisAdvanced
   monthlyBill: number
 }) {
+  const fa = result.financialAnalysis ?? ({} as Record<string, number>)
   const annualMaintenance = result.annualMaintenanceCost || 0
-  const netYearlySavings = result.financialAnalysis.yearlySavings - annualMaintenance
+  const netYearlySavings = (fa.yearlySavings ?? 0) - annualMaintenance
 
   return (
     <div className="space-y-6 transition-opacity duration-300">
       {result.yearlyCashflow && result.yearlyCashflow.length > 0 && (
         <CashflowChart
           cashflow={result.yearlyCashflow}
-          paybackYears={result.financialAnalysis.paybackYears}
-          installationCost={result.financialAnalysis.installationCost}
+          paybackYears={fa.paybackYears ?? 0}
+          installationCost={fa.installationCost ?? 0}
         />
       )}
 
@@ -529,15 +530,15 @@ function FinancialTab({
       {/* Bill Simulator */}
       <BillSimulator
         monthlyBillThb={monthlyBill}
-        monthlySavingsThb={result.financialAnalysis.monthlySavings}
-        annualProductionKwh={result.panelConfig.yearlyEnergyDcKwh}
-        electricityRate={result.electricityRate}
+        monthlySavingsThb={fa.monthlySavings ?? 0}
+        annualProductionKwh={result.panelConfig?.yearlyEnergyDcKwh ?? 0}
+        electricityRate={result.electricityRate ?? 0}
       />
 
       {/* Financing Calculator */}
       <FinancingCalculator
-        systemCost={result.financialAnalysis.installationCost}
-        annualSavings={result.financialAnalysis.yearlySavings}
+        systemCost={fa.installationCost ?? 0}
+        annualSavings={fa.yearlySavings ?? 0}
       />
 
       {/* Self-Consumption & Maintenance Summary */}
@@ -556,7 +557,7 @@ function FinancialTab({
               </div>
               <div className="text-lg font-semibold text-[var(--brand-primary)]">
                 {result.selfConsumptionRate
-                  ? `${(result.selfConsumptionRate * 100).toFixed(0)}%`
+                  ? `${((result.selfConsumptionRate ?? 0) * 100).toFixed(0)}%`
                   : 'N/A'}
               </div>
               <div className="text-xs text-[var(--brand-text-secondary)]">
@@ -568,7 +569,9 @@ function FinancialTab({
                 {'\u0E23\u0E32\u0E04\u0E32\u0E02\u0E32\u0E22\u0E04\u0E37\u0E19'}
               </div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
-                {result.netBillingRate ? `\u0E3F${result.netBillingRate.toFixed(1)}/kWh` : 'N/A'}
+                {result.netBillingRate
+                  ? `\u0E3F${(result.netBillingRate ?? 0).toFixed(1)}/kWh`
+                  : 'N/A'}
               </div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Net Billing Rate</div>
             </div>
@@ -1262,8 +1265,8 @@ export default function AnalyzePage() {
               <div className="text-center">
                 <div className="text-2xl font-bold text-emerald-600">
                   {(
-                    (result.panelConfig.yearlyEnergyDcKwh *
-                      result.solarPotential.carbonOffsetFactorKgPerMwh) /
+                    ((result.panelConfig.yearlyEnergyDcKwh ?? 0) *
+                      (result.solarPotential.carbonOffsetFactorKgPerMwh ?? 0)) /
                     1000
                   ).toFixed(1)}{' '}
                   {'\u0E15\u0E31\u0E19'}
