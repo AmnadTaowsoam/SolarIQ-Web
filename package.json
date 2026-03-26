@@ -16,7 +16,6 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@headlessui/react": "^2.2.9",
     "@line/liff": "^2.27.3",
     "@react-google-maps/api": "^2.19.3",
