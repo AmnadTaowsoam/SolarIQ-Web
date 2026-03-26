@@ -60,7 +60,9 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
       className="flex items-center gap-1 text-xs font-medium text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] transition-colors"
     >
       {label}
-      <ArrowUpDown className={`w-3 h-3 ${sortField === field ? 'text-[var(--brand-primary)]' : ''}`} />
+      <ArrowUpDown
+        className={`w-3 h-3 ${sortField === field ? 'text-[var(--brand-primary)]' : ''}`}
+      />
     </button>
   )
 
@@ -68,7 +70,7 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
     <Card>
       <CardHeader
         title="Panel Comparison"
-        subtitle={`${panels.length} panel options for ${systemSizeKw.toFixed(1)} kW system`}
+        subtitle={`${panels.length} panel options for ${(systemSizeKw ?? 0).toFixed(1)} kW system`}
       />
       <CardBody className="p-0">
         {/* Desktop table */}
@@ -76,20 +78,37 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--brand-border)]">
-                <th className="text-left px-4 py-3 text-xs font-medium text-[var(--brand-text-secondary)]">Brand / Model</th>
-                <th className="px-4 py-3"><SortButton field="wattage" label="Wattage" /></th>
-                <th className="px-4 py-3"><SortButton field="efficiencyPercent" label="Efficiency" /></th>
-                <th className="px-4 py-3"><SortButton field="pricePerWattThb" label="Price/W" /></th>
-                <th className="px-4 py-3"><SortButton field="warrantyYears" label="Warranty" /></th>
-                <th className="px-4 py-3 text-xs font-medium text-[var(--brand-text-secondary)]">Type</th>
-                <th className="px-4 py-3 text-xs font-medium text-[var(--brand-text-secondary)]">Total Cost</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-[var(--brand-text-secondary)]">
+                  Brand / Model
+                </th>
+                <th className="px-4 py-3">
+                  <SortButton field="wattage" label="Wattage" />
+                </th>
+                <th className="px-4 py-3">
+                  <SortButton field="efficiencyPercent" label="Efficiency" />
+                </th>
+                <th className="px-4 py-3">
+                  <SortButton field="pricePerWattThb" label="Price/W" />
+                </th>
+                <th className="px-4 py-3">
+                  <SortButton field="warrantyYears" label="Warranty" />
+                </th>
+                <th className="px-4 py-3 text-xs font-medium text-[var(--brand-text-secondary)]">
+                  Type
+                </th>
+                <th className="px-4 py-3 text-xs font-medium text-[var(--brand-text-secondary)]">
+                  Total Cost
+                </th>
               </tr>
             </thead>
             <tbody>
               {sorted.map((panel, idx) => {
                 const panelsNeeded = Math.ceil((systemSizeKw * 1000) / panel.wattage)
                 const totalCost = panelsNeeded * panel.wattage * panel.pricePerWattThb
-                const isRecommended = recommended && panel.brand === recommended.brand && panel.model === recommended.model
+                const isRecommended =
+                  recommended &&
+                  panel.brand === recommended.brand &&
+                  panel.model === recommended.model
                 return (
                   <tr
                     key={idx}
@@ -99,23 +118,33 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        {isRecommended && <Star className="w-4 h-4 text-[var(--brand-primary)] fill-current" />}
+                        {isRecommended && (
+                          <Star className="w-4 h-4 text-[var(--brand-primary)] fill-current" />
+                        )}
                         <div>
                           <div className="font-medium text-[var(--brand-text)]">{panel.brand}</div>
-                          <div className="text-xs text-[var(--brand-text-secondary)]">{panel.model}</div>
+                          <div className="text-xs text-[var(--brand-text-secondary)]">
+                            {panel.model}
+                          </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-center text-[var(--brand-text)]">{panel.wattage}W</td>
+                    <td className="px-4 py-3 text-center text-[var(--brand-text)]">
+                      {panel.wattage}W
+                    </td>
                     <td className="px-4 py-3 text-center">
-                      <span className={`font-medium ${panel.efficiencyPercent >= 21 ? 'text-green-600' : 'text-[var(--brand-text)]'}`}>
-                        {panel.efficiencyPercent.toFixed(1)}%
+                      <span
+                        className={`font-medium ${panel.efficiencyPercent >= 21 ? 'text-green-600' : 'text-[var(--brand-text)]'}`}
+                      >
+                        {(panel.efficiencyPercent ?? 0).toFixed(1)}%
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center text-[var(--brand-text)]">
                       {formatCurrency(panel.pricePerWattThb)}/W
                     </td>
-                    <td className="px-4 py-3 text-center text-[var(--brand-text)]">{panel.warrantyYears} yrs</td>
+                    <td className="px-4 py-3 text-center text-[var(--brand-text)]">
+                      {panel.warrantyYears} yrs
+                    </td>
                     <td className="px-4 py-3 text-center">
                       <span className="px-2 py-0.5 rounded-full text-xs bg-[var(--brand-primary)]/10 text-[var(--brand-primary)]">
                         {panel.type}
@@ -123,7 +152,9 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
                     </td>
                     <td className="px-4 py-3 text-center font-medium text-[var(--brand-text)]">
                       {formatCurrency(totalCost)}
-                      <div className="text-xs text-[var(--brand-text-secondary)]">{panelsNeeded} panels</div>
+                      <div className="text-xs text-[var(--brand-text-secondary)]">
+                        {panelsNeeded} panels
+                      </div>
                     </td>
                   </tr>
                 )
@@ -137,7 +168,8 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
           {sorted.map((panel, idx) => {
             const panelsNeeded = Math.ceil((systemSizeKw * 1000) / panel.wattage)
             const totalCost = panelsNeeded * panel.wattage * panel.pricePerWattThb
-            const isRecommended = recommended && panel.brand === recommended.brand && panel.model === recommended.model
+            const isRecommended =
+              recommended && panel.brand === recommended.brand && panel.model === recommended.model
             return (
               <div
                 key={idx}
@@ -149,10 +181,14 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    {isRecommended && <Star className="w-4 h-4 text-[var(--brand-primary)] fill-current" />}
+                    {isRecommended && (
+                      <Star className="w-4 h-4 text-[var(--brand-primary)] fill-current" />
+                    )}
                     <div>
                       <div className="font-medium text-[var(--brand-text)]">{panel.brand}</div>
-                      <div className="text-xs text-[var(--brand-text-secondary)]">{panel.model}</div>
+                      <div className="text-xs text-[var(--brand-text-secondary)]">
+                        {panel.model}
+                      </div>
                     </div>
                   </div>
                   <span className="px-2 py-0.5 rounded-full text-xs bg-[var(--brand-primary)]/10 text-[var(--brand-primary)]">
@@ -166,11 +202,15 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
                   </div>
                   <div>
                     <span className="text-[var(--brand-text-secondary)]">Efficiency: </span>
-                    <span className="font-medium text-[var(--brand-text)]">{panel.efficiencyPercent.toFixed(1)}%</span>
+                    <span className="font-medium text-[var(--brand-text)]">
+                      {(panel.efficiencyPercent ?? 0).toFixed(1)}%
+                    </span>
                   </div>
                   <div>
                     <span className="text-[var(--brand-text-secondary)]">Warranty: </span>
-                    <span className="font-medium text-[var(--brand-text)]">{panel.warrantyYears} yrs</span>
+                    <span className="font-medium text-[var(--brand-text)]">
+                      {panel.warrantyYears} yrs
+                    </span>
                   </div>
                   <div>
                     <span className="text-[var(--brand-text-secondary)]">Dimensions: </span>
@@ -180,8 +220,12 @@ export function PanelComparison({ panels, systemSizeKw }: PanelComparisonProps) 
                   </div>
                 </div>
                 <div className="mt-3 pt-3 border-t border-[var(--brand-border)] flex justify-between items-center">
-                  <span className="text-[var(--brand-text-secondary)] text-sm">{panelsNeeded} panels needed</span>
-                  <span className="font-bold text-[var(--brand-text)]">{formatCurrency(totalCost)}</span>
+                  <span className="text-[var(--brand-text-secondary)] text-sm">
+                    {panelsNeeded} panels needed
+                  </span>
+                  <span className="font-bold text-[var(--brand-text)]">
+                    {formatCurrency(totalCost)}
+                  </span>
                 </div>
               </div>
             )

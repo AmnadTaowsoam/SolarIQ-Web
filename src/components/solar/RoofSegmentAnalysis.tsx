@@ -94,7 +94,7 @@ export function RoofSegmentAnalysis({ segments }: RoofSegmentAnalysisProps) {
                   <div>
                     <div className="text-xs text-[var(--brand-text-secondary)]">Azimuth</div>
                     <div className="text-sm font-medium text-[var(--brand-text)]">
-                      {segment.azimuthDegrees.toFixed(1)}&deg;
+                      {(segment.azimuthDegrees ?? 0).toFixed(1)}&deg;
                     </div>
                   </div>
                 </div>
@@ -110,7 +110,7 @@ export function RoofSegmentAnalysis({ segments }: RoofSegmentAnalysisProps) {
                   <Ruler className="w-4 h-4 text-[var(--brand-primary)] mb-1" />
                   <span className="text-xs text-[var(--brand-text-secondary)]">Area</span>
                   <span className="text-sm font-semibold text-[var(--brand-text)]">
-                    {segment.areaM2.toFixed(1)} m&sup2;
+                    {(segment.areaM2 ?? 0).toFixed(1)} m&sup2;
                   </span>
                 </div>
                 <div className="flex flex-col items-center p-2 rounded-lg bg-amber-500/5">

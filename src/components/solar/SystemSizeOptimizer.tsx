@@ -12,7 +12,7 @@ import {
   Cell,
 } from 'recharts'
 import { Card, CardHeader, CardBody } from '@/components/ui'
-import { Zap, TrendingUp, Clock, Award } from 'lucide-react'
+import { Zap, Clock, Award } from 'lucide-react'
 import { CHART_COLORS } from '@/lib/constants'
 import type { SystemSizeOption } from '@/types'
 
@@ -29,10 +29,14 @@ const formatCurrency = (value: number): string =>
     maximumFractionDigits: 0,
   }).format(value)
 
-const formatCompact = (value: number): string => {
-  if (Math.abs(value) >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`
-  if (Math.abs(value) >= 1_000) return `${(value / 1_000).toFixed(0)}K`
-  return value.toFixed(0)
+const _formatCompact = (value: number): string => {
+  if (Math.abs(value) >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(1)}M`
+  }
+  if (Math.abs(value) >= 1_000) {
+    return `${(value / 1_000).toFixed(0)}K`
+  }
+  return (value ?? 0).toFixed(0)
 }
 
 export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptimizerProps) {
@@ -53,7 +57,7 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
 
   const paybackChartData = useMemo(() => {
     return options.map((opt) => ({
-      name: `${opt.sizeKwp.toFixed(1)} kWp`,
+      name: `${(opt.sizeKwp ?? 0).toFixed(1)} kWp`,
       paybackYears: opt.paybackYears,
       isRecommended: opt.isRecommended,
       panelsCount: opt.panelsCount,
@@ -81,7 +85,13 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
         {/* Interactive Slider */}
         <div className="mb-6 p-4 rounded-lg bg-[var(--brand-surface)] border border-[var(--brand-border)]">
           <label className="block text-sm font-medium text-[var(--brand-text)] mb-3">
-            {'\u0E40\u0E25\u0E37\u0E2D\u0E01\u0E08\u0E33\u0E19\u0E27\u0E19\u0E41\u0E1C\u0E07\u0E17\u0E35\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E01\u0E32\u0E23\u0E15\u0E34\u0E14\u0E15\u0E31\u0E49\u0E07'}: <span className="text-[var(--brand-primary)] font-bold">{closestOption.panelsCount} panels ({closestOption.sizeKwp.toFixed(1)} kWp)</span>
+            {
+              '\u0E40\u0E25\u0E37\u0E2D\u0E01\u0E08\u0E33\u0E19\u0E27\u0E19\u0E41\u0E1C\u0E07\u0E17\u0E35\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E01\u0E32\u0E23\u0E15\u0E34\u0E14\u0E15\u0E31\u0E49\u0E07'
+            }
+            :{' '}
+            <span className="text-[var(--brand-primary)] font-bold">
+              {closestOption.panelsCount} panels ({(closestOption.sizeKwp ?? 0).toFixed(1)} kWp)
+            </span>
           </label>
           <input
             type="range"
@@ -103,9 +113,8 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
         {/* Option Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {options.map((opt, idx) => {
-            const billCoverage = currentBillThb > 0
-              ? Math.min((opt.monthlySavingsThb / currentBillThb) * 100, 100)
-              : 0
+            const billCoverage =
+              currentBillThb > 0 ? Math.min((opt.monthlySavingsThb / currentBillThb) * 100, 100) : 0
 
             return (
               <div
@@ -114,8 +123,8 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
                   opt.isRecommended
                     ? 'border-[var(--brand-primary)] shadow-lg shadow-[var(--brand-primary)]/10'
                     : closestOption.panelsCount === opt.panelsCount
-                    ? 'border-blue-400 shadow-md'
-                    : 'border-[var(--brand-border)]'
+                      ? 'border-blue-400 shadow-md'
+                      : 'border-[var(--brand-border)]'
                 }`}
               >
                 {/* Recommended badge */}
@@ -129,7 +138,7 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
                 {/* System info */}
                 <div className="text-center mb-3 pt-1">
                   <div className="text-2xl font-bold text-[var(--brand-text)]">
-                    {opt.sizeKwp.toFixed(1)} <span className="text-sm font-normal">kWp</span>
+                    {(opt.sizeKwp ?? 0).toFixed(1)} <span className="text-sm font-normal">kWp</span>
                   </div>
                   <div className="text-xs text-[var(--brand-text-secondary)]">
                     {opt.panelsCount} panels
@@ -140,30 +149,42 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-[var(--brand-text-secondary)]">Installation</span>
-                    <span className="font-medium text-[var(--brand-text)]">{formatCurrency(opt.installationCostThb)}</span>
+                    <span className="font-medium text-[var(--brand-text)]">
+                      {formatCurrency(opt.installationCostThb)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[var(--brand-text-secondary)]">Monthly Savings</span>
-                    <span className="font-medium text-green-600">{formatCurrency(opt.monthlySavingsThb)}</span>
+                    <span className="font-medium text-green-600">
+                      {formatCurrency(opt.monthlySavingsThb)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[var(--brand-text-secondary)]">Yearly Savings</span>
-                    <span className="font-medium text-green-600">{formatCurrency(opt.annualSavingsThb)}</span>
+                    <span className="font-medium text-green-600">
+                      {formatCurrency(opt.annualSavingsThb)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[var(--brand-text-secondary)]">Payback</span>
-                    <span className="font-medium text-blue-600">{opt.paybackYears.toFixed(1)} yrs</span>
+                    <span className="font-medium text-blue-600">
+                      {(opt.paybackYears ?? 0).toFixed(1)} yrs
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[var(--brand-text-secondary)]">25-yr ROI</span>
-                    <span className="font-medium text-[var(--brand-primary)]">{opt.roi25YrPercent.toFixed(0)}%</span>
+                    <span className="font-medium text-[var(--brand-primary)]">
+                      {(opt.roi25YrPercent ?? 0).toFixed(0)}%
+                    </span>
                   </div>
 
                   {/* Self-consumption bar */}
                   <div className="pt-2">
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-[var(--brand-text-secondary)]">Self-consumption</span>
-                      <span className="font-medium text-[var(--brand-text)]">{opt.selfConsumptionPercent.toFixed(0)}%</span>
+                      <span className="font-medium text-[var(--brand-text)]">
+                        {(opt.selfConsumptionPercent ?? 0).toFixed(0)}%
+                      </span>
                     </div>
                     <div className="w-full h-2 rounded-full bg-[var(--brand-border)]">
                       <div
@@ -177,7 +198,9 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
                   <div className="pt-1">
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-[var(--brand-text-secondary)]">Bill Coverage</span>
-                      <span className="font-medium text-[var(--brand-text)]">{billCoverage.toFixed(0)}%</span>
+                      <span className="font-medium text-[var(--brand-text)]">
+                        {(billCoverage ?? 0).toFixed(0)}%
+                      </span>
                     </div>
                     <div className="w-full h-2 rounded-full bg-[var(--brand-border)]">
                       <div
@@ -191,7 +214,9 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
                 {/* Recommendation reason */}
                 {opt.recommendationReason && (
                   <div className="mt-3 pt-2 border-t border-[var(--brand-border)]">
-                    <p className="text-xs text-[var(--brand-text-secondary)] italic">{opt.recommendationReason}</p>
+                    <p className="text-xs text-[var(--brand-text-secondary)] italic">
+                      {opt.recommendationReason}
+                    </p>
                   </div>
                 )}
               </div>
@@ -207,7 +232,10 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
           </h4>
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={paybackChartData} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
+              <BarChart
+                data={paybackChartData}
+                margin={{ top: 10, right: 20, left: 10, bottom: 5 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--brand-border)" />
                 <XAxis
                   dataKey="name"
@@ -229,7 +257,10 @@ export function SystemSizeOptimizer({ options, currentBillThb }: SystemSizeOptim
                     borderRadius: '8px',
                     color: 'var(--brand-text)',
                   }}
-                  formatter={(value: number) => [`${value.toFixed(1)} years`, 'Payback Period']}
+                  formatter={(value: number) => [
+                    `${(value ?? 0).toFixed(1)} years`,
+                    'Payback Period',
+                  ]}
                 />
                 <Bar dataKey="paybackYears" radius={[4, 4, 0, 0]} barSize={40}>
                   {paybackChartData.map((entry, index) => (

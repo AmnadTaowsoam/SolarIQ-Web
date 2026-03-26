@@ -37,24 +37,47 @@ const formatNumber = (value: number): string =>
   new Intl.NumberFormat('th-TH', { maximumFractionDigits: 0 }).format(value)
 
 function getBarColor(clouds: number, rain: number): string {
-  if (rain > 5) return '#ef4444' // red - rain
-  if (clouds > 60) return '#eab308' // yellow - cloudy
+  if (rain > 5) {
+    return '#ef4444'
+  } // red - rain
+  if (clouds > 60) {
+    return '#eab308'
+  } // yellow - cloudy
   return '#22c55e' // green - good
 }
 
 function getWeatherEmoji(clouds: number, rain: number): string {
-  if (rain > 5) return '\u{1F327}\u{FE0F}'
-  if (clouds < 20) return '\u{2600}\u{FE0F}'
-  if (clouds < 50) return '\u{1F324}\u{FE0F}'
-  if (clouds < 80) return '\u{26C5}'
+  if (rain > 5) {
+    return '\u{1F327}\u{FE0F}'
+  }
+  if (clouds < 20) {
+    return '\u{2600}\u{FE0F}'
+  }
+  if (clouds < 50) {
+    return '\u{1F324}\u{FE0F}'
+  }
+  if (clouds < 80) {
+    return '\u{26C5}'
+  }
   return '\u{1F325}\u{FE0F}'
 }
 
-export function SevenDayForecast({ daily, totalPredicted7Day, totalIdeal7Day }: SevenDayForecastProps) {
+export function SevenDayForecast({
+  daily,
+  totalPredicted7Day,
+  totalIdeal7Day,
+}: SevenDayForecastProps) {
   const chartData = useMemo(() => {
-    if (!daily) return []
+    if (!daily) {
+      return []
+    }
     return daily.map((d, idx) => {
-      const dayLabel = idx === 0 ? '\u0E27\u0E31\u0E19\u0E19\u0E35\u0E49' : idx === 1 ? '\u0E1E\u0E23\u0E38\u0E48\u0E07\u0E19\u0E35\u0E49' : (THAI_DAY_NAMES[d.dayName] || d.dayName)
+      const dayLabel =
+        idx === 0
+          ? '\u0E27\u0E31\u0E19\u0E19\u0E35\u0E49'
+          : idx === 1
+            ? '\u0E1E\u0E23\u0E38\u0E48\u0E07\u0E19\u0E35\u0E49'
+            : THAI_DAY_NAMES[d.dayName] || d.dayName
       return {
         ...d,
         dayLabel,
@@ -65,9 +88,8 @@ export function SevenDayForecast({ daily, totalPredicted7Day, totalIdeal7Day }: 
     })
   }, [daily])
 
-  const forecastAccuracy = totalIdeal7Day > 0
-    ? ((totalPredicted7Day / totalIdeal7Day) * 100).toFixed(0)
-    : '0'
+  const forecastAccuracy =
+    totalIdeal7Day > 0 ? ((totalPredicted7Day / totalIdeal7Day) * 100).toFixed(0) : '0'
 
   if (!daily || daily.length === 0) {
     return (
@@ -83,7 +105,9 @@ export function SevenDayForecast({ daily, totalPredicted7Day, totalIdeal7Day }: 
   return (
     <Card>
       <CardHeader
-        title={'\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F 7 \u0E27\u0E31\u0E19'}
+        title={
+          '\u0E1E\u0E22\u0E32\u0E01\u0E23\u0E13\u0E4C\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F 7 \u0E27\u0E31\u0E19'
+        }
         subtitle="7-Day Energy Production Forecast"
       />
       <CardBody>
@@ -117,9 +141,7 @@ export function SevenDayForecast({ daily, totalPredicted7Day, totalIdeal7Day }: 
               <div className="text-xs text-[var(--brand-text-secondary)]">
                 {'\u0E04\u0E27\u0E32\u0E21\u0E41\u0E21\u0E48\u0E19\u0E22\u0E33'}
               </div>
-              <div className="text-lg font-bold text-purple-600">
-                {forecastAccuracy}%
-              </div>
+              <div className="text-lg font-bold text-purple-600">{forecastAccuracy}%</div>
             </div>
           </div>
         </div>
@@ -138,11 +160,15 @@ export function SevenDayForecast({ daily, totalPredicted7Day, totalIdeal7Day }: 
         <div className="flex items-center gap-4 mb-4 text-xs">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm bg-green-500" />
-            <span className="text-[var(--brand-text-secondary)]">{'\u0E41\u0E14\u0E14\u0E14\u0E35'}</span>
+            <span className="text-[var(--brand-text-secondary)]">
+              {'\u0E41\u0E14\u0E14\u0E14\u0E35'}
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm bg-yellow-500" />
-            <span className="text-[var(--brand-text-secondary)]">{'\u0E21\u0E35\u0E40\u0E21\u0E06'}</span>
+            <span className="text-[var(--brand-text-secondary)]">
+              {'\u0E21\u0E35\u0E40\u0E21\u0E06'}
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm bg-red-500" />
@@ -188,10 +214,23 @@ export function SevenDayForecast({ daily, totalPredicted7Day, totalIdeal7Day }: 
                   color: 'var(--brand-text)',
                 }}
                 formatter={(value: number, name: string) => {
-                  if (name === 'predictedKwh') return [`${value.toFixed(1)} kWh`, '\u0E04\u0E32\u0E14\u0E01\u0E32\u0E23\u0E13\u0E4C']
-                  if (name === 'idealKwh') return [`${value.toFixed(1)} kWh`, '\u0E2D\u0E38\u0E14\u0E21\u0E04\u0E15\u0E34']
-                  if (name === 'tempMax') return [`${value.toFixed(1)}\u00B0C`, '\u0E2D\u0E38\u0E13\u0E2B\u0E20\u0E39\u0E21\u0E34\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14']
-                  return [value, name]
+                  const v = value ?? 0
+                  if (name === 'predictedKwh') {
+                    return [
+                      `${v.toFixed(1)} kWh`,
+                      '\u0E04\u0E32\u0E14\u0E01\u0E32\u0E23\u0E13\u0E4C',
+                    ]
+                  }
+                  if (name === 'idealKwh') {
+                    return [`${v.toFixed(1)} kWh`, '\u0E2D\u0E38\u0E14\u0E21\u0E04\u0E15\u0E34']
+                  }
+                  if (name === 'tempMax') {
+                    return [
+                      `${v.toFixed(1)}\u00B0C`,
+                      '\u0E2D\u0E38\u0E13\u0E2B\u0E20\u0E39\u0E21\u0E34\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14',
+                    ]
+                  }
+                  return [v, name]
                 }}
               />
               <Legend

@@ -40,8 +40,12 @@ const SEASON_LABELS: Record<number, string> = {
 
 function getBarColor(productionKwh: number, maxProduction: number): string {
   const ratio = maxProduction > 0 ? productionKwh / maxProduction : 0
-  if (ratio >= 0.75) return '#22c55e' // green - high
-  if (ratio >= 0.5) return '#eab308' // yellow - medium
+  if (ratio >= 0.75) {
+    return '#22c55e'
+  } // green - high
+  if (ratio >= 0.5) {
+    return '#eab308'
+  } // yellow - medium
   return '#f97316' // orange - low (monsoon)
 }
 
@@ -50,7 +54,9 @@ const formatNumber = (value: number): string =>
 
 export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductionChartProps) {
   const stats = useMemo(() => {
-    if (!data || data.length === 0) return null
+    if (!data || data.length === 0) {
+      return null
+    }
     const sorted = [...data].sort((a, b) => b.productionKwh - a.productionKwh)
     const total = data.reduce((sum, d) => sum + d.productionKwh, 0)
     return {
@@ -63,7 +69,9 @@ export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductio
   }, [data])
 
   const chartData = useMemo(() => {
-    if (!data) return []
+    if (!data) {
+      return []
+    }
     return data.map((d) => ({
       ...d,
       season: SEASON_LABELS[d.month] || '',
@@ -86,7 +94,7 @@ export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductio
     <Card>
       <CardHeader
         title="Monthly Solar Production"
-        subtitle={`System size: ${systemSizeKwp.toFixed(2)} kWp`}
+        subtitle={`System size: ${(systemSizeKwp ?? 0).toFixed(2)} kWp`}
       />
       <CardBody>
         {/* Summary Stats */}
@@ -96,9 +104,7 @@ export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductio
               <TrendingUp className="w-5 h-5 text-green-500" />
               <div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">Best Month</div>
-                <div className="text-lg font-bold text-green-600">
-                  {stats.best.monthName}
-                </div>
+                <div className="text-lg font-bold text-green-600">{stats.best.monthName}</div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
                   {formatNumber(stats.best.productionKwh)} kWh
                 </div>
@@ -108,9 +114,7 @@ export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductio
               <TrendingDown className="w-5 h-5 text-orange-500" />
               <div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">Worst Month</div>
-                <div className="text-lg font-bold text-orange-600">
-                  {stats.worst.monthName}
-                </div>
+                <div className="text-lg font-bold text-orange-600">{stats.worst.monthName}</div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
                   {formatNumber(stats.worst.productionKwh)} kWh
                 </div>
@@ -135,11 +139,15 @@ export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductio
         <div className="flex items-center gap-4 mb-4 text-xs">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm bg-green-500" />
-            <span className="text-[var(--brand-text-secondary)]">High Production (Dry Season: Nov-Apr)</span>
+            <span className="text-[var(--brand-text-secondary)]">
+              High Production (Dry Season: Nov-Apr)
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm bg-orange-500" />
-            <span className="text-[var(--brand-text-secondary)]">Low Production (Monsoon: May-Oct)</span>
+            <span className="text-[var(--brand-text-secondary)]">
+              Low Production (Monsoon: May-Oct)
+            </span>
           </div>
         </div>
 
@@ -185,11 +193,20 @@ export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductio
                     productionKwh: 'Production',
                     sunshineHours: 'Sunshine Hours',
                   }
-                  if (name === 'productionKwh') return [`${formatNumber(value)} kWh`, labels[name]]
-                  if (name === 'sunshineHours') return [`${value.toFixed(0)} hrs`, labels[name]]
+                  if (name === 'productionKwh') {
+                    return [`${formatNumber(value)} kWh`, labels[name]]
+                  }
+                  if (name === 'sunshineHours') {
+                    return [`${(value ?? 0).toFixed(0)} hrs`, labels[name]]
+                  }
                   return [value, name]
                 }}
-                labelFormatter={(_label: string, payload: Array<{ payload?: { monthName?: string; efficiencyFactor?: number; season?: string } }>) => {
+                labelFormatter={(
+                  _label: string,
+                  payload: Array<{
+                    payload?: { monthName?: string; efficiencyFactor?: number; season?: string }
+                  }>
+                ) => {
                   if (payload && payload.length > 0) {
                     const item = payload[0].payload
                     return `${item?.monthName || _label} (${item?.season || ''}) - Efficiency: ${((item?.efficiencyFactor || 0) * 100).toFixed(1)}%`

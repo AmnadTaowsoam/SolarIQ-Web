@@ -34,15 +34,20 @@ const formatCurrency = (value: number): string =>
   }).format(value)
 
 const formatCompact = (value: number): string => {
-  if (Math.abs(value) >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`
-  if (Math.abs(value) >= 1_000) return `${(value / 1_000).toFixed(0)}K`
-  return value.toFixed(0)
+  if (Math.abs(value) >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(1)}M`
+  }
+  if (Math.abs(value) >= 1_000) {
+    return `${(value / 1_000).toFixed(0)}K`
+  }
+  return (value ?? 0).toFixed(0)
 }
 
 export function CashflowChart({ cashflow, paybackYears, installationCost }: CashflowChartProps) {
   const paybackYear = Math.ceil(paybackYears)
   const totalSavings25 = cashflow.length > 0 ? cashflow[cashflow.length - 1].cumulativeSavingThb : 0
-  const totalROI = installationCost > 0 ? ((totalSavings25 - installationCost) / installationCost) * 100 : 0
+  const totalROI =
+    installationCost > 0 ? ((totalSavings25 - installationCost) / installationCost) * 100 : 0
 
   // Add ROI zone coloring data
   const chartData = useMemo(() => {
@@ -81,22 +86,28 @@ export function CashflowChart({ cashflow, paybackYears, installationCost }: Cash
           <div className="flex items-center gap-3 p-3 rounded-lg bg-green-500/5">
             <DollarSign className="w-5 h-5 text-green-500" />
             <div>
-              <div className="text-xs text-[var(--brand-text-secondary)]">Total 25-Year Savings</div>
-              <div className="text-lg font-bold text-green-600">{formatCurrency(totalSavings25)}</div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">
+                Total 25-Year Savings
+              </div>
+              <div className="text-lg font-bold text-green-600">
+                {formatCurrency(totalSavings25)}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/5">
             <TrendingUp className="w-5 h-5 text-blue-500" />
             <div>
               <div className="text-xs text-[var(--brand-text-secondary)]">25-Year ROI</div>
-              <div className="text-lg font-bold text-blue-600">{totalROI.toFixed(0)}%</div>
+              <div className="text-lg font-bold text-blue-600">{(totalROI ?? 0).toFixed(0)}%</div>
             </div>
           </div>
           <div className="flex items-center gap-3 p-3 rounded-lg bg-purple-500/5">
             <DollarSign className="w-5 h-5 text-purple-500" />
             <div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Installation Cost</div>
-              <div className="text-lg font-bold text-[var(--brand-text)]">{formatCurrency(installationCost)}</div>
+              <div className="text-lg font-bold text-[var(--brand-text)]">
+                {formatCurrency(installationCost)}
+              </div>
             </div>
           </div>
         </div>

@@ -1,14 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { Card, CardHeader, CardBody } from '@/components/ui'
 import { CloudSun, Thermometer, Zap, Clock } from 'lucide-react'
 import type { LiveConditions, WeatherHourly } from '@/types'
@@ -22,32 +15,50 @@ const formatNumber = (value: number): string =>
   new Intl.NumberFormat('th-TH', { maximumFractionDigits: 1 }).format(value)
 
 function getWeatherIcon(clouds: number, description?: string): string {
-  if (description?.includes('rain') || description?.includes('storm')) return '\u{1F327}\u{FE0F}'
-  if (clouds < 20) return '\u{2600}\u{FE0F}'
-  if (clouds < 50) return '\u{1F324}\u{FE0F}'
-  if (clouds < 80) return '\u{26C5}'
+  if (description?.includes('rain') || description?.includes('storm')) {
+    return '\u{1F327}\u{FE0F}'
+  }
+  if (clouds < 20) {
+    return '\u{2600}\u{FE0F}'
+  }
+  if (clouds < 50) {
+    return '\u{1F324}\u{FE0F}'
+  }
+  if (clouds < 80) {
+    return '\u{26C5}'
+  }
   return '\u{1F327}\u{FE0F}'
 }
 
 function getTempEfficiencyColor(temp: number): string {
-  if (temp < 30) return 'text-green-500'
-  if (temp < 35) return 'text-yellow-500'
+  if (temp < 30) {
+    return 'text-green-500'
+  }
+  if (temp < 35) {
+    return 'text-yellow-500'
+  }
   return 'text-red-500'
 }
 
 function getTempEfficiencyBg(temp: number): string {
-  if (temp < 30) return 'bg-green-500/10'
-  if (temp < 35) return 'bg-yellow-500/10'
+  if (temp < 30) {
+    return 'bg-green-500/10'
+  }
+  if (temp < 35) {
+    return 'bg-yellow-500/10'
+  }
   return 'bg-red-500/10'
 }
 
 export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeatherYieldProps) {
   const sparklineData = useMemo(() => {
-    if (!hourlyForecast || hourlyForecast.length === 0) return []
+    if (!hourlyForecast || hourlyForecast.length === 0) {
+      return []
+    }
     return hourlyForecast.slice(0, 24).map((h) => ({
       time: h.time,
       kWh: h.predictedKwh,
-      label: new Date(h.time).getHours().toString().padStart(2, '0') + ':00',
+      label: `${new Date(h.time).getHours().toString().padStart(2, '0')}:00`,
     }))
   }, [hourlyForecast])
 
@@ -68,7 +79,9 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
   return (
     <Card>
       <CardHeader
-        title={'\u0E2A\u0E20\u0E32\u0E1E\u0E2D\u0E32\u0E01\u0E32\u0E28 \u0E13 \u0E1B\u0E31\u0E08\u0E08\u0E38\u0E1A\u0E31\u0E19'}
+        title={
+          '\u0E2A\u0E20\u0E32\u0E1E\u0E2D\u0E32\u0E01\u0E32\u0E28 \u0E13 \u0E1B\u0E31\u0E08\u0E08\u0E38\u0E1A\u0E31\u0E19'
+        }
         subtitle="Live Weather & Yield"
       />
       <CardBody>
@@ -83,7 +96,7 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
                   {'\u0E2D\u0E38\u0E13\u0E2B\u0E20\u0E39\u0E21\u0E34'}
                 </div>
                 <div className={`text-xl font-bold ${getTempEfficiencyColor(weather.temp)}`}>
-                  {weather.temp.toFixed(1)}&deg;C
+                  {(weather.temp ?? 0).toFixed(1)}&deg;C
                 </div>
               </div>
             </div>
@@ -95,9 +108,7 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
                 <div className="text-xs text-[var(--brand-text-secondary)]">
                   {'\u0E40\u0E21\u0E06\u0E1B\u0E01\u0E04\u0E25\u0E38\u0E21'}
                 </div>
-                <div className="text-xl font-bold text-[var(--brand-text)]">
-                  {weather.clouds}%
-                </div>
+                <div className="text-xl font-bold text-[var(--brand-text)]">{weather.clouds}%</div>
               </div>
             </div>
 
@@ -106,7 +117,9 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
               <Zap className="w-6 h-6 text-[var(--brand-primary)]" />
               <div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {'\u0E01\u0E33\u0E25\u0E31\u0E07\u0E1C\u0E25\u0E34\u0E15\u0E02\u0E13\u0E30\u0E19\u0E35\u0E49'}
+                  {
+                    '\u0E01\u0E33\u0E25\u0E31\u0E07\u0E1C\u0E25\u0E34\u0E15\u0E02\u0E13\u0E30\u0E19\u0E35\u0E49'
+                  }
                 </div>
                 <div className="text-xl font-bold text-[var(--brand-primary)]">
                   {formatNumber(predictedOutputNow)} kW
@@ -129,14 +142,24 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
           </div>
 
           {/* Temperature Efficiency Indicator */}
-          <div className={`flex items-center gap-2 p-2 rounded-lg ${getTempEfficiencyBg(weather.temp)}`}>
+          <div
+            className={`flex items-center gap-2 p-2 rounded-lg ${getTempEfficiencyBg(weather.temp)}`}
+          >
             <Thermometer className={`w-4 h-4 ${getTempEfficiencyColor(weather.temp)}`} />
             <span className="text-sm text-[var(--brand-text)]">
-              {'\u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E\u0E08\u0E32\u0E01\u0E2D\u0E38\u0E13\u0E2B\u0E20\u0E39\u0E21\u0E34'}: <span className={`font-bold ${getTempEfficiencyColor(weather.temp)}`}>{(tempEfficiency * 100).toFixed(1)}%</span>
+              {
+                '\u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E\u0E08\u0E32\u0E01\u0E2D\u0E38\u0E13\u0E2B\u0E20\u0E39\u0E21\u0E34'
+              }
+              :{' '}
+              <span className={`font-bold ${getTempEfficiencyColor(weather.temp)}`}>
+                {((tempEfficiency ?? 0) * 100).toFixed(1)}%
+              </span>
             </span>
             {weather.temp >= 35 && (
               <span className="text-xs text-red-500 ml-auto">
-                {'\u0E2D\u0E38\u0E13\u0E2B\u0E20\u0E39\u0E21\u0E34\u0E2A\u0E39\u0E07 - \u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E\u0E25\u0E14\u0E25\u0E07'}
+                {
+                  '\u0E2D\u0E38\u0E13\u0E2B\u0E20\u0E39\u0E21\u0E34\u0E2A\u0E39\u0E07 - \u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E\u0E25\u0E14\u0E25\u0E07'
+                }
               </span>
             )}
           </div>
@@ -145,7 +168,9 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
           {sparklineData.length > 0 && (
             <div>
               <div className="text-sm font-medium text-[var(--brand-text)] mb-2">
-                {'\u0E01\u0E23\u0E32\u0E1F\u0E04\u0E32\u0E14\u0E01\u0E32\u0E23\u0E13\u0E4C\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15 24 \u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07'}
+                {
+                  '\u0E01\u0E23\u0E32\u0E1F\u0E04\u0E32\u0E14\u0E01\u0E32\u0E23\u0E13\u0E4C\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15 24 \u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07'
+                }
               </div>
               <div className="h-[120px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -170,7 +195,10 @@ export function LiveWeatherYield({ liveConditions, hourlyForecast }: LiveWeather
                         color: 'var(--brand-text)',
                         fontSize: 12,
                       }}
-                      formatter={(value: number) => [`${formatNumber(value)} kWh`, '\u0E01\u0E33\u0E25\u0E31\u0E07\u0E1C\u0E25\u0E34\u0E15']}
+                      formatter={(value: number) => [
+                        `${formatNumber(value)} kWh`,
+                        '\u0E01\u0E33\u0E25\u0E31\u0E07\u0E1C\u0E25\u0E34\u0E15',
+                      ]}
                     />
                     <Area
                       type="monotone"

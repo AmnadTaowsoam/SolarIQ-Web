@@ -34,7 +34,9 @@ const ENERGY_COLORS = [
 
 function getPanelColor(energyKwh: number): string {
   for (let i = ENERGY_COLORS.length - 1; i >= 0; i--) {
-    if (energyKwh >= ENERGY_COLORS[i].threshold) return ENERGY_COLORS[i].color
+    if (energyKwh >= ENERGY_COLORS[i].threshold) {
+      return ENERGY_COLORS[i].color
+    }
   }
   return ENERGY_COLORS[0].color
 }
@@ -52,7 +54,7 @@ function computeOffset(
   centerLat: number,
   centerLng: number,
   distanceM: number,
-  bearingDeg: number,
+  bearingDeg: number
 ): { lat: number; lng: number } {
   const R = 6371000 // Earth radius in meters
   const latRad = (centerLat * Math.PI) / 180
@@ -84,7 +86,7 @@ function getPanelCorners(
   centerLat: number,
   centerLng: number,
   orientation: string,
-  azimuthDeg: number,
+  azimuthDeg: number
 ): { lat: number; lng: number }[] {
   // Panel dimensions based on orientation
   const w = orientation === 'LANDSCAPE' ? PANEL_HEIGHT_M : PANEL_WIDTH_M
@@ -100,8 +102,8 @@ function getPanelCorners(
 
   // Four corners at bearings relative to azimuth
   const bearings = [
-    azimuthDeg - baseAngle,       // top-left
-    azimuthDeg + baseAngle,       // top-right
+    azimuthDeg - baseAngle, // top-left
+    azimuthDeg + baseAngle, // top-right
     azimuthDeg + 180 - baseAngle, // bottom-right
     azimuthDeg + 180 + baseAngle, // bottom-left
   ]
@@ -132,7 +134,9 @@ export function PanelLayoutMap({
 
   // Energy from solarPanelConfigs for current slider position
   const currentConfigEnergy = useMemo(() => {
-    if (!panelConfigs || panelConfigs.length === 0) return null
+    if (!panelConfigs || panelConfigs.length === 0) {
+      return null
+    }
     const idx = Math.min(panelCount - 1, panelConfigs.length - 1)
     return idx >= 0 ? panelConfigs[idx] : null
   }, [panelConfigs, panelCount])
@@ -149,7 +153,9 @@ export function PanelLayoutMap({
   // Panels are pre-sorted by energy (best first) from API.
   // Slice by panelCount from slider.
   const visiblePanels = useMemo(() => {
-    if (!panels || panels.length === 0) return []
+    if (!panels || panels.length === 0) {
+      return []
+    }
     return panels.slice(0, panelCount)
   }, [panels, panelCount])
 
@@ -157,12 +163,7 @@ export function PanelLayoutMap({
   const panelPolygons = useMemo(() => {
     return visiblePanels.map((panel, idx) => {
       const azimuth = segmentAzimuths[panel.segmentIndex] ?? 180 // default south-facing
-      const corners = getPanelCorners(
-        panel.centerLat,
-        panel.centerLng,
-        panel.orientation,
-        azimuth,
-      )
+      const corners = getPanelCorners(panel.centerLat, panel.centerLng, panel.orientation, azimuth)
       return {
         panel,
         index: idx,
@@ -174,30 +175,40 @@ export function PanelLayoutMap({
 
   // Flux heatmap grid
   const fluxHeatmapRects = useMemo(() => {
-    if (!showFluxHeatmap || visiblePanels.length === 0) return []
+    if (!showFluxHeatmap || visiblePanels.length === 0) {
+      return []
+    }
     const gridSizeM = 3 // 3 meter grid cells
     const mPerDegLat = 111320
     const mPerDegLng = 111320 * Math.cos((latitude * Math.PI) / 180)
     const gridLat = gridSizeM / mPerDegLat
     const gridLng = gridSizeM / mPerDegLng
 
-    const grid: Record<string, { totalEnergy: number; count: number; lat: number; lng: number }> = {}
+    const grid: Record<string, { totalEnergy: number; count: number; lat: number; lng: number }> =
+      {}
     visiblePanels.forEach((p) => {
       const gLat = Math.floor(p.centerLat / gridLat) * gridLat
       const gLng = Math.floor(p.centerLng / gridLng) * gridLng
       const key = `${gLat}_${gLng}`
-      if (!grid[key]) grid[key] = { totalEnergy: 0, count: 0, lat: gLat, lng: gLng }
+      if (!grid[key]) {
+        grid[key] = { totalEnergy: 0, count: 0, lat: gLat, lng: gLng }
+      }
       grid[key].totalEnergy += p.yearlyEnergyDcKwh
       grid[key].count += 1
     })
 
     const maxE = Math.max(...Object.values(grid).map((g) => g.totalEnergy / g.count), 1)
     return Object.values(grid).map((cell) => {
-      const intensity = (cell.totalEnergy / cell.count) / maxE
+      const intensity = cell.totalEnergy / cell.count / maxE
       const r = Math.round(255 * Math.min(intensity * 2, 1))
       const g = Math.round(255 * Math.min((1 - intensity) * 2, 1))
       return {
-        bounds: { north: cell.lat + gridLat, south: cell.lat, east: cell.lng + gridLng, west: cell.lng },
+        bounds: {
+          north: cell.lat + gridLat,
+          south: cell.lat,
+          east: cell.lng + gridLng,
+          west: cell.lng,
+        },
         color: `rgb(${r}, ${g}, 0)`,
         opacity: 0.2 + intensity * 0.35,
       }
@@ -206,7 +217,9 @@ export function PanelLayoutMap({
 
   // Segment boundary polygons
   const segmentPolygons = useMemo(() => {
-    if (!segments || segments.length === 0) return []
+    if (!segments || segments.length === 0) {
+      return []
+    }
     const colors = ['#f97316', '#3b82f6', '#22c55e', '#8b5cf6', '#ec4899', '#14b8a6']
     return segments.map((seg, idx) => {
       const cLat = seg.centerLat || latitude
@@ -333,13 +346,14 @@ export function PanelLayoutMap({
           }}
         >
           {/* Flux heatmap overlay */}
-          {showFluxHeatmap && fluxHeatmapRects.map((rect, idx) => (
-            <Rectangle
-              key={`flux-${idx}`}
-              bounds={rect.bounds}
-              options={{ fillColor: rect.color, fillOpacity: rect.opacity, strokeWeight: 0 }}
-            />
-          ))}
+          {showFluxHeatmap &&
+            fluxHeatmapRects.map((rect, idx) => (
+              <Rectangle
+                key={`flux-${idx}`}
+                bounds={rect.bounds}
+                options={{ fillColor: rect.color, fillOpacity: rect.opacity, strokeWeight: 0 }}
+              />
+            ))}
 
           {/* Segment boundary polygons */}
           {segmentPolygons.map((sp, idx) => (
@@ -403,13 +417,14 @@ export function PanelLayoutMap({
                   <div className="flex justify-between">
                     <span>ผลิตไฟต่อปี:</span>
                     <span className="font-bold text-green-600">
-                      {selectedPanel.yearlyEnergyDcKwh.toFixed(0)} kWh
+                      {(selectedPanel.yearlyEnergyDcKwh ?? 0).toFixed(0)} kWh
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>พิกัด:</span>
                     <span className="font-mono text-[10px]">
-                      {selectedPanel.centerLat.toFixed(6)}, {selectedPanel.centerLng.toFixed(6)}
+                      {(selectedPanel.centerLat ?? 0).toFixed(6)},{' '}
+                      {(selectedPanel.centerLng ?? 0).toFixed(6)}
                     </span>
                   </div>
                 </div>
@@ -423,8 +438,13 @@ export function PanelLayoutMap({
           <span className="font-medium text-[var(--brand-text)]">ผลิตไฟต่อปี:</span>
           {ENERGY_COLORS.map((ec, i) => (
             <div key={i} className="flex items-center gap-1.5">
-              <div className="w-4 h-3 rounded-sm border border-white/50" style={{ backgroundColor: ec.color }} />
-              <span>{ec.threshold}+ kWh ({ec.label})</span>
+              <div
+                className="w-4 h-3 rounded-sm border border-white/50"
+                style={{ backgroundColor: ec.color }}
+              />
+              <span>
+                {ec.threshold}+ kWh ({ec.label})
+              </span>
             </div>
           ))}
           <div className="ml-auto text-[10px]">

@@ -46,10 +46,7 @@ export function HourlyIrradianceChart({ data }: HourlyIrradianceChartProps) {
 
   return (
     <Card>
-      <CardHeader
-        title="Hourly Solar Irradiance"
-        subtitle="Daily irradiance profile (W/m2)"
-      />
+      <CardHeader title="Hourly Solar Irradiance" subtitle="Daily irradiance profile (W/m2)" />
       <CardBody>
         {/* Metrics */}
         <div className="grid grid-cols-3 gap-4 mb-6">
@@ -58,7 +55,7 @@ export function HourlyIrradianceChart({ data }: HourlyIrradianceChartProps) {
             <div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Peak Irradiance</div>
               <div className="text-lg font-bold text-[var(--brand-text)]">
-                {maxIrradiance.toFixed(0)} W/m&sup2;
+                {(maxIrradiance ?? 0).toFixed(0)} W/m&sup2;
               </div>
             </div>
           </div>
@@ -76,7 +73,7 @@ export function HourlyIrradianceChart({ data }: HourlyIrradianceChartProps) {
             <div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Avg Peak</div>
               <div className="text-lg font-bold text-[var(--brand-text)]">
-                {avgPeakIrradiance.toFixed(0)} W/m&sup2;
+                {(avgPeakIrradiance ?? 0).toFixed(0)} W/m&sup2;
               </div>
             </div>
           </div>
@@ -115,7 +112,7 @@ export function HourlyIrradianceChart({ data }: HourlyIrradianceChartProps) {
                   color: 'var(--brand-text)',
                 }}
                 formatter={(value: number) => [
-                  `${value.toFixed(1)} W/m\u00B2`,
+                  `${(value ?? 0).toFixed(1)} W/m\u00B2`,
                   'Irradiance',
                 ]}
               />

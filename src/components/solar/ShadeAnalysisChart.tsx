@@ -30,18 +30,19 @@ export function ShadeAnalysisChart({ shadeAnalysis }: ShadeAnalysisChartProps) {
     isWorst: MONTHS[i] === shadeAnalysis.worstMonth.substring(0, 3),
   }))
 
-  const getBarColor = (entry: typeof data[0]) => {
-    if (entry.isBest) return CHART_COLORS.secondary
-    if (entry.isWorst) return '#ef4444'
+  const getBarColor = (entry: (typeof data)[0]) => {
+    if (entry.isBest) {
+      return CHART_COLORS.secondary
+    }
+    if (entry.isWorst) {
+      return '#ef4444'
+    }
     return CHART_COLORS.primary
   }
 
   return (
     <Card>
-      <CardHeader
-        title="Shade Analysis"
-        subtitle="Monthly shade percentage throughout the year"
-      />
+      <CardHeader title="Shade Analysis" subtitle="Monthly shade percentage throughout the year" />
       <CardBody>
         {/* Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -50,7 +51,7 @@ export function ShadeAnalysisChart({ shadeAnalysis }: ShadeAnalysisChartProps) {
             <div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Annual Avg Shade</div>
               <div className="text-lg font-bold text-[var(--brand-text)]">
-                {shadeAnalysis.annualAverageShadePercent.toFixed(1)}%
+                {(shadeAnalysis.annualAverageShadePercent ?? 0).toFixed(1)}%
               </div>
             </div>
           </div>
@@ -59,7 +60,7 @@ export function ShadeAnalysisChart({ shadeAnalysis }: ShadeAnalysisChartProps) {
             <div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Shade-Free Hours</div>
               <div className="text-lg font-bold text-[var(--brand-text)]">
-                {shadeAnalysis.shadeFreeHoursPerDay.toFixed(1)} hrs/day
+                {(shadeAnalysis.shadeFreeHoursPerDay ?? 0).toFixed(1)} hrs/day
               </div>
             </div>
           </div>
@@ -84,10 +85,7 @@ export function ShadeAnalysisChart({ shadeAnalysis }: ShadeAnalysisChartProps) {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--brand-border)" />
-              <XAxis
-                dataKey="month"
-                tick={{ fontSize: 12, fill: 'var(--brand-text-secondary)' }}
-              />
+              <XAxis dataKey="month" tick={{ fontSize: 12, fill: 'var(--brand-text-secondary)' }} />
               <YAxis
                 tick={{ fontSize: 12, fill: 'var(--brand-text-secondary)' }}
                 label={{
@@ -105,14 +103,14 @@ export function ShadeAnalysisChart({ shadeAnalysis }: ShadeAnalysisChartProps) {
                   borderRadius: '8px',
                   color: 'var(--brand-text)',
                 }}
-                formatter={(value: number) => [`${value.toFixed(1)}%`, 'Shade']}
+                formatter={(value: number) => [`${(value ?? 0).toFixed(1)}%`, 'Shade']}
               />
               <ReferenceLine
                 y={shadeAnalysis.annualAverageShadePercent}
                 stroke={CHART_COLORS.tertiary}
                 strokeDasharray="5 5"
                 label={{
-                  value: `Avg: ${shadeAnalysis.annualAverageShadePercent.toFixed(1)}%`,
+                  value: `Avg: ${(shadeAnalysis.annualAverageShadePercent ?? 0).toFixed(1)}%`,
                   position: 'right',
                   style: { fontSize: 11, fill: CHART_COLORS.tertiary },
                 }}
@@ -129,7 +127,10 @@ export function ShadeAnalysisChart({ shadeAnalysis }: ShadeAnalysisChartProps) {
         {/* Legend */}
         <div className="flex items-center justify-center gap-6 mt-4 text-xs text-[var(--brand-text-secondary)]">
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: CHART_COLORS.secondary }} />
+            <div
+              className="w-3 h-3 rounded-sm"
+              style={{ backgroundColor: CHART_COLORS.secondary }}
+            />
             <span>Best Month</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -141,7 +142,10 @@ export function ShadeAnalysisChart({ shadeAnalysis }: ShadeAnalysisChartProps) {
             <span>Regular</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-6 h-0.5" style={{ backgroundColor: CHART_COLORS.tertiary, borderTop: '2px dashed' }} />
+            <div
+              className="w-6 h-0.5"
+              style={{ backgroundColor: CHART_COLORS.tertiary, borderTop: '2px dashed' }}
+            />
             <span>Average</span>
           </div>
         </div>
