@@ -8,8 +8,10 @@
 import React from 'react'
 import { useLIFF, useLIFFUser } from '../../../context/LIFFContext'
 import { closeWindow, openWindow } from '../../../lib/liff'
+import { useTranslations } from 'next-intl'
 
 export default function AboutPage(): React.ReactElement {
+  const t = useTranslations('aboutPage')
   const { isInitialized, isLoading: liffLoading, error: liffError, isInLINE } = useLIFF()
   const user = useLIFFUser()
 
@@ -33,7 +35,7 @@ export default function AboutPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">กำลังโหลด...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -45,7 +47,7 @@ export default function AboutPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">⚠️</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">เกิดข้อผิดพลาด</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('error')}</h1>
           <p className="text-red-500">{liffError.message}</p>
         </div>
       </div>
@@ -59,7 +61,7 @@ export default function AboutPage(): React.ReactElement {
         <div className="text-center">
           <div className="text-5xl mb-3">☀️</div>
           <h1 className="text-2xl font-bold mb-1">SolarIQ</h1>
-          <p className="text-green-100 text-sm">ผู้ช่วยวิเคราะห์โซลาร์เซลล์อัจฉริยะ</p>
+          <p className="text-green-100 text-sm">{t('subtitle')}</p>
         </div>
       </header>
 
@@ -67,63 +69,70 @@ export default function AboutPage(): React.ReactElement {
       <main className="px-4 -mt-8">
         {/* Main Card */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-4">
-          <h2 className="text-lg font-bold text-gray-800 mb-3">
-            🎯 เกี่ยวกับ SolarIQ
-          </h2>
-          <p className="text-gray-600 text-sm leading-relaxed mb-4">
-            SolarIQ เป็นบริการวิเคราะห์ศักยภาพการติดตั้งโซลาร์เซลล์บนหลังคาบ้านของคุณ
-            โดยใช้ข้อมูลจาก Google Solar API และ AI เพื่อคำนวณผลตอบแทนการลงทุนอย่างแม่นยำ
-          </p>
+          <h2 className="text-lg font-bold text-gray-800 mb-3">🎯 {t('title')}</h2>
+          <p className="text-gray-600 text-sm leading-relaxed mb-4">{t('description')}</p>
 
           {/* Features */}
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600">📍</span>
+                <span className="text-green-600">{t('features.locationAnalysis.icon')}</span>
               </div>
               <div>
-                <h3 className="font-medium text-gray-800 text-sm">วิเคราะห์ตำแหน่งบ้าน</h3>
-                <p className="text-gray-500 text-xs">ปักหมุดบนแผนที่เพื่อวิเคราะห์ศักยภาพแสงอาทิตย์</p>
+                <h3 className="font-medium text-gray-800 text-sm">
+                  {t('features.locationAnalysis.title')}
+                </h3>
+                <p className="text-gray-500 text-xs">
+                  {t('features.locationAnalysis.description')}
+                </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-yellow-600">📸</span>
+                <span className="text-yellow-600">{t('features.billScanning.icon')}</span>
               </div>
               <div>
-                <h3 className="font-medium text-gray-800 text-sm">สแกนบิลค่าไฟ</h3>
-                <p className="text-gray-500 text-xs">ถ่ายรูปบิลค่าไฟเพื่อคำนวณการประหยัด</p>
+                <h3 className="font-medium text-gray-800 text-sm">
+                  {t('features.billScanning.title')}
+                </h3>
+                <p className="text-gray-500 text-xs">{t('features.billScanning.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-blue-600">💰</span>
+                <span className="text-blue-600">{t('features.roiCalculation.icon')}</span>
               </div>
               <div>
-                <h3 className="font-medium text-gray-800 text-sm">คำนวณ ROI</h3>
-                <p className="text-gray-500 text-xs">ดูผลตอบแทนการลงทุนและระยะเวลาคืนทุน</p>
+                <h3 className="font-medium text-gray-800 text-sm">
+                  {t('features.roiCalculation.title')}
+                </h3>
+                <p className="text-gray-500 text-xs">{t('features.roiCalculation.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-purple-600">📄</span>
+                <span className="text-purple-600">{t('features.pdfQuote.icon')}</span>
               </div>
               <div>
-                <h3 className="font-medium text-gray-800 text-sm">ใบเสนอราคา PDF</h3>
-                <p className="text-gray-500 text-xs">รับใบเสนอราคาและรายละเอียดครบถ้วน</p>
+                <h3 className="font-medium text-gray-800 text-sm">
+                  {t('features.pdfQuote.title')}
+                </h3>
+                <p className="text-gray-500 text-xs">{t('features.pdfQuote.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-green-600">🌱</span>
+                <span className="text-green-600">{t('features.carbonFootprint.icon')}</span>
               </div>
               <div>
-                <h3 className="font-medium text-gray-800 text-sm">ลด Carbon Footprint</h3>
-                <p className="text-gray-500 text-xs">ช่วยลดการปล่อยก๊าซเรือนกระจก</p>
+                <h3 className="font-medium text-gray-800 text-sm">
+                  {t('features.carbonFootprint.title')}
+                </h3>
+                <p className="text-gray-500 text-xs">{t('features.carbonFootprint.description')}</p>
               </div>
             </div>
           </div>
@@ -132,29 +141,27 @@ export default function AboutPage(): React.ReactElement {
         {/* Stats Card */}
         <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-4">
           <h2 className="text-lg font-bold text-gray-800 mb-4 text-center">
-            📊 สถิติ SolarIQ
+            📊 {t('stats.title')}
           </h2>
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-green-600">1,200+</div>
-              <div className="text-xs text-gray-500">การวิเคราะห์</div>
+              <div className="text-xs text-gray-500">{t('stats.analyses')}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-blue-600">500+</div>
-              <div className="text-xs text-gray-500">ติดตั้งแล้ว</div>
+              <div className="text-xs text-gray-500">{t('stats.installations')}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-yellow-600">15M+</div>
-              <div className="text-xs text-gray-500">บาทประหยัด</div>
+              <div className="text-xs text-gray-500">{t('stats.savings')}</div>
             </div>
           </div>
         </div>
 
         {/* Contact Card */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-4">
-          <h2 className="text-lg font-bold text-gray-800 mb-3">
-            📞 ติดต่อเรา
-          </h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-3">📞 {t('contact.title')}</h2>
           <div className="space-y-3">
             <button
               onClick={handleContactUs}
@@ -164,7 +171,7 @@ export default function AboutPage(): React.ReactElement {
                 <span className="text-green-600">📱</span>
               </div>
               <div className="text-left">
-                <div className="font-medium text-gray-800 text-sm">โทรหาเรา</div>
+                <div className="font-medium text-gray-800 text-sm">{t('contact.call')}</div>
                 <div className="text-gray-500 text-xs">02-000-0000</div>
               </div>
             </button>
@@ -179,7 +186,7 @@ export default function AboutPage(): React.ReactElement {
                 <span className="text-blue-600">🌐</span>
               </div>
               <div className="text-left">
-                <div className="font-medium text-gray-800 text-sm">เว็บไซต์</div>
+                <div className="font-medium text-gray-800 text-sm">{t('contact.website')}</div>
                 <div className="text-gray-500 text-xs">solariq.app</div>
               </div>
             </a>
@@ -192,7 +199,7 @@ export default function AboutPage(): React.ReactElement {
                 <span className="text-purple-600">✉️</span>
               </div>
               <div className="text-left">
-                <div className="font-medium text-gray-800 text-sm">อีเมล</div>
+                <div className="font-medium text-gray-800 text-sm">{t('contact.email')}</div>
                 <div className="text-gray-500 text-xs">contact@solariq.app</div>
               </div>
             </a>
@@ -201,8 +208,8 @@ export default function AboutPage(): React.ReactElement {
 
         {/* Version */}
         <div className="text-center text-gray-400 text-xs mb-4">
-          <p>SolarIQ v1.0.0</p>
-          <p>© 2024 SolarIQ. All rights reserved.</p>
+          <p>{t('version')}</p>
+          <p>{t('copyright')}</p>
         </div>
 
         {/* Close Button (only in LINE) */}
@@ -211,7 +218,7 @@ export default function AboutPage(): React.ReactElement {
             onClick={handleClose}
             className="w-full py-3 bg-gray-100 text-gray-600 rounded-xl font-medium mb-4"
           >
-            ปิด
+            {t('close')}
           </button>
         )}
       </main>

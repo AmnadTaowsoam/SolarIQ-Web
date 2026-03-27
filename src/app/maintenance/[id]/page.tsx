@@ -1,6 +1,7 @@
 'use client'
 
 import { use, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
 import {
@@ -14,6 +15,7 @@ import WarrantyBadge from '@/components/maintenance/WarrantyBadge'
 import Link from 'next/link'
 
 export default function InstallationDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = useTranslations('maintenanceDetailPage')
   const { id } = use(params)
   const { user } = useAuth()
   const { data: installation, isLoading } = useInstallation(id)
@@ -42,7 +44,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
   if (!installation) {
     return (
       <AppLayout user={user}>
-        <div className="p-12 text-center text-gray-500">ไม่พบข้อมูลงานติดตั้ง</div>
+        <div className="p-12 text-center text-gray-500">{t('notFound')}</div>
       </AppLayout>
     )
   }
@@ -53,7 +55,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <Link href="/maintenance" className="hover:text-amber-600">
-            บำรุงรักษา
+            {t('title')}
           </Link>
           <span>/</span>
           <span className="text-gray-900">{installation.customer_name}</span>
@@ -65,7 +67,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
             <div>
               <h1 className="text-xl font-bold text-gray-900">{installation.customer_name}</h1>
               <p className="mt-1 text-sm text-gray-500">
-                {installation.address || 'ไม่ระบุที่อยู่'}
+                {installation.address || t('addressNotSpecified')}
               </p>
             </div>
             <span
@@ -75,29 +77,29 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                   : 'bg-gray-100 text-gray-600'
               }`}
             >
-              {installation.status === 'active' ? 'ใช้งาน' : installation.status}
+              {installation.status === 'active' ? t('status.active') : installation.status}
             </span>
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
             <div>
-              <span className="text-gray-500">ขนาดระบบ</span>
+              <span className="text-gray-500">{t('systemInfo.systemSize')}</span>
               <p className="font-semibold">{installation.system_size_kw} kWp</p>
             </div>
             <div>
-              <span className="text-gray-500">แผงโซลาร์</span>
+              <span className="text-gray-500">{t('systemInfo.solarPanels')}</span>
               <p className="font-semibold">
                 {installation.panel_brand || '-'} {installation.panel_model || ''}
               </p>
             </div>
             <div>
-              <span className="text-gray-500">อินเวอร์เตอร์</span>
+              <span className="text-gray-500">{t('systemInfo.inverter')}</span>
               <p className="font-semibold">
                 {installation.inverter_brand || '-'} {installation.inverter_model || ''}
               </p>
             </div>
             <div>
-              <span className="text-gray-500">วันที่ติดตั้ง</span>
+              <span className="text-gray-500">{t('systemInfo.installationDate')}</span>
               <p className="font-semibold">
                 {installation.installation_date
                   ? new Date(installation.installation_date).toLocaleDateString('th-TH')
@@ -110,17 +112,17 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
           {installation.warranty_status && (
             <div className="mt-4 flex flex-wrap gap-2">
               <WarrantyBadge
-                label="แผง"
+                label={t('warranty.panel')}
                 status={installation.warranty_status.panel.status}
                 daysRemaining={installation.warranty_status.panel.days_remaining}
               />
               <WarrantyBadge
-                label="อินเวอร์เตอร์"
+                label={t('warranty.inverter')}
                 status={installation.warranty_status.inverter.status}
                 daysRemaining={installation.warranty_status.inverter.days_remaining}
               />
               <WarrantyBadge
-                label="ติดตั้ง"
+                label={t('warranty.installation')}
                 status={installation.warranty_status.installation.status}
                 daysRemaining={installation.warranty_status.installation.days_remaining}
               />
@@ -131,12 +133,12 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
         {/* Maintenance Schedules */}
         <div className="rounded-xl border bg-white p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">ตารางบำรุงรักษา</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('schedule.title')}</h2>
             <button
               onClick={() => setShowScheduleForm(!showScheduleForm)}
               className="rounded-lg bg-amber-100 px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-200"
             >
-              + เพิ่มตาราง
+              {t('schedule.addSchedule')}
             </button>
           </div>
 
@@ -159,15 +161,15 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
             >
               <div className="grid gap-3 md:grid-cols-4">
                 <select name="type" required className="rounded-lg border px-3 py-2 text-sm">
-                  <option value="cleaning">ล้างแผง</option>
-                  <option value="inspection">ตรวจสอบระบบ</option>
-                  <option value="inverter_check">เช็คอินเวอร์เตอร์</option>
-                  <option value="general">ทั่วไป</option>
+                  <option value="cleaning">{t('schedule.type.cleaning')}</option>
+                  <option value="inspection">{t('schedule.type.inspection')}</option>
+                  <option value="inverter_check">{t('schedule.type.inverterCheck')}</option>
+                  <option value="general">{t('schedule.type.general')}</option>
                 </select>
                 <select name="frequency" className="rounded-lg border px-3 py-2 text-sm">
-                  <option value="3">ทุก 3 เดือน</option>
-                  <option value="6">ทุก 6 เดือน</option>
-                  <option value="12">ทุกปี</option>
+                  <option value="3">{t('schedule.frequency.3')}</option>
+                  <option value="6">{t('schedule.frequency.6')}</option>
+                  <option value="12">{t('schedule.frequency.12')}</option>
                 </select>
                 <input
                   name="next_date"
@@ -177,7 +179,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                 />
                 <input
                   name="notes"
-                  placeholder="หมายเหตุ"
+                  placeholder={t('schedule.notes')}
                   className="rounded-lg border px-3 py-2 text-sm"
                 />
               </div>
@@ -185,7 +187,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                 type="submit"
                 className="mt-3 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600"
               >
-                บันทึก
+                {t('schedule.save')}
               </button>
             </form>
           )}
@@ -197,39 +199,39 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                   <div>
                     <span className="text-sm font-medium text-gray-900">
                       {s.maintenance_type === 'cleaning'
-                        ? 'ล้างแผง'
+                        ? t('schedule.type.cleaning')
                         : s.maintenance_type === 'inspection'
-                          ? 'ตรวจสอบ'
+                          ? t('schedule.type.inspection')
                           : s.maintenance_type === 'inverter_check'
-                            ? 'เช็คอินเวอร์เตอร์'
+                            ? t('schedule.type.inverterCheck')
                             : s.maintenance_type}
                     </span>
                     <span className="ml-2 text-xs text-gray-500">
-                      ทุก {s.frequency_months} เดือน
+                      {t('schedule.everyXMonths', { count: s.frequency_months })}
                     </span>
                   </div>
                   <span className="text-sm text-gray-600">
                     {s.next_due_date
-                      ? `ครั้งถัดไป: ${new Date(s.next_due_date).toLocaleDateString('th-TH')}`
-                      : 'ยังไม่กำหนด'}
+                      ? `${t('schedule.nextDue')} ${new Date(s.next_due_date).toLocaleDateString('th-TH')}`
+                      : t('schedule.notSet')}
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">ยังไม่มีตารางบำรุงรักษา</p>
+            <p className="text-sm text-gray-500">{t('schedule.noSchedule')}</p>
           )}
         </div>
 
         {/* Service Records */}
         <div className="rounded-xl border bg-white p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">ประวัติการบำรุงรักษา</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('records.title')}</h2>
             <button
               onClick={() => setShowRecordForm(!showRecordForm)}
               className="rounded-lg bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-200"
             >
-              + บันทึกการซ่อม
+              {t('records.addRecord')}
             </button>
           </div>
 
@@ -259,34 +261,34 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                   className="rounded-lg border px-3 py-2 text-sm"
                 />
                 <select name="type" required className="rounded-lg border px-3 py-2 text-sm">
-                  <option value="cleaning">ล้างแผง</option>
-                  <option value="inspection">ตรวจสอบ</option>
-                  <option value="repair">ซ่อม</option>
-                  <option value="replacement">เปลี่ยนอุปกรณ์</option>
+                  <option value="cleaning">{t('records.type.cleaning')}</option>
+                  <option value="inspection">{t('records.type.inspection')}</option>
+                  <option value="repair">{t('records.type.repair')}</option>
+                  <option value="replacement">{t('records.type.replacement')}</option>
                 </select>
                 <input
                   name="technician"
-                  placeholder="ช่างผู้ดูแล"
+                  placeholder={t('records.technicianPlaceholder')}
                   className="rounded-lg border px-3 py-2 text-sm"
                 />
               </div>
               <textarea
                 name="description"
-                placeholder="รายละเอียดงาน"
+                placeholder={t('records.descriptionPlaceholder')}
                 className="mt-3 w-full rounded-lg border px-3 py-2 text-sm"
                 rows={2}
               />
               <input
                 name="cost"
                 type="number"
-                placeholder="ค่าใช้จ่าย (บาท)"
+                placeholder={t('records.costPlaceholder')}
                 className="mt-2 rounded-lg border px-3 py-2 text-sm"
               />
               <button
                 type="submit"
                 className="mt-3 rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600"
               >
-                บันทึก
+                {t('records.save')}
               </button>
             </form>
           )}
@@ -298,13 +300,13 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-900">
                       {r.service_type === 'cleaning'
-                        ? 'ล้างแผง'
+                        ? t('records.type.cleaning')
                         : r.service_type === 'inspection'
-                          ? 'ตรวจสอบ'
+                          ? t('records.type.inspection')
                           : r.service_type === 'repair'
-                            ? 'ซ่อม'
+                            ? t('records.type.repair')
                             : r.service_type === 'replacement'
-                              ? 'เปลี่ยนอุปกรณ์'
+                              ? t('records.type.replacement')
                               : r.service_type}
                     </span>
                     <span className="text-xs text-gray-500">
@@ -313,14 +315,18 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                   </div>
                   {r.description && <p className="mt-1 text-sm text-gray-600">{r.description}</p>}
                   <div className="mt-2 flex gap-4 text-xs text-gray-500">
-                    {r.technician_name && <span>ช่าง: {r.technician_name}</span>}
-                    {r.cost_thb && <span>ค่าใช้จ่าย: {r.cost_thb.toLocaleString()} บาท</span>}
+                    {r.technician_name && (
+                      <span>{t('records.technicianLabel', { name: r.technician_name })}</span>
+                    )}
+                    {r.cost_thb && (
+                      <span>{t('records.costLabel', { cost: r.cost_thb.toLocaleString() })}</span>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">ยังไม่มีประวัติการบำรุงรักษา</p>
+            <p className="text-sm text-gray-500">{t('records.noRecords')}</p>
           )}
         </div>
       </div>

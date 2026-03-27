@@ -1,47 +1,119 @@
-'use client';
+'use client'
 
 /**
- * Plan Selector Component (WK-017)
- * Displays available subscription plans for selection
+ * Plan Selector Component (WK-017, WK-102)
+ * Displays available subscription plans for selection with billing cycle toggle
  */
 
-import React from 'react';
-import { Check } from 'lucide-react';
-import { PLANS, formatPrice, type Plan, type PlanType } from '@/types/billing';
+import React, { useState } from 'react'
+import { Check, Info } from 'lucide-react'
+import { PLANS, formatPrice, type Plan, type PlanType } from '@/types/billing'
 
 interface PlanSelectorProps {
-  currentPlan?: PlanType;
-  onSelectPlan: (planId: PlanType) => void;
-  isLoading?: boolean;
+  currentPlan?: PlanType
+  onSelectPlan: (planId: PlanType) => void
+  isLoading?: boolean
+  showBillingCycle?: boolean
+  onBillingCycleChange?: (cycle: 'monthly' | 'annual') => void
+  initialBillingCycle?: 'monthly' | 'annual'
 }
 
-export function PlanSelector({ currentPlan, onSelectPlan, isLoading }: PlanSelectorProps) {
-  const plans = Object.values(PLANS);
+export function PlanSelector({
+  currentPlan,
+  onSelectPlan,
+  isLoading,
+  showBillingCycle = true,
+  onBillingCycleChange,
+  initialBillingCycle = 'monthly',
+}: PlanSelectorProps) {
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>(initialBillingCycle)
+
+  const handleBillingCycleChange = (cycle: 'monthly' | 'annual') => {
+    setBillingCycle(cycle)
+    onBillingCycleChange?.(cycle)
+  }
+
+  const plans = Object.values(PLANS)
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {plans.map((plan) => (
-        <PlanCard
-          key={plan.id}
-          plan={plan}
-          isCurrentPlan={currentPlan === plan.id}
-          onSelect={() => onSelectPlan(plan.id)}
-          isLoading={isLoading}
-        />
-      ))}
+    <div>
+      {/* Billing Cycle Toggle */}
+      {showBillingCycle && (
+        <div className="flex justify-center mb-8">
+          <div className="bg-gray-100 rounded-lg p-1 inline-flex">
+            <button
+              onClick={() => handleBillingCycleChange('monthly')}
+              className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                billingCycle === 'monthly'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => handleBillingCycleChange('annual')}
+              className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                billingCycle === 'annual'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Annual
+              <span className="ml-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                Save 20%
+              </span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {plans.map((plan) => (
+          <PlanCard
+            key={plan.id}
+            plan={plan}
+            isCurrentPlan={currentPlan === plan.id}
+            billingCycle={billingCycle}
+            onSelect={() => onSelectPlan(plan.id)}
+            isLoading={isLoading}
+          />
+        ))}
+      </div>
+
+      {/* Annual Billing Info */}
+      {billingCycle === 'annual' && (
+        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
+          <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-blue-900">Annual Billing Benefits</p>
+            <p className="text-sm text-blue-700 mt-1">
+              Save 20% compared to monthly billing. Your subscription will be billed annually and
+              you can cancel at any time before the next billing cycle.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
-  );
+  )
 }
 
 interface PlanCardProps {
-  plan: Plan;
-  isCurrentPlan: boolean;
-  onSelect: () => void;
-  isLoading?: boolean;
+  plan: Plan
+  isCurrentPlan: boolean
+  billingCycle: 'monthly' | 'annual'
+  onSelect: () => void
+  isLoading?: boolean
 }
 
-function PlanCard({ plan, isCurrentPlan, onSelect, isLoading }: PlanCardProps) {
-  const isPopular = plan.id === 'pro';
+function PlanCard({ plan, isCurrentPlan, billingCycle, onSelect, isLoading }: PlanCardProps) {
+  const isPopular = plan.id === 'pro'
+
+  // Calculate price based on billing cycle
+  const monthlyPrice = plan.price_thb
+  const annualPrice = Math.floor(plan.price_thb * 12 * 0.8) // 20% discount
+  const displayPrice = billingCycle === 'annual' ? annualPrice : monthlyPrice
+  const pricePerMonth = billingCycle === 'annual' ? Math.floor(annualPrice / 12) : monthlyPrice
 
   return (
     <div
@@ -49,8 +121,8 @@ function PlanCard({ plan, isCurrentPlan, onSelect, isLoading }: PlanCardProps) {
         isPopular
           ? 'border-blue-600 shadow-lg'
           : isCurrentPlan
-          ? 'border-green-600'
-          : 'border-gray-200'
+            ? 'border-green-600'
+            : 'border-gray-200'
       }`}
     >
       {isPopular && (
@@ -72,22 +144,19 @@ function PlanCard({ plan, isCurrentPlan, onSelect, isLoading }: PlanCardProps) {
       <div className="text-center mb-6">
         <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
         <div className="mt-4">
-          <span className="text-4xl font-bold text-gray-900">
-            {formatPrice(plan.price_thb)}
-          </span>
-          <span className="text-gray-500">/month</span>
+          <span className="text-4xl font-bold text-gray-900">{formatPrice(displayPrice)}</span>
+          <span className="text-gray-500">{billingCycle === 'annual' ? '/year' : '/month'}</span>
         </div>
+        {billingCycle === 'annual' && (
+          <p className="text-sm text-green-600 mt-1">
+            {formatPrice(pricePerMonth)}/month (billed annually)
+          </p>
+        )}
       </div>
 
       <div className="space-y-3 mb-6">
-        <FeatureRow
-          text={`${plan.leads_per_month ?? 'Unlimited'} leads/month`}
-          included={true}
-        />
-        <FeatureRow
-          text={`${plan.users ?? 'Unlimited'} users`}
-          included={true}
-        />
+        <FeatureRow text={`${plan.leads_per_month ?? 'Unlimited'} leads/month`} included={true} />
+        <FeatureRow text={`${plan.users ?? 'Unlimited'} users`} included={true} />
         {plan.features.map((feature, index) => (
           <FeatureRow key={index} text={feature.name} included={feature.included} />
         ))}
@@ -100,19 +169,19 @@ function PlanCard({ plan, isCurrentPlan, onSelect, isLoading }: PlanCardProps) {
           isCurrentPlan
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
             : isPopular
-            ? 'bg-blue-600 text-white hover:bg-blue-700'
-            : 'bg-gray-900 text-white hover:bg-gray-800'
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-gray-900 text-white hover:bg-gray-800'
         }`}
       >
         {isCurrentPlan ? 'Current Plan' : 'Select Plan'}
       </button>
     </div>
-  );
+  )
 }
 
 interface FeatureRowProps {
-  text: string;
-  included: boolean;
+  text: string
+  included: boolean
 }
 
 function FeatureRow({ text, included }: FeatureRowProps) {
@@ -127,7 +196,7 @@ function FeatureRow({ text, included }: FeatureRowProps) {
       </div>
       <span className={included ? 'text-gray-700' : 'text-gray-400'}>{text}</span>
     </div>
-  );
+  )
 }
 
-export default PlanSelector;
+export default PlanSelector

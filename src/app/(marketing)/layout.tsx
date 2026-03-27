@@ -138,7 +138,7 @@ const footerSections = [
       { label: 'เกี่ยวกับเรา', href: '/about' },
       { label: 'ติดต่อเรา', href: '/contact' },
       { label: 'ร่วมงานกับเรา', href: '/contact' },
-      { label: 'บล็อก', href: '/landing' },
+      { label: 'บล็อก', href: '/blog' },
     ],
   },
   {
@@ -248,6 +248,9 @@ function MarketingFooter() {
             </Link>
             <Link href="/privacy" className="hover:text-primary-600 transition-colors">
               ความเป็นส่วนตัว
+            </Link>
+            <Link href="/pdpa" className="hover:text-primary-600 transition-colors">
+              PDPA Compliance
             </Link>
             <Link href="/refund-policy" className="hover:text-primary-600 transition-colors">
               การคืนเงิน

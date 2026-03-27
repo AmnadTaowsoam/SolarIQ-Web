@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 interface ConsentType {
   id: string
@@ -17,42 +18,47 @@ interface ConsentData {
   consents: ConsentType[]
 }
 
-const CONSENT_DEFINITIONS = [
-  {
-    type: 'marketing',
-    label: 'การตลาดและโปรโมชั่น',
-    description: 'ยินยอมรับข้อมูลข่าวสาร โปรโมชั่น และสิทธิประโยชน์พิเศษจาก SolarIQ',
-    icon: '📢',
-  },
-  {
-    type: 'contact_sharing',
-    label: 'แชร์ข้อมูลติดต่อ',
-    description: 'ยินยอมให้แชร์ข้อมูลติดต่อกับผู้ติดตั้งที่ได้รับการรับรองเพื่อรับใบเสนอราคา',
-    icon: '🤝',
-  },
-  {
-    type: 'analysis_results',
-    label: 'ผลวิเคราะห์ต้นทุน',
-    description: 'ยินยอมให้เก็บผลการวิเคราะห์ต้นทุนไฟฟ้าและศักยภาพโซลาร์เซลล์',
-    icon: '📊',
-  },
-  {
-    type: 'proposal_sharing',
-    label: 'รับใบเสนอราคา',
-    description: 'ยินยอมรับใบเสนอราคาและข้อเสนอจากผู้ติดตั้งผ่านระบบ',
-    icon: '📋',
-  },
-]
-
 export default function ConsentPage(): React.ReactElement {
+  const t = useTranslations('consentPage')
   const router = useRouter()
+
+  const consentDefinitions = useMemo(
+    () => [
+      {
+        type: 'marketing',
+        label: t('types.marketing.label'),
+        description: t('types.marketing.description'),
+        icon: t('types.marketing.icon'),
+      },
+      {
+        type: 'contact_sharing',
+        label: t('types.contactSharing.label'),
+        description: t('types.contactSharing.description'),
+        icon: t('types.contactSharing.icon'),
+      },
+      {
+        type: 'analysis_results',
+        label: t('types.analysisResults.label'),
+        description: t('types.analysisResults.description'),
+        icon: t('types.analysisResults.icon'),
+      },
+      {
+        type: 'proposal_sharing',
+        label: t('types.proposalSharing.label'),
+        description: t('types.proposalSharing.description'),
+        icon: t('types.proposalSharing.icon'),
+      },
+    ],
+    [t]
+  )
+
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
   const [consentTypes, setConsentTypes] = useState<ConsentType[]>(
-    CONSENT_DEFINITIONS.map((def) => ({
+    consentDefinitions.map((def) => ({
       id: def.type,
       type: def.type,
       label: def.label,
@@ -74,7 +80,7 @@ export default function ConsentPage(): React.ReactElement {
       if (response.ok) {
         const data: ConsentData = await response.json()
 
-        const mergedConsents = CONSENT_DEFINITIONS.map((def) => {
+        const mergedConsents = consentDefinitions.map((def) => {
           const existingConsent = data.consents.find((c) => c.type === def.type)
           return {
             id: def.type,
@@ -94,7 +100,7 @@ export default function ConsentPage(): React.ReactElement {
     } finally {
       setIsLoading(false)
     }
-  }, [router])
+  }, [router, consentDefinitions])
 
   useEffect(() => {
     fetchConsents()
@@ -136,7 +142,7 @@ export default function ConsentPage(): React.ReactElement {
 
         if (!response.ok) {
           const errorData = await response.json()
-          throw new Error(errorData.detail || 'เกิดข้อผิดพลาดในการบันทึกความยินยอม')
+          throw new Error(errorData.detail || t('errors.save'))
         }
       }
 
@@ -146,7 +152,7 @@ export default function ConsentPage(): React.ReactElement {
         router.push('/liff')
       }, 2000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด')
+      setError(err instanceof Error ? err.message : t('errors.general'))
     } finally {
       setIsSubmitting(false)
     }
@@ -161,7 +167,7 @@ export default function ConsentPage(): React.ReactElement {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">กำลังโหลด...</p>
+          <p className="mt-4 text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -186,8 +192,8 @@ export default function ConsentPage(): React.ReactElement {
               />
             </svg>
           </div>
-          <h2 className="mt-4 text-xl font-semibold text-gray-900">บันทึกความยินยอมสำเร็จ!</h2>
-          <p className="mt-2 text-gray-600">กำลังนำคุณไปยังหน้าหลัก...</p>
+          <h2 className="mt-4 text-xl font-semibold text-gray-900">{t('success.title')}</h2>
+          <p className="mt-2 text-gray-600">{t('success.redirecting')}</p>
         </div>
       </div>
     )
@@ -199,20 +205,15 @@ export default function ConsentPage(): React.ReactElement {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-green-600 text-white p-4 shadow-md">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">การยินยอม (PDPA)</h1>
+          <h1 className="text-xl font-bold">{t('title')}</h1>
         </div>
       </header>
 
       <main className="p-4 max-w-lg mx-auto">
         <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              การให้ความยินยอมข้อมูลส่วนบุคคล
-            </h2>
-            <p className="text-sm text-gray-600">
-              เลือกสิ่งที่คุณต้องการยินยอมให้เราดำเนินการได้
-              คุณสามารถเปลี่ยนแปลงได้ทุกเมื่อในหน้าการตั้งค่า
-            </p>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">{t('description')}</h2>
+            <p className="text-sm text-gray-600">{t('rights.description')}</p>
           </div>
 
           {error && (
@@ -223,7 +224,7 @@ export default function ConsentPage(): React.ReactElement {
 
           <div className="space-y-4">
             {consentTypes.map((consent) => {
-              const definition = CONSENT_DEFINITIONS.find((d) => d.type === consent.type)
+              const definition = consentDefinitions.find((d) => d.type === consent.type)
               return (
                 <div
                   key={consent.type}
@@ -251,13 +252,14 @@ export default function ConsentPage(): React.ReactElement {
                           />
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">{consent.description}</p>
-                      {consent.granted_at && (
-                        <p className="text-xs text-gray-400 mt-2">
-                          ยินยอมเมื่อ: {new Date(consent.granted_at).toLocaleDateString('th-TH')}
-                        </p>
-                      )}
                     </div>
+                    <p className="text-sm text-gray-600 mt-1">{consent.description}</p>
+                    {consent.granted_at && (
+                      <p className="text-xs text-gray-400 mt-2">
+                        {t('consents.grantedAt')}{' '}
+                        {new Date(consent.granted_at).toLocaleDateString('th-TH')}
+                      </p>
+                    )}
                   </div>
                 </div>
               )
@@ -280,11 +282,8 @@ export default function ConsentPage(): React.ReactElement {
                 />
               </svg>
               <div>
-                <p className="text-sm text-blue-800 font-medium">สิทธิ์ของคุณ</p>
-                <p className="text-xs text-blue-600 mt-1">
-                  คุณมีสิทธิ์ขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลของคุณได้ตลอดเวลา ติดต่อเราที่
-                  privacy@solariqapp.com
-                </p>
+                <p className="text-sm text-blue-800 font-medium">{t('rights.title')}</p>
+                <p className="text-xs text-blue-600 mt-1">{t('rights.description')}</p>
               </div>
             </div>
           </div>
@@ -317,10 +316,10 @@ export default function ConsentPage(): React.ReactElement {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  กำลังบันทึก...
+                  {t('actions.submitting')}
                 </span>
               ) : (
-                `บันทึกความยินยอม (${grantedCount}/${consentTypes.length})`
+                `${t('actions.save')} (${grantedCount}/${consentTypes.length})`
               )}
             </button>
 
@@ -329,14 +328,12 @@ export default function ConsentPage(): React.ReactElement {
               disabled={isSubmitting}
               className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
             >
-              ข้ามไปก่อน
+              {t('actions.skip')}
             </button>
           </div>
         </div>
 
-        <p className="text-xs text-gray-500 text-center">
-          การให้ความยินยอมเป็นไปตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)
-        </p>
+        <p className="text-xs text-gray-500 text-center">{t('pdpaNotice')}</p>
 
         {/* WK-021: PDPA data rights link & DPO contact */}
         <div className="mt-4 bg-white rounded-xl shadow-sm p-4 space-y-3">
@@ -344,21 +341,21 @@ export default function ConsentPage(): React.ReactElement {
             href="/liff/data-rights"
             className="flex items-center justify-between text-sm font-medium text-green-700 hover:text-green-800 transition-colors"
           >
-            <span>สิทธิของคุณตาม PDPA</span>
+            <span>{t('dataRightsLink')}</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </a>
           <div className="border-t border-gray-100 pt-3 text-xs text-gray-500 space-y-0.5">
-            <p className="font-medium text-gray-600">ติดต่อ DPO (เจ้าหน้าที่คุ้มครองข้อมูล)</p>
+            <p className="font-medium text-gray-600">{t('dpoContact.title')}</p>
             <p>
-              อีเมล:{' '}
+              {t('dpoContact.email')}:{' '}
               <a href="mailto:dpo@solariq.app" className="text-green-600 hover:underline">
                 dpo@solariq.app
               </a>
             </p>
             <p>
-              โทร:{' '}
+              {t('dpoContact.phone')}:{' '}
               <a href="tel:085-662-1113" className="text-green-600 hover:underline">
                 085-662-1113
               </a>

@@ -1,5 +1,20 @@
-export { useLeads, useLead, useUpdateLeadStatus, useAssignLead, useCreateLead, useUpdateLead, useDeleteLead } from './useLeads'
-export { useSolarAnalysis, useSolarHistory, useDashboardStats, useLeadsOverTime, useTopLocations, useRecentLeads } from './useSolar'
+export {
+  useLeads,
+  useLead,
+  useUpdateLeadStatus,
+  useAssignLead,
+  useCreateLead,
+  useUpdateLead,
+  useDeleteLead,
+} from './useLeads'
+export {
+  useSolarAnalysis,
+  useSolarHistory,
+  useDashboardStats,
+  useLeadsOverTime,
+  useTopLocations,
+  useRecentLeads,
+} from './useSolar'
 export {
   useSolarAnalysisAdvanced,
   useShadeAnalysis,
@@ -21,11 +36,26 @@ export {
   useFinancingOptions,
   useSmartAlerts,
 } from './useSolarAdvanced'
-export { useDocuments, useDocument, useUploadDocument, useDeleteDocument, useDocumentPreview } from './useKnowledge'
-export { 
-  useInstallationCosts, useCreateInstallationCost, useUpdateInstallationCost, useDeleteInstallationCost,
-  useElectricityRates, useCreateElectricityRate, useUpdateElectricityRate, useDeleteElectricityRate,
-  useEquipmentPricing, useCreateEquipmentPricing, useUpdateEquipmentPricing, useDeleteEquipmentPricing
+export {
+  useDocuments,
+  useDocument,
+  useUploadDocument,
+  useDeleteDocument,
+  useDocumentPreview,
+} from './useKnowledge'
+export {
+  useInstallationCosts,
+  useCreateInstallationCost,
+  useUpdateInstallationCost,
+  useDeleteInstallationCost,
+  useElectricityRates,
+  useCreateElectricityRate,
+  useUpdateElectricityRate,
+  useDeleteElectricityRate,
+  useEquipmentPricing,
+  useCreateEquipmentPricing,
+  useUpdateEquipmentPricing,
+  useDeleteEquipmentPricing,
 } from './usePricing'
 export { usePrivacy } from './usePrivacy'
 export {
@@ -72,4 +102,40 @@ export {
 export { useCurrency } from './useCurrency'
 export { useDateTime } from './useDateTime'
 export { useAuditLogs, useAuditStats, useExportAuditLogs } from './useAuditLogs'
-export { useActiveSessions, useTerminateSession, useTerminateOthers, useLoginHistory } from './useSessions'
+export {
+  useActiveSessions,
+  useTerminateSession,
+  useTerminateOthers,
+  useLoginHistory,
+} from './useSessions'
+export {
+  useTaxProfile,
+  useUpdateTaxProfile,
+  useVATInvoices,
+  useVATInvoice,
+  useCreateVATInvoice,
+  useVATInvoicePdf,
+  useSendVATInvoiceEmail,
+  useMarkVATInvoicePaid,
+  useVoidVATInvoice,
+  useCreateCreditNote,
+  useGenerateMonthlyStatement,
+  vatInvoiceKeys,
+  VATDocumentType,
+  VATDocumentStatus,
+} from './useVATInvoices'
+export {
+  usePermits,
+  usePermit,
+  usePermitChecklist,
+  useApprovedEquipment,
+  usePermitTemplates,
+  usePermitStats,
+  createPermitPackage,
+  updatePermitPackage,
+  generatePermitDocument,
+  reviewPermitDocument,
+  DEMO_PERMIT_PACKAGES,
+  DEMO_APPROVED_EQUIPMENT,
+  DEMO_PERMIT_TEMPLATES,
+} from './usePermits'

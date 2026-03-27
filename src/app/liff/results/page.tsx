@@ -9,7 +9,8 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useLIFF, useLIFFUser } from '../../../context/LIFFContext'
 import { sendFlexMessage, closeWindow, getAccessToken } from '../../../lib/liff'
-import { SolarAnalysisResult, FinancialAnalysis, SolarPanelConfig } from '../../../types'
+import { SolarAnalysisResult } from '../../../types'
+import { useTranslations } from 'next-intl'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
@@ -38,10 +39,11 @@ function calculateCarbonOffset(yearlyEnergyKwh: number, factorKgPerMwh: number):
 
 function calculateEquivalentTrees(carbonOffsetTons: number): number {
   // Average tree absorbs ~22kg CO2/year
-  return Math.round(carbonOffsetTons * 1000 / 22)
+  return Math.round((carbonOffsetTons * 1000) / 22)
 }
 
 export default function ResultsPage(): React.ReactElement {
+  const t = useTranslations('resultsPage')
   const { isInitialized, isLoading: liffLoading, error: liffError } = useLIFF()
   const user = useLIFFUser()
   const searchParams = useSearchParams()
@@ -86,11 +88,11 @@ export default function ResultsPage(): React.ReactElement {
       const data = await response.json()
       setAnalysis(data.data || data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาดในการโหลดข้อมูล')
+      setError(err instanceof Error ? err.message : t('errors.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [analysisId, user?.userId])
+  }, [analysisId, user?.userId, t])
 
   useEffect(() => {
     if (isInitialized && !liffLoading) {
@@ -99,7 +101,9 @@ export default function ResultsPage(): React.ReactElement {
   }, [isInitialized, liffLoading, fetchResults])
 
   const handleDownloadPDF = async () => {
-    if (!analysis) return
+    if (!analysis) {
+      return
+    }
     setIsDownloading(true)
 
     try {
@@ -112,26 +116,29 @@ export default function ResultsPage(): React.ReactElement {
         headers['X-LINE-User-Id'] = user.userId
       }
 
-      const response = await fetch(
-        `${API_URL}/api/v1/solar/proposal/${analysis.id}/pdf`,
-        { headers }
-      )
+      const response = await fetch(`${API_URL}/api/v1/solar/proposal/${analysis.id}/pdf`, {
+        headers,
+      })
 
-      if (!response.ok) throw new Error('Failed to generate PDF')
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF')
+      }
 
       const data = await response.json()
       if (data.url) {
         window.open(data.url, '_blank')
       }
     } catch {
-      setError('ไม่สามารถสร้าง PDF ได้ กรุณาลองใหม่อีกครั้ง')
+      setError(t('errors.pdfError'))
     } finally {
       setIsDownloading(false)
     }
   }
 
   const handleShare = async () => {
-    if (!analysis) return
+    if (!analysis) {
+      return
+    }
     setIsSharing(true)
 
     try {
@@ -141,7 +148,7 @@ export default function ResultsPage(): React.ReactElement {
         analysis.result.solarPotential.carbonOffsetFactorKgPerMwh
       )
 
-      await sendFlexMessage('SolarIQ - ผลวิเคราะห์โซลาร์เซลล์', {
+      await sendFlexMessage(t('flexMessage.title'), {
         type: 'bubble',
         size: 'mega',
         header: {
@@ -150,7 +157,7 @@ export default function ResultsPage(): React.ReactElement {
           contents: [
             {
               type: 'text',
-              text: 'SolarIQ - ผลวิเคราะห์',
+              text: t('flexMessage.title'),
               weight: 'bold',
               size: 'lg',
               color: '#16a34a',
@@ -166,35 +173,35 @@ export default function ResultsPage(): React.ReactElement {
           contents: [
             {
               type: 'text',
-              text: `ขนาดระบบ: ${panelConfig.capacityKw.toFixed(1)} kW`,
+              text: `${t('flexMessage.systemSize')} ${panelConfig.capacityKw.toFixed(1)} kW`,
               size: 'md',
             },
             {
               type: 'text',
-              text: `จำนวนแผง: ${panelConfig.panelsCount} แผง`,
+              text: `${t('flexMessage.panelsCount')} ${panelConfig.panelsCount} ${t('system.panels')}`,
               size: 'md',
             },
             {
               type: 'text',
-              text: `พลังงานต่อปี: ${formatNumber(panelConfig.yearlyEnergyDcKwh)} kWh`,
+              text: `${t('flexMessage.yearlyEnergy')} ${formatNumber(panelConfig.yearlyEnergyDcKwh)} kWh`,
               size: 'md',
             },
             { type: 'separator' },
             {
               type: 'text',
-              text: `คืนทุนใน ${financialAnalysis.paybackYears.toFixed(1)} ปี`,
+              text: `${t('flexMessage.payback')} ${financialAnalysis.paybackYears.toFixed(1)} ${t('flexMessage.years')}`,
               size: 'md',
               weight: 'bold',
               color: '#16a34a',
             },
             {
               type: 'text',
-              text: `ประหยัดต่อเดือน: ${formatCurrency(financialAnalysis.monthlySavings)}`,
+              text: `${t('flexMessage.monthlySavings')} ${formatCurrency(financialAnalysis.monthlySavings)}`,
               size: 'sm',
             },
             {
               type: 'text',
-              text: `ลดคาร์บอน: ${carbonTons.toFixed(1)} ตัน CO2/ปี`,
+              text: `${t('flexMessage.carbonReduction')} ${carbonTons.toFixed(1)} ${t('carbon.tonsPerYear')}`,
               size: 'sm',
               color: '#059669',
             },
@@ -209,7 +216,7 @@ export default function ResultsPage(): React.ReactElement {
               type: 'button',
               action: {
                 type: 'uri',
-                label: 'ดูรายละเอียด',
+                label: t('flexMessage.viewDetails'),
                 uri: `${process.env.NEXT_PUBLIC_LIFF_URL || ''}/liff/results?id=${analysis.id}`,
               },
               style: 'primary',
@@ -222,7 +229,7 @@ export default function ResultsPage(): React.ReactElement {
 
       closeWindow()
     } catch {
-      setError('ไม่สามารถแชร์ได้ กรุณาลองใหม่อีกครั้ง')
+      setError(t('errors.shareError'))
     } finally {
       setIsSharing(false)
     }
@@ -234,7 +241,7 @@ export default function ResultsPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">กำลังโหลดผลวิเคราะห์...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -246,7 +253,7 @@ export default function ResultsPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">&#9888;&#65039;</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">เกิดข้อผิดพลาด</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.loadError')}</h1>
           <p className="text-red-500">{liffError.message}</p>
         </div>
       </div>
@@ -259,13 +266,13 @@ export default function ResultsPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">&#9888;&#65039;</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">เกิดข้อผิดพลาด</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.loadError')}</h1>
           <p className="text-red-500 mb-4">{error}</p>
           <button
             onClick={fetchResults}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
           >
-            ลองใหม่อีกครั้ง
+            {t('empty.startAnalysis')}
           </button>
         </div>
       </div>
@@ -278,13 +285,13 @@ export default function ResultsPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
         <div className="text-center">
           <div className="text-6xl mb-4">&#9728;&#65039;</div>
-          <h1 className="text-xl font-bold text-gray-700 mb-2">ยังไม่มีผลวิเคราะห์</h1>
-          <p className="text-gray-500 mb-6">เริ่มต้นวิเคราะห์ศักยภาพโซลาร์เซลล์ของคุณ</p>
+          <h1 className="text-xl font-bold text-gray-700 mb-2">{t('empty.title')}</h1>
+          <p className="text-gray-500 mb-6">{t('empty.description')}</p>
           <a
             href="/liff/map-picker"
             className="inline-block bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors"
           >
-            เริ่มวิเคราะห์
+            {t('empty.startAnalysis')}
           </a>
         </div>
       </div>
@@ -303,7 +310,7 @@ export default function ResultsPage(): React.ReactElement {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-green-600 text-white p-4 shadow-md">
-        <h1 className="text-xl font-bold text-center">ผลวิเคราะห์โซลาร์เซลล์</h1>
+        <h1 className="text-xl font-bold text-center">{t('title')}</h1>
         {analysis.result.address && (
           <p className="text-green-100 text-sm text-center mt-1 truncate">
             {analysis.result.address}
@@ -315,7 +322,7 @@ export default function ResultsPage(): React.ReactElement {
         {/* System Size Card */}
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            ระบบที่แนะนำ
+            {t('system.title')}
           </h2>
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
@@ -323,21 +330,19 @@ export default function ResultsPage(): React.ReactElement {
                 {panelConfig.capacityKw.toFixed(1)}
               </p>
               <p className="text-xs text-gray-500 mt-1">kW</p>
-              <p className="text-xs text-gray-400">ขนาดระบบ</p>
+              <p className="text-xs text-gray-400">{t('system.systemSize')}</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-green-600">
                 {formatNumber(panelConfig.yearlyEnergyDcKwh)}
               </p>
-              <p className="text-xs text-gray-500 mt-1">kWh/ปี</p>
-              <p className="text-xs text-gray-400">พลังงานต่อปี</p>
+              <p className="text-xs text-gray-500 mt-1">{t('system.kwhPerYear')}</p>
+              <p className="text-xs text-gray-400">{t('system.yearlyEnergy')}</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-green-600">
-                {panelConfig.panelsCount}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">แผง</p>
-              <p className="text-xs text-gray-400">จำนวนแผง</p>
+              <p className="text-2xl font-bold text-green-600">{panelConfig.panelsCount}</p>
+              <p className="text-xs text-gray-500 mt-1">{t('system.panels')}</p>
+              <p className="text-xs text-gray-400">{t('system.panelsCount')}</p>
             </div>
           </div>
         </div>
@@ -345,35 +350,35 @@ export default function ResultsPage(): React.ReactElement {
         {/* ROI Summary Card */}
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            ผลตอบแทนการลงทุน
+            {t('roi.title')}
           </h2>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">ระยะเวลาคืนทุน</span>
+              <span className="text-gray-600">{t('roi.paybackPeriod')}</span>
               <span className="text-lg font-bold text-green-600">
-                {financialAnalysis.paybackYears.toFixed(1)} ปี
+                {financialAnalysis.paybackYears.toFixed(1)} {t('roi.years')}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">ประหยัดต่อเดือน</span>
+              <span className="text-gray-600">{t('roi.monthlySavings')}</span>
               <span className="text-lg font-bold text-green-600">
                 {formatCurrency(financialAnalysis.monthlySavings)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">ประหยัดต่อปี</span>
+              <span className="text-gray-600">{t('roi.yearlySavings')}</span>
               <span className="font-semibold text-gray-800">
                 {formatCurrency(financialAnalysis.yearlySavings)}
               </span>
             </div>
             <div className="border-t pt-3 flex justify-between items-center">
-              <span className="text-gray-600">ประหยัดรวม 25 ปี</span>
+              <span className="text-gray-600">{t('roi.savings25Years')}</span>
               <span className="text-xl font-bold text-green-600">
                 {formatCurrency(savings25Year)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">ค่าติดตั้งโดยประมาณ</span>
+              <span className="text-gray-600">{t('roi.estimatedCost')}</span>
               <span className="font-semibold text-gray-800">
                 {formatCurrency(financialAnalysis.installationCost)}
               </span>
@@ -384,26 +389,21 @@ export default function ResultsPage(): React.ReactElement {
         {/* Carbon Offset Card */}
         <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl shadow-sm p-5">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            ลดคาร์บอน
+            {t('carbon.title')}
           </h2>
           <div className="grid grid-cols-2 gap-4 text-center">
             <div>
-              <p className="text-3xl font-bold text-emerald-600">
-                {carbonOffsetTons.toFixed(1)}
-              </p>
-              <p className="text-sm text-gray-600 mt-1">ตัน CO2/ปี</p>
+              <p className="text-3xl font-bold text-emerald-600">{carbonOffsetTons.toFixed(1)}</p>
+              <p className="text-sm text-gray-600 mt-1">{t('carbon.tonsPerYear')}</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-emerald-600">
-                {formatNumber(equivalentTrees)}
-              </p>
-              <p className="text-sm text-gray-600 mt-1">ต้นไม้เทียบเท่า</p>
+              <p className="text-3xl font-bold text-emerald-600">{formatNumber(equivalentTrees)}</p>
+              <p className="text-sm text-gray-600 mt-1">{t('carbon.equivalentTrees')}</p>
             </div>
           </div>
           <div className="mt-3 bg-white/60 rounded-lg p-3">
             <p className="text-xs text-gray-500 text-center">
-              เทียบเท่ากับการปลูกต้นไม้ {formatNumber(equivalentTrees)} ต้น
-              ช่วยลดภาวะโลกร้อนอย่างยั่งยืน
+              {t('carbon.treesDescription').replace('{trees}', formatNumber(equivalentTrees))}
             </p>
           </div>
         </div>
@@ -420,10 +420,10 @@ export default function ResultsPage(): React.ReactElement {
             {isDownloading ? (
               <span className="flex items-center justify-center gap-2">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
-                กำลังสร้าง PDF...
+                {t('actions.generatingPdf')}
               </span>
             ) : (
-              'ดาวน์โหลด PDF'
+              t('actions.downloadPdf')
             )}
           </button>
           <button
@@ -434,10 +434,10 @@ export default function ResultsPage(): React.ReactElement {
             {isSharing ? (
               <span className="flex items-center justify-center gap-2">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                กำลังแชร์...
+                {t('actions.sharing')}
               </span>
             ) : (
-              'แชร์ผลวิเคราะห์'
+              t('actions.shareResults')
             )}
           </button>
         </div>

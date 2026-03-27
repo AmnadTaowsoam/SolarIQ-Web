@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 interface DataSummary {
   name: string
@@ -15,6 +16,7 @@ interface DataSummary {
 }
 
 export default function DataRightsPage(): React.ReactElement {
+  const t = useTranslations('dataRightsPage')
   const router = useRouter()
   const [dataSummary, setDataSummary] = useState<DataSummary | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -118,7 +120,7 @@ export default function DataRightsPage(): React.ReactElement {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto" />
-          <p className="mt-4 text-gray-600">กำลังโหลด...</p>
+          <p className="mt-4 text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -142,16 +144,14 @@ export default function DataRightsPage(): React.ReactElement {
               />
             </svg>
           </button>
-          <h1 className="text-xl font-bold">สิทธิของคุณตาม PDPA</h1>
+          <h1 className="text-xl font-bold">{t('title')}</h1>
         </div>
       </header>
 
       <main className="p-4 max-w-lg mx-auto space-y-4">
         {deleteSuccess && (
           <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
-            <p className="text-green-800 font-medium text-sm">
-              ส่งคำขอลบข้อมูลเรียบร้อย จะดำเนินการภายใน 30 วัน
-            </p>
+            <p className="text-green-800 font-medium text-sm">{t('deleteSuccess')}</p>
           </div>
         )}
 
@@ -163,34 +163,34 @@ export default function DataRightsPage(): React.ReactElement {
 
         {/* Data summary card */}
         <div className="bg-white rounded-xl shadow-sm p-5">
-          <h2 className="text-base font-semibold text-gray-900 mb-4">ข้อมูลที่เราเก็บ</h2>
+          <h2 className="text-base font-semibold text-gray-900 mb-4">{t('dataSummary.title')}</h2>
           <ul className="space-y-2 text-sm text-gray-700">
             <li className="flex justify-between">
-              <span className="text-gray-500">ชื่อ-นามสกุล</span>
+              <span className="text-gray-500">{t('dataSummary.name')}</span>
               <span className="font-medium">{dataSummary?.name ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">เบอร์โทร</span>
+              <span className="text-gray-500">{t('dataSummary.phone')}</span>
               <span className="font-medium">{dataSummary?.phone ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">อีเมล</span>
+              <span className="text-gray-500">{t('dataSummary.email')}</span>
               <span className="font-medium">{dataSummary?.email ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">ที่อยู่</span>
+              <span className="text-gray-500">{t('dataSummary.address')}</span>
               <span className="font-medium">{dataSummary?.address ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">จังหวัด</span>
+              <span className="text-gray-500">{t('dataSummary.province')}</span>
               <span className="font-medium">{dataSummary?.province ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">ประวัติการวิเคราะห์ Solar</span>
+              <span className="text-gray-500">{t('dataSummary.analysisHistory')}</span>
               <span className="font-medium">{dataSummary?.analysis_count ?? 0} ครั้ง</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">ประวัติการยินยอม</span>
+              <span className="text-gray-500">{t('dataSummary.consentHistory')}</span>
               <span className="font-medium">{dataSummary?.consent_count ?? 0} รายการ</span>
             </li>
           </ul>
@@ -198,7 +198,7 @@ export default function DataRightsPage(): React.ReactElement {
 
         {/* Action buttons */}
         <div className="bg-white rounded-xl shadow-sm p-5 space-y-3">
-          <h2 className="text-base font-semibold text-gray-900 mb-3">จัดการข้อมูลของคุณ</h2>
+          <h2 className="text-base font-semibold text-gray-900 mb-3">{t('actions.title')}</h2>
 
           <button
             onClick={handleDownload}
@@ -207,7 +207,7 @@ export default function DataRightsPage(): React.ReactElement {
           >
             <span className="text-xl">⬇️</span>
             <span className="font-medium text-sm">
-              {isDownloading ? 'กำลังดาวน์โหลด...' : 'ดาวน์โหลดข้อมูลของฉัน'}
+              {isDownloading ? t('actions.downloading') : t('actions.download')}
             </span>
           </button>
 
@@ -216,7 +216,7 @@ export default function DataRightsPage(): React.ReactElement {
             className="w-full flex items-center gap-3 p-3 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
           >
             <span className="text-xl">✏️</span>
-            <span className="font-medium text-sm">แก้ไขข้อมูล</span>
+            <span className="font-medium text-sm">{t('actions.edit')}</span>
           </Link>
 
           <Link
@@ -224,7 +224,7 @@ export default function DataRightsPage(): React.ReactElement {
             className="w-full flex items-center gap-3 p-3 rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition-colors"
           >
             <span className="text-xl">🚫</span>
-            <span className="font-medium text-sm">ถอนความยินยอม</span>
+            <span className="font-medium text-sm">{t('actions.withdraw')}</span>
           </Link>
 
           <button
@@ -233,22 +233,22 @@ export default function DataRightsPage(): React.ReactElement {
             className="w-full flex items-center gap-3 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 transition-colors disabled:opacity-50"
           >
             <span className="text-xl">🗑️</span>
-            <span className="font-medium text-sm">ลบข้อมูลทั้งหมด</span>
+            <span className="font-medium text-sm">{t('actions.delete')}</span>
           </button>
         </div>
 
         {/* DPO contact */}
         <div className="bg-white rounded-xl shadow-sm p-5">
-          <h2 className="text-base font-semibold text-gray-900 mb-3">ติดต่อ DPO</h2>
+          <h2 className="text-base font-semibold text-gray-900 mb-3">{t('dpoContact.title')}</h2>
           <div className="space-y-1 text-sm text-gray-600">
             <p>
-              <span className="text-gray-500">อีเมล: </span>
+              <span className="text-gray-500">{t('dpoContact.email')} </span>
               <a href="mailto:dpo@solariq.app" className="text-green-600 hover:underline">
                 dpo@solariq.app
               </a>
             </p>
             <p>
-              <span className="text-gray-500">โทร: </span>
+              <span className="text-gray-500">{t('dpoContact.phone')} </span>
               <a href="tel:085-662-1113" className="text-green-600 hover:underline">
                 085-662-1113
               </a>
@@ -256,9 +256,7 @@ export default function DataRightsPage(): React.ReactElement {
           </div>
         </div>
 
-        <p className="text-xs text-gray-400 text-center pb-4">
-          สิทธิตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) มาตรา 20-22
-        </p>
+        <p className="text-xs text-gray-400 text-center pb-4">{t('pdpaReference')}</p>
       </main>
 
       {/* Delete confirmation modal */}
@@ -269,25 +267,23 @@ export default function DataRightsPage(): React.ReactElement {
               <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                 <span className="text-xl">🗑️</span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">ยืนยันการลบข้อมูล</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{t('deleteModal.title')}</h3>
             </div>
-            <p className="text-sm text-gray-600 mb-6">
-              คุณแน่ใจหรือไม่? ข้อมูลทั้งหมดจะถูกลบภายใน 30 วัน
-            </p>
+            <p className="text-sm text-gray-600 mb-6">{t('deleteModal.description')}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-4 rounded-lg border border-gray-300 text-gray-700 font-medium text-sm hover:bg-gray-50 transition-colors"
               >
-                ยกเลิก
+                {t('deleteModal.cancel')}
               </button>
               <button
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
                 className="flex-1 py-2.5 px-4 rounded-lg bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition-colors disabled:opacity-50"
               >
-                {isDeleting ? 'กำลังส่งคำขอ...' : 'ยืนยันลบข้อมูล'}
+                {isDeleting ? t('deleteModal.submitting') : t('deleteModal.confirm')}
               </button>
             </div>
           </div>

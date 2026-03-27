@@ -13,6 +13,8 @@ import { buildLocalizedPath, extractLocaleFromPath } from '@/lib/locale'
 import { ROUTES } from '@/lib/constants'
 import { useTranslations } from 'next-intl'
 import { THAI_PROVINCES, getProvinceLabel } from '@/lib/provinces'
+import { useGA4 } from '@/hooks/useGA4'
+import { getStoredUTMParams } from '@/lib/ga4'
 
 // Password strength calculation
 function calculatePasswordStrength(password: string): number {
@@ -167,6 +169,10 @@ export default function SignupPage() {
   const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
 
+  // Analytics tracking
+  const { trackSignUp, trackTrialStart } = useGA4()
+  const utmParams = getStoredUTMParams()
+
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
@@ -246,18 +252,41 @@ export default function SignupPage() {
     setIsLoading(true)
 
     try {
-      const response = await api.post<{ success: boolean; message?: string }>('/auth/signup', {
-        email: formData.email,
-        password: formData.password,
-        company_name: formData.companyName,
-        province: formData.province,
-        phone: formData.phone,
-        accept_terms: formData.acceptTerms,
-        accept_pdpa: formData.acceptPdpa,
-        start_trial: isTrial,
-      })
+      const response = await api.post<{ success: boolean; message?: string; user_id?: string }>(
+        '/auth/signup',
+        {
+          email: formData.email,
+          password: formData.password,
+          company_name: formData.companyName,
+          province: formData.province,
+          phone: formData.phone,
+          accept_terms: formData.acceptTerms,
+          accept_pdpa: formData.acceptPdpa,
+          start_trial: isTrial,
+          utm_source: utmParams.utm_source,
+          utm_medium: utmParams.utm_medium,
+          utm_campaign: utmParams.utm_campaign,
+          utm_term: utmParams.utm_term,
+          utm_content: utmParams.utm_content,
+        }
+      )
 
       if (response.success) {
+        // Track sign up event
+        trackSignUp({
+          method: 'email',
+          plan: isTrial ? 'trial' : 'free',
+        })
+
+        // Track trial start if applicable
+        if (isTrial) {
+          trackTrialStart({
+            plan_id: 'trial',
+            plan_name: 'Free Trial',
+            trial_days: 14,
+          })
+        }
+
         // Redirect to email verification page
         router.push(`${verifyEmailPath}?email=${encodeURIComponent(formData.email)}`)
       }
@@ -290,11 +319,32 @@ export default function SignupPage() {
         success: boolean
         requires_onboarding?: boolean
         message?: string
+        user_id?: string
       }>('/signup/google', {
         id_token: idToken,
+        utm_source: utmParams.utm_source,
+        utm_medium: utmParams.utm_medium,
+        utm_campaign: utmParams.utm_campaign,
+        utm_term: utmParams.utm_term,
+        utm_content: utmParams.utm_content,
       })
 
       if (response.success) {
+        // Track sign up event
+        trackSignUp({
+          method: 'google',
+          plan: isTrial ? 'trial' : 'free',
+        })
+
+        // Track trial start if applicable
+        if (isTrial) {
+          trackTrialStart({
+            plan_id: 'trial',
+            plan_name: 'Free Trial',
+            trial_days: 14,
+          })
+        }
+
         if (response.requires_onboarding) {
           router.push(buildLocalizedPath('/onboarding', locale))
         } else {
@@ -658,6 +708,14 @@ export default function SignupPage() {
                 บัญชีทดลองใช้ฟรี 14 วัน จะเริ่มต้นหลังสมัคร
               </p>
               <p className="mt-1">ไม่ต้องใช้บัตรเครดิต ยกเลิกได้ตลอดเวลา</p>
+              <p className="mt-2 text-gray-600">
+                <strong>หลังจากทดลองใช้:</strong> ฟรี 5 leads/เดือน
+                หรืออัปเกรดเพื่อรับฟีเจอร์เต็มรูปแบบ
+              </p>
+              <p className="mt-1 text-xs text-gray-400">
+                หมายเหตุ: ระบบจะ<strong>ไม่</strong>เรียกเก็บเงินอัตโนมัติ
+                คุณต้องเลือกแพ็กเกจด้วยตนเอง
+              </p>
             </>
           ) : (
             <>

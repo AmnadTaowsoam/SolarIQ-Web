@@ -6,6 +6,11 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import { Providers } from './providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { CriticalCSS } from '@/components/CriticalCSS'
+import { Preconnect } from '@/components/Preconnect'
+import { PerformanceMonitor } from '@/components/PerformanceMonitor'
+import { GoogleAnalytics } from '@/components/GoogleAnalytics'
+import { CookieConsentBanner } from '@/components/CookieConsent'
 import './globals.css'
 
 const inter = Inter({
@@ -102,6 +107,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
+        <Preconnect />
+        <GoogleAnalytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -143,11 +150,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body className={`${inter.variable} ${notoSansThai.variable} font-sans`}>
+        <CriticalCSS />
+        <PerformanceMonitor
+          enabled={process.env.NODE_ENV === 'development'}
+          reportToSentry={true}
+          showInDev={true}
+        />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ErrorBoundary>
             <Providers>{children}</Providers>
           </ErrorBoundary>
         </NextIntlClientProvider>
+        <CookieConsentBanner />
       </body>
     </html>
   )

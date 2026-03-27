@@ -1,0 +1,14 @@
+# WK-109: Performance Optimization - Cloudflare Pages Redirects
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+# SEO redirects
+/home / 301
+
+# Trailing slash normalization
+# Next.js handles this automatically, but we add rules for static assets
+
+# Legacy redirects (if any)
+# Add any legacy URL redirects here as needed
+
+# SPA fallback for client-side routing
+# /_next/data/* /_next/data/:splat 200

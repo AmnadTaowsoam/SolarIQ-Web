@@ -10,6 +10,7 @@ import { useToast } from '@/components/ui/Toast'
 import { useSolarAnalysisAdvanced } from '@/hooks'
 import { ROUTES, DEFAULT_MAP_CENTER } from '@/lib/constants'
 import type { SolarAnalysisAdvanced } from '@/types'
+import { useGA4 } from '@/hooks/useGA4'
 import {
   RoofSegmentAnalysis,
   PanelLayoutMap,
@@ -893,7 +894,9 @@ export default function AnalyzePage() {
   const { user, isLoading: authLoading } = useAuth()
   const { addToast } = useToast()
   const t = useTranslations('analyzePage')
+  const { trackFirstAnalysis, trackFirstProposal } = useGA4()
   const tabs = buildTabs(t)
+  const [hasTrackedFirstAnalysis, setHasTrackedFirstAnalysis] = useState(false)
 
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
@@ -944,7 +947,6 @@ export default function AnalyzePage() {
     try {
       const response = await analysisMutation.mutateAsync({
         latitude: lat,
-        longitude: lng,
         monthlyBill: bill,
         address: sanitizedAddress,
         selfConsumptionRate,
@@ -953,6 +955,16 @@ export default function AnalyzePage() {
       setResult(response as unknown as SolarAnalysisAdvanced)
       setActiveTab('overview')
       addToast('success', t('messages.analysisSuccess'))
+
+      // Track first analysis event (only once per session)
+      if (!hasTrackedFirstAnalysis) {
+        trackFirstAnalysis({
+          system_size_kw: (response as SolarAnalysisAdvanced).panelConfig?.capacityKw,
+          estimated_savings: (response as SolarAnalysisAdvanced).financialAnalysis?.yearlySavings,
+          location: sanitizedAddress || 'Unknown',
+        })
+        setHasTrackedFirstAnalysis(true)
+      }
     } catch {
       addToast('error', t('messages.analysisFailed'))
     }
@@ -1209,7 +1221,7 @@ export default function AnalyzePage() {
                 onClick={async () => {
                   try {
                     const { apiClient } = await import('@/lib/api')
-                    await apiClient.post('/api/v1/leads', {
+                    const leadResponse = await apiClient.post('/api/v1/leads', {
                       name: address || 'New Lead',
                       address: address,
                       latitude: result.coordinates.latitude,
@@ -1226,6 +1238,14 @@ export default function AnalyzePage() {
                       },
                     })
                     addToast('success', 'Saved as Lead successfully!')
+
+                    // Track first proposal event
+                    trackFirstProposal({
+                      proposal_id: leadResponse.id,
+                      system_size_kw: result.panelConfig.capacityKw,
+                      estimated_cost: result.financialAnalysis.installationCost,
+                      format: 'email',
+                    })
                   } catch {
                     addToast('error', 'Failed to save as Lead. Please try again.')
                   }

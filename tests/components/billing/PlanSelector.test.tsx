@@ -1,90 +1,148 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { PlanSelector } from '@/components/billing/PlanSelector'
-import type { PlanType } from '@/types/billing'
+/**
+ * PlanSelector Component Tests (WK-102)
+ */
 
-// Mock lucide-react icons
-jest.mock('lucide-react', () => ({
-  Check: () => <svg data-testid="check-icon" />,
-}))
+import React from 'react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { PlanSelector } from '@/components/billing/PlanSelector'
+const mockOnSelectPlan = jest.fn()
+const mockOnBillingCycleChange = jest.fn()
 
 describe('PlanSelector', () => {
-  const mockOnSelectPlan = jest.fn()
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
-  beforeEach(() => jest.clearAllMocks())
+  const defaultProps = {
+    onSelectPlan: mockOnSelectPlan,
+    onBillingCycleChange: mockOnBillingCycleChange,
+  }
 
-  it('renders 3 plan cards', () => {
-    render(<PlanSelector onSelectPlan={mockOnSelectPlan} />)
+  it('renders all plans', () => {
+    render(<PlanSelector {...defaultProps} />)
 
     expect(screen.getByText('Starter')).toBeInTheDocument()
     expect(screen.getByText('Pro')).toBeInTheDocument()
     expect(screen.getByText('Enterprise')).toBeInTheDocument()
   })
 
-  it('displays correct prices in THB', () => {
-    render(<PlanSelector onSelectPlan={mockOnSelectPlan} />)
+  it('shows billing cycle toggle by default', () => {
+    render(<PlanSelector {...defaultProps} />)
 
-    // formatPrice uses Intl.NumberFormat with THB currency
-    expect(screen.getByText(/2,900/)).toBeInTheDocument()
-    expect(screen.getByText(/7,900/)).toBeInTheDocument()
-    expect(screen.getByText(/15,000/)).toBeInTheDocument()
+    expect(screen.getByText('Monthly')).toBeInTheDocument()
+    expect(screen.getByText('Annual')).toBeInTheDocument()
   })
 
-  it('shows features for each plan', () => {
-    render(<PlanSelector onSelectPlan={mockOnSelectPlan} />)
+  it('displays monthly prices by default', () => {
+    render(<PlanSelector {...defaultProps} />)
 
-    // Starter plan features
-    expect(screen.getAllByText('AI Analysis').length).toBeGreaterThanOrEqual(3)
-    expect(screen.getAllByText('PDF Proposal').length).toBeGreaterThanOrEqual(3)
-
-    // Check leads/month info
-    expect(screen.getByText('20 leads/month')).toBeInTheDocument()
-    expect(screen.getByText('100 leads/month')).toBeInTheDocument()
-    expect(screen.getByText('Unlimited leads/month')).toBeInTheDocument()
+    expect(screen.getByText('2,900 THB/month')).toBeInTheDocument() // Starter
+    expect(screen.getByText('4,900 THB/month')).toBeInTheDocument() // Pro
+    expect(screen.getByText('14,900 THB/month')).toBeInTheDocument() // Enterprise
   })
 
-  it('shows user limits for each plan', () => {
-    render(<PlanSelector onSelectPlan={mockOnSelectPlan} />)
+  it('switches to annual billing cycle', async () => {
+    const user = userEvent.setup()
+    render(<PlanSelector {...defaultProps} />)
 
-    expect(screen.getByText('1 users')).toBeInTheDocument()
-    expect(screen.getByText('5 users')).toBeInTheDocument()
-    expect(screen.getByText('Unlimited users')).toBeInTheDocument()
+    const annualButton = screen.getByText('Annual')
+    await user.click(annualButton)
+
+    expect(mockOnBillingCycleChange).toHaveBeenCalledWith('annual')
+    expect(screen.getByText('27,840 THB/year')).toBeInTheDocument() // Starter annual
+    expect(screen.getByText('47,040 THB/year')).toBeInTheDocument() // Pro annual
+  })
+
+  it('displays annual discount badge', () => {
+    render(<PlanSelector {...defaultProps} />)
+
+    const annualButton = screen.getByText('Annual')
+    expect(annualButton).toContainHTML('Save 20%')
+  })
+
+  it('shows annual billing info when annual is selected', async () => {
+    const user = userEvent.setup()
+    render(<PlanSelector {...defaultProps} />)
+
+    const annualButton = screen.getByText('Annual')
+    await user.click(annualButton)
+
+    expect(screen.getByText('Annual Billing Benefits')).toBeInTheDocument()
+    expect(screen.getByText('Save 20% compared to monthly billing')).toBeInTheDocument()
   })
 
   it('highlights current plan', () => {
-    render(<PlanSelector currentPlan="pro" onSelectPlan={mockOnSelectPlan} />)
+    render(<PlanSelector {...defaultProps} currentPlan="pro" />)
 
     expect(screen.getByText('Current Plan')).toBeInTheDocument()
   })
 
-  it('shows "Most Popular" badge on Pro plan', () => {
-    render(<PlanSelector onSelectPlan={mockOnSelectPlan} />)
+  it('marks pro plan as most popular', () => {
+    render(<PlanSelector {...defaultProps} />)
 
     expect(screen.getByText('Most Popular')).toBeInTheDocument()
   })
 
-  it('disables subscribe button for current plan', () => {
-    render(<PlanSelector currentPlan="starter" onSelectPlan={mockOnSelectPlan} />)
-
-    const buttons = screen.getAllByRole('button')
-    const starterButton = buttons.find((btn) => btn.textContent === 'Current Plan')
-    expect(starterButton).toBeDisabled()
-  })
-
-  it('subscribe button calls handler with correct plan id', () => {
-    render(<PlanSelector onSelectPlan={mockOnSelectPlan} />)
+  it('calls onSelectPlan when plan is selected', async () => {
+    const user = userEvent.setup()
+    render(<PlanSelector {...defaultProps} />)
 
     const selectButtons = screen.getAllByText('Select Plan')
-    fireEvent.click(selectButtons[0])
+    await user.click(selectButtons[0]) // Click first plan (Starter)
 
     expect(mockOnSelectPlan).toHaveBeenCalledWith('starter')
   })
 
-  it('disables all buttons when isLoading is true', () => {
-    render(<PlanSelector onSelectPlan={mockOnSelectPlan} isLoading />)
+  it('disables button for current plan', () => {
+    render(<PlanSelector {...defaultProps} currentPlan="pro" />)
 
-    const buttons = screen.getAllByRole('button')
-    buttons.forEach((btn) => {
-      expect(btn).toBeDisabled()
+    const proCard = screen.getByText('Pro').closest('.border-blue-600, .border-green-600')
+    const selectButton = proCard?.querySelector('button')
+    expect(selectButton).toBeDisabled()
+    expect(selectButton).toHaveTextContent('Current Plan')
+  })
+
+  it('disables all buttons when loading', () => {
+    render(<PlanSelector {...defaultProps} isLoading={true} />)
+
+    const selectButtons = screen.getAllByText('Select Plan')
+    selectButtons.forEach((button) => {
+      expect(button).toBeDisabled()
     })
+  })
+
+  it('hides billing cycle toggle when showBillingCycle is false', () => {
+    render(<PlanSelector {...defaultProps} showBillingCycle={false} />)
+
+    expect(screen.queryByText('Monthly')).not.toBeInTheDocument()
+    expect(screen.queryByText('Annual')).not.toBeInTheDocument()
+  })
+
+  it('uses initial billing cycle when provided', () => {
+    render(<PlanSelector {...defaultProps} initialBillingCycle="annual" />)
+
+    expect(screen.getByText('47,040 THB/year')).toBeInTheDocument()
+  })
+
+  it('displays plan features correctly', () => {
+    render(<PlanSelector {...defaultProps} />)
+
+    // Check for some features
+    expect(screen.getByText('AI Analysis')).toBeInTheDocument()
+    expect(screen.getByText('PDF Proposal')).toBeInTheDocument()
+    expect(screen.getByText('leads/month')).toBeInTheDocument()
+    expect(screen.getByText('users')).toBeInTheDocument()
+  })
+
+  it('shows monthly price per month for annual billing', async () => {
+    const user = userEvent.setup()
+    render(<PlanSelector {...defaultProps} />)
+
+    const annualButton = screen.getByText('Annual')
+    await user.click(annualButton)
+
+    // Pro plan: 47,040 / 12 = 3,920 per month
+    expect(screen.getByText('3,920/month (billed annually)')).toBeInTheDocument()
   })
 })

@@ -198,3 +198,6 @@ export * from './commission'
 
 // Analytics types (WK-029)
 export * from './analytics'
+
+// Permit types (WK-112)
+export * from './permit'

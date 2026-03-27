@@ -14,6 +14,7 @@ import {
   updateBrand,
   verifyBrandDomain,
 } from '@/hooks/useBranding'
+import { useTaxProfile, useUpdateTaxProfile } from '@/hooks'
 import apiClient from '@/lib/api'
 import type { BrandDomain } from '@/types/branding'
 import clsx from 'clsx'
@@ -29,7 +30,15 @@ const FONT_OPTIONS = [
 // Types
 // ---------------------------------------------------------------------------
 
-type SettingsTab = 'company' | 'line' | 'notifications' | 'team' | 'api' | 'branding'
+type SettingsTab =
+  | 'company'
+  | 'tax'
+  | 'line'
+  | 'notifications'
+  | 'team'
+  | 'api'
+  | 'branding'
+  | 'privacy'
 
 interface TeamMember {
   id: string
@@ -206,6 +215,34 @@ const TABS: {
       </svg>
     ),
   },
+  {
+    key: 'privacy',
+    labelKey: 'tabs.privacy',
+    icon: (
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z"
+        />
+      </svg>
+    ),
+  },
+  {
+    key: 'tax',
+    labelKey: 'tabs.tax',
+    icon: (
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+        />
+      </svg>
+    ),
+  },
 ]
 
 // ---------------------------------------------------------------------------
@@ -344,6 +381,176 @@ function CompanyProfileSection() {
           </Button>
           <Button variant="primary" size="sm">
             {t('company.save')}
+          </Button>
+        </div>
+      </CardFooter>
+    </Card>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Section: Tax Profile
+// ---------------------------------------------------------------------------
+
+function TaxProfileSection() {
+  const t = useTranslations('settingsPage')
+  const { data: taxProfile, isLoading } = useTaxProfile()
+  const updateTaxProfile = useUpdateTaxProfile()
+
+  const [companyNameTh, setCompanyNameTh] = useState('')
+  const [companyNameEn, setCompanyNameEn] = useState('')
+  const [taxId, setTaxId] = useState('')
+  const [branchNumber, setBranchNumber] = useState('00000')
+  const [taxAddress, setTaxAddress] = useState('')
+  const [taxContactPerson, setTaxContactPerson] = useState('')
+  const [taxContactEmail, setTaxContactEmail] = useState('')
+  const [taxContactPhone, setTaxContactPhone] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+
+  // Initialize form with current tax profile
+  useEffect(() => {
+    if (taxProfile) {
+      setCompanyNameTh(taxProfile.company_name_th || '')
+      setCompanyNameEn(taxProfile.company_name_en || '')
+      setTaxId(taxProfile.tax_id || '')
+      setBranchNumber(taxProfile.branch_number || '00000')
+      setTaxAddress(taxProfile.tax_address || '')
+      setTaxContactPerson(taxProfile.tax_contact_person || '')
+      setTaxContactEmail(taxProfile.tax_contact_email || '')
+      setTaxContactPhone(taxProfile.tax_contact_phone || '')
+    }
+  }, [taxProfile])
+
+  const handleSave = async () => {
+    setIsSaving(true)
+    try {
+      await updateTaxProfile.mutateAsync({
+        company_name_th: companyNameTh || undefined,
+        company_name_en: companyNameEn || undefined,
+        tax_id: taxId || undefined,
+        branch_number: branchNumber,
+        tax_address: taxAddress || undefined,
+        tax_contact_person: taxContactPerson || undefined,
+        tax_contact_email: taxContactEmail || undefined,
+        tax_contact_phone: taxContactPhone || undefined,
+      })
+      alert('บันทึกข้อมูลสำเร็จ')
+    } catch {
+      alert('ไม่สามารถบันทึกข้อมูลได้')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleReset = () => {
+    if (taxProfile) {
+      setCompanyNameTh(taxProfile.company_name_th || '')
+      setCompanyNameEn(taxProfile.company_name_en || '')
+      setTaxId(taxProfile.tax_id || '')
+      setBranchNumber(taxProfile.branch_number || '00000')
+      setTaxAddress(taxProfile.tax_address || '')
+      setTaxContactPerson(taxProfile.tax_contact_person || '')
+      setTaxContactEmail(taxProfile.tax_contact_email || '')
+      setTaxContactPhone(taxProfile.tax_contact_phone || '')
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardBody>
+          <div className="text-center py-10 text-gray-500">กำลังโหลด...</div>
+        </CardBody>
+      </Card>
+    )
+  }
+
+  return (
+    <Card>
+      <CardHeader title={t('tax.title')} subtitle={t('tax.subtitle')} />
+      <CardBody className="space-y-5">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <p className="text-sm text-blue-900 dark:text-blue-100">
+            <strong>ข้อมูลภาษี:</strong> ข้อมูลนี้จะถูกใช้ในการออกใบกำกับภาษีและใบเสร็จรับเงิน
+            ตามมาตรฐานกรมสรรพากร กรุณาตรวจสอบข้อมูลให้ถูกต้อง
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <Input
+            label={t('tax.companyNameTh')}
+            value={companyNameTh}
+            onChange={(e) => setCompanyNameTh(e.target.value)}
+            placeholder="บริษัท ตัวอย่าง จำกัด"
+          />
+          <Input
+            label={t('tax.companyNameEn')}
+            value={companyNameEn}
+            onChange={(e) => setCompanyNameEn(e.target.value)}
+            placeholder="Example Company Limited"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <Input
+            label={t('tax.taxId')}
+            value={taxId}
+            onChange={(e) => setTaxId(e.target.value.replace(/[^0-9]/g, '').slice(0, 13))}
+            placeholder="0105560123456"
+            maxLength={13}
+          />
+          <Input
+            label={t('tax.branchNumber')}
+            value={branchNumber}
+            onChange={(e) => setBranchNumber(e.target.value.replace(/[^0-9]/g, '').slice(0, 5))}
+            placeholder="00000"
+            maxLength={5}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {t('tax.taxAddress')}
+          </label>
+          <textarea
+            value={taxAddress}
+            onChange={(e) => setTaxAddress(e.target.value)}
+            rows={3}
+            className="block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+            placeholder="ที่อยู่สำนักงานใหญ่..."
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <Input
+            label={t('tax.contactPerson')}
+            value={taxContactPerson}
+            onChange={(e) => setTaxContactPerson(e.target.value)}
+            placeholder="ชื่อผู้ติดต่อ"
+          />
+          <Input
+            label={t('tax.contactEmail')}
+            value={taxContactEmail}
+            onChange={(e) => setTaxContactEmail(e.target.value)}
+            placeholder="billing@example.com"
+            type="email"
+          />
+        </div>
+
+        <Input
+          label={t('tax.contactPhone')}
+          value={taxContactPhone}
+          onChange={(e) => setTaxContactPhone(e.target.value)}
+          placeholder="02-xxx-xxxx"
+        />
+      </CardBody>
+      <CardFooter>
+        <div className="flex justify-end gap-3">
+          <Button variant="outline" size="sm" onClick={handleReset}>
+            {t('tax.reset')}
+          </Button>
+          <Button variant="primary" size="sm" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'กำลังบันทึก...' : t('tax.save')}
           </Button>
         </div>
       </CardFooter>
@@ -1543,6 +1750,280 @@ function WhiteLabelSection() {
 }
 
 // ---------------------------------------------------------------------------
+// Section: Privacy & PDPA
+// ---------------------------------------------------------------------------
+
+function PrivacySection() {
+  useTranslations('settingsPage')
+  const { user } = useAuth()
+  const [activePrivacyTab, setActivePrivacyTab] = useState<'consent' | 'data' | 'cookie'>('consent')
+  const [isExporting, setIsExporting] = useState(false)
+  const [_showDeleteModal, setShowDeleteModal] = useState(false)
+
+  const handleExportData = async () => {
+    setIsExporting(true)
+    try {
+      // Simulate API call - Replace with actual API call
+      // const response = await apiClient.get('/privacy/export', {
+      //   responseType: 'blob',
+      // })
+      // const url = window.URL.createObjectURL(new Blob([response.data]))
+      // const link = document.createElement('a')
+      // link.href = url
+      // link.setAttribute('download', `solariq-data-export-${Date.now()}.json`)
+      // document.body.appendChild(link)
+      // link.click()
+      // link.remove()
+
+      // Simulate delay
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      alert('ข้อมูลของคุณถูกส่งออกเรียบร้อยแล้ว')
+    } catch {
+      alert('เกิดข้อผิดพลาดในการส่งออกข้อมูล')
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
+  const _handleDeleteAccount = async () => {
+    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบบัญชี? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
+      return
+    }
+    try {
+      // Simulate API call - Replace with actual API call
+      // await apiClient.post('/privacy/delete-account')
+      alert('คำขอลบบัญชีถูกส่งเรียบร้อยแล้ว คุณจะได้รับอีเมลยืนยัน')
+      setShowDeleteModal(false)
+    } catch {
+      alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Privacy Tabs */}
+      <div className="border-b border-gray-200">
+        <nav className="flex gap-8" aria-label="Privacy tabs">
+          <button
+            onClick={() => setActivePrivacyTab('consent')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activePrivacyTab === 'consent'
+                ? 'border-orange-500 text-orange-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            ความยินยอม
+          </button>
+          <button
+            onClick={() => setActivePrivacyTab('data')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activePrivacyTab === 'data'
+                ? 'border-orange-500 text-orange-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            ข้อมูลส่วนบุคคล
+          </button>
+          <button
+            onClick={() => setActivePrivacyTab('cookie')}
+            className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
+              activePrivacyTab === 'cookie'
+                ? 'border-orange-500 text-orange-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            คุกกี้
+          </button>
+        </nav>
+      </div>
+
+      {/* Consent Tab */}
+      {activePrivacyTab === 'consent' && (
+        <Card>
+          <CardHeader title="จัดการความยินยอม" subtitle="ตรวจสอบและจัดการความยินยอมของคุณ" />
+          <CardBody className="space-y-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <p className="text-sm text-blue-900 dark:text-blue-100">
+                คุณสามารถจัดการความยินยอมของคุณได้ที่นี่ การเปลี่ยนแปลงจะมีผลทันที
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    การเก็บข้อมูลส่วนบุคคล
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    จำเป็นสำหรับการให้บริการ
+                  </p>
+                </div>
+                <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
+                  ยินยอมแล้ว
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">การวิเคราะห์บิลไฟฟ้า</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    ใช้สำหรับคำนวณ ROI และข้อเสนอ
+                  </p>
+                </div>
+                <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
+                  ยินยอมแล้ว
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    การตลาดและการส่งเสริมการขาย
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">รับข่าวสารและโปรโมชัน</p>
+                </div>
+                <Toggle enabled={true} onChange={() => {}} />
+              </div>
+
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    การแชร์ข้อมูลกับพาร์ทเนอร์
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    แชร์ข้อมูลกับผู้ให้บริการที่เกี่ยวข้อง
+                  </p>
+                </div>
+                <Toggle enabled={false} onChange={() => {}} />
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      )}
+
+      {/* Data Tab */}
+      {activePrivacyTab === 'data' && (
+        <Card>
+          <CardHeader title="ข้อมูลส่วนบุคคล" subtitle="ดูและจัดการข้อมูลส่วนบุคคลของคุณ" />
+          <CardBody className="space-y-6">
+            {/* User Info */}
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+              <h3 className="font-medium text-gray-900 dark:text-white mb-3">ข้อมูลบัญชี</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-gray-600 dark:text-gray-400">ชื่อ:</p>
+                  <p className="text-gray-900 dark:text-white font-medium">
+                    {user?.displayName || '-'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-600 dark:text-gray-400">อีเมล:</p>
+                  <p className="text-gray-900 dark:text-white font-medium">{user?.email || '-'}</p>
+                </div>
+                <div>
+                  <p className="text-gray-600 dark:text-gray-400">เบอร์โทร:</p>
+                  <p className="text-gray-900 dark:text-white font-medium">
+                    {user?.phoneNumber || '-'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-600 dark:text-gray-400">บทบาท:</p>
+                  <p className="text-gray-900 dark:text-white font-medium">{user?.role || '-'}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Data Export */}
+            <div>
+              <h3 className="font-medium text-gray-900 dark:text-white mb-3">ส่งออกข้อมูล</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                ดาวน์โหลดข้อมูลส่วนบุคคลทั้งหมดของคุณในรูปแบบที่อ่านได้
+              </p>
+              <Button variant="outline" onClick={handleExportData} disabled={isExporting}>
+                {isExporting ? 'กำลังส่งออก...' : 'ส่งออกข้อมูล'}
+              </Button>
+            </div>
+
+            {/* Delete Account */}
+            <div className="border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <h3 className="font-medium text-red-900 dark:text-red-100 mb-2">ลบบัญชี</h3>
+              <p className="text-sm text-red-700 dark:text-red-300 mb-4">
+                การลบบัญชีจะลบข้อมูลทั้งหมดของคุณ การกระทำนี้ไม่สามารถย้อนกลับได้
+              </p>
+              <Button
+                variant="outline"
+                className="border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                onClick={() => setShowDeleteModal(true)}
+              >
+                ลบบัญชี
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      )}
+
+      {/* Cookie Tab */}
+      {activePrivacyTab === 'cookie' && (
+        <Card>
+          <CardHeader title="การจัดการคุกกี้" subtitle="จัดการความยินยอมคุกกี้ของคุณ" />
+          <CardBody className="space-y-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <p className="text-sm text-blue-900 dark:text-blue-100">
+                คุกกี้เป็นไฟล์ขนาดเล็กที่เก็บบนเบราว์เซอร์ของคุณ
+                เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานของคุณ
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">คุกกี้ที่จำเป็น</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    จำเป็นสำหรับการทำงานของเว็บไซต์
+                  </p>
+                </div>
+                <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
+                  เปิดใช้งานอยู่
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">คุกกี้วิเคราะห์</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    ใช้เพื่อปรับปรุงประสบการณ์การใช้งาน
+                  </p>
+                </div>
+                <Toggle enabled={true} onChange={() => {}} />
+              </div>
+
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">คุกกี้การตลาด</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    ใช้สำหรับการโฆษณาและการตลาด
+                  </p>
+                </div>
+                <Toggle enabled={false} onChange={() => {}} />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <a
+                href="/pdpa"
+                className="text-sm text-orange-600 dark:text-orange-400 hover:underline"
+              >
+                ดูข้อมูลเพิ่มเติมเกี่ยวกับ PDPA Compliance →
+              </a>
+            </div>
+          </CardBody>
+        </Card>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main Settings Page
 // ---------------------------------------------------------------------------
 
@@ -1564,6 +2045,8 @@ export default function SettingsPage() {
     switch (activeTab) {
       case 'company':
         return <CompanyProfileSection />
+      case 'tax':
+        return <TaxProfileSection />
       case 'line':
         return <LineIntegrationSection />
       case 'notifications':
@@ -1574,6 +2057,8 @@ export default function SettingsPage() {
         return <ApiKeysSection />
       case 'branding':
         return <WhiteLabelSection />
+      case 'privacy':
+        return <PrivacySection />
       default:
         return null
     }

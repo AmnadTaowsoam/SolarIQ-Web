@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
 /**
  * Billing Page (WK-017)
  * Main billing management page for subscription, invoices, and usage
  */
 
-import React, { useState } from 'react';
-import { CreditCard, FileText, BarChart3, Settings, ExternalLink } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import { AppLayout } from '@/components/layout';
-import { useAuth } from '@/context';
-import { PlanSelector } from '@/components/billing/PlanSelector';
-import { UsageBar } from '@/components/billing/UsageBar';
-import { InvoiceTable } from '@/components/billing/InvoiceTable';
-import { SubscriptionCard } from '@/components/billing/SubscriptionCard';
+import React, { useState } from 'react'
+import { CreditCard, FileText, BarChart3, Settings, ExternalLink } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { AppLayout } from '@/components/layout'
+import { useAuth } from '@/context'
+import { PlanSelector } from '@/components/billing/PlanSelector'
+import { UsageBar } from '@/components/billing/UsageBar'
+import { InvoiceTable } from '@/components/billing/InvoiceTable'
+import { SubscriptionCard } from '@/components/billing/SubscriptionCard'
 import {
   useBillingStatus,
   usePlans,
@@ -23,85 +23,98 @@ import {
   useUpdateSubscription,
   useCancelSubscription,
   useCustomerPortal,
-} from '@/hooks/useBilling';
-import { type PlanType } from '@/types/billing';
+} from '@/hooks/useBilling'
+import { type PlanType } from '@/types/billing'
+import { useGA4 } from '@/hooks/useGA4'
 
-type TabType = 'overview' | 'plans' | 'invoices' | 'usage';
+type TabType = 'overview' | 'plans' | 'invoices' | 'usage'
 
 export default function BillingPage() {
-  const { user, isLoading: authLoading } = useAuth();
-  const t = useTranslations('billingPage');
-  const [activeTab, setActiveTab] = useState<TabType>('overview');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { user, isLoading: authLoading } = useAuth()
+  const t = useTranslations('billingPage')
+  const { trackUpgradeClick } = useGA4()
+  const [activeTab, setActiveTab] = useState<TabType>('overview')
+  const [isProcessing, setIsProcessing] = useState(false)
 
   // Queries
-  const { data: billingStatus, isLoading: isLoadingStatus } = useBillingStatus();
-  const { data: plansData } = usePlans();
-  const { data: invoicesData, isLoading: isLoadingInvoices } = useInvoices(1, 10);
-  const { data: usageData } = useUsage();
+  const { data: billingStatus, isLoading: isLoadingStatus } = useBillingStatus()
+  usePlans()
+  const { data: invoicesData, isLoading: isLoadingInvoices } = useInvoices(1, 10)
+  const { data: usageData } = useUsage()
 
   // Mutations
-  const subscribeMutation = useSubscribe();
-  const updateSubscriptionMutation = useUpdateSubscription();
-  const cancelSubscriptionMutation = useCancelSubscription();
+  const subscribeMutation = useSubscribe()
+  const updateSubscriptionMutation = useUpdateSubscription()
+  const cancelSubscriptionMutation = useCancelSubscription()
   // Customer portal kept for payment method management via Opn
-  const customerPortalMutation = useCustomerPortal();
+  const customerPortalMutation = useCustomerPortal()
 
   const handleSelectPlan = async (planId: PlanType) => {
-    setIsProcessing(true);
+    setIsProcessing(true)
     try {
+      // Track upgrade click event
+      const currentPlan = billingStatus?.subscription?.plan_id
+      if (currentPlan && currentPlan !== planId) {
+        trackUpgradeClick({
+          current_plan: currentPlan,
+          target_plan: planId,
+        })
+      }
+
       if (billingStatus?.subscription) {
         // Update existing subscription
-        await updateSubscriptionMutation.mutateAsync({ plan_id: planId });
+        await updateSubscriptionMutation.mutateAsync({ plan_id: planId })
       } else {
         // Create new subscription
-        await subscribeMutation.mutateAsync({ plan_id: planId });
+        await subscribeMutation.mutateAsync({ plan_id: planId })
       }
     } catch (error) {
-      console.error('Failed to update subscription:', error);
+      void error // handled by mutation state
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   const handleCancelSubscription = async () => {
     if (confirm(t('actions.cancelConfirm'))) {
-      setIsProcessing(true);
+      setIsProcessing(true)
       try {
-        await cancelSubscriptionMutation.mutateAsync();
+        await cancelSubscriptionMutation.mutateAsync()
       } catch (error) {
-        console.error('Failed to cancel subscription:', error);
+        void error // handled by mutation state
       } finally {
-        setIsProcessing(false);
+        setIsProcessing(false)
       }
     }
-  };
+  }
 
   const handleOpenPortal = async () => {
     try {
-      const result = await customerPortalMutation.mutateAsync();
-      window.open(result.url, '_blank');
+      const result = await customerPortalMutation.mutateAsync()
+      window.open(result.url, '_blank')
     } catch (error) {
-      console.error('Failed to open customer portal:', error);
+      void error // handled by mutation state
     }
-  };
+  }
 
   if (authLoading || isLoadingStatus) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
-    );
+    )
   }
 
-  if (!user) return null;
+  if (!user) {
+    return null
+  }
 
   const tabs = [
     { id: 'overview' as TabType, label: t('tabs.overview'), icon: CreditCard },
     { id: 'plans' as TabType, label: t('tabs.plans'), icon: Settings },
     { id: 'invoices' as TabType, label: t('tabs.invoices'), icon: FileText },
     { id: 'usage' as TabType, label: t('tabs.usage'), icon: BarChart3 },
-  ];
+  ]
 
   return (
     <AppLayout user={user}>
@@ -148,9 +161,7 @@ export default function BillingPage() {
             {/* Usage Summary */}
             {usageData && (
               <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  {t('usage.title')}
-                </h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('usage.title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {usageData.usage.map((item, index) => (
                     <UsageBar
@@ -172,7 +183,17 @@ export default function BillingPage() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
-                  onClick={() => setActiveTab('plans')}
+                  onClick={() => {
+                    // Track upgrade click when navigating to plans tab
+                    const currentPlan = billingStatus?.subscription?.plan_id
+                    if (currentPlan) {
+                      trackUpgradeClick({
+                        current_plan: currentPlan,
+                        feature: 'change_plan',
+                      })
+                    }
+                    setActiveTab('plans')
+                  }}
                   className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <Settings className="w-6 h-6 text-blue-600" />
@@ -204,12 +225,8 @@ export default function BillingPage() {
         {activeTab === 'plans' && (
           <div>
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">
-                {t('plans.title')}
-              </h2>
-              <p className="text-gray-600 mt-1">
-                {t('plans.subtitle')}
-              </p>
+              <h2 className="text-xl font-semibold text-gray-900">{t('plans.title')}</h2>
+              <p className="text-gray-600 mt-1">{t('plans.subtitle')}</p>
             </div>
             <PlanSelector
               currentPlan={billingStatus?.subscription?.plan_id}
@@ -223,9 +240,7 @@ export default function BillingPage() {
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b">
               <h2 className="text-xl font-semibold text-gray-900">{t('invoices.title')}</h2>
-              <p className="text-gray-600 mt-1">
-                {t('invoices.subtitle')}
-              </p>
+              <p className="text-gray-600 mt-1">{t('invoices.subtitle')}</p>
             </div>
             {isLoadingInvoices ? (
               <div className="p-6 text-center">
@@ -274,5 +289,5 @@ export default function BillingPage() {
         )}
       </div>
     </AppLayout>
-  );
+  )
 }

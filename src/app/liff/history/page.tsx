@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { useLIFF, useLIFFUser } from '../../../context/LIFFContext'
 import { getAccessToken } from '../../../lib/liff'
 import { SolarAnalysisResult } from '../../../types'
+import { useTranslations } from 'next-intl'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
@@ -40,6 +41,7 @@ function formatCurrency(num: number): string {
 }
 
 export default function HistoryPage(): React.ReactElement {
+  const t = useTranslations('historyPage')
   const { isInitialized, isLoading: liffLoading, error: liffError } = useLIFF()
   const user = useLIFFUser()
   const router = useRouter()
@@ -64,10 +66,7 @@ export default function HistoryPage(): React.ReactElement {
         headers['X-LINE-User-Id'] = user.userId
       }
 
-      const response = await fetch(
-        `${API_URL}/api/v1/solar/history?sort=desc`,
-        { headers }
-      )
+      const response = await fetch(`${API_URL}/api/v1/solar/history?sort=desc`, { headers })
 
       if (!response.ok) {
         throw new Error('Failed to fetch history')
@@ -77,11 +76,11 @@ export default function HistoryPage(): React.ReactElement {
       const items = data.data?.items || data.items || data.data || []
       setHistory(Array.isArray(items) ? items : [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาดในการโหลดข้อมูล')
+      setError(err instanceof Error ? err.message : t('error'))
     } finally {
       setIsLoading(false)
     }
-  }, [user?.userId])
+  }, [user?.userId, t])
 
   useEffect(() => {
     if (isInitialized && !liffLoading) {
@@ -99,7 +98,7 @@ export default function HistoryPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">กำลังโหลดประวัติ...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -111,7 +110,7 @@ export default function HistoryPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">&#9888;&#65039;</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">เกิดข้อผิดพลาด</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('error')}</h1>
           <p className="text-red-500">{liffError.message}</p>
         </div>
       </div>
@@ -124,13 +123,13 @@ export default function HistoryPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">&#9888;&#65039;</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">เกิดข้อผิดพลาด</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('error')}</h1>
           <p className="text-red-500 mb-4">{error}</p>
           <button
             onClick={fetchHistory}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
           >
-            ลองใหม่อีกครั้ง
+            {t('retry')}
           </button>
         </div>
       </div>
@@ -141,10 +140,8 @@ export default function HistoryPage(): React.ReactElement {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-green-600 text-white p-4 shadow-md">
-        <h1 className="text-xl font-bold text-center">ประวัติการวิเคราะห์</h1>
-        <p className="text-green-100 text-sm text-center mt-1">
-          รายการวิเคราะห์โซลาร์เซลล์ทั้งหมดของคุณ
-        </p>
+        <h1 className="text-xl font-bold text-center">{t('title')}</h1>
+        <p className="text-green-100 text-sm text-center mt-1">{t('subtitle')}</p>
       </header>
 
       <div className="p-4">
@@ -152,17 +149,13 @@ export default function HistoryPage(): React.ReactElement {
         {history.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="text-6xl mb-4">&#9728;&#65039;</div>
-            <h2 className="text-xl font-bold text-gray-700 mb-2">
-              ยังไม่มีประวัติการวิเคราะห์
-            </h2>
-            <p className="text-gray-500 mb-6 text-center">
-              เริ่มต้นวิเคราะห์ศักยภาพโซลาร์เซลล์บ้านคุณ
-            </p>
+            <h2 className="text-xl font-bold text-gray-700 mb-2">{t('empty.title')}</h2>
+            <p className="text-gray-500 mb-6 text-center">{t('empty.description')}</p>
             <a
               href="/liff/map-picker"
               className="inline-block bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors"
             >
-              เริ่มวิเคราะห์
+              {t('empty.startAnalysis')}
             </a>
           </div>
         ) : (
@@ -178,9 +171,7 @@ export default function HistoryPage(): React.ReactElement {
                 >
                   {/* Date */}
                   <div className="flex justify-between items-start mb-2">
-                    <p className="text-xs text-gray-400">
-                      {formatDate(item.createdAt)}
-                    </p>
+                    <p className="text-xs text-gray-400">{formatDate(item.createdAt)}</p>
                     <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
                       {panelConfig.capacityKw.toFixed(1)} kW
                     </span>
@@ -188,17 +179,18 @@ export default function HistoryPage(): React.ReactElement {
 
                   {/* Address */}
                   <p className="text-sm font-medium text-gray-800 mb-2 line-clamp-2">
-                    {address || 'ไม่ระบุที่อยู่'}
+                    {address || t('item.addressNotSpecified')}
                   </p>
 
                   {/* Summary Row */}
                   <div className="flex justify-between items-center text-sm">
                     <div className="flex gap-4">
                       <span className="text-gray-500">
-                        {panelConfig.panelsCount} แผง
+                        {panelConfig.panelsCount} {t('item.panels')}
                       </span>
                       <span className="text-gray-500">
-                        คืนทุน {financialAnalysis.paybackYears.toFixed(1)} ปี
+                        {t('item.payback')} {financialAnalysis.paybackYears.toFixed(1)}{' '}
+                        {t('item.years')}
                       </span>
                     </div>
                     <span className="text-green-600 font-semibold">

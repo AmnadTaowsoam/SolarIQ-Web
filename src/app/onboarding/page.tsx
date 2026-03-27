@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl'
 import { useAuth } from '@/context/AuthContext'
 import { api } from '@/lib/api'
 import type { AxiosRequestConfig } from 'axios'
+import { useGA4 } from '@/hooks/useGA4'
 
 // ---------------------------------------------------------------------------
 // Thai provinces list
@@ -1160,9 +1161,11 @@ export default function OnboardingPage() {
   const { user } = useAuth()
   const router = useRouter()
   const t = useTranslations('onboardingPage')
+  const { trackOnboardingComplete, trackLineConnect } = useGA4()
 
   const [step, setStep] = useState(1)
   const totalSteps = 5
+  const startTimeRef = useRef<number>(Date.now())
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -1256,6 +1259,13 @@ export default function OnboardingPage() {
       })
       setLineData((prev) => ({ ...prev, skipped: false }))
       setSummary((prev) => ({ ...prev, lineConnected: true }))
+
+      // Track LINE connect event
+      trackLineConnect({
+        line_user_id: (user as { lineUserId?: string } | null)?.lineUserId || undefined,
+        liff_id: process.env.NEXT_PUBLIC_LIFF_ID,
+      })
+
       setStep(3)
     } catch {
       setError(t('errors.saveLineFailed'))
@@ -1333,6 +1343,17 @@ export default function OnboardingPage() {
     setIsLoading(true)
     try {
       await api.post('/api/v1/onboarding/complete', {})
+
+      // Track onboarding complete event
+      const durationSeconds = Math.floor((Date.now() - startTimeRef.current) / 1000)
+      const stepsCompleted =
+        5 - [lineData.skipped, teamData.skipped, demoLeadData.skipped].filter(Boolean).length
+
+      trackOnboardingComplete({
+        steps_completed: stepsCompleted,
+        total_steps: totalSteps,
+        duration_seconds: durationSeconds,
+      })
     } catch {
       // Non-critical — still redirect
     } finally {

@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation'
 import { useLIFF, useLIFFUser } from '../../../context/LIFFContext'
 import { sendFlexMessage, closeWindow, getAccessToken, openWindow } from '../../../lib/liff'
 import { SolarAnalysisResult } from '../../../types'
+import { useTranslations } from 'next-intl'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
@@ -32,6 +33,7 @@ function formatCurrency(num: number): string {
 }
 
 export default function ProposalPage(): React.ReactElement {
+  const t = useTranslations('proposalPage')
   const { isInitialized, isLoading: liffLoading, error: liffError } = useLIFF()
   const user = useLIFFUser()
   const searchParams = useSearchParams()
@@ -45,7 +47,7 @@ export default function ProposalPage(): React.ReactElement {
 
   const fetchProposal = useCallback(async () => {
     if (!leadId) {
-      setError('ไม่พบรหัสลูกค้า')
+      setError(t('errors.noLeadId'))
       setIsLoading(false)
       return
     }
@@ -65,14 +67,13 @@ export default function ProposalPage(): React.ReactElement {
         headers['X-LINE-User-Id'] = user.userId
       }
 
-      const response = await fetch(
-        `${API_URL}/api/v1/solar/proposal?lead_id=${leadId}`,
-        { headers }
-      )
+      const response = await fetch(`${API_URL}/api/v1/solar/proposal?lead_id=${leadId}`, {
+        headers,
+      })
 
       if (!response.ok) {
         if (response.status === 404) {
-          setError('ไม่พบใบเสนอราคา')
+          setError(t('errors.notFound'))
           return
         }
         throw new Error('Failed to fetch proposal')
@@ -81,11 +82,11 @@ export default function ProposalPage(): React.ReactElement {
       const data = await response.json()
       setProposal(data.data || data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาดในการโหลดข้อมูล')
+      setError(err instanceof Error ? err.message : t('errors.loadError'))
     } finally {
       setIsLoading(false)
     }
-  }, [leadId, user?.userId])
+  }, [leadId, user?.userId, t])
 
   useEffect(() => {
     if (isInitialized && !liffLoading) {
@@ -94,18 +95,22 @@ export default function ProposalPage(): React.ReactElement {
   }, [isInitialized, liffLoading, fetchProposal])
 
   const handleDownloadPDF = async () => {
-    if (!proposal?.pdfUrl) return
+    if (!proposal?.pdfUrl) {
+      return
+    }
     window.open(proposal.pdfUrl, '_blank')
   }
 
   const handleShareToLINE = async () => {
-    if (!proposal) return
+    if (!proposal) {
+      return
+    }
     setIsSharing(true)
 
     try {
       const { panelConfig, financialAnalysis } = proposal.result
 
-      await sendFlexMessage('SolarIQ - ใบเสนอราคา', {
+      await sendFlexMessage(t('flexMessage.title'), {
         type: 'bubble',
         size: 'mega',
         header: {
@@ -114,7 +119,7 @@ export default function ProposalPage(): React.ReactElement {
           contents: [
             {
               type: 'text',
-              text: 'SolarIQ - ใบเสนอราคา',
+              text: t('flexMessage.title'),
               weight: 'bold',
               size: 'lg',
               color: '#16a34a',
@@ -130,24 +135,24 @@ export default function ProposalPage(): React.ReactElement {
           contents: [
             {
               type: 'text',
-              text: `ขนาดระบบ: ${panelConfig.capacityKw.toFixed(1)} kW (${panelConfig.panelsCount} แผง)`,
+              text: `${t('flexMessage.systemSize')} ${panelConfig.capacityKw.toFixed(1)} kW (${panelConfig.panelsCount} ${t('flexMessage.panels')})`,
               size: 'md',
             },
             {
               type: 'text',
-              text: `ค่าติดตั้ง: ${formatCurrency(financialAnalysis.installationCost)}`,
+              text: `${t('flexMessage.installationCost')} ${formatCurrency(financialAnalysis.installationCost)}`,
               size: 'md',
             },
             {
               type: 'text',
-              text: `คืนทุนใน ${financialAnalysis.paybackYears.toFixed(1)} ปี`,
+              text: `${t('flexMessage.payback')} ${financialAnalysis.paybackYears.toFixed(1)} ${t('flexMessage.years')}`,
               weight: 'bold',
               color: '#16a34a',
               size: 'md',
             },
             {
               type: 'text',
-              text: `ประหยัด ${formatCurrency(financialAnalysis.monthlySavings)}/เดือน`,
+              text: `${t('flexMessage.monthlySavings')} ${formatCurrency(financialAnalysis.monthlySavings)}`,
               size: 'sm',
             },
           ],
@@ -162,7 +167,7 @@ export default function ProposalPage(): React.ReactElement {
               type: 'button',
               action: {
                 type: 'uri',
-                label: 'ดูใบเสนอราคา',
+                label: t('flexMessage.viewProposal'),
                 uri: `${process.env.NEXT_PUBLIC_LIFF_URL || ''}/liff/proposal?lead_id=${leadId}`,
               },
               style: 'primary',
@@ -175,7 +180,7 @@ export default function ProposalPage(): React.ReactElement {
 
       closeWindow()
     } catch {
-      setError('ไม่สามารถแชร์ได้ กรุณาลองใหม่อีกครั้ง')
+      setError(t('errors.shareError'))
     } finally {
       setIsSharing(false)
     }
@@ -195,7 +200,7 @@ export default function ProposalPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">กำลังโหลดใบเสนอราคา...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -207,7 +212,7 @@ export default function ProposalPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">&#9888;&#65039;</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">เกิดข้อผิดพลาด</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.loadError')}</h1>
           <p className="text-red-500">{liffError.message}</p>
         </div>
       </div>
@@ -220,20 +225,22 @@ export default function ProposalPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">&#9888;&#65039;</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">เกิดข้อผิดพลาด</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.loadError')}</h1>
           <p className="text-red-500 mb-4">{error}</p>
           <button
             onClick={fetchProposal}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
           >
-            ลองใหม่อีกครั้ง
+            {t('actions.contactInstaller')}
           </button>
         </div>
       </div>
     )
   }
 
-  if (!proposal) return <div />
+  if (!proposal) {
+    return <div />
+  }
 
   const { panelConfig, financialAnalysis } = proposal.result
   const isReady = proposal.status === 'ready' && proposal.pdfUrl
@@ -243,10 +250,8 @@ export default function ProposalPage(): React.ReactElement {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-green-600 text-white p-4 shadow-md">
-        <h1 className="text-xl font-bold text-center">ใบเสนอราคา</h1>
-        <p className="text-green-100 text-sm text-center mt-1">
-          Solar Proposal
-        </p>
+        <h1 className="text-xl font-bold text-center">{t('title')}</h1>
+        <p className="text-green-100 text-sm text-center mt-1">{t('subtitle')}</p>
       </header>
 
       <div className="p-4 space-y-4 pb-40">
@@ -255,39 +260,40 @@ export default function ProposalPage(): React.ReactElement {
           <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 flex items-center gap-3">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-600 flex-shrink-0"></div>
             <div>
-              <p className="font-semibold text-yellow-800">กำลังสร้างใบเสนอราคา</p>
-              <p className="text-sm text-yellow-600">กรุณารอสักครู่...</p>
+              <p className="font-semibold text-yellow-800">{t('status.generating')}</p>
+              <p className="text-sm text-yellow-600">{t('status.generatingDescription')}</p>
             </div>
           </div>
         )}
 
         {proposal.status === 'error' && (
           <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
-            <p className="font-semibold text-red-800">เกิดข้อผิดพลาดในการสร้างใบเสนอราคา</p>
-            <p className="text-sm text-red-600 mt-1">กรุณาลองใหม่อีกครั้ง หรือติดต่อเจ้าหน้าที่</p>
+            <p className="font-semibold text-red-800">{t('status.error')}</p>
+            <p className="text-sm text-red-600 mt-1">{t('status.errorDescription')}</p>
           </div>
         )}
 
         {/* Proposal Summary */}
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            สรุปข้อเสนอ
+            {t('summary.title')}
           </h2>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">ขนาดระบบ</span>
+              <span className="text-gray-600">{t('summary.systemSize')}</span>
               <span className="font-bold text-gray-800">
                 {panelConfig.capacityKw.toFixed(1)} kW ({panelConfig.panelsCount} แผง)
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">พลังงานต่อปี</span>
+              <span className="text-gray-600">{t('summary.yearlyEnergy')}</span>
               <span className="font-semibold text-gray-800">
-                {new Intl.NumberFormat('th-TH').format(Math.round(panelConfig.yearlyEnergyDcKwh))} kWh
+                {new Intl.NumberFormat('th-TH').format(Math.round(panelConfig.yearlyEnergyDcKwh))}{' '}
+                kWh
               </span>
             </div>
             <div className="border-t pt-3 flex justify-between items-center">
-              <span className="text-gray-600">ราคาประมาณการ</span>
+              <span className="text-gray-600">{t('summary.estimatedPrice')}</span>
               <span className="text-xl font-bold text-gray-800">
                 {formatCurrency(financialAnalysis.installationCost)}
               </span>
@@ -298,24 +304,24 @@ export default function ProposalPage(): React.ReactElement {
         {/* ROI Card */}
         <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-sm p-5">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            ผลตอบแทน
+            {t('roi.title')}
           </h2>
           <div className="grid grid-cols-2 gap-4 text-center">
             <div className="bg-white/70 rounded-xl p-3">
               <p className="text-2xl font-bold text-green-600">
                 {financialAnalysis.paybackYears.toFixed(1)}
               </p>
-              <p className="text-xs text-gray-500 mt-1">ปีคืนทุน</p>
+              <p className="text-xs text-gray-500 mt-1">{t('roi.payback')}</p>
             </div>
             <div className="bg-white/70 rounded-xl p-3">
               <p className="text-2xl font-bold text-green-600">
                 {formatCurrency(financialAnalysis.monthlySavings)}
               </p>
-              <p className="text-xs text-gray-500 mt-1">ประหยัด/เดือน</p>
+              <p className="text-xs text-gray-500 mt-1">{t('roi.monthlySavings')}</p>
             </div>
           </div>
           <div className="mt-3 text-center bg-white/70 rounded-xl p-3">
-            <p className="text-sm text-gray-600">ประหยัดรวม 25 ปี</p>
+            <p className="text-sm text-gray-600">{t('roi.savings25Years')}</p>
             <p className="text-2xl font-bold text-green-600">
               {formatCurrency(financialAnalysis.yearlySavings * 25)}
             </p>
@@ -326,7 +332,7 @@ export default function ProposalPage(): React.ReactElement {
         {isReady && proposal.pdfUrl && (
           <div className="bg-white rounded-2xl shadow-sm p-5">
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-              เอกสารใบเสนอราคา
+              {t('document.title')}
             </h2>
             <div className="border rounded-xl overflow-hidden">
               <iframe
@@ -339,7 +345,7 @@ export default function ProposalPage(): React.ReactElement {
               onClick={handleDownloadPDF}
               className="w-full mt-3 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
             >
-              เปิด PDF เต็มจอ
+              {t('document.openFullPdf')}
             </button>
           </div>
         )}
@@ -356,17 +362,17 @@ export default function ProposalPage(): React.ReactElement {
             {isSharing ? (
               <span className="flex items-center justify-center gap-2">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
-                กำลังแชร์...
+                {t('actions.sharing')}
               </span>
             ) : (
-              'แชร์ไปยัง LINE'
+              t('actions.shareToLine')
             )}
           </button>
           <button
             onClick={handleContactInstaller}
             className="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold transition-all hover:bg-green-700"
           >
-            ติดต่อช่างติดตั้ง
+            {t('actions.contactInstaller')}
           </button>
         </div>
       </div>

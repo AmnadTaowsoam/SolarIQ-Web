@@ -10,6 +10,7 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import { useLIFF, useLIFFUser } from '../../../context/LIFFContext'
 import { sendLocationMessage, closeWindow } from '../../../lib/liff'
 import { env } from '../../../lib/env'
+import { useTranslations } from 'next-intl'
 
 interface LocationState {
   lat: number
@@ -36,9 +37,10 @@ const mapOptions: google.maps.MapOptions = {
 }
 
 export default function MapPickerPage(): React.ReactElement {
+  const t = useTranslations('mapPickerPage')
   const { isInitialized, isLoading: liffLoading, error: liffError } = useLIFF()
   const user = useLIFFUser()
-  
+
   const [location, setLocation] = useState<LocationState>({
     lat: defaultCenter.lat,
     lng: defaultCenter.lng,
@@ -55,12 +57,14 @@ export default function MapPickerPage(): React.ReactElement {
 
   // Get current location on mount
   useEffect(() => {
-    if (!mapLoaded) return
+    if (!mapLoaded) {
+      return
+    }
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLocation(prev => ({
+          setLocation((prev) => ({
             ...prev,
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -80,14 +84,16 @@ export default function MapPickerPage(): React.ReactElement {
 
   // Reverse geocode coordinates to address
   const reverseGeocode = useCallback(async (lat: number, lng: number): Promise<string> => {
-    if (!window.google?.maps) return ''
+    if (!window.google?.maps) {
+      return ''
+    }
 
     try {
       const geocoder = new google.maps.Geocoder()
       const response = await geocoder.geocode({ location: { lat, lng } })
-      
+
       if (response.results && response.results.length > 0) {
-        return response.results[0].formatted_address
+        return response.results[0]?.formatted_address || ''
       }
       return ''
     } catch {
@@ -96,35 +102,45 @@ export default function MapPickerPage(): React.ReactElement {
   }, [])
 
   // Handle marker drag
-  const handleMarkerDragEnd = useCallback(async (e: google.maps.MapMouseEvent) => {
-    if (!e.latLng) return
-    
-    const lat = e.latLng.lat()
-    const lng = e.latLng.lng()
-    
-    setLocation(prev => ({ ...prev, lat, lng }))
-    
-    const address = await reverseGeocode(lat, lng)
-    setLocation(prev => ({ ...prev, address }))
-  }, [reverseGeocode])
+  const handleMarkerDragEnd = useCallback(
+    async (e: google.maps.MapMouseEvent) => {
+      if (!e.latLng) {
+        return
+      }
+
+      const lat = e.latLng.lat()
+      const lng = e.latLng.lng()
+
+      setLocation((prev) => ({ ...prev, lat, lng }))
+
+      const address = await reverseGeocode(lat, lng)
+      setLocation((prev) => ({ ...prev, address }))
+    },
+    [reverseGeocode]
+  )
 
   // Handle map click
-  const handleMapClick = useCallback(async (e: google.maps.MapMouseEvent) => {
-    if (!e.latLng) return
-    
-    const lat = e.latLng.lat()
-    const lng = e.latLng.lng()
-    
-    setLocation(prev => ({ ...prev, lat, lng }))
-    
-    const address = await reverseGeocode(lat, lng)
-    setLocation(prev => ({ ...prev, address }))
-  }, [reverseGeocode])
+  const handleMapClick = useCallback(
+    async (e: google.maps.MapMouseEvent) => {
+      if (!e.latLng) {
+        return
+      }
+
+      const lat = e.latLng.lat()
+      const lng = e.latLng.lng()
+
+      setLocation((prev) => ({ ...prev, lat, lng }))
+
+      const address = await reverseGeocode(lat, lng)
+      setLocation((prev) => ({ ...prev, address }))
+    },
+    [reverseGeocode]
+  )
 
   // Submit location to chat
   const handleSubmit = async () => {
     if (!location.address) {
-      setError('Please select a location on the map')
+      setError(t('pleaseSelectLocation'))
       return
     }
 
@@ -132,19 +148,14 @@ export default function MapPickerPage(): React.ReactElement {
     setError(null)
 
     try {
-      await sendLocationMessage(
-        'ที่ตั้งบ้านของฉัน',
-        location.address,
-        location.lat,
-        location.lng
-      )
-      
+      await sendLocationMessage(t('myHomeLocation'), location.address, location.lat, location.lng)
+
       // Close LIFF after sending
       setTimeout(() => {
         closeWindow()
       }, 1000)
-    } catch (err) {
-      setError('Failed to send location. Please try again.')
+    } catch {
+      setError(t('errors.submitError'))
       setIsSubmitting(false)
     }
   }
@@ -155,7 +166,7 @@ export default function MapPickerPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">กำลังโหลด...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -167,7 +178,7 @@ export default function MapPickerPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">⚠️</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">เกิดข้อผิดพลาด</h1>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.locationError')}</h1>
           <p className="text-red-500">{liffError.message}</p>
         </div>
       </div>
@@ -179,8 +190,8 @@ export default function MapPickerPage(): React.ReactElement {
       <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">🗺️</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">ไม่สามารถโหลดแผนที่ได้</h1>
-          <p className="text-red-500">กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต</p>
+          <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.geocodeError')}</h1>
+          <p className="text-red-500">{t('checkInternetConnection')}</p>
         </div>
       </div>
     )
@@ -190,10 +201,8 @@ export default function MapPickerPage(): React.ReactElement {
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
       <header className="bg-green-600 text-white p-4 shadow-md">
-        <h1 className="text-xl font-bold text-center">📍 ปักหมุดบ้านของคุณ</h1>
-        <p className="text-green-100 text-sm text-center mt-1">
-          แตะบนแผนที่เพื่อเลือกตำแหน่งบ้าน
-        </p>
+        <h1 className="text-xl font-bold text-center">📍 {t('title')}</h1>
+        <p className="text-green-100 text-sm text-center mt-1">{t('subtitle')}</p>
       </header>
 
       {/* Map */}
@@ -222,22 +231,16 @@ export default function MapPickerPage(): React.ReactElement {
       <div className="bg-white border-t p-4">
         {location.address ? (
           <div className="mb-4">
-            <p className="text-sm text-gray-500 mb-1">ที่อยู่:</p>
+            <p className="text-sm text-gray-500 mb-1">{t('address')}:</p>
             <p className="text-gray-800 font-medium">{location.address}</p>
           </div>
         ) : (
           <div className="mb-4">
-            <p className="text-gray-400 text-center">
-              แตะบนแผนที่เพื่อเลือกตำแหน่ง
-            </p>
+            <p className="text-gray-400 text-center">{t('selectOnMap')}</p>
           </div>
         )}
 
-        {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
-            {error}
-          </div>
-        )}
+        {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">{error}</div>}
 
         {/* Submit Button */}
         <button
@@ -252,10 +255,10 @@ export default function MapPickerPage(): React.ReactElement {
           {isSubmitting ? (
             <span className="flex items-center justify-center gap-2">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              กำลังส่ง...
+              {t('confirming')}
             </span>
           ) : (
-            '✓ วิเคราะห์ตำแหน่งนี้'
+            `✓ ${t('confirm')}`
           )}
         </button>
       </div>

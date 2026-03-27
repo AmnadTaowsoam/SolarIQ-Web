@@ -1,132 +1,117 @@
+/**
+ * Next.js Middleware for Security Headers
+ * Adds OWASP-recommended security headers to all responses
+ */
+
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { defaultLocale, isSupportedLocale, type Locale } from '@/i18n/config'
-import { buildLocalizedPath, extractLocaleFromPath, normalizePathname } from '@/lib/locale'
 
-const LOCALE_COOKIE = 'NEXT_LOCALE'
+/**
+ * Security headers configuration
+ */
+const SECURITY_HEADERS = {
+  // Content Security Policy - Controls resources the browser is allowed to load
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "img-src 'self' data: https: blob:",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com https://www.google-analytics.com",
+    "frame-src 'self' https://liff.line.me",
+    "media-src 'self' https:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    'upgrade-insecure-requests',
+  ].join('; '),
 
-// Routes that don't require authentication
-const publicRoutes = [
-  '/',
-  '/login',
-  '/signup',
-  '/forgot-password',
-  '/verify-email',
-  '/landing',
-  '/pricing-plans',
-  '/about',
-  '/terms',
-  '/privacy',
-  '/refund-policy',
-  '/contact',
-  '/checkout',
-  '/checkout/success',
-  '/checkout/cancel',
-]
+  // Strict-Transport-Security - Force HTTPS connections
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
 
-// Admin-only routes
-const adminRoutes = ['/knowledge', '/pricing', '/admin/revenue']
+  // X-Content-Type-Options - Prevent MIME type sniffing
+  'X-Content-Type-Options': 'nosniff',
 
-function getLocaleFromHeader(header: string | null): Locale | null {
-  if (!header) {
-    return null
-  }
-  const value = header.split(',')[0]?.trim()?.toLowerCase() ?? ''
-  const base = value.split('-')[0]
-  return isSupportedLocale(base) ? base : null
+  // X-Frame-Options - Prevent clickjacking
+  'X-Frame-Options': 'DENY',
+
+  // X-XSS-Protection - Enable browser XSS filter
+  'X-XSS-Protection': '1; mode=block',
+
+  // Referrer-Policy - Control referrer information
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+
+  // Permissions-Policy - Control browser features
+  'Permissions-Policy':
+    'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=()',
+
+  // Cross-Origin-Embedder-Policy - Control COOP/COEP for shared array buffers
+  'Cross-Origin-Embedder-Policy': 'require-corp',
+
+  // Cross-Origin-Opener-Policy - Control COOP for window opener
+  'Cross-Origin-Opener-Policy': 'same-origin',
+
+  // X-DNS-Prefetch-Control - Control DNS prefetching
+  'X-DNS-Prefetch-Control': 'off',
+
+  // Cache-Control for API routes - Prevent caching sensitive data
 }
 
-function resolvePreferredLocale(request: NextRequest): Locale {
-  const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value
-  if (isSupportedLocale(cookieLocale)) {
-    return cookieLocale
-  }
-  const headerLocale = getLocaleFromHeader(request.headers.get('accept-language'))
-  return headerLocale ?? defaultLocale
+/**
+ * Paths that should be excluded from security header enforcement
+ */
+const EXEMPT_PATHS = ['/_next', '/api/health', '/api/webhook', '/api/analytics/vitals']
+
+/**
+ * Check if path should be exempted from security headers
+ */
+function shouldExemptPath(pathname: string): boolean {
+  return EXEMPT_PATHS.some((exempt) => pathname.startsWith(exempt))
 }
 
+/**
+ * Middleware function to add security headers
+ */
 export function middleware(request: NextRequest) {
-  const pathname = normalizePathname(request.nextUrl.pathname)
-  const { locale: pathLocale, pathname: strippedPath } = extractLocaleFromPath(pathname)
-  const preferredLocale = pathLocale ?? resolvePreferredLocale(request)
+  const response = NextResponse.next()
 
-  // Handle root path first
-  if (strippedPath === '/') {
-    const hasSession =
-      request.cookies.get('__session') ?? request.cookies.get('firebase-auth-token')
-    const target = hasSession ? '/dashboard' : '/landing'
-    const localizedTarget = buildLocalizedPath(target, preferredLocale)
-    const redirectUrl = new URL(localizedTarget, request.url)
-    const response = NextResponse.redirect(redirectUrl)
-    response.cookies.set(LOCALE_COOKIE, preferredLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
-    response.headers.set('x-locale', preferredLocale)
+  // Skip security headers for exempted paths
+  if (shouldExemptPath(request.nextUrl.pathname)) {
     return response
   }
 
-  // Strip default locale prefix from URL (e.g. /th/billing → /billing)
-  if (pathLocale === defaultLocale) {
-    const redirectUrl = new URL(strippedPath, request.url)
-    const response = NextResponse.redirect(redirectUrl)
-    response.cookies.set(LOCALE_COOKIE, defaultLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
-    response.headers.set('x-locale', defaultLocale)
-    return response
-  }
+  // Add security headers
+  Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
+    response.headers.set(key, value)
+  })
 
-  // Redirect to locale-prefixed route when user prefers non-default locale
-  if (!pathLocale && preferredLocale !== defaultLocale) {
-    const redirectUrl = new URL(buildLocalizedPath(pathname, preferredLocale), request.url)
-    const response = NextResponse.redirect(redirectUrl)
-    response.cookies.set(LOCALE_COOKIE, preferredLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
-    response.headers.set('x-locale', preferredLocale)
-    return response
-  }
-
-  const effectivePath = pathLocale ? strippedPath : pathname
-
-  // Check if route is public
-  const isPublicRoute = publicRoutes.some(
-    (route) => effectivePath === route || effectivePath.startsWith(`${route}/`)
-  )
-
-  // Prepare base response (rewrite if locale prefix was present)
-  const response = pathLocale
-    ? NextResponse.rewrite(new URL(effectivePath, request.url))
-    : NextResponse.next()
-
-  response.cookies.set(LOCALE_COOKIE, preferredLocale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
-  response.headers.set('x-locale', preferredLocale)
-
-  if (isPublicRoute) {
-    return response
-  }
-
-  // Check for Firebase auth session cookie/token
-  const hasSession = request.cookies.get('__session') ?? request.cookies.get('firebase-auth-token')
-
-  if (!hasSession) {
-    const loginUrl = new URL(buildLocalizedPath('/login', preferredLocale), request.url)
-    loginUrl.searchParams.set('redirect', effectivePath)
-    return NextResponse.redirect(loginUrl)
-  }
-
-  const isAdminRoute = adminRoutes.some(
-    (route) => effectivePath === route || effectivePath.startsWith(`${route}/`)
-  )
-
-  if (isAdminRoute) {
-    const userRole = request.cookies.get('user-role')?.value
-    if (userRole && userRole !== 'admin') {
-      return NextResponse.redirect(
-        new URL(buildLocalizedPath('/dashboard', preferredLocale), request.url)
-      )
-    }
+  // Add cache control for API routes
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    response.headers.set(
+      'Cache-Control',
+      'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'
+    )
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
   }
 
   return response
 }
 
+/**
+ * Middleware matcher configuration
+ * Apply to all paths except static files and images
+ */
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|llms.txt|sw.js|workbox-.*|site.webmanifest|icons/.*).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    '/((?!_next/static|_next/image|favicon.ico|public|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

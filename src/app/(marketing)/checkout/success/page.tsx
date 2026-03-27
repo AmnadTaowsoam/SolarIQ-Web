@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle2, ArrowRight, Mail, FileText, Sparkles } from 'lucide-react'
+import { useGA4 } from '@/hooks/useGA4'
 
 /* ------------------------------------------------------------------ */
 /*  Confetti CSS animation (pure CSS approach)                         */
@@ -59,11 +60,51 @@ export default function CheckoutSuccessPage() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('charge_id') ?? searchParams.get('session_id')
   const [showConfetti, setShowConfetti] = useState(true)
+  const { trackPurchase } = useGA4()
 
   useEffect(() => {
     const timer = setTimeout(() => setShowConfetti(false), 5000)
     return () => clearTimeout(timer)
   }, [])
+
+  // Track purchase event on page load
+  useEffect(() => {
+    // Get purchase details from URL params or localStorage
+    const planId = searchParams.get('plan_id') || localStorage.getItem('checkout_plan_id')
+    const planName = searchParams.get('plan_name') || localStorage.getItem('checkout_plan_name')
+    const planType = (searchParams.get('plan_type') as 'monthly' | 'annual') || 'monthly'
+    const amount = parseFloat(
+      searchParams.get('amount') || localStorage.getItem('checkout_amount') || '0'
+    )
+    const currency = searchParams.get('currency') || 'THB'
+
+    if (sessionId && amount > 0) {
+      trackPurchase({
+        transaction_id: sessionId,
+        value: amount,
+        currency,
+        plan_id: planId || undefined,
+        plan_name: planName || undefined,
+        plan_type: planType,
+        items: planId
+          ? [
+              {
+                item_id: planId,
+                item_name: planName || 'Subscription Plan',
+                item_category: 'subscription',
+                price: amount,
+                quantity: 1,
+              },
+            ]
+          : undefined,
+      })
+
+      // Clear checkout data from localStorage
+      localStorage.removeItem('checkout_plan_id')
+      localStorage.removeItem('checkout_plan_name')
+      localStorage.removeItem('checkout_amount')
+    }
+  }, [sessionId, searchParams, trackPurchase])
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-gray-950 flex items-center justify-center px-4 py-16">
@@ -82,12 +123,8 @@ export default function CheckoutSuccessPage() {
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
           ชำระเงินสำเร็จ!
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">
-          ขอบคุณที่เลือกใช้ SolarIQ
-        </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-          บัญชีของคุณพร้อมใช้งานแล้ว
-        </p>
+        <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">ขอบคุณที่เลือกใช้ SolarIQ</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">บัญชีของคุณพร้อมใช้งานแล้ว</p>
 
         {/* Info cards */}
         <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 mb-8 text-left space-y-4 shadow-sm">
