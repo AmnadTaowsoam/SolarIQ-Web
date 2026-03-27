@@ -123,7 +123,7 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
                 <div className="flex justify-between text-xs mb-1">
                   <span className={`font-bold ${aqiConfig.color}`}>{aqiConfig.label}</span>
                   <span className="text-[var(--brand-text-secondary)]">
-                    PM2.5: {airQuality.pm25} \u00B5g/m\u00B3
+                    PM2.5: {airQuality.pm25} µg/m³
                   </span>
                 </div>
                 <div className="w-full h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 via-orange-500 to-purple-500 relative">

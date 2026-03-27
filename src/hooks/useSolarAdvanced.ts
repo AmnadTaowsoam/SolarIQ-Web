@@ -363,12 +363,14 @@ export function useWeatherForecast(lat: number, lng: number) {
           daily_yield_factor: number
         }) => ({
           date: d.date,
-          tempMax: d.temp_max_c,
-          tempMin: d.temp_min_c,
-          cloudCover: d.avg_cloud_cover_pct,
-          rainMm: d.total_rain_mm,
+          dayName: new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' }),
+          tempMax: d.temp_max_c ?? 0,
+          tempMin: d.temp_min_c ?? 0,
+          clouds: d.avg_cloud_cover_pct ?? 0,
+          rain: d.total_rain_mm ?? 0,
           predictedKwh: (d.daily_yield_factor ?? 0) * 5 * 5, // factor * kWp * peak hours
           idealKwh: 5 * 5, // kWp * peak hours
+          weatherIcon: '',
         })
       )
       const totalPredicted = daily.reduce(
@@ -430,10 +432,13 @@ export function useLiveConditions(lat: number, lng: number) {
 export function useClimateScore(lat: number, lng: number) {
   return useQuery({
     queryKey: ['climate-score', lat, lng],
-    queryFn: () =>
-      api.get<ClimateReliabilityData>(API_ENDPOINTS.SOLAR.FORECAST_CLIMATE_SCORE, {
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resp: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_CLIMATE_SCORE, {
         params: { lat, lng },
-      }),
+      })
+      return (resp.data ?? resp) as ClimateReliabilityData
+    },
     enabled: lat !== 0 && lng !== 0,
   })
 }
@@ -441,10 +446,13 @@ export function useClimateScore(lat: number, lng: number) {
 export function useClimateRisk(lat: number, lng: number) {
   return useQuery({
     queryKey: ['climate-risk', lat, lng],
-    queryFn: () =>
-      api.get<ClimateRiskAssessment>(API_ENDPOINTS.SOLAR.FORECAST_CLIMATE_RISK, {
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resp: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_CLIMATE_RISK, {
         params: { lat, lng },
-      }),
+      })
+      return (resp.data ?? resp) as ClimateRiskAssessment
+    },
     enabled: lat !== 0 && lng !== 0,
   })
 }
@@ -452,22 +460,28 @@ export function useClimateRisk(lat: number, lng: number) {
 export function useAirQuality(lat: number, lng: number) {
   return useQuery({
     queryKey: ['air-quality', lat, lng],
-    queryFn: () =>
-      api.get<AirQualityData>(API_ENDPOINTS.SOLAR.FORECAST_AIR_QUALITY, {
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resp: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_AIR_QUALITY, {
         params: { lat, lng },
-      }),
+      })
+      return (resp.data ?? resp) as AirQualityData
+    },
     enabled: lat !== 0 && lng !== 0,
-    refetchInterval: 10 * 60 * 1000, // Refresh every 10 minutes
+    refetchInterval: 10 * 60 * 1000,
   })
 }
 
 export function useAirQualityForecast(lat: number, lng: number) {
   return useQuery({
     queryKey: ['air-quality-forecast', lat, lng],
-    queryFn: () =>
-      api.get<AirQualityForecast>(API_ENDPOINTS.SOLAR.FORECAST_AIR_QUALITY_FORECAST, {
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resp: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_AIR_QUALITY_FORECAST, {
         params: { lat, lng },
-      }),
+      })
+      return (resp.data ?? resp) as AirQualityForecast
+    },
     enabled: lat !== 0 && lng !== 0,
   })
 }
@@ -475,10 +489,13 @@ export function useAirQualityForecast(lat: number, lng: number) {
 export function useDustSeason(lat: number, lng: number) {
   return useQuery({
     queryKey: ['dust-season', lat, lng],
-    queryFn: () =>
-      api.get<DustSeasonAnalysis>(API_ENDPOINTS.SOLAR.FORECAST_DUST_SEASON, {
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const resp: any = await api.get(API_ENDPOINTS.SOLAR.FORECAST_DUST_SEASON, {
         params: { lat, lng },
-      }),
+      })
+      return (resp.data ?? resp) as DustSeasonAnalysis
+    },
     enabled: lat !== 0 && lng !== 0,
   })
 }
