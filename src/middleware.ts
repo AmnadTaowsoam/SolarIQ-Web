@@ -74,7 +74,34 @@ function shouldExemptPath(pathname: string): boolean {
  * Middleware function to add security headers
  */
 export function middleware(request: NextRequest) {
-  const response = NextResponse.next()
+  // Read locale from NEXT_LOCALE cookie and pass as x-locale header
+  // so next-intl's getRequestConfig can pick it up
+  const localeCookie = request.cookies.get('NEXT_LOCALE')?.value
+  const requestHeaders = new Headers(request.headers)
+  if (localeCookie && (localeCookie === 'th' || localeCookie === 'en')) {
+    requestHeaders.set('x-locale', localeCookie)
+  }
+
+  // If URL has /en/ or /th/ prefix, redirect to clean path (cookie-based, no URL locale)
+  const pathname = request.nextUrl.pathname
+  const localeMatch = pathname.match(/^\/(en|th)(\/.*)$/)
+  if (localeMatch) {
+    const detectedLocale = localeMatch[1]
+    const cleanPath = localeMatch[2] || '/'
+    const url = request.nextUrl.clone()
+    url.pathname = cleanPath
+    const redirectResponse = NextResponse.redirect(url)
+    redirectResponse.cookies.set('NEXT_LOCALE', detectedLocale, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: 'lax',
+    })
+    return redirectResponse
+  }
+
+  const response = NextResponse.next({
+    request: { headers: requestHeaders },
+  })
 
   // Skip security headers for exempted paths
   if (shouldExemptPath(request.nextUrl.pathname)) {
