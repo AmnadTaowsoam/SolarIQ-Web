@@ -395,11 +395,12 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
 
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-50 w-[260px] bg-[var(--brand-sidebar)] border-r border-[var(--brand-border)]',
-          'transform transition-transform duration-200 ease-out',
-          'lg:translate-x-0 lg:static lg:z-auto',
-          'flex flex-col',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          'w-[260px] bg-[var(--brand-sidebar)] border-r border-[var(--brand-border)]',
+          'transition-transform duration-200 ease-out',
+          'flex flex-col flex-shrink-0',
+          // Mobile: fixed overlay
+          'max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-50',
+          isOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full'
         )}
       >
         <div className="flex items-center justify-between h-16 px-5 border-b border-[var(--brand-border)] flex-shrink-0">
