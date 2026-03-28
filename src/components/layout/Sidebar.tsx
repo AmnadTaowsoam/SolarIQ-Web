@@ -1,15 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
-import { signOut } from 'firebase/auth'
 import { useTranslations } from 'next-intl'
-import { auth } from '@/lib/firebase'
 import { User } from '@/types'
 import { ROUTES } from '@/lib/constants'
 import { extractLocaleFromPath } from '@/lib/locale'
-import { useBrand } from '@/context'
+import { useBrand, useAuth } from '@/context'
 
 interface SidebarProps {
   user: User | null
@@ -32,7 +30,7 @@ interface NavGroup {
 
 export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
-  const router = useRouter()
+  const { logout } = useAuth()
   const tNav = useTranslations('nav')
   const tNavbar = useTranslations('navbar')
   const { brand } = useBrand()
@@ -376,12 +374,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
   ]
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth)
-      router.push(ROUTES.LOGIN)
-    } catch {
-      router.push(ROUTES.LOGIN)
-    }
+    await logout()
   }
 
   return (
