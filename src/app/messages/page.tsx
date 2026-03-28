@@ -768,8 +768,8 @@ export default function MessagesPage() {
 
   return (
     <AppLayout user={user}>
-      {/* Full-height chat layout — negative margins to fill parent padding, but keep left margin 0 to not overlap sidebar */}
-      <div className="-mt-4 -mr-4 -mb-4 lg:-mt-6 lg:-mr-6 lg:-mb-6 xl:-mt-8 xl:-mr-8 xl:-mb-8 h-[calc(100vh-4rem)] flex flex-col overflow-hidden">
+      {/* Full-height chat layout */}
+      <div className="h-[calc(100vh-8rem)] flex flex-col overflow-hidden -mb-4 lg:-mb-6 xl:-mb-8">
         {/* Demo banner */}
         {isDemoMode && (
           <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 flex items-center gap-2 text-xs flex-shrink-0">

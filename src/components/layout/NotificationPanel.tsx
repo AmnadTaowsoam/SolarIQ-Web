@@ -189,20 +189,23 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
   }, [])
 
+  if (!isOpen) {
+    return null
+  }
+
   return (
     <>
       {/* Backdrop overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 z-40 bg-gray-900/20 backdrop-blur-[2px]" onClick={onClose} />
-      )}
-
-      {/* Slide-out panel */}
       <div
-        className={clsx(
-          'fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] bg-white shadow-2xl border-l border-gray-200/80',
-          'transform transition-transform duration-300 ease-out',
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        )}
+        className="fixed inset-0 z-40"
+        style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
+        onClick={onClose}
+      />
+
+      {/* Dropdown panel — positioned from navbar */}
+      <div
+        className="absolute right-0 top-full mt-2 z-50 bg-white rounded-xl shadow-2xl border border-gray-200"
+        style={{ width: '400px', maxHeight: '80vh', overflow: 'hidden' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 h-16 border-b border-gray-100 flex-shrink-0">
@@ -241,7 +244,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
         </div>
 
         {/* Notification list */}
-        <div className="overflow-y-auto h-[calc(100vh-64px)] scrollbar-thin">
+        <div className="overflow-y-auto scrollbar-thin" style={{ maxHeight: 'calc(80vh - 64px)' }}>
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-center px-6">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
