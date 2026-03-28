@@ -128,8 +128,15 @@ export function sanitizeErrorMessage(message: string): string {
  */
 export const ALLOWED_MIME_TYPES: Record<string, string[]> = {
   image: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-  document: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-  spreadsheet: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+  document: [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ],
+  spreadsheet: [
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ],
   text: ['text/plain', 'text/csv'],
 }
 
@@ -330,15 +337,15 @@ export class ClientRateLimiter {
    */
   isRateLimited(): boolean {
     const now = Date.now()
-    
+
     // Remove old attempts outside the window
     this.attempts = this.attempts.filter((time) => now - time < this.windowMs)
-    
+
     // Check if over limit
     if (this.attempts.length >= this.maxAttempts) {
       return true
     }
-    
+
     // Record this attempt
     this.attempts.push(now)
     return false
@@ -488,5 +495,28 @@ export function clearAuthData(): void {
     document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
     // Also try with different domain variations
     document.cookie = `${name}=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+  }
+
+  // Clear Firebase IndexedDB databases to prevent auth state persistence
+  const firebaseDBs = [
+    'firebaseLocalStorageDb',
+    'firebase-heartbeat-database',
+    'firebase-installations-database',
+  ]
+  for (const dbName of firebaseDBs) {
+    try {
+      indexedDB.deleteDatabase(dbName)
+    } catch {
+      // Ignore errors if database doesn't exist
+    }
+  }
+
+  // Unregister service workers to clear cached auth state
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister()
+      }
+    })
   }
 }

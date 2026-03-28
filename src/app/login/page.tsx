@@ -107,7 +107,7 @@ export default function LoginPage() {
       setFailedAttempts(0)
       setLockoutUntil(null)
       addToast('success', t('messages.success'))
-      router.push(redirectAfterAuth)
+      // Redirect is handled by useEffect when isAuthenticated becomes true
     } catch (error: unknown) {
       let message = t('errors.failed')
       let isRateLimit = false

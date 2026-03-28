@@ -16,12 +16,16 @@ export function useLeads(options: UseLeadsOptions = {}) {
 
   return useQuery({
     queryKey: ['leads', page, pageSize, filters],
-    queryFn: () =>
-      api.get<PaginatedResponse<Lead>>(API_ENDPOINTS.LEADS.LIST, {
-        page,
-        pageSize,
-        ...filters,
-      }),
+    queryFn: async () => {
+      const response = await api.get<PaginatedResponse<Lead>>(API_ENDPOINTS.LEADS.LIST, {
+        params: { page, pageSize, ...filters },
+      })
+      const data = response?.data ?? response
+      return {
+        ...data,
+        totalPages: Math.ceil((data.total || 0) / pageSize),
+      }
+    },
   })
 }
 
