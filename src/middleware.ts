@@ -46,11 +46,12 @@ const SECURITY_HEADERS = {
   'Permissions-Policy':
     'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=()',
 
-  // Cross-Origin-Embedder-Policy - Control COOP/COEP for shared array buffers
-  'Cross-Origin-Embedder-Policy': 'require-corp',
+  // Cross-Origin-Embedder-Policy - use unsafe-none to allow cross-origin resources
+  // (Firebase SDK, Google Fonts, Analytics, etc. don't send CORP headers)
+  'Cross-Origin-Embedder-Policy': 'unsafe-none',
 
-  // Cross-Origin-Opener-Policy - Control COOP for window opener
-  'Cross-Origin-Opener-Policy': 'same-origin',
+  // Cross-Origin-Opener-Policy - same-origin-allow-popups for OAuth flows
+  'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
 
   // X-DNS-Prefetch-Control - Control DNS prefetching
   'X-DNS-Prefetch-Control': 'off',
