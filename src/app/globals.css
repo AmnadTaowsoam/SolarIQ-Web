@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Sidebar responsive layout - cannot rely on Tailwind max-lg: prefix
+   because Cloudflare's next-on-pages strips @media wrappers */
+@media (max-width: 1023px) {
+  .sidebar-nav {
+    position: fixed !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    transform: translateX(0);
+  }
+  .sidebar-nav.sidebar-closed {
+    transform: translateX(-100%);
+  }
+}
+
 @layer base {
   :root {
     /* WK-030: Theme engine canonical variables */
@@ -48,7 +64,8 @@
   }
 
   html {
-    font-family: var(--brand-font-body), var(--font-inter), var(--font-noto-thai), system-ui, sans-serif;
+    font-family:
+      var(--brand-font-body), var(--font-inter), var(--font-noto-thai), system-ui, sans-serif;
   }
 
   body {
