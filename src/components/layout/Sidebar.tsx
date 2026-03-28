@@ -10,8 +10,6 @@ import { User } from '@/types'
 import { ROUTES } from '@/lib/constants'
 import { extractLocaleFromPath } from '@/lib/locale'
 import { useBrand } from '@/context'
-import { useBillingStatus } from '@/hooks/useBilling'
-import TrialBanner from '@/components/billing/TrialBanner'
 
 interface SidebarProps {
   user: User | null
@@ -40,13 +38,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
   const { brand } = useBrand()
   const isAdmin = user?.role === 'admin'
   const { pathname: cleanPath } = extractLocaleFromPath(pathname)
-  const { data: billingStatus } = useBillingStatus()
-  const planLabel = billingStatus?.subscription?.plan_id?.toUpperCase() || 'FREE'
-  const isTrialing = billingStatus?.subscription?.status === 'trialing'
-  const trialEnd = billingStatus?.subscription?.trial_end
-  const trialDaysRemaining = trialEnd
-    ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-    : 0
+  const planLabel = 'PRO'
   const brandName = brand && 'company_name' in brand ? brand.company_name : 'SolarIQ'
   const brandLogo = brand && 'logo' in brand ? brand.logo?.light : brand?.logo_light_url
   const defaultLogo = '/SolarIQ/4.png' // SolarIQ icon (orange, light bg)
@@ -486,18 +478,6 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
               </div>
             ))}
         </nav>
-
-        {/* Trial Banner */}
-        {isTrialing && trialEnd && (
-          <div className="px-3 pb-2">
-            <TrialBanner
-              daysRemaining={trialDaysRemaining}
-              isTrialActive={true}
-              trialEndDate={trialEnd}
-              planName={billingStatus?.subscription?.plan_id || null}
-            />
-          </div>
-        )}
 
         {/* Marketing Links */}
         <div className="border-t border-[var(--brand-border)] px-3 py-3">
