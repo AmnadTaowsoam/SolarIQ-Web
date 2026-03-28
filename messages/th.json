@@ -638,7 +638,19 @@
     "selectDatePrompt": "เลือกวันที่เพื่อดูงาน",
     "noEventsToday": "ไม่มีงานในวันนี้",
     "upcomingEvents": "งานที่กำลังจะมาถึง:",
-    "overdue": "เลยกำหนด"
+    "overdue": "เลยกำหนด",
+    "add": "เพิ่ม",
+    "adding": "กำลังเพิ่ม...",
+    "cancel": "ยกเลิก",
+    "error": "เกิดข้อผิดพลาด",
+    "fields": {
+      "activityName": "ชื่อกิจกรรม",
+      "customerName": "ชื่อลูกค้า",
+      "date": "วันที่",
+      "notes": "หมายเหตุ",
+      "time": "เวลา",
+      "type": "ประเภท"
+    }
   },
   "messagesPage": {
     "title": "ข้อความ",
@@ -705,6 +717,18 @@
     "empty": {
       "title": "ยังไม่มี Deal",
       "description": "เมื่อลูกค้ายอมรับใบเสนอราคา Deal จะถูกสร้างขึ้นที่นี่"
+    },
+    "cancel": "ยกเลิก",
+    "create": "สร้าง",
+    "creating": "กำลังสร้าง...",
+    "error": "เกิดข้อผิดพลาด",
+    "fields": {
+      "address": "ที่อยู่",
+      "customerName": "ชื่อลูกค้า",
+      "notes": "หมายเหตุ",
+      "stage": "ขั้นตอน",
+      "systemSize": "ขนาดระบบ (kW)",
+      "totalValue": "มูลค่ารวม (บาท)"
     }
   },
   "analyticsPage": {
@@ -782,7 +806,20 @@
     "download": "ดาวน์โหลด PDF",
     "send": "ส่ง",
     "delete": "ลบ",
-    "view": "ดู"
+    "view": "ดู",
+    "empty": "ไม่พบใบแจ้งหนี้",
+    "history": {
+      "subtitle": "ดูประวัติการเรียกเก็บเงิน",
+      "title": "ประวัติใบแจ้งหนี้"
+    },
+    "table": {
+      "action": "การดำเนินการ",
+      "documentNumber": "เลขที่เอกสาร",
+      "documentType": "ประเภทเอกสาร",
+      "issuedDate": "วันที่ออก",
+      "status": "สถานะ",
+      "total": "ยอดรวม"
+    }
   },
   "settingsPage": {
     "tabs": {
@@ -928,7 +965,47 @@
       "customizationNote": "การปรับแต่งมีผลกับ UI, Proposal, และอีเมล",
       "saving": "กำลังบันทึก...",
       "saveSettings": "บันทึกการตั้งค่า"
-    }
+    },
+    "account": {
+      "addContact": "เพิ่มข้อมูลติดต่อ",
+      "edit": "แก้ไข",
+      "email": "อีเมล",
+      "name": "ชื่อ",
+      "noContact": "ไม่มีข้อมูลติดต่อ",
+      "phone": "เบอร์โทรศัพท์",
+      "status": "สถานะ",
+      "title": "ข้อมูลบัญชี"
+    },
+    "consent": {
+      "title": "การจัดการความยินยอม"
+    },
+    "contact": "ติดต่อฝ่ายสนับสนุน",
+    "dangerZone": {
+      "deleteAll": "ลบข้อมูลทั้งหมด",
+      "deleteConfirm": "คุณแน่ใจหรือไม่ที่จะลบข้อมูลทั้งหมด?",
+      "deleteNotice": "การดำเนินการนี้ไม่สามารถย้อนกลับได้ ข้อมูลทั้งหมดจะถูกลบอย่างถาวร",
+      "title": "โซนอันตราย"
+    },
+    "errors": {
+      "deleteError": "ไม่สามารถลบข้อมูลได้",
+      "loadError": "ไม่สามารถโหลดการตั้งค่าได้"
+    },
+    "loading": "กำลังโหลด...",
+    "tax": {
+      "branchNumber": "สาขา",
+      "companyNameEn": "ชื่อบริษัท (ภาษาอังกฤษ)",
+      "companyNameTh": "ชื่อบริษัท (ภาษาไทย)",
+      "contactEmail": "อีเมลติดต่อ",
+      "contactPerson": "ผู้ติดต่อ",
+      "contactPhone": "เบอร์โทรติดต่อ",
+      "reset": "รีเซ็ต",
+      "save": "บันทึก",
+      "subtitle": "ข้อมูลภาษีบริษัทสำหรับใบแจ้งหนี้และใบเสร็จ",
+      "taxAddress": "ที่อยู่สำหรับออกใบกำกับภาษี",
+      "taxId": "เลขประจำตัวผู้เสียภาษี",
+      "title": "ข้อมูลภาษี"
+    },
+    "version": "เวอร์ชัน"
   },
   "serviceAreaPage": {
     "title": "พื้นที่ให้บริการ",
@@ -1128,15 +1205,46 @@
     },
     "step3": {
       "title": "เชิญทีม",
-      "subtitle": "เชิญสมาชิกเข้าร่วมทีม"
+      "subtitle": "เชิญสมาชิกเข้าร่วมทีม",
+      "addMember": "เพิ่มสมาชิกทีม",
+      "memberNumber": "สมาชิกคนที่ {number}",
+      "noMembers": "ยังไม่มีสมาชิกทีม",
+      "roleAdmin": "ผู้ดูแลระบบ",
+      "roleMember": "สมาชิก",
+      "sendInvites": "ส่งคำเชิญ",
+      "sendingInvites": "กำลังส่งคำเชิญ...",
+      "skip": "ข้าม"
     },
     "step4": {
       "title": "Lead แรก",
-      "subtitle": "สร้าง Lead ตัวอย่างเพื่อทดลองใช้ระบบ"
+      "subtitle": "สร้าง Lead ตัวอย่างเพื่อทดลองใช้ระบบ",
+      "baht": "บาท",
+      "createLead": "สร้างลีด",
+      "creatingLead": "กำลังสร้างลีด...",
+      "customerName": "ชื่อลูกค้า",
+      "infoMessage": "สร้างลีดแรกของคุณเพื่อเริ่มต้น",
+      "monthlyBill": "ค่าไฟฟ้ารายเดือน",
+      "phone": "เบอร์โทรศัพท์",
+      "province": "จังหวัด",
+      "selectProvince": "เลือกจังหวัด"
     },
     "step5": {
       "title": "ตั้งค่าเสร็จสิ้น!",
-      "subtitle": "พื้นที่ทำงานของคุณพร้อมใช้งานแล้ว"
+      "subtitle": "พื้นที่ทำงานของคุณพร้อมใช้งานแล้ว",
+      "company": "บริษัท",
+      "goToDashboard": "ไปที่แดชบอร์ด",
+      "leadCreated": "สร้างลีดแล้ว",
+      "leadLabel": "ลีดแรก",
+      "leadNotCreated": "ยังไม่ได้สร้างลีด",
+      "lineConnected": "เชื่อมต่อ LINE แล้ว",
+      "lineLabel": "การเชื่อมต่อ LINE",
+      "lineNotConnected": "ยังไม่ได้เชื่อมต่อ LINE",
+      "preparingDashboard": "กำลังเตรียมแดชบอร์ดของคุณ...",
+      "setupSummary": "สรุปการตั้งค่า",
+      "skipped": "ข้ามแล้ว",
+      "teamInvited": "เชิญทีมแล้ว",
+      "teamLabel": "ทีม",
+      "teamNotInvited": "ยังไม่ได้เชิญทีม"
     },
     "header": {
       "setupTitle": "ตั้งค่าบัญชีของคุณ",
@@ -1202,7 +1310,67 @@
     "monthlyBill": "ค่าไฟรายเดือน",
     "breakEven": "จุดคุ้มทุน",
     "npv": "มูลค่าปัจจุบันสุทธิ",
-    "irr": "อัตราผลตอบแทนภายใน"
+    "irr": "อัตราผลตอบแทนภายใน",
+    "analyzeButton": "วิเคราะห์",
+    "analyzeHint": "กรอกข้อมูลตำแหน่งและค่าไฟเพื่อเริ่มการวิเคราะห์",
+    "inputForm": {
+      "address": "ที่อยู่",
+      "addressPlaceholder": "กรอกที่อยู่หรือตำแหน่ง",
+      "latitude": "ละติจูด",
+      "latitudeHint": "เช่น 13.7563",
+      "longitude": "ลองจิจูด",
+      "longitudeHint": "เช่น 100.5018",
+      "monthlyBill": "ค่าไฟฟ้ารายเดือน",
+      "monthlyBillHint": "ค่าไฟฟ้าเฉลี่ยต่อเดือน (บาท)",
+      "title": "ข้อมูลนำเข้า",
+      "useCurrentLocation": "ใช้ตำแหน่งปัจจุบัน",
+      "useDefaultLocation": "ใช้ตำแหน่งเริ่มต้น"
+    },
+    "locationPreview": {
+      "avgSolarPotential": "ศักยภาพพลังงานแสงอาทิตย์เฉลี่ย",
+      "coordinates": "พิกัด",
+      "financingComparison": "เปรียบเทียบการเงิน",
+      "forecast7day": "พยากรณ์ 7 วัน",
+      "hoursPerYear": "ชั่วโมงแสงอาทิตย์สูงสุด/ปี",
+      "investment25yr": "การลงทุน 25 ปี",
+      "pm25impact": "ผลกระทบ PM2.5",
+      "region": "ภูมิภาค",
+      "regionCentral": "ภาคกลาง",
+      "regionNorth": "ภาคเหนือ",
+      "regionSouth": "ภาคใต้",
+      "reliabilityIndex": "ดัชนีความน่าเชื่อถือ",
+      "roofPlan": "แผนผังหลังคา",
+      "subtitle": "ศักยภาพพลังงานแสงอาทิตย์สำหรับตำแหน่งที่เลือก",
+      "title": "ตัวอย่างตำแหน่ง",
+      "youWillReceive": "คุณจะได้รับ"
+    },
+    "messages": {
+      "analysisFailed": "การวิเคราะห์ล้มเหลว กรุณาลองใหม่อีกครั้ง",
+      "analysisSuccess": "วิเคราะห์เสร็จสมบูรณ์",
+      "fillAllFields": "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+      "geolocationNotSupported": "เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง",
+      "invalidBill": "กรุณากรอกจำนวนค่าไฟที่ถูกต้อง",
+      "invalidLatitude": "กรุณากรอกละติจูดที่ถูกต้อง",
+      "invalidLongitude": "กรุณากรอกลองจิจูดที่ถูกต้อง",
+      "locationFailed": "ไม่สามารถรับตำแหน่งได้",
+      "locationSuccess": "ได้รับตำแหน่งสำเร็จ"
+    },
+    "results": {
+      "title": "ผลการวิเคราะห์"
+    },
+    "subtitle": "วิเคราะห์ศักยภาพพลังงานแสงอาทิตย์สำหรับพื้นที่ของคุณ",
+    "tabs": {
+      "data": "ข้อมูล",
+      "equipment": "อุปกรณ์",
+      "financial": "การเงิน",
+      "forecast": "พยากรณ์",
+      "incentives": "สิทธิประโยชน์",
+      "overview": "ภาพรวม",
+      "reliability": "ความน่าเชื่อถือ",
+      "roof": "หลังคา",
+      "solar": "พลังงานแสงอาทิตย์"
+    },
+    "title": "วิเคราะห์พลังงานแสงอาทิตย์"
   },
   "knowledgePage": {
     "title": "คลังความรู้",
@@ -1481,7 +1649,22 @@
     "cancel": "ยกเลิก",
     "create": "สร้าง Deal",
     "creating": "กำลังสร้าง...",
-    "error": "ไม่สามารถสร้าง Deal ได้ กรุณาลองใหม่"
+    "error": "ไม่สามารถสร้าง Deal ได้ กรุณาลองใหม่",
+    "all": "ทั้งหมด",
+    "createDeal": "สร้างดีล",
+    "empty": {
+      "description": "สร้างดีลแรกของคุณเพื่อเริ่มต้น",
+      "title": "ยังไม่มีดีล"
+    },
+    "progress": "ความคืบหน้า",
+    "stats": {
+      "completed": "เสร็จสิ้น",
+      "inProgress": "กำลังดำเนินการ",
+      "total": "ทั้งหมด"
+    },
+    "steps": "ขั้นตอน",
+    "subtitle": "จัดการท่อดีลของคุณ",
+    "totalValue": "มูลค่ารวม"
   },
   "addActivityModal": {
     "title": "เพิ่มกิจกรรม",
@@ -1503,7 +1686,42 @@
     "cancel": "ยกเลิก",
     "add": "เพิ่มกิจกรรม",
     "adding": "กำลังเพิ่ม...",
-    "error": "ไม่สามารถเพิ่มกิจกรรมได้ กรุณาลองใหม่"
+    "error": "ไม่สามารถเพิ่มกิจกรรมได้ กรุณาลองใหม่",
+    "addActivity": "เพิ่มกิจกรรม",
+    "daysShort": {
+      "fri": "ศ.",
+      "mon": "จ.",
+      "sat": "ส.",
+      "sun": "อา.",
+      "thu": "พฤ.",
+      "tue": "อ.",
+      "wed": "พ."
+    },
+    "eventTypes": {
+      "installation": "การติดตั้ง",
+      "maintenance": "บำรุงรักษา",
+      "service_request": "คำขอบริการ"
+    },
+    "eventsForDate": "กิจกรรมสำหรับวันนี้",
+    "months": {
+      "april": "เมษายน",
+      "august": "สิงหาคม",
+      "december": "ธันวาคม",
+      "february": "กุมภาพันธ์",
+      "january": "มกราคม",
+      "july": "กรกฎาคม",
+      "june": "มิถุนายน",
+      "march": "มีนาคม",
+      "may": "พฤษภาคม",
+      "november": "พฤศจิกายน",
+      "october": "ตุลาคม",
+      "september": "กันยายน"
+    },
+    "noEventsToday": "ไม่มีกิจกรรมวันนี้",
+    "overdue": "เลยกำหนด",
+    "selectDatePrompt": "เลือกวันที่",
+    "subtitle": "เลือกวันที่เพื่อเพิ่มหรือดูกิจกรรม",
+    "upcomingEvents": "กิจกรรมที่กำลังจะมาถึง"
   },
   "billingPolicy": {
     "title": "นโยบายการเรียกเก็บเงิน",
@@ -2415,7 +2633,16 @@
     "noCard": "ไม่ต้องใช้บัตรเครดิต",
     "unlimited": "ไม่จำกัด",
     "leadsPerMonth": "ลีด / เดือน",
-    "viewPlans": "ดูแพ็กเกจ"
+    "viewPlans": "ดูแพ็กเกจ",
+    "cancelledWarning": "แพ็กเกจของคุณถูกยกเลิกแล้ว",
+    "currentPeriod": "รอบปัจจุบัน",
+    "daysLeft": "วันที่เหลือ",
+    "endsAtPeriod": "สิ้นสุดรอบ",
+    "planName": "แพลน",
+    "resume": "เปิดใช้งานแพ็กเกจอีกครั้ง",
+    "resuming": "กำลังเปิดใช้งาน...",
+    "subtitle": "แพ็กเกจปัจจุบันของคุณ",
+    "to": "ถึง"
   },
   "trialBanner": {
     "freePlan": "แพลน Free",
@@ -2445,7 +2672,14 @@
     "seconds": "วินาที",
     "trialEndsIn": "ช่วงทดลองสิ้นสุดใน",
     "upgrade": "อัปเกรด",
-    "upgradeNow": "อัปเกรดเดี๋ยวนี้"
+    "upgradeNow": "อัปเกรดเดี๋ยวนี้",
+    "endingSoon": "ทดลองใช้ใกล้หมดอายุ",
+    "expired": "หมดระยะทดลองใช้",
+    "expiredDesc": "ระยะทดลองใช้ของคุณสิ้นสุดแล้ว",
+    "keepData": "เก็บข้อมูลของคุณ",
+    "noCreditCard": "ไม่ต้องใช้บัตรเครดิต",
+    "timeLeft": "เวลาที่เหลือ",
+    "upgradeCTA": "อัปเกรดเลย"
   },
   "upgradeCTA": {
     "title": "พร้อมอัปเกรดแล้วหรือยัง?",
@@ -2457,7 +2691,29 @@
     "noCard": "ไม่ต้องใช้บัตรเครดิต",
     "cancelAnytime": "ยกเลิกได้ตลอดเวลา",
     "freeTrial": "เริ่มทดลองใช้ฟรี",
-    "contactSales": "ติดต่อทีมขาย"
+    "contactSales": "ติดต่อทีมขาย",
+    "changeTitle": "เปลี่ยนแพลน",
+    "faq1Answer": "ได้ คุณสามารถอัปเกรดหรือดาวน์เกรดแพลนได้ตลอดเวลา",
+    "faq1Question": "เปลี่ยนแพลนได้ตลอดเวลาหรือไม่?",
+    "faq2Answer": "มี ทุกแพลนรวมช่วงทดลองใช้ฟรี 14 วัน",
+    "faq2Question": "มีช่วงทดลองใช้ฟรีหรือไม่?",
+    "faq3Answer": "คุณสามารถยกเลิกแพ็กเกจได้จากหน้าตั้งค่า",
+    "faq3Question": "ยกเลิกได้อย่างไร?",
+    "faqTitle": "คำถามที่พบบ่อย",
+    "freeDesc": "เริ่มต้นด้วยแพลนฟรี",
+    "hideDetails": "ซ่อนรายละเอียด",
+    "showBillingInfo": "แสดงข้อมูลการเรียกเก็บเงิน",
+    "step1Desc": "เลือกแพลนที่เหมาะกับธุรกิจของคุณ",
+    "step1Title": "เลือกแพลน",
+    "step2Desc": "กรอกข้อมูลการชำระเงินอย่างปลอดภัย",
+    "step2Title": "กรอกข้อมูลการชำระเงิน",
+    "step3Desc": "เริ่มใช้ฟีเจอร์พรีเมียมทั้งหมดทันที",
+    "step3Title": "เปิดใช้งาน",
+    "step4Desc": "ขยายธุรกิจโซลาร์ด้วยเครื่องมือทรงพลัง",
+    "step4Title": "เติบโต",
+    "upgradeCTA": "อัปเกรดเลย",
+    "upgradeTitle": "อัปเกรดแพลนของคุณ",
+    "viewAllPlans": "ดูแพลนทั้งหมด"
   },
   "usageBar": {
     "unlimited": "ไม่จำกัด",
@@ -2657,7 +2913,14 @@
     "reply": "ตอบกลับ",
     "edited": "แก้ไขแล้ว",
     "image": "รูปภาพ",
-    "file": "ไฟล์"
+    "file": "ไฟล์",
+    "conversationClosed": "การสนทนานี้ถูกปิดแล้ว",
+    "loadMore": "โหลดเพิ่มเติม",
+    "quickReplies": "ตอบกลับด่วน",
+    "statusActive": "ใช้งานอยู่",
+    "statusClosed": "ปิดแล้ว",
+    "system": "ระบบ",
+    "you": "คุณ"
   },
   "quickReply": {
     "title": "ข้อความตอบกลับด่วน",
@@ -2742,7 +3005,12 @@
     "itemPrice": "ราคาต่อหน่วย",
     "itemTotal": "รวม",
     "years": "ปี",
-    "months": "เดือน"
+    "months": "เดือน",
+    "days": "วัน",
+    "step1": "ข้อมูลระบบ",
+    "step2": "ราคา",
+    "step3": "ระยะเวลา",
+    "step4": "ตรวจสอบ"
   },
   "proposalPreview": {
     "title": "ใบเสนอราคาระบบโซลาร์เซลล์",
@@ -3117,5 +3385,579 @@
       "testError": "ส่งทดสอบเว็บฮุคไม่สำเร็จ ตรวจสอบปลายทางของคุณ",
       "confirmDelete": "คุณแน่ใจหรือไม่ว่าต้องการลบเว็บฮุคนี้?"
     }
+  },
+  "aboutPage": {
+    "close": "ปิด",
+    "contact": {
+      "call": "โทร",
+      "email": "อีเมล",
+      "title": "ติดต่อเรา",
+      "website": "เว็บไซต์"
+    },
+    "copyright": "สงวนลิขสิทธิ์",
+    "description": "SolarIQ เป็นแพลตฟอร์มอัจฉริยะสำหรับวิเคราะห์ศักยภาพพลังงานแสงอาทิตย์ ช่วยให้คุณตัดสินใจเกี่ยวกับการติดตั้งแผงโซลาร์เซลล์อย่างมีข้อมูล",
+    "error": "เกิดข้อผิดพลาด",
+    "features": {
+      "billScanning": {
+        "description": "สแกนบิลค่าไฟฟ้าเพื่อคำนวณการประหยัดอัตโนมัติ",
+        "icon": "receipt",
+        "title": "สแกนบิลค่าไฟ"
+      },
+      "carbonFootprint": {
+        "description": "คำนวณการลดคาร์บอนจากพลังงานแสงอาทิตย์",
+        "icon": "leaf",
+        "title": "คาร์บอนฟุตพริ้นท์"
+      },
+      "locationAnalysis": {
+        "description": "วิเคราะห์ศักยภาพพลังงานแสงอาทิตย์ตามตำแหน่งของคุณ",
+        "icon": "map-pin",
+        "title": "วิเคราะห์ตามพิกัด"
+      },
+      "pdfQuote": {
+        "description": "สร้างใบเสนอราคา PDF มืออาชีพสำหรับลูกค้า",
+        "icon": "file-text",
+        "title": "ใบเสนอราคา PDF"
+      },
+      "roiCalculation": {
+        "description": "คำนวณผลตอบแทนการลงทุนสำหรับการติดตั้งโซลาร์เซลล์",
+        "icon": "calculator",
+        "title": "คำนวณ ROI"
+      }
+    },
+    "loading": "กำลังโหลด...",
+    "stats": {
+      "analyses": "การวิเคราะห์ที่เสร็จสิ้น",
+      "installations": "การติดตั้ง",
+      "savings": "ยอดประหยัดรวม",
+      "title": "สถิติแพลตฟอร์ม"
+    },
+    "subtitle": "แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ",
+    "title": "เกี่ยวกับ SolarIQ",
+    "version": "เวอร์ชัน"
+  },
+  "analytics": {
+    "funnel": {
+      "avgTimeToPurchase": "เวลาเฉลี่ยในการซื้อ",
+      "conversion": "อัตราการแปลง",
+      "dropOff": "อัตราการหลุด",
+      "export": "ส่งออก",
+      "funnelTitle": "ช่องทางการแปลง",
+      "insight1Desc": "มุ่งเน้นลีดคุณภาพสูงเพื่ออัตราการแปลงที่ดีขึ้น",
+      "insight1Title": "คุณภาพลีด",
+      "insight2Desc": "การติดตามที่รวดเร็วช่วยเพิ่มโอกาสการแปลง",
+      "insight2Title": "ความเร็วในการติดตาม",
+      "insight3Desc": "ปรับปรุงราคาใบเสนอราคาเพื่อเพิ่มอัตราการชนะ",
+      "insight3Title": "การเพิ่มประสิทธิภาพใบเสนอราคา",
+      "insight4Desc": "รักษาความสัมพันธ์เพื่อการแนะนำและธุรกิจซ้ำ",
+      "insight4Title": "การรักษาลูกค้า",
+      "insights": "ข้อมูลเชิงลึก",
+      "overallConversion": "อัตราการแปลงรวม",
+      "refresh": "รีเฟรช",
+      "subtitle": "ติดตามประสิทธิภาพท่อการขายของคุณ",
+      "title": "ช่องทางการขาย",
+      "totalRevenue": "รายได้รวม"
+    }
+  },
+  "chatPage": {
+    "title": "แชท",
+    "underDevelopment": "ฟีเจอร์นี้กำลังอยู่ในระหว่างการพัฒนา"
+  },
+  "consentPage": {
+    "actions": {
+      "save": "บันทึกการตั้งค่า",
+      "skip": "ข้าม",
+      "submitting": "กำลังบันทึก..."
+    },
+    "consents": {
+      "grantedAt": "ให้ความยินยอมเมื่อ"
+    },
+    "dataRightsLink": "ดูสิทธิ์ข้อมูลของคุณ",
+    "description": "จัดการการยินยอมข้อมูลส่วนบุคคลของคุณ",
+    "dpoContact": {
+      "email": "อีเมล",
+      "phone": "โทรศัพท์",
+      "title": "เจ้าหน้าที่คุ้มครองข้อมูล"
+    },
+    "errors": {
+      "general": "เกิดข้อผิดพลาด",
+      "save": "ไม่สามารถบันทึกการตั้งค่าความยินยอมได้"
+    },
+    "loading": "กำลังโหลด...",
+    "pdpaNotice": "ภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล (PDPA) คุณมีสิทธิ์ในการจัดการความยินยอมข้อมูลส่วนบุคคล",
+    "rights": {
+      "description": "คุณมีสิทธิ์ในการเข้าถึง แก้ไข และลบข้อมูลส่วนบุคคลของคุณ",
+      "title": "สิทธิ์ของคุณ"
+    },
+    "success": {
+      "redirecting": "กำลังเปลี่ยนหน้า...",
+      "title": "บันทึกการตั้งค่าสำเร็จ"
+    },
+    "title": "การจัดการความยินยอม",
+    "types": {
+      "analysisResults": {
+        "description": "แชร์ผลการวิเคราะห์โซลาร์กับผู้ติดตั้ง",
+        "icon": "chart",
+        "label": "ผลการวิเคราะห์"
+      },
+      "contactSharing": {
+        "description": "แชร์ข้อมูลติดต่อของคุณกับผู้ติดตั้งโซลาร์",
+        "icon": "users",
+        "label": "การแชร์ข้อมูลติดต่อ"
+      },
+      "marketing": {
+        "description": "รับข้อเสนอโปรโมชันและข่าวสารอัปเดต",
+        "icon": "mail",
+        "label": "การตลาด"
+      },
+      "proposalSharing": {
+        "description": "แชร์ใบเสนอราคากับฝ่ายที่เกี่ยวข้อง",
+        "icon": "file",
+        "label": "การแชร์ใบเสนอราคา"
+      }
+    }
+  },
+  "contactPage": {
+    "description": "กรุณากรอกข้อมูลติดต่อของคุณ",
+    "form": {
+      "address": "ที่อยู่",
+      "addressPlaceholder": "กรอกที่อยู่ของคุณ",
+      "district": "เขต/อำเภอ",
+      "districtPlaceholder": "กรอกเขต/อำเภอ",
+      "email": "อีเมล",
+      "emailInvalid": "รูปแบบอีเมลไม่ถูกต้อง",
+      "name": "ชื่อ-นามสกุล",
+      "nameRequired": "กรุณากรอกชื่อ",
+      "phone": "เบอร์โทรศัพท์",
+      "phoneInvalid": "รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง",
+      "phoneRequired": "กรุณากรอกเบอร์โทรศัพท์",
+      "province": "จังหวัด",
+      "save": "บันทึก",
+      "saving": "กำลังบันทึก...",
+      "selectProvince": "เลือกจังหวัด",
+      "update": "อัปเดต"
+    },
+    "loading": "กำลังโหลด...",
+    "pdpaNotice": "ข้อมูลของคุณได้รับการคุ้มครองภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล (PDPA)",
+    "success": {
+      "redirecting": "กำลังเปลี่ยนหน้า...",
+      "title": "บันทึกข้อมูลสำเร็จ"
+    },
+    "title": "ข้อมูลติดต่อ"
+  },
+  "dataRightsPage": {
+    "actions": {
+      "delete": "ลบข้อมูลของฉัน",
+      "download": "ดาวน์โหลดข้อมูลของฉัน",
+      "downloading": "กำลังดาวน์โหลด...",
+      "edit": "แก้ไขข้อมูลของฉัน",
+      "title": "การดำเนินการ",
+      "withdraw": "ถอนความยินยอม"
+    },
+    "dataSummary": {
+      "address": "ที่อยู่",
+      "analysisHistory": "ประวัติการวิเคราะห์",
+      "consentHistory": "ประวัติความยินยอม",
+      "email": "อีเมล",
+      "name": "ชื่อ",
+      "phone": "เบอร์โทรศัพท์",
+      "province": "จังหวัด",
+      "title": "สรุปข้อมูล"
+    },
+    "deleteModal": {
+      "cancel": "ยกเลิก",
+      "confirm": "ลบ",
+      "description": "การดำเนินการนี้ไม่สามารถย้อนกลับได้ ข้อมูลส่วนบุคคลทั้งหมดจะถูกลบอย่างถาวร",
+      "submitting": "กำลังลบ...",
+      "title": "ลบข้อมูลทั้งหมด"
+    },
+    "deleteSuccess": "ลบข้อมูลสำเร็จ",
+    "dpoContact": {
+      "email": "อีเมล",
+      "phone": "โทรศัพท์",
+      "title": "เจ้าหน้าที่คุ้มครองข้อมูล"
+    },
+    "loading": "กำลังโหลด...",
+    "pdpaReference": "สิทธิ์ตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล มาตรา 30-36",
+    "title": "สิทธิ์ข้อมูลของคุณ"
+  },
+  "historyPage": {
+    "empty": {
+      "description": "คุณยังไม่ได้ทำการวิเคราะห์โซลาร์",
+      "startAnalysis": "เริ่มวิเคราะห์",
+      "title": "ไม่มีประวัติการวิเคราะห์"
+    },
+    "error": "ไม่สามารถโหลดประวัติได้",
+    "item": {
+      "addressNotSpecified": "ไม่ได้ระบุที่อยู่",
+      "panels": "แผง",
+      "payback": "คืนทุน",
+      "years": "ปี"
+    },
+    "loading": "กำลังโหลด...",
+    "retry": "ลองใหม่",
+    "subtitle": "ดูผลการวิเคราะห์โซลาร์ก่อนหน้า",
+    "title": "ประวัติการวิเคราะห์"
+  },
+  "knowledge": {
+    "description": "จัดการเอกสารและข้อมูลสำหรับ AI",
+    "documents": {
+      "actionsColumn": "การดำเนินการ",
+      "chunksColumn": "ส่วนย่อย",
+      "delete": "ลบ",
+      "sourceColumn": "แหล่งที่มา",
+      "title": "เอกสาร",
+      "titleColumn": "ชื่อ",
+      "updatedColumn": "อัปเดตล่าสุด"
+    },
+    "errors": {
+      "contentRequired": "กรุณากรอกเนื้อหา"
+    },
+    "messages": {
+      "confirmDelete": "คุณแน่ใจหรือไม่ที่จะลบเอกสารนี้?"
+    },
+    "search": {
+      "button": "ค้นหา",
+      "clear": "ล้าง",
+      "placeholder": "ค้นหาเอกสาร...",
+      "results": "ผลการค้นหา",
+      "score": "คะแนนความเกี่ยวข้อง"
+    },
+    "stats": {
+      "sources": "แหล่งข้อมูล",
+      "totalChunks": "จำนวนส่วนย่อยทั้งหมด",
+      "totalDocuments": "จำนวนเอกสารทั้งหมด"
+    },
+    "title": "คลังความรู้",
+    "upload": {
+      "button": "อัปโหลดเอกสาร",
+      "cancel": "ยกเลิก",
+      "contentLabel": "เนื้อหา",
+      "contentPlaceholder": "กรอกเนื้อหาเอกสาร...",
+      "metadataLabel": "เมตาดาต้า",
+      "metadataOptional": "(ไม่บังคับ)",
+      "metadataPlaceholder": "กรอกเมตาดาต้าในรูปแบบ JSON...",
+      "modalTitle": "อัปโหลดเอกสารใหม่",
+      "sourceLabel": "แหล่งที่มา",
+      "submit": "ส่ง",
+      "titleLabel": "ชื่อเอกสาร",
+      "titlePlaceholder": "กรอกชื่อเอกสาร..."
+    }
+  },
+  "maintenanceDetailPage": {
+    "addressNotSpecified": "ไม่ได้ระบุที่อยู่",
+    "notFound": "ไม่พบระบบ",
+    "records": {
+      "addRecord": "เพิ่มบันทึก",
+      "costLabel": "ค่าใช้จ่าย (บาท)",
+      "costPlaceholder": "กรอกค่าใช้จ่าย",
+      "descriptionPlaceholder": "กรอกรายละเอียด",
+      "noRecords": "ไม่มีบันทึกการบำรุงรักษา",
+      "save": "บันทึก",
+      "technicianLabel": "ช่างเทคนิค",
+      "technicianPlaceholder": "กรอกชื่อช่างเทคนิค",
+      "title": "บันทึกการบำรุงรักษา",
+      "type": {
+        "cleaning": "ทำความสะอาด",
+        "inspection": "ตรวจสอบ",
+        "repair": "ซ่อมแซม",
+        "replacement": "เปลี่ยนอุปกรณ์"
+      }
+    },
+    "schedule": {
+      "addSchedule": "เพิ่มตาราง",
+      "everyXMonths": "ทุก {count} เดือน",
+      "frequency": {
+        "12": "ทุก 12 เดือน",
+        "3": "ทุก 3 เดือน",
+        "6": "ทุก 6 เดือน"
+      },
+      "nextDue": "ครั้งถัดไป",
+      "noSchedule": "ไม่มีตารางที่กำหนด",
+      "notSet": "ยังไม่ได้กำหนด",
+      "notes": "หมายเหตุ",
+      "save": "บันทึก",
+      "title": "ตารางการบำรุงรักษา",
+      "type": {
+        "cleaning": "ทำความสะอาด",
+        "general": "ทั่วไป",
+        "inspection": "ตรวจสอบ",
+        "inverterCheck": "ตรวจอินเวอร์เตอร์"
+      }
+    },
+    "status": {
+      "active": "ใช้งานอยู่"
+    },
+    "systemInfo": {
+      "installationDate": "วันที่ติดตั้ง",
+      "inverter": "อินเวอร์เตอร์",
+      "solarPanels": "แผงโซลาร์เซลล์",
+      "systemSize": "ขนาดระบบ"
+    },
+    "title": "รายละเอียดการบำรุงรักษา",
+    "warranty": {
+      "installation": "ประกันการติดตั้ง",
+      "inverter": "ประกันอินเวอร์เตอร์",
+      "panel": "ประกันแผงโซลาร์"
+    }
+  },
+  "mapPickerPage": {
+    "address": "ที่อยู่",
+    "checkInternetConnection": "กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต",
+    "confirm": "ยืนยันตำแหน่ง",
+    "confirming": "กำลังยืนยัน...",
+    "errors": {
+      "geocodeError": "ไม่สามารถรับที่อยู่จากตำแหน่งได้",
+      "locationError": "ไม่สามารถรับตำแหน่งของคุณได้",
+      "submitError": "ไม่สามารถส่งตำแหน่งได้"
+    },
+    "loading": "กำลังโหลดแผนที่...",
+    "myHomeLocation": "ตำแหน่งบ้านของฉัน",
+    "pleaseSelectLocation": "กรุณาเลือกตำแหน่งบนแผนที่",
+    "selectOnMap": "เลือกบนแผนที่",
+    "subtitle": "แตะบนแผนที่เพื่อเลือกตำแหน่งของคุณ",
+    "title": "เลือกตำแหน่ง"
+  },
+  "proposalPage": {
+    "actions": {
+      "contactInstaller": "ติดต่อผู้ติดตั้ง",
+      "shareToLine": "แชร์ผ่าน LINE",
+      "sharing": "กำลังแชร์..."
+    },
+    "document": {
+      "openFullPdf": "เปิด PDF ฉบับเต็ม",
+      "title": "เอกสารใบเสนอราคา"
+    },
+    "errors": {
+      "loadError": "ไม่สามารถโหลดใบเสนอราคาได้",
+      "noLeadId": "ไม่พบรหัสลีด",
+      "notFound": "ไม่พบใบเสนอราคา",
+      "shareError": "ไม่สามารถแชร์ใบเสนอราคาได้"
+    },
+    "flexMessage": {
+      "installationCost": "ค่าติดตั้ง",
+      "monthlySavings": "ประหยัดรายเดือน",
+      "panels": "แผง",
+      "payback": "คืนทุน",
+      "systemSize": "ขนาดระบบ",
+      "title": "ใบเสนอราคาโซลาร์",
+      "viewProposal": "ดูใบเสนอราคา",
+      "years": "ปี"
+    },
+    "loading": "กำลังโหลดใบเสนอราคา...",
+    "roi": {
+      "monthlySavings": "ประหยัดรายเดือน",
+      "payback": "ระยะเวลาคืนทุน",
+      "savings25Years": "ประหยัด 25 ปี",
+      "title": "ผลตอบแทนการลงทุน"
+    },
+    "status": {
+      "error": "ข้อผิดพลาด",
+      "errorDescription": "ไม่สามารถสร้างใบเสนอราคาได้",
+      "generating": "กำลังสร้าง",
+      "generatingDescription": "ใบเสนอราคาของคุณกำลังถูกสร้าง..."
+    },
+    "subtitle": "ตรวจสอบใบเสนอราคาการติดตั้งโซลาร์ของคุณ",
+    "summary": {
+      "estimatedPrice": "ราคาประมาณ",
+      "systemSize": "ขนาดระบบ",
+      "title": "สรุประบบ",
+      "yearlyEnergy": "พลังงานรายปี"
+    },
+    "title": "ใบเสนอราคาโซลาร์"
+  },
+  "quoteBuilderPage": {
+    "additionalRequirements": "ข้อกำหนดเพิ่มเติม",
+    "approximatePrice": "ราคาโดยประมาณ",
+    "back": "กลับ",
+    "budget": "งบประมาณ",
+    "clear": "ล้าง",
+    "createQuote": "สร้างใบเสนอราคา",
+    "draftSaveError": "ไม่สามารถบันทึกแบบร่างได้",
+    "draftSaved": "บันทึกแบบร่างแล้ว",
+    "loadTemplate": "โหลดเทมเพลต",
+    "loading": "กำลังโหลด...",
+    "location": "ตำแหน่ง",
+    "notSpecified": "ไม่ได้ระบุ",
+    "requestDetails": "รายละเอียดคำขอ",
+    "submitError": "ไม่สามารถส่งใบเสนอราคาได้",
+    "systemSize": "ขนาดระบบ",
+    "templates": {
+      "noTemplates": "ไม่มีเทมเพลต",
+      "select": "เลือกเทมเพลต"
+    },
+    "timeline": "ระยะเวลา",
+    "usingTemplate": "ใช้เทมเพลต",
+    "validation": {
+      "fillSystemInfo": "กรุณากรอกข้อมูลระบบ",
+      "specifyDates": "กรุณาระบุวันที่"
+    },
+    "labels": {
+      "battery": "แบตเตอรี่",
+      "cashDiscount": "ส่วนลดเงินสด",
+      "cashPayment": "ชำระเงินสด",
+      "financing": "ผ่อนชำระ",
+      "installationComplete": "ติดตั้งเสร็จ",
+      "installationStart": "เริ่มติดตั้ง",
+      "installationWarranty": "ประกันการติดตั้ง",
+      "inverter": "อินเวอร์เตอร์",
+      "inverterCapacity": "กำลังอินเวอร์เตอร์",
+      "monthlyProduction": "ผลิตไฟรายเดือน",
+      "monthlySavings": "ประหยัดรายเดือน",
+      "mounting": "โครงยึด",
+      "panelCount": "จำนวนแผง",
+      "panelPerformance": "ประสิทธิภาพแผง",
+      "panelProduct": "รุ่นแผงโซลาร์",
+      "panels": "แผงโซลาร์",
+      "paybackPeriod": "ระยะเวลาคืนทุน",
+      "performance": "ประสิทธิภาพ",
+      "priceDetails": "รายละเอียดราคา",
+      "roofLeak": "ประกันหลังคารั่ว",
+      "siteSurvey": "สำรวจหน้างาน",
+      "timeline": "ระยะเวลา",
+      "totalDuration": "ระยะเวลารวม",
+      "totalSystemSize": "ขนาดระบบรวม",
+      "warranty": "ประกัน"
+    }
+  },
+  "quotePreviewPage": {
+    "backToCreate": "กลับไปสร้าง",
+    "days": "วัน",
+    "edit": "แก้ไข",
+    "labels": {
+      "battery": "Battery",
+      "batteryCost": "ค่าแบตเตอรี่",
+      "cableAndAccessories": "สายไฟและอุปกรณ์เสริม",
+      "date": "วันที่",
+      "discount": "ส่วนลด",
+      "engineeringCost": "ค่าวิศวกรรม",
+      "includedInPackage": "รวมในแพ็กเกจ",
+      "installment": "ผ่อนชำระ",
+      "interestRate": "อัตราดอกเบี้ย",
+      "inverterCost": "ค่าอินเวอร์เตอร์",
+      "laborCost": "ค่าแรง",
+      "monitoringSystem": "ระบบมอนิเตอร์",
+      "months": "เดือน",
+      "mountingCost": "ค่าโครงยึด",
+      "notes": "หมายเหตุ",
+      "optional": "เลือกได้",
+      "panelCost": "ค่าแผงโซลาร์",
+      "permitCost": "ค่าใบอนุญาต",
+      "pricePerKw": "ราคาต่อ kW",
+      "quoteNumber": "เลขที่ใบเสนอราคา",
+      "quoter": "ผู้เสนอราคา",
+      "receiver": "ผู้รับ",
+      "scaffoldingCost": "ค่านั่งร้าน",
+      "signDate": "วันที่ลงนาม",
+      "signName": "ชื่อผู้ลงนาม",
+      "solarQuote": "ใบเสนอราคาโซลาร์",
+      "subtotal": "ยอดรวมย่อย",
+      "total": "ยอดรวม",
+      "validUntil": "ใช้ได้ถึง"
+    },
+    "noDataFound": "ไม่พบข้อมูล",
+    "onRoof": "บนหลังคา",
+    "panels": "แผง",
+    "printSave": "พิมพ์ / บันทึก",
+    "sections": {
+      "additionalServices": "บริการเพิ่มเติม",
+      "systemInfo": "ข้อมูลระบบ"
+    },
+    "submit": "ส่งใบเสนอราคา",
+    "submitted": {
+      "description": "ใบเสนอราคาของคุณถูกส่งเรียบร้อยแล้ว",
+      "goToDeals": "ไปที่ดีล",
+      "title": "ส่งใบเสนอราคาแล้ว",
+      "viewOtherRequests": "ดูคำขออื่นๆ"
+    },
+    "title": "ตัวอย่างใบเสนอราคา",
+    "years": "ปี"
+  },
+  "resultsPage": {
+    "actions": {
+      "downloadPdf": "ดาวน์โหลด PDF",
+      "generatingPdf": "กำลังสร้าง PDF...",
+      "shareResults": "แชร์ผลลัพธ์",
+      "sharing": "กำลังแชร์..."
+    },
+    "carbon": {
+      "equivalentTrees": "ต้นไม้เทียบเท่า",
+      "title": "ผลกระทบต่อสิ่งแวดล้อม",
+      "tonsPerYear": "ตัน CO2/ปี",
+      "treesDescription": "ต้นไม้เทียบเท่าที่ปลูกต่อปี"
+    },
+    "empty": {
+      "description": "ไม่พบผลการวิเคราะห์",
+      "startAnalysis": "เริ่มวิเคราะห์",
+      "title": "ไม่มีผลลัพธ์"
+    },
+    "errors": {
+      "loadError": "ไม่สามารถโหลดผลลัพธ์ได้",
+      "pdfError": "ไม่สามารถสร้าง PDF ได้",
+      "shareError": "ไม่สามารถแชร์ผลลัพธ์ได้"
+    },
+    "flexMessage": {
+      "carbonReduction": "ลดคาร์บอน",
+      "monthlySavings": "ประหยัดรายเดือน",
+      "panelsCount": "แผง",
+      "payback": "คืนทุน",
+      "systemSize": "ขนาดระบบ",
+      "title": "ผลการวิเคราะห์โซลาร์",
+      "viewDetails": "ดูรายละเอียด",
+      "yearlyEnergy": "พลังงานรายปี",
+      "years": "ปี"
+    },
+    "loading": "กำลังโหลดผลลัพธ์...",
+    "roi": {
+      "estimatedCost": "ค่าใช้จ่ายประมาณ",
+      "monthlySavings": "ประหยัดรายเดือน",
+      "paybackPeriod": "ระยะเวลาคืนทุน",
+      "savings25Years": "ประหยัด 25 ปี",
+      "title": "ผลตอบแทนการลงทุน",
+      "yearlySavings": "ประหยัดรายปี",
+      "years": "ปี"
+    },
+    "system": {
+      "kwhPerYear": "kWh/ปี",
+      "panels": "แผง",
+      "panelsCount": "{count} แผง",
+      "systemSize": "ขนาดระบบ",
+      "title": "ข้อมูลระบบ",
+      "yearlyEnergy": "พลังงานรายปี"
+    },
+    "title": "ผลการวิเคราะห์"
+  },
+  "reviewPage": {
+    "form": {
+      "addPhoto": "เพิ่มรูปภาพ",
+      "allRequired": "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+      "incomplete": "กรุณากรอกข้อมูลให้ครบถ้วน",
+      "minCharacters": "ต้องมีอย่างน้อย {count} ตัวอักษร",
+      "placeholder": "เขียนรีวิวของคุณที่นี่...",
+      "rateDimensions": "ให้คะแนนแต่ละด้าน",
+      "submit": "ส่งรีวิว",
+      "yourReview": "รีวิวของคุณ"
+    },
+    "states": {
+      "alreadyReviewed": {
+        "attachedPhotos": "รูปภาพที่แนบ",
+        "submittedOn": "ส่งเมื่อ",
+        "title": "รีวิวแล้ว",
+        "yourReview": "รีวิวของคุณ"
+      },
+      "error": {
+        "loadError": "ไม่สามารถโหลดแบบฟอร์มรีวิวได้",
+        "submitError": "ไม่สามารถส่งรีวิวได้",
+        "title": "ข้อผิดพลาด"
+      },
+      "pleaseWait": "กรุณารอสักครู่...",
+      "submitting": "กำลังส่งรีวิวของคุณ...",
+      "success": {
+        "closeNotice": "หน้าต่างนี้จะปิดอัตโนมัติ",
+        "description": "ความคิดเห็นของคุณช่วยปรับปรุงคุณภาพบริการ",
+        "title": "ขอบคุณสำหรับรีวิว!"
+      }
+    },
+    "subtitle": "แชร์ประสบการณ์ของคุณกับผู้ติดตั้ง",
+    "title": "เขียนรีวิว"
   }
 }

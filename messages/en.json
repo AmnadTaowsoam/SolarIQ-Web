@@ -638,7 +638,19 @@
     "selectDatePrompt": "Select a date to view events",
     "noEventsToday": "No events for this day",
     "upcomingEvents": "Upcoming events:",
-    "overdue": "Overdue"
+    "overdue": "Overdue",
+    "add": "Add",
+    "adding": "Adding...",
+    "cancel": "Cancel",
+    "error": "An error occurred",
+    "fields": {
+      "activityName": "Activity Name",
+      "customerName": "Customer Name",
+      "date": "Date",
+      "notes": "Notes",
+      "time": "Time",
+      "type": "Type"
+    }
   },
   "messagesPage": {
     "title": "Messages",
@@ -705,6 +717,18 @@
     "empty": {
       "title": "No Deals Yet",
       "description": "When a customer accepts a proposal, a deal will be created here"
+    },
+    "cancel": "Cancel",
+    "create": "Create",
+    "creating": "Creating...",
+    "error": "An error occurred",
+    "fields": {
+      "address": "Address",
+      "customerName": "Customer Name",
+      "notes": "Notes",
+      "stage": "Stage",
+      "systemSize": "System Size (kW)",
+      "totalValue": "Total Value (Baht)"
     }
   },
   "analyticsPage": {
@@ -782,7 +806,20 @@
     "download": "Download PDF",
     "send": "Send",
     "delete": "Delete",
-    "view": "View"
+    "view": "View",
+    "empty": "No invoices found",
+    "history": {
+      "subtitle": "View your billing history",
+      "title": "Invoice History"
+    },
+    "table": {
+      "action": "Action",
+      "documentNumber": "Document Number",
+      "documentType": "Document Type",
+      "issuedDate": "Issued Date",
+      "status": "Status",
+      "total": "Total"
+    }
   },
   "settingsPage": {
     "tabs": {
@@ -928,7 +965,47 @@
       "customizationNote": "Customization applies to UI, Proposals, and Email",
       "saving": "Saving...",
       "saveSettings": "Save Settings"
-    }
+    },
+    "account": {
+      "addContact": "Add Contact",
+      "edit": "Edit",
+      "email": "Email",
+      "name": "Name",
+      "noContact": "No contact information",
+      "phone": "Phone",
+      "status": "Status",
+      "title": "Account Information"
+    },
+    "consent": {
+      "title": "Consent Management"
+    },
+    "contact": "Contact Support",
+    "dangerZone": {
+      "deleteAll": "Delete All Data",
+      "deleteConfirm": "Are you sure you want to delete all data?",
+      "deleteNotice": "This action cannot be undone. All your data will be permanently deleted.",
+      "title": "Danger Zone"
+    },
+    "errors": {
+      "deleteError": "Failed to delete data",
+      "loadError": "Failed to load settings"
+    },
+    "loading": "Loading...",
+    "tax": {
+      "branchNumber": "Branch Number",
+      "companyNameEn": "Company Name (English)",
+      "companyNameTh": "Company Name (Thai)",
+      "contactEmail": "Contact Email",
+      "contactPerson": "Contact Person",
+      "contactPhone": "Contact Phone",
+      "reset": "Reset",
+      "save": "Save",
+      "subtitle": "Company tax information for invoices and receipts",
+      "taxAddress": "Tax Address",
+      "taxId": "Tax ID",
+      "title": "Tax Information"
+    },
+    "version": "Version"
   },
   "serviceAreaPage": {
     "title": "Service Area",
@@ -1237,7 +1314,67 @@
     "monthlyBill": "Monthly Bill",
     "breakEven": "Break-Even Point",
     "npv": "Net Present Value",
-    "irr": "Internal Rate of Return"
+    "irr": "Internal Rate of Return",
+    "analyzeButton": "Analyze",
+    "analyzeHint": "Enter location and electricity bill details to start analysis",
+    "inputForm": {
+      "address": "Address",
+      "addressPlaceholder": "Enter address or location",
+      "latitude": "Latitude",
+      "latitudeHint": "e.g., 13.7563",
+      "longitude": "Longitude",
+      "longitudeHint": "e.g., 100.5018",
+      "monthlyBill": "Monthly Electricity Bill",
+      "monthlyBillHint": "Average monthly electricity cost in Baht",
+      "title": "Input Information",
+      "useCurrentLocation": "Use Current Location",
+      "useDefaultLocation": "Use Default Location"
+    },
+    "locationPreview": {
+      "avgSolarPotential": "Average Solar Potential",
+      "coordinates": "Coordinates",
+      "financingComparison": "Financing Comparison",
+      "forecast7day": "7-Day Forecast",
+      "hoursPerYear": "Peak Sun Hours/Year",
+      "investment25yr": "25-Year Investment",
+      "pm25impact": "PM2.5 Impact",
+      "region": "Region",
+      "regionCentral": "Central Thailand",
+      "regionNorth": "Northern Thailand",
+      "regionSouth": "Southern Thailand",
+      "reliabilityIndex": "Reliability Index",
+      "roofPlan": "Roof Plan",
+      "subtitle": "Solar potential for selected location",
+      "title": "Location Preview",
+      "youWillReceive": "You Will Receive"
+    },
+    "messages": {
+      "analysisFailed": "Analysis failed. Please try again.",
+      "analysisSuccess": "Analysis completed successfully",
+      "fillAllFields": "Please fill in all required fields",
+      "geolocationNotSupported": "Geolocation is not supported by your browser",
+      "invalidBill": "Please enter a valid electricity bill amount",
+      "invalidLatitude": "Please enter a valid latitude",
+      "invalidLongitude": "Please enter a valid longitude",
+      "locationFailed": "Failed to get location",
+      "locationSuccess": "Location obtained successfully"
+    },
+    "results": {
+      "title": "Analysis Results"
+    },
+    "subtitle": "Analyze solar energy potential for your location",
+    "tabs": {
+      "data": "Data",
+      "equipment": "Equipment",
+      "financial": "Financial",
+      "forecast": "Forecast",
+      "incentives": "Incentives",
+      "overview": "Overview",
+      "reliability": "Reliability",
+      "roof": "Roof",
+      "solar": "Solar"
+    },
+    "title": "Solar Analysis"
   },
   "knowledgePage": {
     "title": "Knowledge Base",
@@ -1516,7 +1653,22 @@
     "cancel": "Cancel",
     "create": "Create Deal",
     "creating": "Creating...",
-    "error": "Failed to create deal. Please try again."
+    "error": "Failed to create deal. Please try again.",
+    "all": "All",
+    "createDeal": "Create Deal",
+    "empty": {
+      "description": "Create your first deal to get started",
+      "title": "No deals yet"
+    },
+    "progress": "Progress",
+    "stats": {
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "total": "Total"
+    },
+    "steps": "Steps",
+    "subtitle": "Manage your deals pipeline",
+    "totalValue": "Total Value"
   },
   "addActivityModal": {
     "title": "Add Activity",
@@ -1538,7 +1690,42 @@
     "cancel": "Cancel",
     "add": "Add Activity",
     "adding": "Adding...",
-    "error": "Failed to add activity. Please try again."
+    "error": "Failed to add activity. Please try again.",
+    "addActivity": "Add Activity",
+    "daysShort": {
+      "fri": "Fri",
+      "mon": "Mon",
+      "sat": "Sat",
+      "sun": "Sun",
+      "thu": "Thu",
+      "tue": "Tue",
+      "wed": "Wed"
+    },
+    "eventTypes": {
+      "installation": "Installation",
+      "maintenance": "Maintenance",
+      "service_request": "Service Request"
+    },
+    "eventsForDate": "Events for this date",
+    "months": {
+      "april": "April",
+      "august": "August",
+      "december": "December",
+      "february": "February",
+      "january": "January",
+      "july": "July",
+      "june": "June",
+      "march": "March",
+      "may": "May",
+      "november": "November",
+      "october": "October",
+      "september": "September"
+    },
+    "noEventsToday": "No events today",
+    "overdue": "Overdue",
+    "selectDatePrompt": "Select a date",
+    "subtitle": "Select a date to add or view activities",
+    "upcomingEvents": "Upcoming Events"
   },
   "billingPolicy": {
     "title": "Billing Policy",
@@ -2450,7 +2637,16 @@
     "noCard": "No credit card required",
     "unlimited": "Unlimited",
     "leadsPerMonth": "leads / month",
-    "viewPlans": "View Plans"
+    "viewPlans": "View Plans",
+    "cancelledWarning": "Your subscription has been cancelled",
+    "currentPeriod": "Current Period",
+    "daysLeft": "days left",
+    "endsAtPeriod": "Ends at period",
+    "planName": "Plan",
+    "resume": "Resume Subscription",
+    "resuming": "Resuming...",
+    "subtitle": "Your current subscription",
+    "to": "to"
   },
   "trialBanner": {
     "freePlan": "Free Plan",
@@ -2480,7 +2676,14 @@
     "seconds": "Seconds",
     "trialEndsIn": "Trial ends in",
     "upgrade": "Upgrade",
-    "upgradeNow": "Upgrade Now"
+    "upgradeNow": "Upgrade Now",
+    "endingSoon": "Trial Ending Soon",
+    "expired": "Trial Expired",
+    "expiredDesc": "Your trial period has ended",
+    "keepData": "Keep your data",
+    "noCreditCard": "No credit card required",
+    "timeLeft": "Time Left",
+    "upgradeCTA": "Upgrade Now"
   },
   "upgradeCTA": {
     "title": "Ready to Upgrade?",
@@ -2492,7 +2695,29 @@
     "noCard": "No credit card required",
     "cancelAnytime": "Cancel anytime",
     "freeTrial": "Start Free Trial",
-    "contactSales": "Contact Sales"
+    "contactSales": "Contact Sales",
+    "changeTitle": "Change Plan",
+    "faq1Answer": "Yes, you can upgrade or downgrade your plan at any time.",
+    "faq1Question": "Can I change plans anytime?",
+    "faq2Answer": "Yes, all plans include a 14-day free trial.",
+    "faq2Question": "Is there a free trial?",
+    "faq3Answer": "You can cancel your subscription from the settings page.",
+    "faq3Question": "How do I cancel?",
+    "faqTitle": "Frequently Asked Questions",
+    "freeDesc": "Start with our free plan",
+    "hideDetails": "Hide Details",
+    "showBillingInfo": "Show Billing Info",
+    "step1Desc": "Select the plan that fits your business needs",
+    "step1Title": "Choose a Plan",
+    "step2Desc": "Securely enter your payment details",
+    "step2Title": "Enter Payment Info",
+    "step3Desc": "Start using all premium features immediately",
+    "step3Title": "Activate",
+    "step4Desc": "Scale your solar business with powerful tools",
+    "step4Title": "Grow",
+    "upgradeCTA": "Upgrade Now",
+    "upgradeTitle": "Upgrade Your Plan",
+    "viewAllPlans": "View All Plans"
   },
   "usageBar": {
     "unlimited": "Unlimited",
@@ -2692,7 +2917,14 @@
     "reply": "Reply",
     "edited": "Edited",
     "image": "Image",
-    "file": "File"
+    "file": "File",
+    "conversationClosed": "This conversation has been closed",
+    "loadMore": "Load More",
+    "quickReplies": "Quick Replies",
+    "statusActive": "Active",
+    "statusClosed": "Closed",
+    "system": "System",
+    "you": "You"
   },
   "quickReply": {
     "title": "Quick Replies",
@@ -2777,7 +3009,12 @@
     "itemPrice": "Unit Price",
     "itemTotal": "Total",
     "years": "years",
-    "months": "months"
+    "months": "months",
+    "days": "days",
+    "step1": "System Info",
+    "step2": "Pricing",
+    "step3": "Timeline",
+    "step4": "Review"
   },
   "proposalPreview": {
     "title": "Solar System Proposal",
@@ -3152,5 +3389,579 @@
       "testError": "Test webhook failed. Check your endpoint.",
       "confirmDelete": "Are you sure you want to delete this webhook?"
     }
+  },
+  "aboutPage": {
+    "close": "Close",
+    "contact": {
+      "call": "Call",
+      "email": "Email",
+      "title": "Contact Us",
+      "website": "Website"
+    },
+    "copyright": "All rights reserved",
+    "description": "SolarIQ is an intelligent platform for analyzing solar energy potential, helping you make informed decisions about solar panel installation.",
+    "error": "An error occurred",
+    "features": {
+      "billScanning": {
+        "description": "Scan your electricity bill to automatically calculate savings",
+        "icon": "receipt",
+        "title": "Bill Scanning"
+      },
+      "carbonFootprint": {
+        "description": "Calculate your carbon reduction from solar energy",
+        "icon": "leaf",
+        "title": "Carbon Footprint"
+      },
+      "locationAnalysis": {
+        "description": "Analyze solar potential based on your location",
+        "icon": "map-pin",
+        "title": "Location Analysis"
+      },
+      "pdfQuote": {
+        "description": "Generate professional PDF quotes for customers",
+        "icon": "file-text",
+        "title": "PDF Quote"
+      },
+      "roiCalculation": {
+        "description": "Calculate return on investment for solar installations",
+        "icon": "calculator",
+        "title": "ROI Calculation"
+      }
+    },
+    "loading": "Loading...",
+    "stats": {
+      "analyses": "Analyses Completed",
+      "installations": "Installations",
+      "savings": "Total Savings",
+      "title": "Platform Statistics"
+    },
+    "subtitle": "Smart Solar Energy Analysis Platform",
+    "title": "About SolarIQ",
+    "version": "Version"
+  },
+  "analytics": {
+    "funnel": {
+      "avgTimeToPurchase": "Avg. Time to Purchase",
+      "conversion": "Conversion",
+      "dropOff": "Drop Off",
+      "export": "Export",
+      "funnelTitle": "Conversion Funnel",
+      "insight1Desc": "Focus on high-quality leads for better conversion rates",
+      "insight1Title": "Lead Quality",
+      "insight2Desc": "Faster follow-ups increase conversion probability",
+      "insight2Title": "Follow-up Speed",
+      "insight3Desc": "Optimize quote pricing to improve win rates",
+      "insight3Title": "Quote Optimization",
+      "insight4Desc": "Maintain relationships for referrals and repeat business",
+      "insight4Title": "Customer Retention",
+      "insights": "Insights",
+      "overallConversion": "Overall Conversion",
+      "refresh": "Refresh",
+      "subtitle": "Track your sales pipeline performance",
+      "title": "Sales Funnel",
+      "totalRevenue": "Total Revenue"
+    }
+  },
+  "chatPage": {
+    "title": "Chat",
+    "underDevelopment": "This feature is under development"
+  },
+  "consentPage": {
+    "actions": {
+      "save": "Save Preferences",
+      "skip": "Skip",
+      "submitting": "Saving..."
+    },
+    "consents": {
+      "grantedAt": "Granted at"
+    },
+    "dataRightsLink": "View Your Data Rights",
+    "description": "Manage your data consent preferences",
+    "dpoContact": {
+      "email": "Email",
+      "phone": "Phone",
+      "title": "Data Protection Officer"
+    },
+    "errors": {
+      "general": "An error occurred",
+      "save": "Failed to save consent preferences"
+    },
+    "loading": "Loading...",
+    "pdpaNotice": "Under Thailand's PDPA, you have the right to manage your personal data consent",
+    "rights": {
+      "description": "You have the right to access, correct, and delete your personal data",
+      "title": "Your Rights"
+    },
+    "success": {
+      "redirecting": "Redirecting...",
+      "title": "Preferences saved successfully"
+    },
+    "title": "Consent Management",
+    "types": {
+      "analysisResults": {
+        "description": "Share your solar analysis results with installers",
+        "icon": "chart",
+        "label": "Analysis Results"
+      },
+      "contactSharing": {
+        "description": "Share your contact information with solar installers",
+        "icon": "users",
+        "label": "Contact Sharing"
+      },
+      "marketing": {
+        "description": "Receive promotional offers and updates",
+        "icon": "mail",
+        "label": "Marketing"
+      },
+      "proposalSharing": {
+        "description": "Share proposals with relevant parties",
+        "icon": "file",
+        "label": "Proposal Sharing"
+      }
+    }
+  },
+  "contactPage": {
+    "description": "Please provide your contact details",
+    "form": {
+      "address": "Address",
+      "addressPlaceholder": "Enter your address",
+      "district": "District",
+      "districtPlaceholder": "Enter your district",
+      "email": "Email",
+      "emailInvalid": "Invalid email format",
+      "name": "Full Name",
+      "nameRequired": "Name is required",
+      "phone": "Phone Number",
+      "phoneInvalid": "Invalid phone number format",
+      "phoneRequired": "Phone number is required",
+      "province": "Province",
+      "save": "Save",
+      "saving": "Saving...",
+      "selectProvince": "Select province",
+      "update": "Update"
+    },
+    "loading": "Loading...",
+    "pdpaNotice": "Your information is protected under PDPA (Personal Data Protection Act)",
+    "success": {
+      "redirecting": "Redirecting...",
+      "title": "Information saved successfully"
+    },
+    "title": "Contact Information"
+  },
+  "dataRightsPage": {
+    "actions": {
+      "delete": "Delete My Data",
+      "download": "Download My Data",
+      "downloading": "Downloading...",
+      "edit": "Edit My Data",
+      "title": "Actions",
+      "withdraw": "Withdraw Consent"
+    },
+    "dataSummary": {
+      "address": "Address",
+      "analysisHistory": "Analysis History",
+      "consentHistory": "Consent History",
+      "email": "Email",
+      "name": "Name",
+      "phone": "Phone",
+      "province": "Province",
+      "title": "Data Summary"
+    },
+    "deleteModal": {
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "description": "This action cannot be undone. All your personal data will be permanently deleted.",
+      "submitting": "Deleting...",
+      "title": "Delete All Data"
+    },
+    "deleteSuccess": "Data deleted successfully",
+    "dpoContact": {
+      "email": "Email",
+      "phone": "Phone",
+      "title": "Data Protection Officer"
+    },
+    "loading": "Loading...",
+    "pdpaReference": "Rights under PDPA Section 30-36",
+    "title": "Your Data Rights"
+  },
+  "historyPage": {
+    "empty": {
+      "description": "You haven't performed any solar analyses yet",
+      "startAnalysis": "Start Analysis",
+      "title": "No analysis history"
+    },
+    "error": "Failed to load history",
+    "item": {
+      "addressNotSpecified": "Address not specified",
+      "panels": "Panels",
+      "payback": "Payback",
+      "years": "years"
+    },
+    "loading": "Loading...",
+    "retry": "Retry",
+    "subtitle": "View your previous solar analyses",
+    "title": "Analysis History"
+  },
+  "knowledge": {
+    "description": "Manage documents and data for AI-powered responses",
+    "documents": {
+      "actionsColumn": "Actions",
+      "chunksColumn": "Chunks",
+      "delete": "Delete",
+      "sourceColumn": "Source",
+      "title": "Documents",
+      "titleColumn": "Title",
+      "updatedColumn": "Updated"
+    },
+    "errors": {
+      "contentRequired": "Content is required"
+    },
+    "messages": {
+      "confirmDelete": "Are you sure you want to delete this document?"
+    },
+    "search": {
+      "button": "Search",
+      "clear": "Clear",
+      "placeholder": "Search documents...",
+      "results": "Search Results",
+      "score": "Relevance Score"
+    },
+    "stats": {
+      "sources": "Sources",
+      "totalChunks": "Total Chunks",
+      "totalDocuments": "Total Documents"
+    },
+    "title": "Knowledge Base",
+    "upload": {
+      "button": "Upload Document",
+      "cancel": "Cancel",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Enter document content...",
+      "metadataLabel": "Metadata",
+      "metadataOptional": "(Optional)",
+      "metadataPlaceholder": "Enter metadata as JSON...",
+      "modalTitle": "Upload New Document",
+      "sourceLabel": "Source",
+      "submit": "Submit",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Enter document title..."
+    }
+  },
+  "maintenanceDetailPage": {
+    "addressNotSpecified": "Address not specified",
+    "notFound": "System not found",
+    "records": {
+      "addRecord": "Add Record",
+      "costLabel": "Cost (Baht)",
+      "costPlaceholder": "Enter cost",
+      "descriptionPlaceholder": "Enter description",
+      "noRecords": "No maintenance records",
+      "save": "Save",
+      "technicianLabel": "Technician",
+      "technicianPlaceholder": "Enter technician name",
+      "title": "Maintenance Records",
+      "type": {
+        "cleaning": "Cleaning",
+        "inspection": "Inspection",
+        "repair": "Repair",
+        "replacement": "Replacement"
+      }
+    },
+    "schedule": {
+      "addSchedule": "Add Schedule",
+      "everyXMonths": "Every {count} months",
+      "frequency": {
+        "12": "Every 12 months",
+        "3": "Every 3 months",
+        "6": "Every 6 months"
+      },
+      "nextDue": "Next Due",
+      "noSchedule": "No schedule set",
+      "notSet": "Not set",
+      "notes": "Notes",
+      "save": "Save",
+      "title": "Maintenance Schedule",
+      "type": {
+        "cleaning": "Cleaning",
+        "general": "General",
+        "inspection": "Inspection",
+        "inverterCheck": "Inverter Check"
+      }
+    },
+    "status": {
+      "active": "Active"
+    },
+    "systemInfo": {
+      "installationDate": "Installation Date",
+      "inverter": "Inverter",
+      "solarPanels": "Solar Panels",
+      "systemSize": "System Size"
+    },
+    "title": "Maintenance Details",
+    "warranty": {
+      "installation": "Installation Warranty",
+      "inverter": "Inverter Warranty",
+      "panel": "Panel Warranty"
+    }
+  },
+  "mapPickerPage": {
+    "address": "Address",
+    "checkInternetConnection": "Please check your internet connection",
+    "confirm": "Confirm Location",
+    "confirming": "Confirming...",
+    "errors": {
+      "geocodeError": "Failed to get address from location",
+      "locationError": "Failed to get your location",
+      "submitError": "Failed to submit location"
+    },
+    "loading": "Loading map...",
+    "myHomeLocation": "My Home Location",
+    "pleaseSelectLocation": "Please select a location on the map",
+    "selectOnMap": "Select on Map",
+    "subtitle": "Tap on the map to select your location",
+    "title": "Select Location"
+  },
+  "proposalPage": {
+    "actions": {
+      "contactInstaller": "Contact Installer",
+      "shareToLine": "Share via LINE",
+      "sharing": "Sharing..."
+    },
+    "document": {
+      "openFullPdf": "Open Full PDF",
+      "title": "Proposal Document"
+    },
+    "errors": {
+      "loadError": "Failed to load proposal",
+      "noLeadId": "Lead ID not found",
+      "notFound": "Proposal not found",
+      "shareError": "Failed to share proposal"
+    },
+    "flexMessage": {
+      "installationCost": "Installation Cost",
+      "monthlySavings": "Monthly Savings",
+      "panels": "Panels",
+      "payback": "Payback",
+      "systemSize": "System Size",
+      "title": "Solar Proposal",
+      "viewProposal": "View Proposal",
+      "years": "years"
+    },
+    "loading": "Loading proposal...",
+    "roi": {
+      "monthlySavings": "Monthly Savings",
+      "payback": "Payback Period",
+      "savings25Years": "25-Year Savings",
+      "title": "Return on Investment"
+    },
+    "status": {
+      "error": "Error",
+      "errorDescription": "Failed to generate proposal",
+      "generating": "Generating",
+      "generatingDescription": "Your proposal is being generated..."
+    },
+    "subtitle": "Review your solar installation proposal",
+    "summary": {
+      "estimatedPrice": "Estimated Price",
+      "systemSize": "System Size",
+      "title": "System Summary",
+      "yearlyEnergy": "Yearly Energy"
+    },
+    "title": "Solar Proposal"
+  },
+  "quoteBuilderPage": {
+    "additionalRequirements": "Additional Requirements",
+    "approximatePrice": "Approximate Price",
+    "back": "Back",
+    "budget": "Budget",
+    "clear": "Clear",
+    "createQuote": "Create Quote",
+    "draftSaveError": "Failed to save draft",
+    "draftSaved": "Draft saved",
+    "loadTemplate": "Load Template",
+    "loading": "Loading...",
+    "location": "Location",
+    "notSpecified": "Not specified",
+    "requestDetails": "Request Details",
+    "submitError": "Failed to submit quote",
+    "systemSize": "System Size",
+    "templates": {
+      "noTemplates": "No templates available",
+      "select": "Select Template"
+    },
+    "timeline": "Timeline",
+    "usingTemplate": "Using Template",
+    "validation": {
+      "fillSystemInfo": "Please fill in system information",
+      "specifyDates": "Please specify dates"
+    },
+    "labels": {
+      "battery": "Battery",
+      "cashDiscount": "Cash Discount",
+      "cashPayment": "Cash Payment",
+      "financing": "Financing",
+      "installationComplete": "Installation Complete",
+      "installationStart": "Installation Start",
+      "installationWarranty": "Installation Warranty",
+      "inverter": "Inverter",
+      "inverterCapacity": "Inverter Capacity",
+      "monthlyProduction": "Monthly Production",
+      "monthlySavings": "Monthly Savings",
+      "mounting": "Mounting",
+      "panelCount": "Panel Count",
+      "panelPerformance": "Panel Performance",
+      "panelProduct": "Panel Product",
+      "panels": "Panels",
+      "paybackPeriod": "Payback Period",
+      "performance": "Performance",
+      "priceDetails": "Price Details",
+      "roofLeak": "Roof Leak Warranty",
+      "siteSurvey": "Site Survey",
+      "timeline": "Timeline",
+      "totalDuration": "Total Duration",
+      "totalSystemSize": "Total System Size",
+      "warranty": "Warranty"
+    }
+  },
+  "quotePreviewPage": {
+    "backToCreate": "Back to Create",
+    "days": "days",
+    "edit": "Edit",
+    "labels": {
+      "battery": "Battery",
+      "batteryCost": "Battery Cost",
+      "cableAndAccessories": "Cable & Accessories",
+      "date": "Date",
+      "discount": "Discount",
+      "engineeringCost": "Engineering Cost",
+      "includedInPackage": "Included in Package",
+      "installment": "Installment",
+      "interestRate": "Interest Rate",
+      "inverterCost": "Inverter Cost",
+      "laborCost": "Labor Cost",
+      "monitoringSystem": "Monitoring System",
+      "months": "months",
+      "mountingCost": "Mounting Cost",
+      "notes": "Notes",
+      "optional": "Optional",
+      "panelCost": "Panel Cost",
+      "permitCost": "Permit Cost",
+      "pricePerKw": "Price per kW",
+      "quoteNumber": "Quote Number",
+      "quoter": "Quoter",
+      "receiver": "Receiver",
+      "scaffoldingCost": "Scaffolding Cost",
+      "signDate": "Signature Date",
+      "signName": "Signature Name",
+      "solarQuote": "Solar Quote",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "validUntil": "Valid Until"
+    },
+    "noDataFound": "No data found",
+    "onRoof": "on roof",
+    "panels": "panels",
+    "printSave": "Print / Save",
+    "sections": {
+      "additionalServices": "Additional Services",
+      "systemInfo": "System Information"
+    },
+    "submit": "Submit Quote",
+    "submitted": {
+      "description": "Your quote has been submitted successfully",
+      "goToDeals": "Go to Deals",
+      "title": "Quote Submitted",
+      "viewOtherRequests": "View Other Requests"
+    },
+    "title": "Quote Preview",
+    "years": "years"
+  },
+  "resultsPage": {
+    "actions": {
+      "downloadPdf": "Download PDF",
+      "generatingPdf": "Generating PDF...",
+      "shareResults": "Share Results",
+      "sharing": "Sharing..."
+    },
+    "carbon": {
+      "equivalentTrees": "Equivalent Trees",
+      "title": "Environmental Impact",
+      "tonsPerYear": "tons CO2/year",
+      "treesDescription": "equivalent trees planted per year"
+    },
+    "empty": {
+      "description": "No analysis results found",
+      "startAnalysis": "Start Analysis",
+      "title": "No results"
+    },
+    "errors": {
+      "loadError": "Failed to load results",
+      "pdfError": "Failed to generate PDF",
+      "shareError": "Failed to share results"
+    },
+    "flexMessage": {
+      "carbonReduction": "Carbon Reduction",
+      "monthlySavings": "Monthly Savings",
+      "panelsCount": "Panels",
+      "payback": "Payback",
+      "systemSize": "System Size",
+      "title": "Solar Analysis Results",
+      "viewDetails": "View Details",
+      "yearlyEnergy": "Yearly Energy",
+      "years": "years"
+    },
+    "loading": "Loading results...",
+    "roi": {
+      "estimatedCost": "Estimated Cost",
+      "monthlySavings": "Monthly Savings",
+      "paybackPeriod": "Payback Period",
+      "savings25Years": "25-Year Savings",
+      "title": "Return on Investment",
+      "yearlySavings": "Yearly Savings",
+      "years": "years"
+    },
+    "system": {
+      "kwhPerYear": "kWh/year",
+      "panels": "Panels",
+      "panelsCount": "{count} panels",
+      "systemSize": "System Size",
+      "title": "System Information",
+      "yearlyEnergy": "Yearly Energy"
+    },
+    "title": "Analysis Results"
+  },
+  "reviewPage": {
+    "form": {
+      "addPhoto": "Add Photo",
+      "allRequired": "All fields are required",
+      "incomplete": "Please complete all fields",
+      "minCharacters": "Minimum {count} characters required",
+      "placeholder": "Write your review here...",
+      "rateDimensions": "Rate each aspect",
+      "submit": "Submit Review",
+      "yourReview": "Your Review"
+    },
+    "states": {
+      "alreadyReviewed": {
+        "attachedPhotos": "Attached Photos",
+        "submittedOn": "Submitted on",
+        "title": "Already Reviewed",
+        "yourReview": "Your Review"
+      },
+      "error": {
+        "loadError": "Failed to load review form",
+        "submitError": "Failed to submit review",
+        "title": "Error"
+      },
+      "pleaseWait": "Please wait...",
+      "submitting": "Submitting your review...",
+      "success": {
+        "closeNotice": "This window will close automatically",
+        "description": "Your feedback helps improve service quality",
+        "title": "Thank you for your review!"
+      }
+    },
+    "subtitle": "Share your experience with this installer",
+    "title": "Leave a Review"
   }
 }
