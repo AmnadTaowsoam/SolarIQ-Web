@@ -51,7 +51,8 @@
     "accountAndPlan": "บัญชีและแพลน",
     "about": "เกี่ยวกับเรา",
     "contact": "ติดต่อเรา",
-    "pricingPlans": "แพ็กเกจราคา"
+    "pricingPlans": "แพ็กเกจราคา",
+    "developerApi": "Developer API"
   },
   "navbar": {
     "openMenu": "เปิดเมนู",

@@ -355,7 +355,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           ),
         },
         {
-          name: 'Developer API',
+          name: tNav('developerApi'),
           href: ROUTES.DEVELOPERS,
           adminOnly: true,
           icon: (
@@ -435,7 +435,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
             .filter((group) => !group.adminOnly || isAdmin)
             .map((group) => (
               <div key={group.label}>
-                <p className="px-3 text-[10px] font-bold text-[var(--brand-sidebar-text)]/40 uppercase tracking-[0.1em] mb-2">
+                <p className="px-3 text-[10px] font-bold text-[var(--brand-sidebar-text)] opacity-40 uppercase tracking-[0.1em] mb-2">
                   {group.label}
                 </p>
                 <div className="space-y-0.5">
@@ -474,7 +474,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
 
         {/* Marketing Links */}
         <div className="border-t border-[var(--brand-border)] px-3 py-3">
-          <p className="px-3 text-[10px] font-bold text-[var(--brand-sidebar-text)]/40 uppercase tracking-[0.1em] mb-2">
+          <p className="px-3 text-[10px] font-bold text-[var(--brand-sidebar-text)] opacity-40 uppercase tracking-[0.1em] mb-2">
             SolarIQ
           </p>
           <div className="space-y-0.5">

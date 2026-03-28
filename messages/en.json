@@ -51,7 +51,8 @@
     "accountAndPlan": "Account & Plan",
     "about": "About Us",
     "contact": "Contact Us",
-    "pricingPlans": "Pricing Plans"
+    "pricingPlans": "Pricing Plans",
+    "developerApi": "Developer API"
   },
   "navbar": {
     "openMenu": "Open menu",
