@@ -4,92 +4,95 @@
  * Displays a list of chat threads with search, filtering, and selection.
  */
 
-'use client';
+'use client'
 
-import React, { useState, useMemo } from 'react';
-import { formatDistanceToNow } from 'date-fns';
-import { th } from 'date-fns/locale';
-import {
-  ChatThread,
-  ThreadStatus,
-  SenderType,
-} from '@/types/chat';
-import { Badge } from '@/components/ui/Badge';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import { cn } from '@/lib/utils';
+import React, { useState, useMemo } from 'react'
+import { useTranslations } from 'next-intl'
+import { formatDistanceToNow } from 'date-fns'
+import { th } from 'date-fns/locale'
+import { ChatThread, ThreadStatus, SenderType } from '@/types/chat'
+import { Badge } from '@/components/ui/Badge'
+import { Input } from '@/components/ui/Input'
+import { cn } from '@/lib/utils'
 
 // ============== Types ==============
 
 interface ThreadListProps {
-  threads: ChatThread[];
-  selectedThreadId?: string;
-  isLoading?: boolean;
-  onSelectThread: (thread: ChatThread) => void;
-  onArchiveThread?: (threadId: string) => void;
-  className?: string;
+  threads: ChatThread[]
+  selectedThreadId?: string
+  isLoading?: boolean
+  onSelectThread: (thread: ChatThread) => void
+  onArchiveThread?: (threadId: string) => void
+  className?: string
 }
 
-type FilterType = 'all' | 'unread' | 'mine';
+type FilterType = 'all' | 'unread' | 'mine'
 
 // ============== Helper Functions ==============
 
 function getStatusColor(status: ThreadStatus): string {
   switch (status) {
     case ThreadStatus.ACTIVE:
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800'
     case ThreadStatus.ARCHIVED:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800'
     case ThreadStatus.CLOSED:
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800'
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800'
   }
 }
 
-function getStatusLabel(status: ThreadStatus): string {
+function getStatusLabel(
+  status: ThreadStatus,
+  t: ReturnType<typeof useTranslations<'chat'>>
+): string {
   switch (status) {
     case ThreadStatus.ACTIVE:
-      return 'กำลังดำเนินการ';
+      return t('statusActive')
     case ThreadStatus.ARCHIVED:
-      return 'เก็บถาวร';
+      return t('archived')
     case ThreadStatus.CLOSED:
-      return 'ปิดแล้ว';
+      return t('statusClosed')
     default:
-      return status;
+      return status
   }
 }
 
-function getLastMessageLabel(senderType: SenderType): string {
+function getLastMessageLabel(
+  senderType: SenderType,
+  t: ReturnType<typeof useTranslations<'chat'>>
+): string {
   switch (senderType) {
     case SenderType.B2C:
-      return 'ลูกค้า';
+      return t('customer')
     case SenderType.CONTRACTOR:
-      return 'คุณ';
+      return t('you')
     case SenderType.SYSTEM:
-      return 'ระบบ';
+      return t('system')
     default:
-      return '';
+      return ''
   }
 }
 
 // ============== Sub-Components ==============
 
 interface ThreadItemProps {
-  thread: ChatThread;
-  isSelected: boolean;
-  onClick: () => void;
+  thread: ChatThread
+  isSelected: boolean
+  onClick: () => void
+  t: ReturnType<typeof useTranslations<'chat'>>
 }
 
-function ThreadItem({ thread, isSelected, onClick }: ThreadItemProps) {
+function ThreadItem({ thread, isSelected, onClick, t }: ThreadItemProps) {
   const lastMessageTime = thread.lastMessageAt
     ? formatDistanceToNow(new Date(thread.lastMessageAt), {
         addSuffix: true,
         locale: th,
       })
-    : '';
+    : ''
 
-  const hasUnread = thread.unreadCount && thread.unreadCount > 0;
+  const hasUnread = thread.unreadCount && thread.unreadCount > 0
 
   return (
     <button
@@ -104,7 +107,7 @@ function ThreadItem({ thread, isSelected, onClick }: ThreadItemProps) {
           {/* Header */}
           <div className="flex items-center gap-2 mb-1">
             <span className="font-medium text-gray-900 truncate">
-              {thread.metadata?.customerName || 'ลูกค้า'}
+              {thread.metadata?.customerName || t('customer')}
             </span>
             {hasUnread && (
               <span className="flex-shrink-0 w-5 h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -117,23 +120,19 @@ function ThreadItem({ thread, isSelected, onClick }: ThreadItemProps) {
           <p className="text-sm text-gray-600 truncate">
             {thread.lastMessageSender && (
               <span className="font-medium">
-                {getLastMessageLabel(thread.lastMessageSender)}:{' '}
+                {getLastMessageLabel(thread.lastMessageSender, t)}:{' '}
               </span>
             )}
-            {thread.lastMessagePreview || 'ยังไม่มีข้อความ'}
+            {thread.lastMessagePreview || ''}
           </p>
 
           {/* Metadata */}
           <div className="flex items-center gap-2 mt-1">
             {thread.metadata?.propertyType && (
-              <span className="text-xs text-gray-500">
-                {thread.metadata.propertyType}
-              </span>
+              <span className="text-xs text-gray-500">{thread.metadata.propertyType}</span>
             )}
             {thread.metadata?.systemSize && (
-              <span className="text-xs text-gray-500">
-                • {thread.metadata.systemSize} kW
-              </span>
+              <span className="text-xs text-gray-500">• {thread.metadata.systemSize} kW</span>
             )}
           </div>
         </div>
@@ -141,13 +140,13 @@ function ThreadItem({ thread, isSelected, onClick }: ThreadItemProps) {
         {/* Right side */}
         <div className="flex flex-col items-end gap-1">
           <Badge className={getStatusColor(thread.status)}>
-            {getStatusLabel(thread.status)}
+            {getStatusLabel(thread.status, t)}
           </Badge>
           <span className="text-xs text-gray-400">{lastMessageTime}</span>
         </div>
       </div>
     </button>
-  );
+  )
 }
 
 // ============== Main Component ==============
@@ -157,59 +156,54 @@ export function ThreadList({
   selectedThreadId,
   isLoading = false,
   onSelectThread,
-  onArchiveThread,
+  onArchiveThread: _onArchiveThread,
   className,
 }: ThreadListProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<ThreadStatus | 'all'>('all');
-  const [assigneeFilter, setAssigneeFilter] = useState<FilterType>('all');
+  const t = useTranslations('chat')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState<ThreadStatus | 'all'>('all')
+  const [assigneeFilter, setAssigneeFilter] = useState<FilterType>('all')
 
   // Filter threads
   const filteredThreads = useMemo(() => {
     return threads.filter((thread) => {
       // Status filter
       if (statusFilter !== 'all' && thread.status !== statusFilter) {
-        return false;
+        return false
       }
 
       // Assignee filter
       if (assigneeFilter === 'mine' && !thread.isAssignedToMe) {
-        return false;
+        return false
       }
       if (assigneeFilter === 'unread' && (!thread.unreadCount || thread.unreadCount === 0)) {
-        return false;
+        return false
       }
 
       // Search filter
       if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        const matchesName = thread.metadata?.customerName
-          ?.toLowerCase()
-          .includes(query);
-        const matchesPreview = thread.lastMessagePreview
-          ?.toLowerCase()
-          .includes(query);
-        const matchesLocation = thread.metadata?.location
-          ?.toLowerCase()
-          .includes(query);
+        const query = searchQuery.toLowerCase()
+        const matchesName = thread.metadata?.customerName?.toLowerCase().includes(query)
+        const matchesPreview = thread.lastMessagePreview?.toLowerCase().includes(query)
+        const matchesLocation = thread.metadata?.location?.toLowerCase().includes(query)
 
-        return matchesName || matchesPreview || matchesLocation;
+        return matchesName || matchesPreview || matchesLocation
       }
 
-      return true;
-    });
-  }, [threads, searchQuery, statusFilter, assigneeFilter]);
+      return true
+    })
+  }, [threads, searchQuery, statusFilter, assigneeFilter])
 
   return (
     <div className={cn('flex flex-col h-full bg-white', className)}>
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">ข้อความ</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('newConversation')}</h2>
 
         {/* Search */}
         <Input
           type="search"
-          placeholder="ค้นหาการสนทนา..."
+          placeholder={t('search')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full"
@@ -219,15 +213,13 @@ export function ThreadList({
         <div className="flex gap-2 mt-3">
           <select
             value={statusFilter}
-            onChange={(e) =>
-              setStatusFilter(e.target.value as ThreadStatus | 'all')
-            }
+            onChange={(e) => setStatusFilter(e.target.value as ThreadStatus | 'all')}
             className="flex-1 text-sm border border-gray-200 rounded-md px-2 py-1.5"
           >
-            <option value="all">ทุกสถานะ</option>
-            <option value={ThreadStatus.ACTIVE}>กำลังดำเนินการ</option>
-            <option value={ThreadStatus.ARCHIVED}>เก็บถาวร</option>
-            <option value={ThreadStatus.CLOSED}>ปิดแล้ว</option>
+            <option value="all">{t('all')}</option>
+            <option value={ThreadStatus.ACTIVE}>{t('statusActive')}</option>
+            <option value={ThreadStatus.ARCHIVED}>{t('archived')}</option>
+            <option value={ThreadStatus.CLOSED}>{t('statusClosed')}</option>
           </select>
 
           <select
@@ -235,9 +227,9 @@ export function ThreadList({
             onChange={(e) => setAssigneeFilter(e.target.value as FilterType)}
             className="flex-1 text-sm border border-gray-200 rounded-md px-2 py-1.5"
           >
-            <option value="all">ทั้งหมด</option>
-            <option value="mine">ที่รับผิดชอบ</option>
-            <option value="unread">ยังไม่อ่าน</option>
+            <option value="all">{t('all')}</option>
+            <option value="mine">{t('assign')}</option>
+            <option value="unread">{t('unread')}</option>
           </select>
         </div>
       </div>
@@ -268,10 +260,8 @@ export function ThreadList({
                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
               />
             </svg>
-            <p>ไม่พบการสนทนา</p>
-            {searchQuery && (
-              <p className="text-sm mt-1">ลองเปลี่ยนคำค้นหา</p>
-            )}
+            <p>{t('noConversations')}</p>
+            {searchQuery && <p className="text-sm mt-1">{t('noConversationsDesc')}</p>}
           </div>
         ) : (
           filteredThreads.map((thread) => (
@@ -280,6 +270,7 @@ export function ThreadList({
               thread={thread}
               isSelected={thread.id === selectedThreadId}
               onClick={() => onSelectThread(thread)}
+              t={t}
             />
           ))
         )}
@@ -287,20 +278,15 @@ export function ThreadList({
 
       {/* Footer with stats */}
       <div className="p-3 border-t border-gray-200 bg-gray-50 text-xs text-gray-500">
-        {filteredThreads.length} การสนทนา
-        {threads.some((t) => t.unreadCount && t.unreadCount > 0) && (
+        {filteredThreads.length} {t('all').toLowerCase()}
+        {threads.some((th) => th.unreadCount && th.unreadCount > 0) && (
           <span className="ml-2">
-            •{' '}
-            {threads.reduce(
-              (sum, t) => sum + (t.unreadCount || 0),
-              0
-            )}{' '}
-            ข้อความใหม่
+            • {threads.reduce((sum, th) => sum + (th.unreadCount || 0), 0)} {t('unread')}
           </span>
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default ThreadList;
+export default ThreadList

@@ -7,16 +7,9 @@
 
 import { format } from 'date-fns'
 import { th } from 'date-fns/locale'
+import { useTranslations } from 'next-intl'
 import { useApiUsage } from '@/hooks/useDeveloperApi'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 function StatCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
@@ -29,23 +22,23 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
 }
 
 export default function ApiUsagePage() {
+  const t = useTranslations('developersExtra')
   const { usage, isLoading } = useApiUsage()
 
-  const usagePercent = usage
-    ? Math.round((usage.totalCallsMonth / usage.monthLimit) * 100)
-    : 0
+  const usagePercent = usage ? Math.round((usage.totalCallsMonth / usage.monthLimit) * 100) : 0
 
-  const chartData = usage?.dailyStats.map((d) => ({
-    date: format(new Date(d.date), 'd', { locale: th }),
-    calls: d.calls,
-    errors: d.errors,
-  })) ?? []
+  const chartData =
+    usage?.dailyStats.map((d) => ({
+      date: format(new Date(d.date), 'd', { locale: th }),
+      calls: d.calls,
+      errors: d.errors,
+    })) ?? []
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-bold text-gray-900">การใช้งาน API</h2>
+        <h2 className="text-lg font-bold text-gray-900">{t('usage.title')}</h2>
         <p className="text-sm text-gray-500 mt-0.5">
           {format(new Date(), 'MMMM yyyy', { locale: th })}
         </p>
@@ -54,7 +47,9 @@ export default function ApiUsagePage() {
       {isLoading ? (
         <div className="space-y-4 animate-pulse">
           <div className="grid grid-cols-3 gap-4">
-            {[...Array(3)].map((_, i) => <div key={i} className="h-24 bg-gray-100 rounded-xl" />)}
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-100 rounded-xl" />
+            ))}
           </div>
           <div className="h-64 bg-gray-100 rounded-xl" />
         </div>
@@ -63,34 +58,35 @@ export default function ApiUsagePage() {
           {/* Stats row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <StatCard
-              label="API Calls เดือนนี้"
+              label={t('usage.totalRequests')}
               value={(usage?.totalCallsMonth ?? 0).toLocaleString()}
-              sub={`จาก ${(usage?.monthLimit ?? 0).toLocaleString()} calls`}
+              sub={t('usage.thisMonth')}
             />
             <StatCard
-              label="Success Rate"
+              label={t('usage.successRate')}
               value={`${usage?.successRate ?? 0}%`}
-              sub="เฉลี่ย 30 วัน"
+              sub={t('usage.avgResponseTime')}
             />
             <StatCard
-              label="Avg Response Time"
+              label={t('usage.avgResponseTime')}
               value={`${usage?.avgLatencyMs ?? 0} ms`}
-              sub="ค่าเฉลี่ย"
+              sub={t('usage.today')}
             />
           </div>
 
           {/* Monthly quota bar */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-gray-900">โควต้าเดือนนี้</h3>
-              <span className="text-sm font-semibold text-gray-700">{usagePercent}% ใช้แล้ว</span>
+              <h3 className="text-sm font-bold text-gray-900">{t('usage.thisMonth')}</h3>
+              <span className="text-sm font-semibold text-gray-700">{usagePercent}%</span>
             </div>
             <div className="w-full bg-gray-100 rounded-full h-3 mb-2">
               <div
                 className="h-3 rounded-full transition-all"
                 style={{
                   width: `${Math.min(usagePercent, 100)}%`,
-                  backgroundColor: usagePercent >= 90 ? '#ef4444' : usagePercent >= 70 ? '#f97316' : '#22c55e',
+                  backgroundColor:
+                    usagePercent >= 90 ? '#ef4444' : usagePercent >= 70 ? '#f97316' : '#22c55e',
                 }}
               />
             </div>
@@ -100,14 +96,14 @@ export default function ApiUsagePage() {
             </div>
             {usagePercent >= 80 && (
               <div className="mt-3 bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 text-xs text-orange-800">
-                คุณใช้โควต้าไปแล้ว {usagePercent}% อัปเกรดแผนเพื่อเพิ่มโควต้า
+                {usagePercent}%
               </div>
             )}
           </div>
 
           {/* Daily chart */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 className="text-sm font-bold text-gray-900 mb-4">API Calls รายวัน (30 วัน)</h3>
+            <h3 className="text-sm font-bold text-gray-900 mb-4">{t('usage.requests')}</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} barSize={8}>
@@ -123,7 +119,7 @@ export default function ApiUsagePage() {
                     tick={{ fontSize: 11, fill: '#9ca3af' }}
                     axisLine={false}
                     tickLine={false}
-                    tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(1)}k` : String(v)}
+                    tickFormatter={(v) => (v >= 1000 ? `${(v / 1000).toFixed(1)}k` : String(v))}
                   />
                   <Tooltip
                     contentStyle={{
@@ -157,19 +153,26 @@ export default function ApiUsagePage() {
 
           {/* Endpoint breakdown */}
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 className="text-sm font-bold text-gray-900 mb-4">การใช้งานแยกตาม Endpoint</h3>
+            <h3 className="text-sm font-bold text-gray-900 mb-4">{t('usage.endpoint')}</h3>
             <div className="space-y-3">
               {(usage?.endpointBreakdown ?? []).map((ep) => (
                 <div key={ep.endpoint}>
                   <div className="flex items-center justify-between mb-1">
                     <code className="text-xs font-mono text-gray-700">{ep.endpoint}</code>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-500">{ep.calls.toLocaleString()} calls</span>
-                      <span className="text-xs font-semibold text-gray-700 w-10 text-right">{ep.percentage}%</span>
+                      <span className="text-xs text-gray-500">
+                        {ep.calls.toLocaleString()} calls
+                      </span>
+                      <span className="text-xs font-semibold text-gray-700 w-10 text-right">
+                        {ep.percentage}%
+                      </span>
                     </div>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-1.5">
-                    <div className="h-1.5 rounded-full bg-orange-400 transition-all" style={{ width: `${ep.percentage}%` }} />
+                    <div
+                      className="h-1.5 rounded-full bg-orange-400 transition-all"
+                      style={{ width: `${ep.percentage}%` }}
+                    />
                   </div>
                 </div>
               ))}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { QuoteComparisonData, QuoteComparisonItem } from '@/types/quotes'
 
 interface QuoteComparisonTableProps {
@@ -30,7 +30,9 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
 
 function Badge({ children, color }: { children: React.ReactNode; color: string }) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${color}`}>
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${color}`}
+    >
       {children}
     </span>
   )
@@ -43,27 +45,34 @@ export function QuoteComparisonTable({
   onViewDetail,
   isAccepting,
 }: QuoteComparisonTableProps) {
+  const t = useTranslations('quoteComparison')
   const [sortKey, setSortKey] = useState<SortKey>('price')
   const [showDeclineModal, setShowDeclineModal] = useState<string | null>(null)
   const [declineReason, setDeclineReason] = useState('')
 
   const sorted = [...data.quotes].sort((a, b) => {
-    if (sortKey === 'price') return a.pricing.totalPrice - b.pricing.totalPrice
-    if (sortKey === 'rating') return b.contractor.rating - a.contractor.rating
-    if (sortKey === 'fast') return a.timeline.totalDays - b.timeline.totalDays
+    if (sortKey === 'price') {
+      return a.pricing.totalPrice - b.pricing.totalPrice
+    }
+    if (sortKey === 'rating') {
+      return b.contractor.rating - a.contractor.rating
+    }
+    if (sortKey === 'fast') {
+      return a.timeline.totalDays - b.timeline.totalDays
+    }
     return 0
   })
 
   const getBadges = (item: QuoteComparisonItem): Array<{ label: string; color: string }> => {
     const badges: Array<{ label: string; color: string }> = []
     if (data.analysis?.cheapest === item.quoteId) {
-      badges.push({ label: 'ราคาดีที่สุด', color: 'bg-green-100 text-green-800' })
+      badges.push({ label: t('best'), color: 'bg-green-100 text-green-800' })
     }
     if (data.analysis?.highestRated === item.quoteId) {
-      badges.push({ label: 'เรตติ้งสูงสุด', color: 'bg-yellow-100 text-yellow-800' })
+      badges.push({ label: t('premium'), color: 'bg-yellow-100 text-yellow-800' })
     }
     if (data.analysis?.fastest === item.quoteId) {
-      badges.push({ label: 'เร็วที่สุด', color: 'bg-blue-100 text-blue-800' })
+      badges.push({ label: t('basic'), color: 'bg-blue-100 text-blue-800' })
     }
     return badges
   }
@@ -81,9 +90,9 @@ export function QuoteComparisonTable({
       {/* Sort tabs */}
       <div className="flex gap-2">
         {[
-          { key: 'price' as SortKey, label: 'ราคา' },
-          { key: 'rating' as SortKey, label: 'เรตติ้ง' },
-          { key: 'fast' as SortKey, label: 'เร็วที่สุด' },
+          { key: 'price' as SortKey, label: t('totalCost') },
+          { key: 'rating' as SortKey, label: t('recommended') },
+          { key: 'fast' as SortKey, label: t('basic') },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -103,7 +112,7 @@ export function QuoteComparisonTable({
       {sorted.map((item, index) => {
         const badges = getBadges(item)
         const isAcceptingThis = isAccepting === item.quoteId
-        const installmentMonth = item.pricing.monthlyInstallment
+        const _installmentMonth = item.pricing.monthlyInstallment
           ? Object.entries({}).reduce((_, [k]) => k, '36')
           : null
 
@@ -111,17 +120,18 @@ export function QuoteComparisonTable({
           <div
             key={item.quoteId}
             className={`bg-white rounded-2xl border-2 shadow-sm overflow-hidden transition-all ${
-              badges.some((b) => b.label === 'ราคาดีที่สุด')
+              badges.some((b) => b.label === t('best'))
                 ? 'border-green-400'
                 : index === 0
-                ? 'border-orange-400'
-                : 'border-gray-200'
+                  ? 'border-orange-400'
+                  : 'border-gray-200'
             }`}
           >
             {/* Top banner for best options */}
             {index === 0 && sortKey === 'price' && (
               <div className="bg-orange-500 text-white text-xs font-bold text-center py-1.5">
-                อันดับที่ 1 — {sortKey === 'price' ? 'ราคาถูกที่สุด' : sortKey === 'rating' ? 'เรตติ้งสูงสุด' : 'เร็วที่สุด'}
+                {t('recommended')} —{' '}
+                {sortKey === 'price' ? t('best') : sortKey === 'rating' ? t('premium') : t('basic')}
               </div>
             )}
 
@@ -135,13 +145,18 @@ export function QuoteComparisonTable({
                     </span>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm">{item.contractor.companyName}</p>
-                    <StarRating rating={item.contractor.rating} count={item.contractor.totalReviews} />
+                    <p className="font-semibold text-gray-900 text-sm">
+                      {item.contractor.companyName}
+                    </p>
+                    <StarRating
+                      rating={item.contractor.rating}
+                      count={item.contractor.totalReviews}
+                    />
                   </div>
                 </div>
                 {item.contractor.verified && (
                   <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium border border-blue-100">
-                    ✓ ยืนยันแล้ว
+                    ✓ {t('select')}
                   </span>
                 )}
               </div>
@@ -160,18 +175,20 @@ export function QuoteComparisonTable({
               {/* Price */}
               <div className="bg-gray-50 rounded-xl p-3">
                 <div className="flex items-baseline justify-between mb-1">
-                  <span className="text-gray-500 text-xs">ราคารวมทั้งสิ้น</span>
+                  <span className="text-gray-500 text-xs">{t('totalCost')}</span>
                   {item.pricing.discountPct > 0 && (
                     <span className="text-xs text-green-600 font-medium">
-                      ลด {item.pricing.discountPct.toFixed(1)}%
+                      {t('saving')} {item.pricing.discountPct.toFixed(1)}%
                     </span>
                   )}
                 </div>
-                <p className="text-2xl font-bold text-orange-600">{formatThb(item.pricing.totalPrice)}</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatThb(item.pricing.totalPrice)}
+                </p>
                 <p className="text-xs text-gray-400">{formatThb(item.pricing.pricePerKw)}/kW</p>
                 {item.pricing.hasFinancing && item.pricing.monthlyInstallment && (
                   <p className="text-xs text-blue-600 mt-1 font-medium">
-                    หรือผ่อน {formatThb(item.pricing.monthlyInstallment)}/เดือน
+                    {t('perMonth')}: {formatThb(item.pricing.monthlyInstallment)}
                   </p>
                 )}
               </div>
@@ -179,23 +196,25 @@ export function QuoteComparisonTable({
               {/* System specs comparison rows */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">แผงโซลาร์</span>
+                  <span className="text-gray-500">{t('panelBrand')}</span>
                   <span className="font-medium text-gray-800 text-right">
                     {item.system.panelBrand} {item.system.panelWattage}W × {item.system.panelCount}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">ขนาดรวม</span>
-                  <span className="font-medium text-gray-800">{item.system.totalKw.toFixed(2)} kW</span>
+                  <span className="text-gray-500">{t('systemSize')}</span>
+                  <span className="font-medium text-gray-800">
+                    {item.system.totalKw.toFixed(2)} kW
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">อินเวอร์เตอร์</span>
+                  <span className="text-gray-500">{t('inverterBrand')}</span>
                   <span className="font-medium text-gray-800">{item.system.inverterBrand}</span>
                 </div>
                 {item.system.hasBattery && (
                   <div className="flex justify-between">
-                    <span className="text-gray-500">แบตเตอรี่</span>
-                    <span className="font-medium text-green-600">มีแบตเตอรี่</span>
+                    <span className="text-gray-500">{t('equipment')}</span>
+                    <span className="font-medium text-green-600">{t('equipment')}</span>
                   </div>
                 )}
               </div>
@@ -203,7 +222,7 @@ export function QuoteComparisonTable({
               {/* Timeline */}
               <div className="flex items-center justify-between text-sm bg-blue-50 rounded-xl px-3 py-2">
                 <div>
-                  <p className="text-gray-500 text-xs">ติดตั้งเสร็จ</p>
+                  <p className="text-gray-500 text-xs">{t('installation')}</p>
                   <p className="font-medium text-gray-800">
                     {new Date(item.timeline.installationEnd).toLocaleDateString('th-TH', {
                       day: 'numeric',
@@ -212,35 +231,47 @@ export function QuoteComparisonTable({
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-gray-500 text-xs">ระยะเวลา</p>
-                  <p className="font-medium text-gray-800">{item.timeline.totalDays} วัน</p>
+                  <p className="text-gray-500 text-xs">{t('vs')}</p>
+                  <p className="font-medium text-gray-800">
+                    {item.timeline.totalDays} {t('years')}
+                  </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-gray-500 text-xs">ประหยัด/เดือน</p>
-                  <p className="font-medium text-green-700">{formatThb(item.savings.monthlySavingsThb)}</p>
+                  <p className="text-gray-500 text-xs">{t('perMonth')}</p>
+                  <p className="font-medium text-green-700">
+                    {formatThb(item.savings.monthlySavingsThb)}
+                  </p>
                 </div>
               </div>
 
               {/* Warranty quick view */}
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
                 <div className="bg-gray-50 rounded-lg py-2">
-                  <p className="text-gray-400">แผง</p>
-                  <p className="font-bold text-gray-700">{item.warranty.panelYears} ปี</p>
+                  <p className="text-gray-400">{t('feature')}</p>
+                  <p className="font-bold text-gray-700">
+                    {item.warranty.panelYears} {t('years')}
+                  </p>
                 </div>
                 <div className="bg-gray-50 rounded-lg py-2">
-                  <p className="text-gray-400">อินเวอร์เตอร์</p>
-                  <p className="font-bold text-gray-700">{item.warranty.inverterYears} ปี</p>
+                  <p className="text-gray-400">{t('inverterBrand')}</p>
+                  <p className="font-bold text-gray-700">
+                    {item.warranty.inverterYears} {t('years')}
+                  </p>
                 </div>
                 <div className="bg-gray-50 rounded-lg py-2">
-                  <p className="text-gray-400">ติดตั้ง</p>
-                  <p className="font-bold text-gray-700">{item.warranty.installationYears} ปี</p>
+                  <p className="text-gray-400">{t('installation')}</p>
+                  <p className="font-bold text-gray-700">
+                    {item.warranty.installationYears} {t('years')}
+                  </p>
                 </div>
               </div>
 
               {/* Payback */}
               <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-500">คืนทุนใน</span>
-                <span className="font-bold text-orange-700">{item.savings.paybackYears.toFixed(1)} ปี</span>
+                <span className="text-gray-500">{t('payback')}</span>
+                <span className="font-bold text-orange-700">
+                  {item.savings.paybackYears.toFixed(1)} {t('years')}
+                </span>
               </div>
 
               {/* Action buttons */}
@@ -249,13 +280,13 @@ export function QuoteComparisonTable({
                   onClick={() => onViewDetail(item.quoteId)}
                   className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  ดูรายละเอียด
+                  {t('compare')}
                 </button>
                 <button
                   onClick={() => setShowDeclineModal(item.quoteId)}
                   className="py-2.5 px-3 border border-red-200 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors"
                 >
-                  ปฏิเสธ
+                  {t('close')}
                 </button>
                 <button
                   onClick={() => onAccept(item.quoteId)}
@@ -266,7 +297,7 @@ export function QuoteComparisonTable({
                       : 'bg-orange-500 text-white hover:bg-orange-600'
                   }`}
                 >
-                  {isAcceptingThis ? '...' : 'เลือกรายนี้'}
+                  {isAcceptingThis ? '...' : t('select')}
                 </button>
               </div>
             </div>
@@ -278,8 +309,8 @@ export function QuoteComparisonTable({
       {showDeclineModal && (
         <div className="fixed inset-0 bg-black/40 flex items-end justify-center z-50">
           <div className="bg-white rounded-t-2xl w-full max-w-lg p-5 space-y-4">
-            <h3 className="font-bold text-gray-900">ปฏิเสธใบเสนอราคา</h3>
-            <p className="text-sm text-gray-500">กรุณาระบุเหตุผล (ไม่บังคับ)</p>
+            <h3 className="font-bold text-gray-900">{t('title')}</h3>
+            <p className="text-sm text-gray-500">{t('noQuotes')}</p>
             <textarea
               value={declineReason}
               onChange={(e) => setDeclineReason(e.target.value)}
@@ -292,13 +323,13 @@ export function QuoteComparisonTable({
                 onClick={() => setShowDeclineModal(null)}
                 className="flex-1 py-3 border border-gray-200 rounded-xl text-sm font-medium text-gray-700"
               >
-                ยกเลิก
+                {t('close')}
               </button>
               <button
                 onClick={handleDeclineConfirm}
                 className="flex-1 py-3 bg-red-500 text-white rounded-xl text-sm font-bold hover:bg-red-600"
               >
-                ยืนยันปฏิเสธ
+                {t('export')}
               </button>
             </div>
           </div>

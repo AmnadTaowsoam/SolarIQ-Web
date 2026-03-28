@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Proposal, SendProposalRequest, UpdateStatusRequest } from '../../hooks/useProposals'
 import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
@@ -17,6 +18,7 @@ export function ProposalPreview({
   onUpdateStatus,
   onRegenerate,
 }: ProposalPreviewProps) {
+  const t = useTranslations('proposalPreview')
   const [showSendModal, setShowSendModal] = useState(false)
   const [showStatusModal, setShowStatusModal] = useState(false)
   const [sendChannel, setSendChannel] = useState<'line' | 'email'>('line')
@@ -29,10 +31,10 @@ export function ProposalPreview({
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { label: 'รอดำเนินการ', color: 'bg-yellow-100 text-yellow-800' },
-      accepted: { label: 'ยอมรับ', color: 'bg-green-100 text-green-800' },
-      declined: { label: 'ปฏิเสธ', color: 'bg-red-100 text-red-800' },
-      expired: { label: 'หมดอายุ', color: 'bg-gray-100 text-gray-800' },
+      pending: { label: t('note'), color: 'bg-yellow-100 text-yellow-800' },
+      accepted: { label: t('accept'), color: 'bg-green-100 text-green-800' },
+      declined: { label: t('decline'), color: 'bg-red-100 text-red-800' },
+      expired: { label: t('validUntil'), color: 'bg-gray-100 text-gray-800' },
     }
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending
     return <Badge className={config.color}>{config.label}</Badge>
@@ -106,7 +108,7 @@ export function ProposalPreview({
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-white text-lg font-bold">ใบเสนอราคา</h3>
+            <h3 className="text-white text-lg font-bold">{t('title')}</h3>
             <p className="text-amber-100 text-sm">
               เลขที่: {proposal.id.slice(0, 8).toUpperCase()}
             </p>
@@ -120,25 +122,26 @@ export function ProposalPreview({
         {/* Key Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-blue-50 rounded-lg p-4 text-center">
-            <div className="text-sm text-gray-600 mb-1">ขนาดระบบ</div>
+            <div className="text-sm text-gray-600 mb-1">{t('systemSize')}</div>
             <div className="text-2xl font-bold text-blue-900">
               {proposal.system_size_kw.toFixed(2)} <span className="text-sm font-normal">kWp</span>
             </div>
           </div>
           <div className="bg-green-50 rounded-lg p-4 text-center">
-            <div className="text-sm text-gray-600 mb-1">ราคาติดตั้ง</div>
+            <div className="text-sm text-gray-600 mb-1">{t('installationCost')}</div>
             <div className="text-2xl font-bold text-green-900">
               {formatCurrency(proposal.estimated_cost)}
             </div>
           </div>
           <div className="bg-purple-50 rounded-lg p-4 text-center">
-            <div className="text-sm text-gray-600 mb-1">คืนทุนภายใน</div>
+            <div className="text-sm text-gray-600 mb-1">{t('payback')}</div>
             <div className="text-2xl font-bold text-purple-900">
-              {proposal.payback_years.toFixed(1)} <span className="text-sm font-normal">ปี</span>
+              {proposal.payback_years.toFixed(1)}{' '}
+              <span className="text-sm font-normal">{t('years')}</span>
             </div>
           </div>
           <div className="bg-amber-50 rounded-lg p-4 text-center">
-            <div className="text-sm text-gray-600 mb-1">ออมเงิน/เดือน</div>
+            <div className="text-sm text-gray-600 mb-1">{t('annualSavings')}</div>
             <div className="text-2xl font-bold text-amber-900">
               {formatCurrency(proposal.annual_savings / 12)}
             </div>
@@ -148,21 +151,23 @@ export function ProposalPreview({
         {/* Details */}
         <div className="space-y-3">
           <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">ผลิตไฟฟ้าต่อปี</span>
+            <span className="text-gray-600">{t('annualProduction')}</span>
             <span className="font-semibold">{proposal.annual_production_kwh.toFixed(0)} kWh</span>
           </div>
           <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">ออมเงินต่อปี</span>
+            <span className="text-gray-600">{t('annualSavings')}</span>
             <span className="font-semibold text-green-600">
               {formatCurrency(proposal.annual_savings)}
             </span>
           </div>
           <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">ROI 25 ปี</span>
+            <span className="text-gray-600">
+              {t('roi')} 25 {t('years')}
+            </span>
             <span className="font-semibold text-blue-600">{proposal.roi_percent.toFixed(1)}%</span>
           </div>
           <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">วันหมดอายุ</span>
+            <span className="text-gray-600">{t('validUntil')}</span>
             <span className="font-semibold">{formatDate(proposal.valid_until)}</span>
           </div>
         </div>
@@ -170,26 +175,26 @@ export function ProposalPreview({
         {/* Tracking Info */}
         <div className="bg-gray-50 rounded-lg p-4 space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">จำนวนครั้งที่ดู</span>
+            <span className="text-sm text-gray-600">{t('page')}</span>
             <span className="font-semibold">{proposal.view_count}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">เวลาดูรวม</span>
+            <span className="text-sm text-gray-600">{t('of')}</span>
             <span className="font-semibold">
-              {Math.floor(proposal.total_view_duration_seconds / 60)} นาที
+              {Math.floor(proposal.total_view_duration_seconds / 60)} {t('of')}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">ส่งผ่าน LINE</span>
+            <span className="text-sm text-gray-600">{t('share')} LINE</span>
             <span className="font-semibold">{proposal.sent_via_line ? '✅' : '❌'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">ส่งผ่าน Email</span>
+            <span className="text-sm text-gray-600">{t('email')}</span>
             <span className="font-semibold">{proposal.sent_via_email ? '✅' : '❌'}</span>
           </div>
           {proposal.last_viewed_at && (
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">ดูล่าสุด</span>
+              <span className="text-sm text-gray-600">{t('date')}</span>
               <span className="font-semibold text-sm">{formatDate(proposal.last_viewed_at)}</span>
             </div>
           )}
@@ -198,7 +203,7 @@ export function ProposalPreview({
         {/* AI Summary */}
         {proposal.ai_summary && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <h4 className="font-semibold text-amber-900 mb-2">สรุปผลวิเคราะห์โดย AI</h4>
+            <h4 className="font-semibold text-amber-900 mb-2">{t('executiveSummary')}</h4>
             <p className="text-sm text-amber-800 whitespace-pre-wrap">{proposal.ai_summary}</p>
           </div>
         )}
@@ -206,7 +211,7 @@ export function ProposalPreview({
         {/* Custom Notes */}
         {proposal.custom_notes && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="font-semibold text-blue-900 mb-2">หมายเหตุเพิ่มเติม</h4>
+            <h4 className="font-semibold text-blue-900 mb-2">{t('note')}</h4>
             <p className="text-sm text-blue-800 whitespace-pre-wrap">{proposal.custom_notes}</p>
           </div>
         )}
@@ -214,7 +219,7 @@ export function ProposalPreview({
         {/* Response Notes */}
         {proposal.response_notes && (
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <h4 className="font-semibold text-gray-900 mb-2">หมายเหตุการตอบรับ</h4>
+            <h4 className="font-semibold text-gray-900 mb-2">{t('terms')}</h4>
             <p className="text-sm text-gray-800 whitespace-pre-wrap">{proposal.response_notes}</p>
           </div>
         )}
@@ -226,24 +231,24 @@ export function ProposalPreview({
           <div className="flex gap-2">
             {proposal.pdf_url && (
               <Button variant="secondary" onClick={() => window.open(proposal.pdf_url, '_blank')}>
-                📄 ดาวน์โหลด PDF
+                📄 {t('download')}
               </Button>
             )}
             {onRegenerate && (
               <Button variant="outline" onClick={() => onRegenerate(proposal.id)}>
-                🔄 สร้างใหม่
+                🔄 {t('print')}
               </Button>
             )}
           </div>
           <div className="flex gap-2">
             {onSend && proposal.status === 'pending' && (
               <Button variant="primary" onClick={() => setShowSendModal(true)}>
-                📤 ส่งใบเสนอราคา
+                📤 {t('title')}
               </Button>
             )}
             {onUpdateStatus && proposal.status === 'pending' && (
               <Button variant="outline" onClick={() => setShowStatusModal(true)}>
-                ✏️ อัปเดตสถานะ
+                ✏️ {t('nextSteps')}
               </Button>
             )}
           </div>
@@ -254,11 +259,11 @@ export function ProposalPreview({
       {showSendModal && (
         <Modal onClose={() => setShowSendModal(false)}>
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold mb-4">ส่งใบเสนอราคา</h3>
+            <h3 className="text-lg font-bold mb-4">{t('title')}</h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  ช่องทางการส่ง
+                  {t('contactUs')}
                 </label>
                 <select
                   value={sendChannel}
@@ -271,7 +276,7 @@ export function ProposalPreview({
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  ผู้รับ {sendChannel === 'line' ? '(LINE User ID)' : '(อีเมล)'}
+                  {t('preparedFor')} {sendChannel === 'line' ? '(LINE User ID)' : `(${t('email')})`}
                 </label>
                 <input
                   type="text"
@@ -282,9 +287,7 @@ export function ProposalPreview({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  ข้อความ (ไม่บังคับ)
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('note')}</label>
                 <textarea
                   value={sendMessage}
                   onChange={(e) => setSendMessage(e.target.value)}
@@ -299,10 +302,10 @@ export function ProposalPreview({
                   onClick={() => setShowSendModal(false)}
                   disabled={isSending}
                 >
-                  ยกเลิก
+                  {t('decline')}
                 </Button>
                 <Button variant="primary" onClick={handleSend} disabled={isSending}>
-                  {isSending ? 'กำลังส่ง...' : 'ส่ง'}
+                  {isSending ? `${t('contactUs')}...` : t('share')}
                 </Button>
               </div>
             </div>
@@ -314,24 +317,24 @@ export function ProposalPreview({
       {showStatusModal && (
         <Modal onClose={() => setShowStatusModal(false)}>
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold mb-4">อัปเดตสถานะ</h3>
+            <h3 className="text-lg font-bold mb-4">{t('nextSteps')}</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">สถานะ</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('financialAnalysis')}
+                </label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as 'accepted' | 'declined' | 'expired')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
-                  <option value="accepted">ยอมรับ</option>
-                  <option value="declined">ปฏิเสธ</option>
-                  <option value="expired">หมดอายุ</option>
+                  <option value="accepted">{t('accept')}</option>
+                  <option value="declined">{t('decline')}</option>
+                  <option value="expired">{t('validUntil')}</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  หมายเหตุ (ไม่บังคับ)
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('note')}</label>
                 <textarea
                   value={responseNotes}
                   onChange={(e) => setResponseNotes(e.target.value)}
@@ -346,10 +349,10 @@ export function ProposalPreview({
                   onClick={() => setShowStatusModal(false)}
                   disabled={isUpdating}
                 >
-                  ยกเลิก
+                  {t('decline')}
                 </Button>
                 <Button variant="primary" onClick={handleUpdateStatus} disabled={isUpdating}>
-                  {isUpdating ? 'กำลังอัปเดต...' : 'อัปเดต'}
+                  {isUpdating ? `${t('nextSteps')}...` : t('accept')}
                 </Button>
               </div>
             </div>

@@ -18,29 +18,29 @@ export function UpgradeCTA({
   showBillingInfo = true,
   className = '',
 }: UpgradeCTAProps) {
-  const t = useTranslations('billingPolicy')
+  const t = useTranslations('upgradeCTA')
   const [showDetails, setShowDetails] = useState(false)
 
   const steps = [
     {
       icon: Calendar,
-      title: t('howBillingWorks.step1'),
-      description: 'ไม่มีการเรียกเก็บเงิน',
+      title: t('step1Title'),
+      description: t('step1Desc'),
     },
     {
       icon: CreditCard,
-      title: t('howBillingWorks.step2'),
-      description: 'คุณต้องเลือกแพ็กเกจด้วยตนเอง',
+      title: t('step2Title'),
+      description: t('step2Desc'),
     },
     {
       icon: Shield,
-      title: t('howBillingWorks.step3'),
-      description: 'รองรับหลายช่องทาง',
+      title: t('step3Title'),
+      description: t('step3Desc'),
     },
     {
       icon: Info,
-      title: t('howBillingWorks.step4'),
-      description: 'ยกเลิกได้ตลอดเวลา',
+      title: t('step4Title'),
+      description: t('step4Desc'),
     },
   ]
 
@@ -50,12 +50,10 @@ export function UpgradeCTA({
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {currentPlan === 'free' ? 'อัปเกรดแพ็กเกจ' : 'เปลี่ยนแพ็กเกจ'}
+              {currentPlan === 'free' ? t('upgradeTitle') : t('changeTitle')}
             </h3>
             {currentPlan === 'free' && (
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                หลังจากทดลองใช้: ฟรี 5 leads/เดือน หรืออัปเกรดเพื่อรับฟีเจอร์เต็มรูปแบบ
-              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{t('freeDesc')}</p>
             )}
           </div>
 
@@ -67,12 +65,12 @@ export function UpgradeCTA({
             >
               {showDetails ? (
                 <>
-                  <span>ซ่อนรายละเอียด</span>
+                  <span>{t('hideDetails')}</span>
                   <ChevronUp className="ml-1 h-4 w-4" />
                 </>
               ) : (
                 <>
-                  <span>ดูวิธีการเรียกเก็บเงิน</span>
+                  <span>{t('showBillingInfo')}</span>
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </>
               )}
@@ -102,28 +100,22 @@ export function UpgradeCTA({
             </div>
 
             <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 p-4">
-              <h4 className="mb-3 font-semibold text-gray-900 dark:text-white">คำถามที่พบบ่อย</h4>
+              <h4 className="mb-3 font-semibold text-gray-900 dark:text-white">{t('faqTitle')}</h4>
               <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                 <p>
-                  <strong>Q: {t('questions.q1.question')}</strong>
+                  <strong>Q: {t('faq1Question')}</strong>
                   <br />
-                  <span className="text-gray-600 dark:text-gray-400">
-                    A: {t('questions.q1.answer')}
-                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">A: {t('faq1Answer')}</span>
                 </p>
                 <p>
-                  <strong>Q: {t('questions.q2.question')}</strong>
+                  <strong>Q: {t('faq2Question')}</strong>
                   <br />
-                  <span className="text-gray-600 dark:text-gray-400">
-                    A: {t('questions.q2.answer')}
-                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">A: {t('faq2Answer')}</span>
                 </p>
                 <p>
-                  <strong>Q: {t('questions.q3.question')}</strong>
+                  <strong>Q: {t('faq3Question')}</strong>
                   <br />
-                  <span className="text-gray-600 dark:text-gray-400">
-                    A: {t('questions.q3.answer')}
-                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">A: {t('faq3Answer')}</span>
                 </p>
               </div>
             </div>
@@ -133,7 +125,7 @@ export function UpgradeCTA({
                 href="/pricing-plans"
                 className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white hover:bg-primary-700 transition-colors"
               >
-                ดูแพ็กเกจทั้งหมด
+                {t('viewAllPlans')}
               </Link>
             </div>
           </div>
@@ -145,7 +137,7 @@ export function UpgradeCTA({
               onClick={onUpgradeClick}
               className="w-full rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white hover:bg-primary-700 transition-colors"
             >
-              {t('trialInfo.upgradeCTA')}
+              {t('upgradeCTA')}
             </button>
           </div>
         )}

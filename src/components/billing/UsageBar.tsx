@@ -1,62 +1,76 @@
-'use client';
+'use client'
 
 /**
  * Usage Bar Component (WK-017)
  * Progress bar showing resource usage vs quota with color coding
  */
 
-import React from 'react';
+import React from 'react'
+import { useTranslations } from 'next-intl'
 
 // ============== Props ==============
 
 interface UsageBarProps {
   /** Display label for the resource */
-  label: string;
+  label: string
   /** Current usage count */
-  current: number;
+  current: number
   /** Usage limit (null = unlimited) */
-  limit?: number | null;
+  limit?: number | null
   /** Pre-calculated usage percentage (null = unlimited) */
-  percentage?: number | null;
+  percentage?: number | null
 }
 
 // ============== Helpers ==============
 
 function getBarColor(percentage: number): string {
-  if (percentage > 90) return 'bg-red-500';
-  if (percentage > 70) return 'bg-yellow-500';
-  return 'bg-green-500';
+  if (percentage > 90) {
+    return 'bg-red-500'
+  }
+  if (percentage > 70) {
+    return 'bg-yellow-500'
+  }
+  return 'bg-green-500'
 }
 
 function getBarBgColor(percentage: number): string {
-  if (percentage > 90) return 'bg-red-100';
-  if (percentage > 70) return 'bg-yellow-100';
-  return 'bg-green-100';
+  if (percentage > 90) {
+    return 'bg-red-100'
+  }
+  if (percentage > 70) {
+    return 'bg-yellow-100'
+  }
+  return 'bg-green-100'
 }
 
 function getTextColor(percentage: number): string {
-  if (percentage > 90) return 'text-red-600';
-  if (percentage > 70) return 'text-yellow-600';
-  return 'text-green-600';
+  if (percentage > 90) {
+    return 'text-red-600'
+  }
+  if (percentage > 70) {
+    return 'text-yellow-600'
+  }
+  return 'text-green-600'
 }
 
 function formatNumber(value: number): string {
-  return new Intl.NumberFormat('th-TH').format(value);
+  return new Intl.NumberFormat('th-TH').format(value)
 }
 
 // ============== Component ==============
 
 export function UsageBar({ label, current, limit, percentage }: UsageBarProps) {
-  const isUnlimited = limit === null || limit === undefined;
+  const t = useTranslations('usageBar')
+  const isUnlimited = limit === null || limit === undefined
   const computedPercentage = isUnlimited
     ? 0
     : percentage !== null && percentage !== undefined
-    ? percentage
-    : limit && limit > 0
-    ? Math.min((current / limit) * 100, 100)
-    : 0;
+      ? percentage
+      : limit && limit > 0
+        ? Math.min((current / limit) * 100, 100)
+        : 0
 
-  const clampedPercentage = Math.min(Math.max(computedPercentage, 0), 100);
+  const clampedPercentage = Math.min(Math.max(computedPercentage, 0), 100)
 
   return (
     <div className="w-full">
@@ -68,14 +82,13 @@ export function UsageBar({ label, current, limit, percentage }: UsageBarProps) {
             {isUnlimited ? (
               <>
                 {formatNumber(current)} /{' '}
-                <span className="text-purple-600 font-medium">ไม่จำกัด</span>
+                <span className="text-purple-600 font-medium">{t('unlimited')}</span>
               </>
             ) : (
               <>
-                <span className={getTextColor(clampedPercentage)}>
-                  {formatNumber(current)}
-                </span>
+                <span className={getTextColor(clampedPercentage)}>{formatNumber(current)}</span>
                 {' / '}
+                {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
                 {formatNumber(limit!)}
               </>
             )}
@@ -111,7 +124,7 @@ export function UsageBar({ label, current, limit, percentage }: UsageBarProps) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
-export default UsageBar;
+export default UsageBar

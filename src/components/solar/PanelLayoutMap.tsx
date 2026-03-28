@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useMemo } from 'react'
+import { useTranslations } from 'next-intl'
 import { GoogleMap, useJsApiLoader, InfoWindow, Polygon, Rectangle } from '@react-google-maps/api'
 import { Card, CardHeader, CardBody } from '@/components/ui'
 import { Layers, Thermometer, Zap } from 'lucide-react'
@@ -25,20 +26,20 @@ const MAP_CONTAINER_STYLE = {
 const PANEL_WIDTH_M = 0.99
 const PANEL_HEIGHT_M = 1.65
 
-const ENERGY_COLORS = [
-  { threshold: 0, color: '#ef4444', label: 'ต่ำ' },
-  { threshold: 300, color: '#f97316', label: 'ปานกลาง' },
-  { threshold: 400, color: '#eab308', label: 'ดี' },
-  { threshold: 500, color: '#22c55e', label: 'ดีเยี่ยม' },
+const ENERGY_COLOR_KEYS = [
+  { threshold: 0, color: '#ef4444', labelKey: 'low' },
+  { threshold: 300, color: '#f97316', labelKey: 'medium' },
+  { threshold: 400, color: '#eab308', labelKey: 'optimal' },
+  { threshold: 500, color: '#22c55e', labelKey: 'optimal' },
 ]
 
 function getPanelColor(energyKwh: number): string {
-  for (let i = ENERGY_COLORS.length - 1; i >= 0; i--) {
-    if (energyKwh >= ENERGY_COLORS[i].threshold) {
-      return ENERGY_COLORS[i].color
+  for (let i = ENERGY_COLOR_KEYS.length - 1; i >= 0; i--) {
+    if (energyKwh >= ENERGY_COLOR_KEYS[i].threshold) {
+      return ENERGY_COLOR_KEYS[i].color
     }
   }
-  return ENERGY_COLORS[0].color
+  return ENERGY_COLOR_KEYS[0].color
 }
 
 /**
@@ -118,6 +119,7 @@ export function PanelLayoutMap({
   segments,
   panelConfigs,
 }: PanelLayoutMapProps) {
+  const t = useTranslations('panelLayout')
   const [mapType, setMapType] = useState<'satellite' | 'roadmap'>('satellite')
   const [selectedPanel, setSelectedPanel] = useState<(SolarPanel & { index: number }) | null>(null)
   const maxPanels = panels.length
@@ -239,9 +241,7 @@ export function PanelLayoutMap({
   if (loadError) {
     return (
       <Card>
-        <CardBody className="p-6 text-center text-red-500">
-          ไม่สามารถโหลด Google Maps ได้ กรุณาตรวจสอบ API Key
-        </CardBody>
+        <CardBody className="p-6 text-center text-red-500">{t('title')}</CardBody>
       </Card>
     )
   }
@@ -259,8 +259,8 @@ export function PanelLayoutMap({
   return (
     <Card>
       <CardHeader
-        title="ผังแผงโซลาร์บนหลังคา"
-        subtitle={`แสดง ${visiblePanels.length} จาก ${maxPanels} แผง (พิกัดจริงจาก Google Solar API)`}
+        title={t('title')}
+        subtitle={`${visiblePanels.length} / ${maxPanels} ${t('panels')}`}
         action={
           <div className="flex items-center gap-2">
             <button
@@ -279,7 +279,7 @@ export function PanelLayoutMap({
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-[var(--brand-radius)] border border-[var(--brand-border)] text-[var(--brand-text)] hover:bg-[var(--brand-surface)] transition-colors"
             >
               <Layers className="w-4 h-4" />
-              {mapType === 'satellite' ? 'แผนที่' : 'ดาวเทียม'}
+              {mapType === 'satellite' ? 'Map' : 'Satellite'}
             </button>
           </div>
         }
@@ -289,7 +289,7 @@ export function PanelLayoutMap({
       <div className="px-4 py-3 border-b border-[var(--brand-border)] space-y-2">
         <div className="flex items-center gap-3">
           <label className="text-sm text-[var(--brand-text)] whitespace-nowrap font-medium">
-            จำนวนแผง:
+            {t('panels')}:
           </label>
           <input
             type="range"
@@ -303,7 +303,7 @@ export function PanelLayoutMap({
             }}
           />
           <span className="text-sm font-bold text-[var(--brand-primary)] min-w-[5rem] text-right">
-            {panelCount} แผง
+            {panelCount} {t('panels')}
           </span>
         </div>
 
@@ -312,17 +312,19 @@ export function PanelLayoutMap({
           <div className="flex flex-wrap items-center gap-4 text-sm">
             <div className="flex items-center gap-1.5">
               <Zap className="w-4 h-4 text-[var(--brand-primary)]" />
-              <span className="text-[var(--brand-text-secondary)]">ติดตั้ง {panelCount} แผง =</span>
+              <span className="text-[var(--brand-text-secondary)]">
+                {panelCount} {t('panels')} =
+              </span>
               <span className="font-bold text-[var(--brand-text)]">
-                {currentConfigEnergy.yearlyEnergyDcKwh.toLocaleString()} kWh/ปี
+                {currentConfigEnergy.yearlyEnergyDcKwh.toLocaleString()} kWh
               </span>
             </div>
             <span className="text-[var(--brand-text-secondary)]">
-              ({((panelCount / maxPanels) * 100).toFixed(0)}% ของความจุสูงสุด)
+              ({((panelCount / maxPanels) * 100).toFixed(0)}% {t('capacity')})
             </span>
             {currentConfigEnergy.roofSegmentSummaries.length > 0 && (
               <span className="text-xs text-[var(--brand-text-secondary)]">
-                | {currentConfigEnergy.roofSegmentSummaries.length} ส่วนหลังคา
+                | {currentConfigEnergy.roofSegmentSummaries.length} {t('area')}
               </span>
             )}
           </div>
@@ -397,31 +399,31 @@ export function PanelLayoutMap({
             >
               <div className="p-2 min-w-[220px]">
                 <h4 className="font-semibold text-sm text-gray-900 mb-2">
-                  แผงที่ {selectedPanel.index + 1}
+                  {t('panels')} {selectedPanel.index + 1}
                 </h4>
                 <div className="space-y-1.5 text-xs text-gray-600">
                   <div className="flex justify-between">
-                    <span>ทิศทางวาง:</span>
+                    <span>{t('orientation')}:</span>
                     <span className="font-medium">
-                      {selectedPanel.orientation === 'LANDSCAPE' ? 'แนวนอน' : 'แนวตั้ง'}
+                      {selectedPanel.orientation === 'LANDSCAPE' ? t('east') : t('north')}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>ส่วนหลังคา:</span>
+                    <span>{t('area')}:</span>
                     <span className="font-medium">
                       Segment {selectedPanel.segmentIndex + 1}
                       {segmentAzimuths[selectedPanel.segmentIndex] !== undefined &&
-                        ` (${segmentAzimuths[selectedPanel.segmentIndex]}°)`}
+                        ` (${segmentAzimuths[selectedPanel.segmentIndex]}${t('degrees')})`}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>ผลิตไฟต่อปี:</span>
+                    <span>{t('capacity')}:</span>
                     <span className="font-bold text-green-600">
                       {(selectedPanel.yearlyEnergyDcKwh ?? 0).toFixed(0)} kWh
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>พิกัด:</span>
+                    <span>{t('coordinates')}:</span>
                     <span className="font-mono text-[10px]">
                       {(selectedPanel.centerLat ?? 0).toFixed(6)},{' '}
                       {(selectedPanel.centerLng ?? 0).toFixed(6)}
@@ -435,20 +437,20 @@ export function PanelLayoutMap({
 
         {/* Legend */}
         <div className="px-4 py-3 border-t border-[var(--brand-border)] flex flex-wrap items-center gap-4 text-xs text-[var(--brand-text-secondary)]">
-          <span className="font-medium text-[var(--brand-text)]">ผลิตไฟต่อปี:</span>
-          {ENERGY_COLORS.map((ec, i) => (
+          <span className="font-medium text-[var(--brand-text)]">{t('capacity')}:</span>
+          {ENERGY_COLOR_KEYS.map((ec, i) => (
             <div key={i} className="flex items-center gap-1.5">
               <div
                 className="w-4 h-3 rounded-sm border border-white/50"
                 style={{ backgroundColor: ec.color }}
               />
               <span>
-                {ec.threshold}+ kWh ({ec.label})
+                {ec.threshold}+ kWh ({t(ec.labelKey as Parameters<typeof t>[0])})
               </span>
             </div>
           ))}
           <div className="ml-auto text-[10px]">
-            ขนาดแผง {PANEL_WIDTH_M}m × {PANEL_HEIGHT_M}m | หมุนตาม Azimuth ของหลังคา
+            {PANEL_WIDTH_M}m × {PANEL_HEIGHT_M}m | {t('tilt')} Azimuth
           </div>
         </div>
       </CardBody>

@@ -1,30 +1,31 @@
-'use client';
+'use client'
 
 /**
  * Subscription Card Component (WK-017)
  * Displays current subscription details with status badge and action buttons
  */
 
-import React from 'react';
-import { CalendarDays, CreditCard, RefreshCw, XCircle, ArrowRightCircle } from 'lucide-react';
-import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card';
-import { Badge, type BadgeProps } from '@/components/ui/Badge';
+import React from 'react'
+import { CalendarDays, CreditCard, RefreshCw, XCircle, ArrowRightCircle } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card'
+import { Badge, type BadgeProps } from '@/components/ui/Badge'
 import {
   type SubscriptionWithPlan,
   type SubscriptionStatus,
   formatPrice,
   getStatusText,
-} from '@/types/billing';
-import { useResumeSubscription } from '@/hooks/useBilling';
+} from '@/types/billing'
+import { useResumeSubscription } from '@/hooks/useBilling'
 
 // ============== Props ==============
 
 interface SubscriptionCardProps {
-  subscription: SubscriptionWithPlan;
-  onCancel: () => void;
-  onManagePayment: () => void;
-  onChangePlan?: () => void;
-  isProcessing?: boolean;
+  subscription: SubscriptionWithPlan
+  onCancel: () => void
+  onManagePayment: () => void
+  onChangePlan?: () => void
+  isProcessing?: boolean
 }
 
 // ============== Helpers ==============
@@ -32,18 +33,18 @@ interface SubscriptionCardProps {
 function getStatusBadgeVariant(status: SubscriptionStatus): BadgeProps['variant'] {
   switch (status) {
     case 'active':
-      return 'success';
+      return 'success'
     case 'trialing':
-      return 'info';
+      return 'info'
     case 'past_due':
-      return 'warning';
+      return 'warning'
     case 'canceled':
-      return 'danger';
+      return 'danger'
     case 'incomplete':
     case 'unpaid':
-      return 'warning';
+      return 'warning'
     default:
-      return 'default';
+      return 'default'
   }
 }
 
@@ -52,7 +53,7 @@ function formatDateThai(dateString: string): string {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  });
+  })
 }
 
 // ============== Component ==============
@@ -64,28 +65,30 @@ export function SubscriptionCard({
   onChangePlan,
   isProcessing = false,
 }: SubscriptionCardProps) {
-  const resumeMutation = useResumeSubscription();
+  const t = useTranslations('subscriptionCard')
+  const resumeMutation = useResumeSubscription()
 
-  const isCanceled = subscription.status === 'canceled' || subscription.cancel_at_period_end;
-  const isActive = subscription.status === 'active';
-  const isTrialing = subscription.status === 'trialing';
+  const isCanceled = subscription.status === 'canceled' || subscription.cancel_at_period_end
+  const isActive = subscription.status === 'active'
+  const isTrialing = subscription.status === 'trialing'
 
   const handleResume = async () => {
     try {
-      await resumeMutation.mutateAsync();
+      await resumeMutation.mutateAsync()
     } catch (error) {
-      console.error('Failed to resume subscription:', error);
+      // eslint-disable-next-line no-console
+      console.error('Failed to resume subscription:', error)
     }
-  };
+  }
 
-  const isResuming = resumeMutation.isPending;
-  const disabled = isProcessing || isResuming;
+  const isResuming = resumeMutation.isPending
+  const disabled = isProcessing || isResuming
 
   return (
     <Card>
       <CardHeader
-        title="การสมัครสมาชิกปัจจุบัน"
-        subtitle="รายละเอียดแพ็กเกจและสถานะการสมัครสมาชิก"
+        title={t('currentPlan')}
+        subtitle={t('subtitle')}
         action={
           <Badge variant={getStatusBadgeVariant(subscription.status)} size="md">
             {getStatusText(subscription.status)}
@@ -101,9 +104,11 @@ export function SubscriptionCard({
               <CreditCard className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">แพ็กเกจ</p>
+              <p className="text-sm text-gray-500">{t('planName')}</p>
               <p className="text-base font-semibold text-gray-900">{subscription.plan.name}</p>
-              <p className="text-sm text-gray-500">{formatPrice(subscription.plan.price_thb)}/เดือน</p>
+              <p className="text-sm text-gray-500">
+                {formatPrice(subscription.plan.price_thb)}/{t('perMonth')}
+              </p>
             </div>
           </div>
 
@@ -113,12 +118,12 @@ export function SubscriptionCard({
               <CalendarDays className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">รอบบิลปัจจุบัน</p>
+              <p className="text-sm text-gray-500">{t('currentPeriod')}</p>
               <p className="text-sm font-medium text-gray-900">
                 {formatDateThai(subscription.current_period_start)}
               </p>
               <p className="text-sm text-gray-500">
-                ถึง {formatDateThai(subscription.current_period_end)}
+                {t('to')} {formatDateThai(subscription.current_period_end)}
               </p>
             </div>
           </div>
@@ -129,16 +134,16 @@ export function SubscriptionCard({
               <RefreshCw className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">ต่ออายุถัดไป</p>
+              <p className="text-sm text-gray-500">{t('renewsOn')}</p>
               {subscription.cancel_at_period_end ? (
-                <p className="text-sm font-medium text-red-600">จะสิ้นสุดเมื่อหมดรอบบิล</p>
+                <p className="text-sm font-medium text-red-600">{t('endsAtPeriod')}</p>
               ) : (
                 <p className="text-sm font-medium text-gray-900">
                   {formatDateThai(subscription.current_period_end)}
                 </p>
               )}
               <p className="text-sm text-gray-500">
-                เหลืออีก {subscription.days_until_period_end} วัน
+                {t('daysLeft', { days: subscription.days_until_period_end })}
               </p>
             </div>
           </div>
@@ -150,7 +155,7 @@ export function SubscriptionCard({
                 <CalendarDays className="w-5 h-5 text-yellow-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">ทดลองใช้สิ้นสุด</p>
+                <p className="text-sm text-gray-500">{t('trialEndsOn')}</p>
                 <p className="text-sm font-medium text-gray-900">
                   {formatDateThai(subscription.trial_end)}
                 </p>
@@ -163,11 +168,7 @@ export function SubscriptionCard({
         {subscription.cancel_at_period_end && (
           <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
             <p className="text-sm text-yellow-800">
-              การสมัครสมาชิกของคุณถูกยกเลิกแล้ว แต่ยังสามารถใช้งานได้จนถึง{' '}
-              <span className="font-semibold">
-                {formatDateThai(subscription.current_period_end)}
-              </span>{' '}
-              คุณสามารถกลับมาใช้งานได้อีกครั้งก่อนวันดังกล่าว
+              {t('cancelledWarning', { date: formatDateThai(subscription.current_period_end) })}
             </p>
           </div>
         )}
@@ -183,7 +184,7 @@ export function SubscriptionCard({
               className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowRightCircle className="w-4 h-4" />
-              เปลี่ยนแพ็กเกจ
+              {t('changePlan')}
             </button>
           )}
 
@@ -195,7 +196,7 @@ export function SubscriptionCard({
               className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <RefreshCw className={`w-4 h-4 ${isResuming ? 'animate-spin' : ''}`} />
-              {isResuming ? 'กำลังดำเนินการ...' : 'กลับมาใช้งานต่อ'}
+              {isResuming ? t('resuming') : t('resume')}
             </button>
           )}
 
@@ -206,7 +207,7 @@ export function SubscriptionCard({
             className="inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <CreditCard className="w-4 h-4" />
-            จัดการการชำระเงิน
+            {t('manage')}
           </button>
 
           {/* Cancel button (only if active/trialing and not already canceling) */}
@@ -217,13 +218,13 @@ export function SubscriptionCard({
               className="inline-flex items-center gap-2 px-4 py-2 text-red-600 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <XCircle className="w-4 h-4" />
-              ยกเลิกการสมัคร
+              {t('cancel')}
             </button>
           )}
         </div>
       </CardFooter>
     </Card>
-  );
+  )
 }
 
-export default SubscriptionCard;
+export default SubscriptionCard

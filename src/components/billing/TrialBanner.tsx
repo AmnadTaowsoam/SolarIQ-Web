@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { Clock, AlertTriangle, CheckCircle, X } from 'lucide-react'
 import { Card, CardBody } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { useTranslations } from 'next-intl'
 
 interface TrialBannerProps {
   daysRemaining: number
@@ -30,6 +31,7 @@ export default function TrialBanner({
   onDismiss,
   showDismiss = false,
 }: TrialBannerProps) {
+  const t = useTranslations('trialBanner')
   const [timeRemaining, setTimeRemaining] = useState<{
     days: number
     hours: number
@@ -98,7 +100,7 @@ export default function TrialBanner({
           <div className="flex items-center gap-2">
             {critical ? <AlertTriangle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
             <span>
-              {planName === 'free' ? 'แพลน Free' : `ทดลองใช้งาน — เหลืออีก ${daysRemaining} วัน`}
+              {planName === 'free' ? t('freePlan') : t('trialDaysLeft', { days: daysRemaining })}
             </span>
           </div>
           <Link
@@ -107,7 +109,7 @@ export default function TrialBanner({
               critical ? 'bg-red-600' : 'bg-amber-600'
             }`}
           >
-            อัปเกรด
+            {t('upgrade')}
           </Link>
         </div>
       </div>

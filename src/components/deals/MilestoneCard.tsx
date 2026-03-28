@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { useTranslations } from 'next-intl'
 import { DealMilestone, DealStage, DEAL_STAGE_LABELS } from '@/types/quotes'
 
 interface MilestoneCardProps {
@@ -10,7 +11,13 @@ interface MilestoneCardProps {
   isLoading?: boolean
 }
 
-export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading }: MilestoneCardProps) {
+export function MilestoneCard({
+  milestone,
+  onComplete,
+  onUploadPhoto,
+  isLoading,
+}: MilestoneCardProps) {
+  const t = useTranslations('milestoneCard')
   const [notes, setNotes] = useState('')
   const [photos, setPhotos] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
@@ -20,7 +27,9 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (!files || files.length === 0) return
+    if (!files || files.length === 0) {
+      return
+    }
     setUploading(true)
     try {
       const urls = await Promise.all(
@@ -39,7 +48,9 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
   }
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return '—'
+    if (!dateStr) {
+      return '—'
+    }
     return new Date(dateStr).toLocaleDateString('th-TH', {
       day: 'numeric',
       month: 'short',
@@ -50,9 +61,7 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
   return (
     <div
       className={`border rounded-xl overflow-hidden transition-all ${
-        isCompleted
-          ? 'border-green-200 bg-green-50'
-          : 'border-orange-200 bg-orange-50'
+        isCompleted ? 'border-green-200 bg-green-50' : 'border-orange-200 bg-orange-50'
       }`}
     >
       {/* Header */}
@@ -68,20 +77,34 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
           >
             {isCompleted ? (
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             ) : (
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             )}
           </div>
           <div>
-            <p className={`font-medium text-sm ${isCompleted ? 'text-green-800' : 'text-orange-800'}`}>
+            <p
+              className={`font-medium text-sm ${isCompleted ? 'text-green-800' : 'text-orange-800'}`}
+            >
               {DEAL_STAGE_LABELS[milestone.stage as DealStage]}
             </p>
             <p className="text-xs text-gray-500">
-              {isCompleted ? `เสร็จสิ้น: ${formatDate(milestone.completedAt)}` : `กำหนด: ${formatDate(milestone.plannedDate)}`}
+              {isCompleted
+                ? `${t('completed')}: ${formatDate(milestone.completedAt)}`
+                : `${t('dueDate')}: ${formatDate(milestone.plannedDate)}`}
             </p>
           </div>
         </div>
@@ -114,7 +137,7 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
                   rel="noopener noreferrer"
                   className="text-xs text-blue-600 bg-white px-2 py-1 rounded border border-blue-100 hover:border-blue-300"
                 >
-                  รูปภาพ {i + 1}
+                  {i + 1}
                 </a>
               ))}
             </div>
@@ -129,7 +152,7 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
                   rel="noopener noreferrer"
                   className="text-xs text-purple-600 bg-white px-2 py-1 rounded border border-purple-100 hover:border-purple-300"
                 >
-                  เอกสาร {i + 1}
+                  {i + 1}
                 </a>
               ))}
             </div>
@@ -141,18 +164,18 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
       {!isCompleted && expanded && (
         <div className="px-4 pb-4 space-y-3 border-t border-orange-200">
           <div className="pt-3">
-            <label className="block text-xs font-medium text-gray-700 mb-1">หมายเหตุ</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('name')}</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
-              placeholder="ระบุรายละเอียดการดำเนินงาน..."
+              placeholder="..."
               className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">รูปภาพหลักฐาน</label>
+            <label className="block text-xs font-medium text-gray-700 mb-1">{t('status')}</label>
             <input
               ref={fileInputRef}
               type="file"
@@ -167,12 +190,13 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
               disabled={uploading}
               className="w-full py-2 border-2 border-dashed border-orange-300 rounded-lg text-sm text-orange-600 hover:bg-orange-50 transition-colors disabled:opacity-50"
             >
-              {uploading ? 'กำลังอัพโหลด...' : '+ แนบรูปภาพ'}
+              {uploading ? '...' : '+'}
             </button>
             {photos.length > 0 && (
               <div className="mt-2 flex gap-2 flex-wrap">
                 {photos.map((url, i) => (
                   <div key={i} className="relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={url}
                       alt={`Photo ${i + 1}`}
@@ -195,7 +219,7 @@ export function MilestoneCard({ milestone, onComplete, onUploadPhoto, isLoading 
             disabled={isLoading}
             className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50"
           >
-            {isLoading ? 'กำลังบันทึก...' : 'ยืนยันเสร็จสิ้น'}
+            {isLoading ? '...' : t('save')}
           </button>
         </div>
       )}

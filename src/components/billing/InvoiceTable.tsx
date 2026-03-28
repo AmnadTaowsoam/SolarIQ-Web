@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react'
 import { Download, FileText, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import {
   Table,
   TableHeader,
@@ -51,18 +52,21 @@ function getInvoiceStatusBadgeVariant(status: InvoiceStatus): BadgeProps['varian
   }
 }
 
-function getInvoiceStatusText(status: InvoiceStatus): string {
+function getInvoiceStatusText(
+  status: InvoiceStatus,
+  t: ReturnType<typeof useTranslations>
+): string {
   switch (status) {
     case 'paid':
-      return 'ชำระแล้ว'
+      return t('statusPaid')
     case 'open':
-      return 'รอชำระ'
+      return t('statusOpen')
     case 'void':
-      return 'ยกเลิก'
+      return t('statusVoid')
     case 'draft':
-      return 'แบบร่าง'
+      return t('statusDraft')
     case 'uncollectible':
-      return 'เก็บเงินไม่ได้'
+      return t('statusUncollectible')
     default:
       return status
   }
@@ -83,6 +87,7 @@ export function InvoiceTable({
   paginated = false,
   pageSize = 10,
 }: InvoiceTableProps) {
+  const t = useTranslations('invoiceTable')
   const [page, setPage] = useState(1)
 
   // Use internal hook when paginated mode is enabled
@@ -100,8 +105,8 @@ export function InvoiceTable({
   if (invoices.length === 0) {
     return (
       <EmptyState
-        title="ยังไม่มีใบแจ้งหนี้"
-        description="ใบแจ้งหนี้จะปรากฏที่นี่เมื่อมีการเรียกเก็บเงิน"
+        title={t('emptyTitle')}
+        description={t('emptyDesc')}
         icon={<FileText className="w-12 h-12" />}
       />
     )
@@ -112,13 +117,13 @@ export function InvoiceTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>เลขที่ใบแจ้งหนี้</TableHead>
-            <TableHead>วันที่ออก</TableHead>
-            <TableHead>วันครบกำหนด</TableHead>
-            <TableHead>จำนวนเงิน (THB)</TableHead>
-            <TableHead>สถานะ</TableHead>
-            <TableHead>วิธีชำระเงิน</TableHead>
-            <TableHead>ดาวน์โหลด</TableHead>
+            <TableHead>{t('invoiceNumber')}</TableHead>
+            <TableHead>{t('issueDate')}</TableHead>
+            <TableHead>{t('dueDate')}</TableHead>
+            <TableHead>{t('amount')}</TableHead>
+            <TableHead>{t('status')}</TableHead>
+            <TableHead>{t('paymentMethod')}</TableHead>
+            <TableHead>{t('download')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -132,8 +137,8 @@ export function InvoiceTable({
       {paginated && totalPages > 1 && (
         <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
           <p className="text-sm text-gray-500">
-            แสดง {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, total)} จากทั้งหมด {total}{' '}
-            รายการ
+            {t('showing')} {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, total)}{' '}
+            {t('of')} {total} {t('items')}
           </p>
           <div className="flex items-center gap-2">
             <button
@@ -142,17 +147,17 @@ export function InvoiceTable({
               className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
-              ก่อนหน้า
+              {t('previous')}
             </button>
             <span className="text-sm text-gray-600">
-              หน้า {page} / {totalPages}
+              {t('page')} {page} / {totalPages}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
               className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              ถัดไป
+              {t('next')}
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -169,6 +174,8 @@ interface InvoiceRowProps {
 }
 
 function InvoiceRow({ invoice }: InvoiceRowProps) {
+  const t = useTranslations('invoiceTable')
+
   const getPaymentMethod = () => {
     if (!invoice.provider_invoice_id) {
       return '-'
@@ -202,9 +209,9 @@ function InvoiceRow({ invoice }: InvoiceRowProps) {
       </TableCell>
       <TableCell>
         <Badge variant={getInvoiceStatusBadgeVariant(invoice.status)} size="sm">
-          {getInvoiceStatusText(invoice.status)}
+          {getInvoiceStatusText(invoice.status, t)}
         </Badge>
-        {isOverdue && <span className="text-xs text-red-600 mt-1 block">Overdue</span>}
+        {isOverdue && <span className="text-xs text-red-600 mt-1 block">{t('overdue')}</span>}
       </TableCell>
       <TableCell>
         <div className="text-sm text-gray-600">{getPaymentMethod()}</div>
@@ -221,7 +228,7 @@ function InvoiceRow({ invoice }: InvoiceRowProps) {
             PDF
           </a>
         ) : invoice.status === 'paid' ? (
-          <span className="text-xs text-gray-400">Processing...</span>
+          <span className="text-xs text-gray-400">{t('processing')}</span>
         ) : (
           <span className="text-sm text-gray-400">-</span>
         )}

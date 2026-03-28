@@ -139,3 +139,4 @@ export {
   DEMO_APPROVED_EQUIPMENT,
   DEMO_PERMIT_TEMPLATES,
 } from './usePermits'
+export { useFeatureGate } from './useFeatureGate'

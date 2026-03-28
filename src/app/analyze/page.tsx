@@ -117,7 +117,13 @@ function buildTabs(t: ReturnType<typeof useTranslations<'analyzePage'>>): TabDef
 
 // ---- Tab Content Components ----
 
-function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
+function OverviewTab({
+  result,
+  t,
+}: {
+  result: SolarAnalysisAdvanced
+  t: ReturnType<typeof useTranslations<'analyzePage'>>
+}) {
   return (
     <div className="space-y-6 transition-opacity duration-300">
       {/* Summary Cards */}
@@ -129,14 +135,12 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 <Zap className="w-5 h-5 text-[var(--brand-primary)]" />
               </div>
               <div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {'\u0E02\u0E19\u0E32\u0E14\u0E23\u0E30\u0E1A\u0E1A'}
-                </div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">{t('systemSize')}</div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
                   {(result.panelConfig.capacityKw ?? 0).toFixed(2)} kWp
                 </div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {result.panelConfig.panelsCount} {'\u0E41\u0E1C\u0E07'}
+                  {result.panelConfig.panelsCount} {t('panels')}
                 </div>
               </div>
             </div>
@@ -150,14 +154,12 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
               </div>
               <div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {'\u0E1C\u0E25\u0E1C\u0E25\u0E34\u0E15\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+                  {t('annualProduction')}
                 </div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
-                  {result.panelConfig.yearlyEnergyDcKwh.toLocaleString()} kWh
+                  {result.panelConfig.yearlyEnergyDcKwh.toLocaleString()} {t('kWh')}
                 </div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {'\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
-                </div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">{t('years')}</div>
               </div>
             </div>
           </CardBody>
@@ -169,14 +171,12 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 <DollarSign className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}
-                </div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">{t('payback')}</div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
-                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {'\u0E1B\u0E35'}
+                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {t('years')}
                 </div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
-                  ROI: {(result.financialAnalysis.roi25Year ?? 0).toFixed(1)}%
+                  {t('roi')}: {(result.financialAnalysis.roi25Year ?? 0).toFixed(1)}%
                 </div>
               </div>
             </div>
@@ -189,20 +189,16 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 <Leaf className="w-5 h-5 text-emerald-500" />
               </div>
               <div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {'\u0E25\u0E14\u0E04\u0E32\u0E23\u0E4C\u0E1A\u0E2D\u0E19'}
-                </div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">{t('co2Saved')}</div>
                 <div className="text-xl font-bold text-[var(--brand-text)]">
                   {(
                     ((result.panelConfig.yearlyEnergyDcKwh ?? 0) *
                       (result.solarPotential.carbonOffsetFactorKgPerMwh ?? 0)) /
                     1000
                   ).toFixed(1)}{' '}
-                  {'\u0E15\u0E31\u0E19'}
+                  t
                 </div>
-                <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {'\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
-                </div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">/ {t('years')}</div>
               </div>
             </div>
           </CardBody>
@@ -211,39 +207,31 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
 
       {/* Financial Summary */}
       <Card>
-        <CardHeader title={'\u0E2A\u0E23\u0E38\u0E1B\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19'} />
+        <CardHeader title={t('financialTab')} />
         <CardBody>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <div className="text-sm text-[var(--brand-text-secondary)]">
-                {'\u0E04\u0E48\u0E32\u0E15\u0E34\u0E14\u0E15\u0E31\u0E49\u0E07'}
+                {t('installationCost')}
               </div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {formatCurrency(result.financialAnalysis.installationCost)}
               </div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">
-                {'\u0E23\u0E32\u0E04\u0E32\u0E2A\u0E38\u0E17\u0E18\u0E34'}
-              </div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">{t('breakEven')}</div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {formatCurrency(result.financialAnalysis.netCost)}
               </div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">
-                {
-                  '\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19'
-                }
-              </div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">{t('monthlyBill')}</div>
               <div className="text-lg font-semibold text-green-600">
                 {formatCurrency(result.financialAnalysis.monthlySavings)}
               </div>
             </div>
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">
-                {'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
-              </div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">{t('savingsYear1')}</div>
               <div className="text-lg font-semibold text-green-600">
                 {formatCurrency(result.financialAnalysis.yearlySavings)}
               </div>
@@ -255,43 +243,31 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
       {/* Solar Potential & Location */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
-          <CardHeader
-            title={
-              '\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C'
-            }
-          />
+          <CardHeader title={t('irradiation')} />
           <CardBody>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <div className="text-sm text-[var(--brand-text-secondary)]">
-                  {
-                    '\u0E0A\u0E31\u0E48\u0E27\u0E42\u0E21\u0E07\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14'
-                  }
+                  {t('peakSunHours')}
                 </div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {result.solarPotential.maxSunshineHoursPerYear.toLocaleString()} hrs/yr
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">
-                  {'\u0E1E\u0E37\u0E49\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32'}
-                </div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">{t('roofArea')}</div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
-                  {(result.solarPotential.roofAreaM2 ?? 0).toFixed(0)} m&sup2;
+                  {(result.solarPotential.roofAreaM2 ?? 0).toFixed(0)} {t('sqm')}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">
-                  {'\u0E41\u0E1C\u0E07\u0E2A\u0E39\u0E07\u0E2A\u0E38\u0E14'}
-                </div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">{t('panelCount')}</div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {result.solarPotential.maxPanels}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">
-                  {'\u0E04\u0E38\u0E13\u0E20\u0E32\u0E1E\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25'}
-                </div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">{t('efficiency')}</div>
                 <div className="text-lg font-semibold text-[var(--brand-primary)]">
                   {result.solarPotential.quality}
                 </div>
@@ -300,19 +276,17 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
           </CardBody>
         </Card>
         <Card>
-          <CardHeader title={'\u0E17\u0E35\u0E48\u0E15\u0E31\u0E49\u0E07'} />
+          <CardHeader title={t('location')} />
           <CardBody>
             <div className="space-y-3">
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">
-                  {'\u0E17\u0E35\u0E48\u0E2D\u0E22\u0E39\u0E48'}
-                </div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">{t('location')}</div>
                 <div className="text-sm font-medium text-[var(--brand-text)]">{result.address}</div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="text-sm text-[var(--brand-text-secondary)]">
-                    {'\u0E1E\u0E34\u0E01\u0E31\u0E14'}
+                    {t('selectLocation')}
                   </div>
                   <div className="text-sm font-medium text-[var(--brand-text)]">
                     {result.coordinates.latitude.toFixed(4)},{' '}
@@ -321,19 +295,17 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
                 </div>
                 <div>
                   <div className="text-sm text-[var(--brand-text-secondary)]">
-                    {'\u0E2D\u0E31\u0E15\u0E23\u0E32\u0E04\u0E48\u0E32\u0E44\u0E1F'}
+                    {t('electricityBill')}
                   </div>
                   <div className="text-sm font-medium text-[var(--brand-text)]">
-                    {'\u0E3F'}
-                    {(result.electricityRate ?? 0).toFixed(2)}/kWh
+                    ฿{(result.electricityRate ?? 0).toFixed(2)}/kWh
                   </div>
                 </div>
               </div>
               {result.solarPotential.imageryDate && (
                 <div className="flex items-center gap-1.5 text-xs text-[var(--brand-text-secondary)]">
                   <Calendar className="w-3.5 h-3.5" />
-                  {'\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E16\u0E48\u0E32\u0E22\u0E20\u0E32\u0E1E'}
-                  : {result.solarPotential.imageryDate}
+                  {t('forecastDays')}: {result.solarPotential.imageryDate}
                 </div>
               )}
             </div>
@@ -353,41 +325,35 @@ function OverviewTab({ result }: { result: SolarAnalysisAdvanced }) {
       {(result.financialAnalysis.npvThb !== undefined ||
         result.financialAnalysis.irrPercent !== undefined) && (
         <Card>
-          <CardHeader
-            title={
-              '\u0E15\u0E31\u0E27\u0E0A\u0E35\u0E49\u0E27\u0E31\u0E14\u0E17\u0E32\u0E07\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19\u0E02\u0E31\u0E49\u0E19\u0E2A\u0E39\u0E07'
-            }
-          />
+          <CardHeader title={t('lifetimeSavings')} />
           <CardBody>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <div className="text-sm text-[var(--brand-text-secondary)]">
-                  NPV (25 {'\u0E1B\u0E35'})
+                  {t('npv')} (25 {t('years')})
                 </div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {formatCurrency(result.financialAnalysis.npvThb)}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">IRR</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">{t('irr')}</div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {(result.financialAnalysis.irrPercent ?? 0).toFixed(1)}%
                 </div>
               </div>
               <div>
                 <div className="text-sm text-[var(--brand-text-secondary)]">
-                  ROI 25 {'\u0E1B\u0E35'}
+                  {t('roi')} 25 {t('years')}
                 </div>
                 <div className="text-lg font-semibold text-green-600">
                   {(result.financialAnalysis.roi25Year ?? 0).toFixed(1)}%
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">
-                  {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}
-                </div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">{t('payback')}</div>
                 <div className="text-lg font-semibold text-blue-600">
-                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {'\u0E1B\u0E35'}
+                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {t('years')}
                 </div>
               </div>
             </div>
@@ -413,7 +379,13 @@ function RoofTab({ result }: { result: SolarAnalysisAdvanced }) {
   )
 }
 
-function SolarPotentialTab({ result }: { result: SolarAnalysisAdvanced }) {
+function SolarPotentialTab({
+  result,
+  t,
+}: {
+  result: SolarAnalysisAdvanced
+  t: ReturnType<typeof useTranslations<'analyzePage'>>
+}) {
   return (
     <div className="space-y-6 transition-opacity duration-300">
       {result.shadeAnalysis && <ShadeAnalysisChart shadeAnalysis={result.shadeAnalysis} />}
@@ -440,11 +412,7 @@ function SolarPotentialTab({ result }: { result: SolarAnalysisAdvanced }) {
           <Card>
             <CardBody className="p-8 text-center text-[var(--brand-text-secondary)]">
               <Sun className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              <p>
-                {
-                  '\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E28\u0E31\u0E01\u0E22\u0E20\u0E32\u0E1E\u0E41\u0E2A\u0E07\u0E2D\u0E32\u0E17\u0E34\u0E15\u0E22\u0E4C\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E19\u0E35\u0E49'
-                }
-              </p>
+              <p>{t('noDataAvailable')}</p>
             </CardBody>
           </Card>
         )}
@@ -505,9 +473,11 @@ class TabErrorBoundary extends Component<
 function FinancialTab({
   result,
   monthlyBill,
+  t,
 }: {
   result: SolarAnalysisAdvanced
   monthlyBill: number
+  t: ReturnType<typeof useTranslations<'analyzePage'>>
 }) {
   const fa = result.financialAnalysis ?? ({} as Record<string, number>)
   const annualMaintenance = result.annualMaintenanceCost || 0
@@ -544,18 +514,11 @@ function FinancialTab({
 
       {/* Self-Consumption & Maintenance Summary */}
       <Card>
-        <CardHeader
-          title={
-            '\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E44\u0E1F\u0E41\u0E25\u0E30\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32'
-          }
-          subtitle="Consumption & Maintenance"
-        />
+        <CardHeader title={t('efficiency')} subtitle="Consumption & Maintenance" />
         <CardBody>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <div className="text-sm text-[var(--brand-text-secondary)]">
-                {'\u0E2D\u0E31\u0E15\u0E23\u0E32\u0E43\u0E0A\u0E49\u0E40\u0E2D\u0E07'}
-              </div>
+              <div className="text-sm text-[var(--brand-text-secondary)]">{t('roofCoverage')}</div>
               <div className="text-lg font-semibold text-[var(--brand-primary)]">
                 {result.selfConsumptionRate
                   ? `${((result.selfConsumptionRate ?? 0) * 100).toFixed(0)}%`
@@ -567,20 +530,16 @@ function FinancialTab({
             </div>
             <div>
               <div className="text-sm text-[var(--brand-text-secondary)]">
-                {'\u0E23\u0E32\u0E04\u0E32\u0E02\u0E32\u0E22\u0E04\u0E37\u0E19'}
+                {t('estimatedOutput')}
               </div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
-                {result.netBillingRate
-                  ? `\u0E3F${(result.netBillingRate ?? 0).toFixed(1)}/kWh`
-                  : 'N/A'}
+                {result.netBillingRate ? `฿${(result.netBillingRate ?? 0).toFixed(1)}/kWh` : 'N/A'}
               </div>
               <div className="text-xs text-[var(--brand-text-secondary)]">Net Billing Rate</div>
             </div>
             <div>
               <div className="text-sm text-[var(--brand-text-secondary)]">
-                {
-                  '\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32/\u0E1B\u0E35'
-                }
+                {t('installationCost')}
               </div>
               <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {annualMaintenance > 0 ? formatCurrency(annualMaintenance) : 'N/A'}
@@ -589,12 +548,10 @@ function FinancialTab({
             </div>
             <div>
               <div className="text-sm text-[var(--brand-text-secondary)]">
-                {
-                  '\u0E1C\u0E25\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E23\u0E27\u0E21 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07)'
-                }
+                {t('lifetimeSavings')}
               </div>
               <div className="text-lg font-semibold text-green-600">
-                {formatCurrency(netYearlySavings)}/{'\u0E1B\u0E35'}
+                {formatCurrency(netYearlySavings)}/{t('years')}
               </div>
               <div className="text-xs text-[var(--brand-text-secondary)]">
                 Net Savings After Maintenance
@@ -606,22 +563,18 @@ function FinancialTab({
 
       {/* Detailed financial breakdown */}
       <Card>
-        <CardHeader
-          title={
-            '\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E17\u0E32\u0E07\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19'
-          }
-        />
+        <CardHeader title={t('financialTab')} />
         <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h4 className="font-semibold text-[var(--brand-text)] flex items-center gap-2">
                 <DollarSign className="w-4 h-4 text-[var(--brand-primary)]" />
-                {'\u0E15\u0E49\u0E19\u0E17\u0E38\u0E19'}
+                {t('installationCost')}
               </h4>
               <div className="space-y-2">
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                   <span className="text-sm text-[var(--brand-text-secondary)]">
-                    {'\u0E04\u0E48\u0E32\u0E15\u0E34\u0E14\u0E15\u0E31\u0E49\u0E07'}
+                    {t('installationCost')}
                   </span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
                     {formatCurrency(result.financialAnalysis.installationCost)}
@@ -629,9 +582,7 @@ function FinancialTab({
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                   <span className="text-sm text-[var(--brand-text-secondary)]">
-                    {
-                      '\u0E23\u0E32\u0E04\u0E32\u0E2A\u0E38\u0E17\u0E18\u0E34 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E1B\u0E23\u0E30\u0E42\u0E22\u0E0A\u0E19\u0E4C)'
-                    }
+                    {t('breakEven')}
                   </span>
                   <span className="text-sm font-medium text-green-600">
                     {formatCurrency(result.financialAnalysis.netCost)}
@@ -639,7 +590,7 @@ function FinancialTab({
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                   <span className="text-sm text-[var(--brand-text-secondary)]">
-                    {'\u0E23\u0E32\u0E04\u0E32\u0E15\u0E48\u0E2D kWp'}
+                    {t('systemSize')} / kWp
                   </span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
                     {formatCurrency(
@@ -652,9 +603,7 @@ function FinancialTab({
                   <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                     <span className="text-sm text-[var(--brand-text-secondary)] flex items-center gap-1">
                       <Wrench className="w-3.5 h-3.5" />
-                      {
-                        '\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07\u0E23\u0E31\u0E01\u0E29\u0E32/\u0E1B\u0E35'
-                      }
+                      {t('efficiency')} / {t('years')}
                     </span>
                     <span className="text-sm font-medium text-[var(--brand-text)]">
                       {formatCurrency(annualMaintenance)}
@@ -666,14 +615,12 @@ function FinancialTab({
             <div className="space-y-4">
               <h4 className="font-semibold text-[var(--brand-text)] flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-green-500" />
-                {'\u0E1C\u0E25\u0E15\u0E2D\u0E1A\u0E41\u0E17\u0E19'}
+                {t('roi')}
               </h4>
               <div className="space-y-2">
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                   <span className="text-sm text-[var(--brand-text-secondary)]">
-                    {
-                      '\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E40\u0E14\u0E37\u0E2D\u0E19'
-                    }
+                    {t('monthlyBill')}
                   </span>
                   <span className="text-sm font-medium text-green-600">
                     {formatCurrency(result.financialAnalysis.monthlySavings)}
@@ -681,7 +628,7 @@ function FinancialTab({
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                   <span className="text-sm text-[var(--brand-text-secondary)]">
-                    {'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
+                    {t('savingsYear1')}
                   </span>
                   <span className="text-sm font-medium text-green-600">
                     {formatCurrency(result.financialAnalysis.yearlySavings)}
@@ -690,25 +637,23 @@ function FinancialTab({
                 {annualMaintenance > 0 && (
                   <div className="flex justify-between py-2 border-b border-[var(--brand-border)] bg-green-50/50">
                     <span className="text-sm font-medium text-[var(--brand-text)]">
-                      {
-                        '\u0E1C\u0E25\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E23\u0E27\u0E21 (\u0E2B\u0E25\u0E31\u0E07\u0E2B\u0E31\u0E01\u0E04\u0E48\u0E32\u0E1A\u0E33\u0E23\u0E38\u0E07)'
-                      }
+                      {t('lifetimeSavings')}
                     </span>
                     <span className="text-sm font-bold text-green-600">
-                      {formatCurrency(netYearlySavings)}/{'\u0E1B\u0E35'}
+                      {formatCurrency(netYearlySavings)}/{t('years')}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
                   <span className="text-sm text-[var(--brand-text-secondary)]">
-                    NPV (25 {'\u0E1B\u0E35'})
+                    {t('npv')} (25 {t('years')})
                   </span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
                     {formatCurrency(result.financialAnalysis.npvThb)}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--brand-border)]">
-                  <span className="text-sm text-[var(--brand-text-secondary)]">IRR</span>
+                  <span className="text-sm text-[var(--brand-text-secondary)]">{t('irr')}</span>
                   <span className="text-sm font-medium text-[var(--brand-text)]">
                     {(result.financialAnalysis.irrPercent ?? 0).toFixed(1)}%
                   </span>
@@ -741,19 +686,18 @@ function IncentivesTab({ result }: { result: SolarAnalysisAdvanced }) {
   )
 }
 
-function DataExportTab({ result }: { result: SolarAnalysisAdvanced }) {
+function DataExportTab({
+  result,
+  t,
+}: {
+  result: SolarAnalysisAdvanced
+  t: ReturnType<typeof useTranslations<'analyzePage'>>
+}) {
   return (
     <div className="space-y-6 transition-opacity duration-300">
       {/* Report Export */}
       <Card>
-        <CardHeader
-          title={
-            '\u0E23\u0E32\u0E22\u0E07\u0E32\u0E19\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C'
-          }
-          subtitle={
-            '\u0E14\u0E32\u0E27\u0E19\u0E4C\u0E42\u0E2B\u0E25\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E04\u0E31\u0E14\u0E25\u0E2D\u0E01\u0E23\u0E32\u0E22\u0E07\u0E32\u0E19'
-          }
-        />
+        <CardHeader title={t('exportReport')} subtitle={t('loadingData')} />
         <CardBody>
           <AnalysisReportExport result={result} />
         </CardBody>
@@ -766,11 +710,7 @@ function DataExportTab({ result }: { result: SolarAnalysisAdvanced }) {
         <Card>
           <CardBody className="p-8 text-center text-[var(--brand-text-secondary)]">
             <Database className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p>
-              {
-                '\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E0A\u0E31\u0E49\u0E19\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E14\u0E32\u0E27\u0E19\u0E4C\u0E42\u0E2B\u0E25\u0E14'
-              }
-            </p>
+            <p>{t('noDataAvailable')}</p>
           </CardBody>
         </Card>
       )}
@@ -838,9 +778,9 @@ function ReliabilityTab({ result }: { result: SolarAnalysisAdvanced }) {
     gridImportPercent: Math.round((1 - selfConsumption) * 80),
     surplusExportPercent: Math.round((1 - selfConsumption) * 20),
     tips: [
-      '\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E41\u0E1A\u0E15\u0E40\u0E15\u0E2D\u0E23\u0E35\u0E48\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E01\u0E31\u0E01\u0E40\u0E01\u0E47\u0E1A\u0E1E\u0E25\u0E31\u0E07\u0E07\u0E32\u0E19\u0E2A\u0E48\u0E27\u0E19\u0E40\u0E01\u0E34\u0E19',
-      '\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E08\u0E33\u0E19\u0E27\u0E19\u0E41\u0E1C\u0E07\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E23\u0E2D\u0E07\u0E23\u0E31\u0E1A\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E07\u0E32\u0E19\u0E21\u0E32\u0E01\u0E02\u0E36\u0E49\u0E19',
-      '\u0E22\u0E49\u0E32\u0E22\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E44\u0E1F\u0E2B\u0E19\u0E31\u0E01\u0E44\u0E1B\u0E0A\u0E48\u0E27\u0E07\u0E01\u0E25\u0E32\u0E07\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E21\u0E35\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14',
+      'Add battery storage to capture excess energy',
+      'Increase solar panel count to support higher usage',
+      'Shift heavy electricity usage to peak sun hours',
     ],
   }
 
@@ -1012,15 +952,15 @@ export default function AnalyzePage() {
     }
     switch (activeTab) {
       case 'overview':
-        return <OverviewTab result={result} />
+        return <OverviewTab result={result} t={t} />
       case 'roof':
         return <RoofTab result={result} />
       case 'solar':
-        return <SolarPotentialTab result={result} />
+        return <SolarPotentialTab result={result} t={t} />
       case 'financial':
         return (
-          <TabErrorBoundary tabName="Financial">
-            <FinancialTab result={result} monthlyBill={parseFloat(monthlyBill) || 0} />
+          <TabErrorBoundary tabName={t('financialTab')}>
+            <FinancialTab result={result} monthlyBill={parseFloat(monthlyBill) || 0} t={t} />
           </TabErrorBoundary>
         )
       case 'equipment':
@@ -1028,17 +968,17 @@ export default function AnalyzePage() {
       case 'incentives':
         return <IncentivesTab result={result} />
       case 'data':
-        return <DataExportTab result={result} />
+        return <DataExportTab result={result} t={t} />
       case 'forecast':
         return (
-          <TabErrorBoundary tabName="Forecast">
+          <TabErrorBoundary tabName={t('forecastTab')}>
             <ForecastTab result={result} />
           </TabErrorBoundary>
         )
       case 'reliability':
         return <ReliabilityTab result={result} />
       default:
-        return <OverviewTab result={result} />
+        return <OverviewTab result={result} t={t} />
     }
   }
 
@@ -1247,12 +1187,12 @@ export default function AnalyzePage() {
                       format: 'email',
                     })
                   } catch {
-                    addToast('error', 'Failed to save as Lead. Please try again.')
+                    addToast('error', t('noDataAvailable'))
                   }
                 }}
                 className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
               >
-                + Save as Lead
+                + {t('saveLead')}
               </button>
             </div>
 
@@ -1262,25 +1202,19 @@ export default function AnalyzePage() {
                 <div className="text-2xl font-bold text-orange-600">
                   {(result.panelConfig.capacityKw ?? 0).toFixed(1)} kWp
                 </div>
-                <div className="text-xs text-gray-600">
-                  {'\u0E02\u0E19\u0E32\u0E14\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E19\u0E30\u0E19\u0E33'}
-                </div>
+                <div className="text-xs text-gray-600">{t('systemSize')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
                   {formatCurrency(result.financialAnalysis.yearlySavings)}
                 </div>
-                <div className="text-xs text-gray-600">
-                  {'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
-                </div>
+                <div className="text-xs text-gray-600">{t('savingsYear1')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">
-                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {'\u0E1B\u0E35'}
+                  {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {t('years')}
                 </div>
-                <div className="text-xs text-gray-600">
-                  {'\u0E04\u0E37\u0E19\u0E17\u0E38\u0E19'}
-                </div>
+                <div className="text-xs text-gray-600">{t('payback')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-emerald-600">
@@ -1289,11 +1223,9 @@ export default function AnalyzePage() {
                       (result.solarPotential.carbonOffsetFactorKgPerMwh ?? 0)) /
                     1000
                   ).toFixed(1)}{' '}
-                  {'\u0E15\u0E31\u0E19'}
+                  t
                 </div>
-                <div className="text-xs text-gray-600">
-                  CO{'\u2082'} {'\u0E25\u0E14\u0E44\u0E14\u0E49\u0E15\u0E48\u0E2D\u0E1B\u0E35'}
-                </div>
+                <div className="text-xs text-gray-600">CO&#8322; {t('co2Saved')}</div>
               </div>
             </div>
 

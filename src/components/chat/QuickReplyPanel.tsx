@@ -4,38 +4,34 @@
  * Panel for selecting and managing quick reply templates.
  */
 
-'use client';
+'use client'
 
-import React, { useState, useMemo } from 'react';
-import {
-  QuickReply,
-  QuickReplyCategory,
-  QuickReplyCreate,
-  QuickReplyUpdate,
-} from '@/types/chat';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Modal } from '@/components/ui/Modal';
-import { Badge } from '@/components/ui/Badge';
-import { cn } from '@/lib/utils';
+import React, { useState, useMemo } from 'react'
+import { useTranslations } from 'next-intl'
+import { QuickReply, QuickReplyCategory, QuickReplyCreate, QuickReplyUpdate } from '@/types/chat'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Modal } from '@/components/ui/Modal'
+import { Badge } from '@/components/ui/Badge'
+import { cn } from '@/lib/utils'
 
 // ============== Types ==============
 
 interface QuickReplyPanelProps {
-  replies: QuickReply[];
-  isLoading?: boolean;
-  onSelect: (reply: QuickReply) => void;
-  onCreate?: (data: QuickReplyCreate) => Promise<void>;
-  onUpdate?: (id: string, data: QuickReplyUpdate) => Promise<void>;
-  onDelete?: (id: string) => Promise<void>;
-  className?: string;
+  replies: QuickReply[]
+  isLoading?: boolean
+  onSelect: (reply: QuickReply) => void
+  onCreate?: (data: QuickReplyCreate) => Promise<void>
+  onUpdate?: (id: string, data: QuickReplyUpdate) => Promise<void>
+  onDelete?: (id: string) => Promise<void>
+  className?: string
 }
 
 interface QuickReplyFormData {
-  name: string;
-  content: string;
-  category: QuickReplyCategory;
-  variables?: string[];
+  name: string
+  content: string
+  category: QuickReplyCategory
+  variables?: string[]
 }
 
 // ============== Helper Functions ==============
@@ -43,74 +39,75 @@ interface QuickReplyFormData {
 function getCategoryColor(category: QuickReplyCategory): string {
   switch (category) {
     case QuickReplyCategory.GREETING:
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800'
     case QuickReplyCategory.PRICING:
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-blue-100 text-blue-800'
     case QuickReplyCategory.SCHEDULING:
-      return 'bg-purple-100 text-purple-800';
+      return 'bg-purple-100 text-purple-800'
     case QuickReplyCategory.FOLLOW_UP:
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800'
     case QuickReplyCategory.CLOSING:
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800'
     case QuickReplyCategory.CUSTOM:
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800'
   }
 }
 
-function getCategoryLabel(category: QuickReplyCategory): string {
+function getCategoryLabel(
+  category: QuickReplyCategory,
+  t: ReturnType<typeof useTranslations<'quickReply'>>
+): string {
   switch (category) {
     case QuickReplyCategory.GREETING:
-      return 'ทักทาย';
+      return t('greet')
     case QuickReplyCategory.PRICING:
-      return 'ราคา';
+      return t('quote')
     case QuickReplyCategory.SCHEDULING:
-      return 'นัดหมาย';
+      return t('followUp')
     case QuickReplyCategory.FOLLOW_UP:
-      return 'ติดตาม';
+      return t('followUp')
     case QuickReplyCategory.CLOSING:
-      return 'ปิดการขาย';
+      return t('confirm')
     case QuickReplyCategory.CUSTOM:
-      return 'กำหนดเอง';
+      return t('custom')
     default:
-      return category;
+      return category
   }
 }
 
 function extractVariables(content: string): string[] {
-  const regex = /\{\{(\w+)\}\}/g;
-  const variables: string[] = [];
-  let match;
+  const regex = /\{\{(\w+)\}\}/g
+  const variables: string[] = []
+  let match
 
   while ((match = regex.exec(content)) !== null) {
     if (!variables.includes(match[1])) {
-      variables.push(match[1]);
+      variables.push(match[1])
     }
   }
 
-  return variables;
+  return variables
 }
 
-function replaceVariables(
-  content: string,
-  variables: Record<string, string>
-): string {
+function replaceVariables(content: string, variables: Record<string, string>): string {
   return content.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-    return variables[key] || match;
-  });
+    return variables[key] || match
+  })
 }
 
 // ============== Sub-Components ==============
 
 interface QuickReplyItemProps {
-  reply: QuickReply;
-  onSelect: () => void;
-  onEdit?: () => void;
-  onDelete?: () => void;
+  reply: QuickReply
+  onSelect: () => void
+  onEdit?: () => void
+  onDelete?: () => void
+  t: ReturnType<typeof useTranslations<'quickReply'>>
 }
 
-function QuickReplyItem({ reply, onSelect, onEdit, onDelete }: QuickReplyItemProps) {
-  const [showActions, setShowActions] = useState(false);
+function QuickReplyItem({ reply, onSelect, onEdit, onDelete, t }: QuickReplyItemProps) {
+  const [showActions, setShowActions] = useState(false)
 
   return (
     <div
@@ -122,18 +119,14 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete }: QuickReplyItemPro
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-gray-900 truncate">
-              {reply.name}
-            </span>
+            <span className="font-medium text-gray-900 truncate">{reply.name}</span>
             <Badge className={getCategoryColor(reply.category)}>
-              {getCategoryLabel(reply.category)}
+              {getCategoryLabel(reply.category, t)}
             </Badge>
           </div>
           <p className="text-sm text-gray-600 line-clamp-2">{reply.content}</p>
           {reply.usageCount > 0 && (
-            <p className="text-xs text-gray-400 mt-1">
-              ใช้แล้ว {reply.usageCount} ครั้ง
-            </p>
+            <p className="text-xs text-gray-400 mt-1">{reply.usageCount}x</p>
           )}
         </div>
 
@@ -143,8 +136,8 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete }: QuickReplyItemPro
             {onEdit && (
               <button
                 onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit();
+                  e.stopPropagation()
+                  onEdit()
                 }}
                 className="p-1 text-gray-400 hover:text-blue-500"
               >
@@ -161,8 +154,8 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete }: QuickReplyItemPro
             {onDelete && (
               <button
                 onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete();
+                  e.stopPropagation()
+                  onDelete()
                 }}
                 className="p-1 text-gray-400 hover:text-red-500"
               >
@@ -180,15 +173,16 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete }: QuickReplyItemPro
         )}
       </div>
     </div>
-  );
+  )
 }
 
 interface QuickReplyFormModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: QuickReplyFormData) => Promise<void>;
-  initialData?: QuickReply;
-  isLoading?: boolean;
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (data: QuickReplyFormData) => Promise<void>
+  initialData?: QuickReply
+  isLoading?: boolean
+  t: ReturnType<typeof useTranslations<'quickReply'>>
 }
 
 function QuickReplyFormModal({
@@ -197,58 +191,44 @@ function QuickReplyFormModal({
   onSubmit,
   initialData,
   isLoading = false,
+  t,
 }: QuickReplyFormModalProps) {
-  const [name, setName] = useState(initialData?.name || '');
-  const [content, setContent] = useState(initialData?.content || '');
+  const [name, setName] = useState(initialData?.name || '')
+  const [content, setContent] = useState(initialData?.content || '')
   const [category, setCategory] = useState<QuickReplyCategory>(
     initialData?.category || QuickReplyCategory.CUSTOM
-  );
-  const [detectedVariables, setDetectedVariables] = useState<string[]>(
-    initialData?.variables || []
-  );
+  )
+  const [detectedVariables, setDetectedVariables] = useState<string[]>(initialData?.variables || [])
 
   // Detect variables when content changes
   const handleContentChange = (value: string) => {
-    setContent(value);
-    setDetectedVariables(extractVariables(value));
-  };
+    setContent(value)
+    setDetectedVariables(extractVariables(value))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     await onSubmit({
       name,
       content,
       category,
       variables: detectedVariables,
-    });
-    onClose();
-  };
+    })
+    onClose()
+  }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={initialData ? 'แก้ไข Quick Reply' : 'สร้าง Quick Reply'}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={initialData ? t('edit') : t('add')}>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            ชื่อ
-          </label>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="เช่น ทักทายลูกค้าใหม่"
-            required
-          />
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('name')}</label>
+          <Input value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            หมวดหมู่
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('category')}</label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value as QuickReplyCategory)}
@@ -256,7 +236,7 @@ function QuickReplyFormModal({
           >
             {Object.values(QuickReplyCategory).map((cat) => (
               <option key={cat} value={cat}>
-                {getCategoryLabel(cat)}
+                {getCategoryLabel(cat, t)}
               </option>
             ))}
           </select>
@@ -264,27 +244,22 @@ function QuickReplyFormModal({
 
         {/* Content */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            เนื้อหา
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('message')}</label>
           <textarea
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
-            placeholder="เช่น สวัสดีครับ {{name}} ขอบคุณที่สนใจ..."
+            placeholder={t('insertVariable')}
             rows={4}
             className="w-full border border-gray-200 rounded-md px-3 py-2 resize-none"
             required
           />
-          <p className="text-xs text-gray-500 mt-1">
-            ใช้ {'{{variable}}'} สำหรับตัวแปรที่ต้องการแทนที่
-          </p>
         </div>
 
         {/* Detected variables */}
         {detectedVariables.length > 0 && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              ตัวแปรที่ตรวจพบ
+              {t('insertVariable')}
             </label>
             <div className="flex flex-wrap gap-2">
               {detectedVariables.map((variable) => (
@@ -299,61 +274,51 @@ function QuickReplyFormModal({
         {/* Actions */}
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onClose}>
-            ยกเลิก
+            {t('cancel')}
           </Button>
           <Button type="submit" disabled={isLoading || !name || !content}>
-            {isLoading ? 'กำลังบันทึก...' : initialData ? 'บันทึก' : 'สร้าง'}
+            {isLoading ? t('save') : initialData ? t('save') : t('add')}
           </Button>
         </div>
       </form>
     </Modal>
-  );
+  )
 }
 
 interface VariableInputModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (variables: Record<string, string>) => void;
-  reply: QuickReply;
+  isOpen: boolean
+  onClose: () => void
+  onSubmit: (variables: Record<string, string>) => void
+  reply: QuickReply
+  t: ReturnType<typeof useTranslations<'quickReply'>>
 }
 
-function VariableInputModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  reply,
-}: VariableInputModalProps) {
-  const [values, setValues] = useState<Record<string, string>>({});
+function VariableInputModal({ isOpen, onClose, onSubmit, reply, t }: VariableInputModalProps) {
+  const [values, setValues] = useState<Record<string, string>>({})
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(values);
-    onClose();
-  };
+    e.preventDefault()
+    onSubmit(values)
+    onClose()
+  }
 
   // Reset values when modal opens
   React.useEffect(() => {
     if (isOpen) {
-      const initial: Record<string, string> = {};
+      const initial: Record<string, string> = {}
       reply.variables?.forEach((v) => {
-        initial[v] = '';
-      });
-      setValues(initial);
+        initial[v] = ''
+      })
+      setValues(initial)
     }
-  }, [isOpen, reply.variables]);
+  }, [isOpen, reply.variables])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="กรอกข้อมูล">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('insertVariable')}>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <p className="text-sm text-gray-600">
-          กรุณากรอกข้อมูลสำหรับตัวแปรในข้อความ
-        </p>
-
         {reply.variables?.map((variable) => (
           <div key={variable}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {variable}
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{variable}</label>
             <Input
               value={values[variable] || ''}
               onChange={(e) =>
@@ -362,7 +327,6 @@ function VariableInputModal({
                   [variable]: e.target.value,
                 }))
               }
-              placeholder={`กรอก ${variable}`}
               required
             />
           </div>
@@ -370,9 +334,7 @@ function VariableInputModal({
 
         {/* Preview */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            ตัวอย่างข้อความ
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('preview')}</label>
           <div className="bg-gray-50 rounded-md p-3 text-sm text-gray-700">
             {replaceVariables(reply.content, values)}
           </div>
@@ -381,13 +343,13 @@ function VariableInputModal({
         {/* Actions */}
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onClose}>
-            ยกเลิก
+            {t('cancel')}
           </Button>
-          <Button type="submit">ส่งข้อความ</Button>
+          <Button type="submit">{t('use')}</Button>
         </div>
       </form>
     </Modal>
-  );
+  )
 }
 
 // ============== Main Component ==============
@@ -401,46 +363,42 @@ export function QuickReplyPanel({
   onDelete,
   className,
 }: QuickReplyPanelProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<QuickReplyCategory | 'all'>(
-    'all'
-  );
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingReply, setEditingReply] = useState<QuickReply | null>(null);
-  const [variableModalReply, setVariableModalReply] = useState<QuickReply | null>(
-    null
-  );
+  const t = useTranslations('quickReply')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState<QuickReplyCategory | 'all'>('all')
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [editingReply, setEditingReply] = useState<QuickReply | null>(null)
+  const [variableModalReply, setVariableModalReply] = useState<QuickReply | null>(null)
 
   // Filter replies
   const filteredReplies = useMemo(() => {
     return replies.filter((reply) => {
       // Category filter
       if (categoryFilter !== 'all' && reply.category !== categoryFilter) {
-        return false;
+        return false
       }
 
       // Search filter
       if (searchQuery) {
-        const query = searchQuery.toLowerCase();
+        const query = searchQuery.toLowerCase()
         return (
-          reply.name.toLowerCase().includes(query) ||
-          reply.content.toLowerCase().includes(query)
-        );
+          reply.name.toLowerCase().includes(query) || reply.content.toLowerCase().includes(query)
+        )
       }
 
-      return true;
-    });
-  }, [replies, searchQuery, categoryFilter]);
+      return true
+    })
+  }, [replies, searchQuery, categoryFilter])
 
   // Handle reply selection
   const handleSelect = (reply: QuickReply) => {
     // If reply has variables, show variable input modal
     if (reply.variables && reply.variables.length > 0) {
-      setVariableModalReply(reply);
+      setVariableModalReply(reply)
     } else {
-      onSelect(reply);
+      onSelect(reply)
     }
-  };
+  }
 
   // Handle variable submission
   const handleVariableSubmit = (variables: Record<string, string>) => {
@@ -448,41 +406,36 @@ export function QuickReplyPanel({
       const processedReply: QuickReply = {
         ...variableModalReply,
         content: replaceVariables(variableModalReply.content, variables),
-      };
-      onSelect(processedReply);
+      }
+      onSelect(processedReply)
     }
-  };
+  }
 
   // Handle form submission
   const handleFormSubmit = async (data: QuickReplyFormData) => {
     if (editingReply && onUpdate) {
-      await onUpdate(editingReply.id, data);
+      await onUpdate(editingReply.id, data)
     } else if (onCreate) {
-      await onCreate(data as QuickReplyCreate);
+      await onCreate(data as QuickReplyCreate)
     }
-    setEditingReply(null);
-  };
+    setEditingReply(null)
+  }
 
   return (
     <div className={cn('flex flex-col h-full bg-white', className)}>
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-gray-900">Quick Reply</h3>
+          <h3 className="font-semibold text-gray-900">{t('title')}</h3>
           {onCreate && (
             <Button
               size="sm"
               onClick={() => {
-                setEditingReply(null);
-                setIsFormOpen(true);
+                setEditingReply(null)
+                setIsFormOpen(true)
               }}
             >
-              <svg
-                className="w-4 h-4 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -490,7 +443,7 @@ export function QuickReplyPanel({
                   d="M12 4v16m8-8H4"
                 />
               </svg>
-              เพิ่ม
+              {t('add')}
             </Button>
           )}
         </div>
@@ -498,7 +451,7 @@ export function QuickReplyPanel({
         {/* Search */}
         <Input
           type="search"
-          placeholder="ค้นหา..."
+          placeholder={t('search')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full"
@@ -515,7 +468,7 @@ export function QuickReplyPanel({
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             )}
           >
-            ทั้งหมด
+            {t('selectCategory')}
           </button>
           {Object.values(QuickReplyCategory).map((cat) => (
             <button
@@ -560,14 +513,10 @@ export function QuickReplyPanel({
                 d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
               />
             </svg>
-            <p>ไม่พบ Quick Reply</p>
+            <p>{t('noReplies')}</p>
             {onCreate && (
-              <Button
-                size="sm"
-                className="mt-3"
-                onClick={() => setIsFormOpen(true)}
-              >
-                สร้าง Quick Reply
+              <Button size="sm" className="mt-3" onClick={() => setIsFormOpen(true)}>
+                {t('addFirst')}
               </Button>
             )}
           </div>
@@ -576,20 +525,21 @@ export function QuickReplyPanel({
             <QuickReplyItem
               key={reply.id}
               reply={reply}
+              t={t}
               onSelect={() => handleSelect(reply)}
               onEdit={
                 onUpdate
                   ? () => {
-                      setEditingReply(reply);
-                      setIsFormOpen(true);
+                      setEditingReply(reply)
+                      setIsFormOpen(true)
                     }
                   : undefined
               }
               onDelete={
                 onDelete
                   ? () => {
-                      if (confirm('ยืนยันการลบ Quick Reply นี้?')) {
-                        onDelete(reply.id);
+                      if (confirm(t('deleteConfirm'))) {
+                        onDelete(reply.id)
                       }
                     }
                   : undefined
@@ -603,12 +553,13 @@ export function QuickReplyPanel({
       <QuickReplyFormModal
         isOpen={isFormOpen}
         onClose={() => {
-          setIsFormOpen(false);
-          setEditingReply(null);
+          setIsFormOpen(false)
+          setEditingReply(null)
         }}
         onSubmit={handleFormSubmit}
         initialData={editingReply || undefined}
         isLoading={isLoading}
+        t={t}
       />
 
       {/* Variable input modal */}
@@ -618,10 +569,11 @@ export function QuickReplyPanel({
           onClose={() => setVariableModalReply(null)}
           onSubmit={handleVariableSubmit}
           reply={variableModalReply}
+          t={t}
         />
       )}
     </div>
-  );
+  )
 }
 
-export default QuickReplyPanel;
+export default QuickReplyPanel

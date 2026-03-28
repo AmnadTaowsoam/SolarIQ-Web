@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { PricingBreakdown } from '@/types/quotes'
 
 interface PricingCalculatorProps {
@@ -53,6 +54,7 @@ function NumberInput({
 }
 
 export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCalculatorProps) {
+  const t = useTranslations('pricingCalculator')
   // Auto-recalculate totals whenever any input changes
   useEffect(() => {
     const equipmentCost =
@@ -93,6 +95,7 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
     if (hasChange) {
       onChange(updated)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     pricing.panelCost,
     pricing.inverterCost,
@@ -116,40 +119,84 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
     <div className="space-y-4">
       {/* Equipment Costs */}
       <div className="bg-gray-50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">ค่าอุปกรณ์</h4>
-        <NumberInput label="ค่าแผงโซลาร์" value={pricing.panelCost} onChange={update('panelCost')} />
-        <NumberInput label="ค่าอินเวอร์เตอร์" value={pricing.inverterCost} onChange={update('inverterCost')} />
-        <NumberInput label="ค่าแบตเตอรี่" value={pricing.batteryCost || 0} onChange={update('batteryCost')} hint="(ถ้ามี)" />
-        <NumberInput label="ค่าโครงยึด" value={pricing.mountingCost} onChange={update('mountingCost')} />
-        <NumberInput label="ค่าสายไฟและอุปกรณ์เสริม" value={pricing.cableAndAccessories} onChange={update('cableAndAccessories')} />
+        <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('equipment')}</h4>
+        <NumberInput
+          label={t('equipment')}
+          value={pricing.panelCost}
+          onChange={update('panelCost')}
+        />
+        <NumberInput
+          label={t('equipment')}
+          value={pricing.inverterCost}
+          onChange={update('inverterCost')}
+        />
+        <NumberInput
+          label={t('accessories')}
+          value={pricing.batteryCost || 0}
+          onChange={update('batteryCost')}
+        />
+        <NumberInput
+          label={t('accessories')}
+          value={pricing.mountingCost}
+          onChange={update('mountingCost')}
+        />
+        <NumberInput
+          label={t('accessories')}
+          value={pricing.cableAndAccessories}
+          onChange={update('cableAndAccessories')}
+        />
         <div className="flex justify-between pt-2 mt-1 border-t border-gray-200">
-          <span className="text-xs font-semibold text-gray-600">รวมค่าอุปกรณ์</span>
-          <span className="text-xs font-bold text-gray-800">{formatThb(pricing.equipmentCost)}</span>
+          <span className="text-xs font-semibold text-gray-600">{t('equipment')}</span>
+          <span className="text-xs font-bold text-gray-800">
+            {formatThb(pricing.equipmentCost)}
+          </span>
         </div>
       </div>
 
       {/* Installation Costs */}
       <div className="bg-gray-50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">ค่าติดตั้ง</h4>
-        <NumberInput label="ค่าแรงงาน" value={pricing.laborCost} onChange={update('laborCost')} />
-        <NumberInput label="ค่านั่งร้าน" value={pricing.scaffoldingCost || 0} onChange={update('scaffoldingCost')} hint="(ถ้ามี)" />
+        <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('installation')}</h4>
+        <NumberInput
+          label={t('installation')}
+          value={pricing.laborCost}
+          onChange={update('laborCost')}
+        />
+        <NumberInput
+          label={t('accessories')}
+          value={pricing.scaffoldingCost || 0}
+          onChange={update('scaffoldingCost')}
+        />
         <div className="flex justify-between pt-2 mt-1 border-t border-gray-200">
-          <span className="text-xs font-semibold text-gray-600">รวมค่าติดตั้ง</span>
-          <span className="text-xs font-bold text-gray-800">{formatThb(pricing.installationCost)}</span>
+          <span className="text-xs font-semibold text-gray-600">{t('installation')}</span>
+          <span className="text-xs font-bold text-gray-800">
+            {formatThb(pricing.installationCost)}
+          </span>
         </div>
       </div>
 
       {/* Other Costs */}
       <div className="bg-gray-50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">ค่าใช้จ่ายอื่นๆ</h4>
-        <NumberInput label="ค่าขออนุญาต PEA/MEA" value={pricing.permitCost} onChange={update('permitCost')} />
-        <NumberInput label="ค่าออกแบบวิศวกรรม" value={pricing.engineeringCost || 0} onChange={update('engineeringCost')} hint="(ถ้ามี)" />
+        <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('accessories')}</h4>
+        <NumberInput
+          label={t('accessories')}
+          value={pricing.permitCost}
+          onChange={update('permitCost')}
+        />
+        <NumberInput
+          label={t('accessories')}
+          value={pricing.engineeringCost || 0}
+          onChange={update('engineeringCost')}
+        />
       </div>
 
       {/* Discount */}
       <div className="bg-yellow-50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">ส่วนลด</h4>
-        <NumberInput label="จำนวนส่วนลด" value={pricing.discountAmount} onChange={update('discountAmount')} />
+        <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('breakdown')}</h4>
+        <NumberInput
+          label={t('breakdown')}
+          value={pricing.discountAmount}
+          onChange={update('discountAmount')}
+        />
         <div className="mt-2">
           <input
             type="text"
@@ -163,24 +210,28 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
 
       {/* Summary */}
       <div className="bg-orange-50 rounded-xl p-4 border border-orange-200">
-        <h4 className="text-sm font-semibold text-orange-800 mb-3">สรุปราคา</h4>
+        <h4 className="text-sm font-semibold text-orange-800 mb-3">{t('total')}</h4>
         <div className="space-y-1.5 text-sm">
           <div className="flex justify-between text-gray-700">
-            <span>รวม (ก่อน VAT)</span>
+            <span>{t('estimatedCost')}</span>
             <span className="font-medium">{formatThb(pricing.subtotal)}</span>
           </div>
           <div className="flex justify-between text-gray-500 text-xs">
-            <span>VAT {pricing.vatRate}%</span>
+            <span>
+              {t('vat')} {pricing.vatRate}%
+            </span>
             <span>{formatThb(pricing.vatAmount)}</span>
           </div>
           <div className="flex justify-between font-bold text-base text-orange-900 pt-2 border-t border-orange-200 mt-2">
-            <span>ราคารวมทั้งสิ้น</span>
+            <span>{t('total')}</span>
             <span>{formatThb(pricing.totalPrice)}</span>
           </div>
           {pricing.pricePerKw > 0 && (
             <div className="flex justify-between text-xs text-gray-500">
-              <span>ราคาต่อ kW</span>
-              <span>{formatThb(pricing.pricePerKw)}/kW</span>
+              <span>{t('kWp')}</span>
+              <span>
+                {formatThb(pricing.pricePerKw)}/{t('kWp')}
+              </span>
             </div>
           )}
         </div>

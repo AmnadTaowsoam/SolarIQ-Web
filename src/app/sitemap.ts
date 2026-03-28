@@ -1,3 +1,5 @@
+export const runtime = 'nodejs'
+
 import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'

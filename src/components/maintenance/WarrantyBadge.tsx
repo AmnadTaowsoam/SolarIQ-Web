@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 interface WarrantyBadgeProps {
   label: string
   status: string
@@ -7,6 +9,7 @@ interface WarrantyBadgeProps {
 }
 
 export default function WarrantyBadge({ label, status, daysRemaining }: WarrantyBadgeProps) {
+  const t = useTranslations('warrantyBadge')
   const config = {
     active: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
     expiring_soon: { bg: 'bg-amber-100', text: 'text-amber-700', dot: 'bg-amber-500' },
@@ -16,10 +19,12 @@ export default function WarrantyBadge({ label, status, daysRemaining }: Warranty
 
   const statusText =
     {
-      active: daysRemaining !== null ? `เหลือ ${Math.floor(daysRemaining / 365)} ปี` : 'ใช้งานได้',
-      expiring_soon: daysRemaining !== null ? `เหลือ ${daysRemaining} วัน` : 'ใกล้หมด',
-      expired: 'หมดอายุ',
-      not_set: 'ยังไม่กำหนด',
+      active:
+        daysRemaining !== null ? `${Math.floor(daysRemaining / 365)} ${t('years')}` : t('active'),
+      expiring_soon:
+        daysRemaining !== null ? `${daysRemaining} ${t('daysLeft')}` : t('expiringSoon'),
+      expired: t('expired'),
+      not_set: t('warranty'),
     }[status] || status
 
   return (

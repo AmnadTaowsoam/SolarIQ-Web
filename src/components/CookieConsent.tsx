@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { X, Cookie } from 'lucide-react'
 import { updateGA4Consent } from '@/lib/ga4'
+import { useTranslations } from 'next-intl'
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                               */
@@ -29,20 +30,20 @@ const CONSENT_VERSION = '1.0.0'
 const COOKIE_CATEGORIES = [
   {
     key: 'necessary',
-    name: 'คุกกี้ที่จำเป็น',
-    description: 'คุกกี้ที่จำเป็นสำหรับการทำงานของเว็บไซต์ เช่น การยืนยันตัวตน และความปลอดภัย',
+    nameKey: 'necessary',
+    descriptionKey: 'necessaryDesc',
     required: true,
   },
   {
     key: 'analytics',
-    name: 'คุกกี้วิเคราะห์',
-    description: 'คุกกี้ที่ใช้เก็บข้อมูลการใช้งานเพื่อปรับปรุงประสบการณ์ผู้ใช้',
+    nameKey: 'analytics',
+    descriptionKey: 'analyticsDesc',
     required: false,
   },
   {
     key: 'marketing',
-    name: 'คุกกี้การตลาด',
-    description: 'คุกกี้ที่ใช้สำหรับการโฆษณาและการตลาด',
+    nameKey: 'marketing',
+    descriptionKey: 'marketingDesc',
     required: false,
   },
 ]
@@ -116,6 +117,7 @@ interface CookieConsentBannerProps {
 }
 
 export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProps) {
+  const t = useTranslations('cookieConsent')
   const [isVisible, setIsVisible] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [preferences, setPreferences] = useState<Record<string, boolean>>({
@@ -215,12 +217,9 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                    การใช้คุกกี้
+                    {t('title')}
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานของคุณ
-                    คุณสามารถจัดการความยินยอมของคุณได้ตลอดเวลา
-                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('description')}</p>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
@@ -228,19 +227,19 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                   onClick={handleManageSettings}
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
-                  จัดการการตั้งค่า
+                  {t('customize')}
                 </button>
                 <button
                   onClick={handleRejectAll}
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
-                  ปฏิเสธทั้งหมด
+                  {t('rejectAll')}
                 </button>
                 <button
                   onClick={handleAcceptAll}
                   className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
                 >
-                  ยอมรับทั้งหมด
+                  {t('acceptAll')}
                 </button>
               </div>
             </div>
@@ -255,16 +254,16 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                    จัดการความยินยอมคุกกี้
+                    {t('title')}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    คุณสามารถเลือกความยินยอมสำหรับแต่ละหมวดหมู่คุกกี้ได้
+                    {t('description')}
                   </p>
                   <Link
                     href="/privacy"
                     className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
                   >
-                    อ่านนโยบายความเป็นส่วนตัว
+                    {t('privacyPolicy')}
                   </Link>
                 </div>
               </div>
@@ -288,16 +287,16 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className="font-medium text-gray-900 dark:text-white">
-                          {category.name}
+                          {t(category.nameKey)}
                         </h4>
                         {category.required && (
                           <span className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded">
-                            จำเป็น
+                            {t('necessary')}
                           </span>
                         )}
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {category.description}
+                        {t(category.descriptionKey)}
                       </p>
                     </div>
                     <label className="flex items-center">
@@ -320,19 +319,19 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                 onClick={handleRejectAll}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
-                ปฏิเสธทั้งหมด
+                {t('rejectAll')}
               </button>
               <button
                 onClick={handleAcceptAll}
                 className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
               >
-                ยอมรับทั้งหมด
+                {t('acceptAll')}
               </button>
               <button
                 onClick={handleAcceptSelected}
                 className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
               >
-                ยอมรับที่เลือก
+                {t('save')}
               </button>
             </div>
           </div>

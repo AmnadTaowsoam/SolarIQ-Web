@@ -15,7 +15,7 @@ export function TrialCountdown({
   onUpgradeClick,
   className = '',
 }: TrialCountdownProps) {
-  const t = useTranslations('billingPolicy')
+  const t = useTranslations('trialCountdown')
   const [daysLeft, setDaysLeft] = useState<number>(0)
   const [hoursLeft, setHoursLeft] = useState<number>(0)
   const [minutesLeft, setMinutesLeft] = useState<number>(0)
@@ -90,27 +90,22 @@ export function TrialCountdown({
         <div className="flex-1">
           {isTrialExpired ? (
             <>
-              <p className="font-semibold text-gray-900 dark:text-white">
-                {t('trialInfo.duration')} หมดอายุแล้ว
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                หลังจากทดลองใช้: ฟรี 5 leads/เดือน หรืออัปเกรดเพื่อรับฟีเจอร์เต็มรูปแบบ
-              </p>
+              <p className="font-semibold text-gray-900 dark:text-white">{t('expired')}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('expiredDesc')}</p>
             </>
           ) : (
             <>
               <p className="font-semibold text-gray-900 dark:text-white">
-                {t('trialInfo.duration')} ทดลองใช้: {daysLeft} วัน {hoursLeft} ชั่วโมง {minutesLeft}{' '}
-                นาที
+                {t('timeLeft', { days: daysLeft, hours: hoursLeft, minutes: minutesLeft })}
               </p>
               {isTrialEndingSoon && (
                 <p className="mt-1 flex items-center gap-1.5 text-sm text-amber-700 dark:text-amber-300">
                   <AlertCircle className="h-4 w-4" />
-                  <span>ทดลองใช้ใกล้หมดอายุแล้ว</span>
+                  <span>{t('endingSoon')}</span>
                 </p>
               )}
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {t('trialInfo.noCreditCard')} • {t('trialInfo.keepData')}
+                {t('noCreditCard')} • {t('keepData')}
               </p>
             </>
           )}
@@ -125,7 +120,7 @@ export function TrialCountdown({
                 : 'bg-primary-600 text-white hover:bg-primary-700'
             }`}
           >
-            {t('trialInfo.upgradeCTA')}
+            {t('upgradeCTA')}
           </button>
         )}
       </div>

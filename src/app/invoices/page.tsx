@@ -17,17 +17,17 @@ const statusColors: Record<string, string> = {
 }
 
 const typeLabels: Record<string, string> = {
-  invoice: 'ใบกำกับภาษี',
-  receipt: 'ใบเสร็จรับเงิน',
-  credit_note: 'ใบลดหนี้',
+  invoice: 'Invoice',
+  receipt: 'Receipt',
+  credit_note: 'Credit Note',
 }
 
 const statusLabels: Record<string, string> = {
-  draft: 'ร่าง',
-  issued: 'ออกแล้ว',
-  sent: 'ส่งแล้ว',
-  paid: 'ชำระแล้ว',
-  void: 'ยกเลิก',
+  draft: 'Draft',
+  issued: 'Issued',
+  sent: 'Sent',
+  paid: 'Paid',
+  void: 'Void',
 }
 
 export default function InvoicesPage() {
@@ -71,7 +71,7 @@ export default function InvoicesPage() {
           <CardBody className="p-4">
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">ประเภทเอกสาร:</label>
+                <label className="text-sm font-medium text-gray-700">{t('filterStatus')}:</label>
                 <select
                   value={documentType || ''}
                   onChange={(e) =>
@@ -79,14 +79,14 @@ export default function InvoicesPage() {
                   }
                   className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
-                  <option value="">ทั้งหมด</option>
-                  <option value={VATDocumentType.INVOICE}>ใบกำกับภาษี</option>
-                  <option value={VATDocumentType.RECEIPT}>ใบเสร็จรับเงิน</option>
-                  <option value={VATDocumentType.CREDIT_NOTE}>ใบลดหนี้</option>
+                  <option value="">{t('allStatuses')}</option>
+                  <option value={VATDocumentType.INVOICE}>{typeLabels.invoice}</option>
+                  <option value={VATDocumentType.RECEIPT}>{typeLabels.receipt}</option>
+                  <option value={VATDocumentType.CREDIT_NOTE}>{typeLabels.credit_note}</option>
                 </select>
               </div>
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">สถานะ:</label>
+                <label className="text-sm font-medium text-gray-700">{t('status')}:</label>
                 <select
                   value={status || ''}
                   onChange={(e) =>
@@ -94,12 +94,12 @@ export default function InvoicesPage() {
                   }
                   className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
-                  <option value="">ทั้งหมด</option>
-                  <option value={VATDocumentStatus.DRAFT}>ร่าง</option>
-                  <option value={VATDocumentStatus.ISSUED}>ออกแล้ว</option>
-                  <option value={VATDocumentStatus.SENT}>ส่งแล้ว</option>
-                  <option value={VATDocumentStatus.PAID}>ชำระแล้ว</option>
-                  <option value={VATDocumentStatus.VOID}>ยกเลิก</option>
+                  <option value="">{t('allStatuses')}</option>
+                  <option value={VATDocumentStatus.DRAFT}>{statusLabels.draft}</option>
+                  <option value={VATDocumentStatus.ISSUED}>{statusLabels.issued}</option>
+                  <option value={VATDocumentStatus.SENT}>{statusLabels.sent}</option>
+                  <option value={VATDocumentStatus.PAID}>{statusLabels.paid}</option>
+                  <option value={VATDocumentStatus.VOID}>{statusLabels.void}</option>
                 </select>
               </div>
             </div>
@@ -172,8 +172,7 @@ export default function InvoicesPage() {
           {total > 20 && (
             <div className="px-6 py-4 border-t border-gray-100 flex justify-between items-center">
               <div className="text-sm text-gray-500">
-                แสดง {Math.min((page - 1) * 20 + 1, total)} - {Math.min(page * 20, total)} จาก{' '}
-                {total} รายการ
+                {t('totalInvoices')}: {total}
               </div>
               <div className="flex gap-2">
                 <Button
@@ -182,7 +181,7 @@ export default function InvoicesPage() {
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
                 >
-                  ก่อนหน้า
+                  &laquo;
                 </Button>
                 <Button
                   variant="outline"
@@ -190,7 +189,7 @@ export default function InvoicesPage() {
                   onClick={() => setPage((p) => p + 1)}
                   disabled={page * 20 >= total}
                 >
-                  ถัดไป
+                  &raquo;
                 </Button>
               </div>
             </div>

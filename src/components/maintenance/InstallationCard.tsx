@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import type { Installation } from '@/hooks/useMaintenance'
 import WarrantyBadge from './WarrantyBadge'
 
@@ -9,6 +10,7 @@ interface InstallationCardProps {
 }
 
 export default function InstallationCard({ installation: inst }: InstallationCardProps) {
+  const t = useTranslations('installationCard')
   return (
     <Link
       href={`/maintenance/${inst.id}`}
@@ -17,7 +19,7 @@ export default function InstallationCard({ installation: inst }: InstallationCar
       <div className="flex items-start justify-between">
         <div>
           <h3 className="font-semibold text-gray-900">{inst.customer_name}</h3>
-          <p className="mt-0.5 text-sm text-gray-500">{inst.address || 'ไม่ระบุที่อยู่'}</p>
+          <p className="mt-0.5 text-sm text-gray-500">{inst.address || t('address')}</p>
         </div>
         <span
           className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
@@ -28,7 +30,11 @@ export default function InstallationCard({ installation: inst }: InstallationCar
                 : 'bg-red-100 text-red-700'
           }`}
         >
-          {inst.status === 'active' ? 'ใช้งาน' : inst.status === 'inactive' ? 'หยุดใช้' : 'ยกเลิก'}
+          {inst.status === 'active'
+            ? t('active')
+            : inst.status === 'inactive'
+              ? t('status')
+              : t('maintenance')}
         </span>
       </div>
 
@@ -55,24 +61,26 @@ export default function InstallationCard({ installation: inst }: InstallationCar
           </span>
         )}
         {inst.installation_date && (
-          <span>ติดตั้ง: {new Date(inst.installation_date).toLocaleDateString('th-TH')}</span>
+          <span>
+            {t('installDate')}: {new Date(inst.installation_date).toLocaleDateString('th-TH')}
+          </span>
         )}
       </div>
 
       {inst.warranty_status && (
         <div className="mt-3 flex flex-wrap gap-2">
           <WarrantyBadge
-            label="แผง"
+            label={t('panelBrand')}
             status={inst.warranty_status.panel.status}
             daysRemaining={inst.warranty_status.panel.days_remaining}
           />
           <WarrantyBadge
-            label="อินเวอร์เตอร์"
+            label={t('inverterBrand')}
             status={inst.warranty_status.inverter.status}
             daysRemaining={inst.warranty_status.inverter.days_remaining}
           />
           <WarrantyBadge
-            label="ติดตั้ง"
+            label={t('installDate')}
             status={inst.warranty_status.installation.status}
             daysRemaining={inst.warranty_status.installation.days_remaining}
           />

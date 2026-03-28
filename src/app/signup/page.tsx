@@ -370,7 +370,7 @@ export default function SignupPage() {
           {isTrial && (
             <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2">
               <span className="flex h-2 w-2 rounded-full bg-green-500" />
-              <span className="text-sm font-semibold text-green-700">ทดลองฟรี 14 วัน</span>
+              <span className="text-sm font-semibold text-green-700">{t('trialBadge')}</span>
             </div>
           )}
         </div>
@@ -704,18 +704,12 @@ export default function SignupPage() {
         <div className="mt-6 text-center text-sm text-gray-500">
           {isTrial ? (
             <>
-              <p className="font-medium text-green-700">
-                บัญชีทดลองใช้ฟรี 14 วัน จะเริ่มต้นหลังสมัคร
-              </p>
-              <p className="mt-1">ไม่ต้องใช้บัตรเครดิต ยกเลิกได้ตลอดเวลา</p>
+              <p className="font-medium text-green-700">{t('trialFreeLabel')}</p>
+              <p className="mt-1">{t('trialNoCard')}</p>
               <p className="mt-2 text-gray-600">
-                <strong>หลังจากทดลองใช้:</strong> ฟรี 5 leads/เดือน
-                หรืออัปเกรดเพื่อรับฟีเจอร์เต็มรูปแบบ
+                <strong>{t('trialAfterLabel')}</strong> {t('trialAfterDetail')}
               </p>
-              <p className="mt-1 text-xs text-gray-400">
-                หมายเหตุ: ระบบจะ<strong>ไม่</strong>เรียกเก็บเงินอัตโนมัติ
-                คุณต้องเลือกแพ็กเกจด้วยตนเอง
-              </p>
+              <p className="mt-1 text-xs text-gray-400">{t('trialNote')}</p>
             </>
           ) : (
             <>

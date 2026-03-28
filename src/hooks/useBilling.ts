@@ -207,6 +207,19 @@ export function useUsage() {
   })
 }
 
+export function useUsageHistory(limit: number = 6) {
+  return useQuery({
+    queryKey: [...billingKeys.usage(), 'history', limit],
+    queryFn: async () => {
+      const { data } = await apiClient.get('/api/v1/usage/history', {
+        params: { limit },
+      })
+      return data
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
 // ============== Billing Status Hook ==============
 
 export function useBillingStatus() {
@@ -259,6 +272,27 @@ export function useCustomerPortal() {
     mutationFn: async (): Promise<PaymentPortalResponse> => {
       const response = await apiClient.post<PaymentPortalResponse>('/billing/customer-portal', {})
       return response.data
+    },
+  })
+}
+
+export function useConvertTrial() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      planId,
+      paymentMethodId,
+    }: {
+      planId: string
+      paymentMethodId: string
+    }) => {
+      const { data } = await apiClient.post('/api/v1/billing/convert-trial', null, {
+        params: { plan_id: planId, payment_method_id: paymentMethodId },
+      })
+      return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: billingKeys.all })
     },
   })
 }

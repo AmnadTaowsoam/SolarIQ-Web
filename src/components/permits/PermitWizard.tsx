@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import {
   DocumentType,
   ApplicationFormData,
@@ -29,6 +30,7 @@ interface PermitWizardProps {
 }
 
 export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
+  const t = useTranslations('permitWizard')
   const router = useRouter()
   const { permit, loading: permitLoading, error: permitError, refetch } = usePermit(permitId)
   const { checklist, loading: checklistLoading } = usePermitChecklist(permitId)
@@ -40,10 +42,10 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   const steps = [
-    { id: 'overview', title: 'ภาพรวม', titleEn: 'Overview' },
-    { id: 'documents', title: 'เอกสาร', titleEn: 'Documents' },
-    { id: 'review', title: 'ตรวจสอบ', titleEn: 'Review' },
-    { id: 'submit', title: 'ส่งขอ', titleEn: 'Submit' },
+    { id: 'overview', title: t('step1'), titleEn: 'Overview' },
+    { id: 'documents', title: t('step2'), titleEn: 'Documents' },
+    { id: 'review', title: t('step3'), titleEn: 'Review' },
+    { id: 'submit', title: t('step4'), titleEn: 'Submit' },
   ]
 
   const handleGenerateDocument = async (documentType: DocumentType) => {
@@ -61,10 +63,10 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
         dataJson: data,
       })
 
-      showToast('success', 'สร้างเอกสารสำเร็จ')
+      showToast('success', t('success'))
       refetch()
     } catch {
-      showToast('error', 'สร้างเอกสารไม่สำเร็จ')
+      showToast('error', t('error'))
     }
   }
 
@@ -252,20 +254,20 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
         status,
         reviewNotes: '',
       })
-      showToast('success', 'ตรวจสอบเอกสารสำเร็จ')
+      showToast('success', t('success'))
       refetch()
     } catch {
-      showToast('error', 'ตรวจสอบเอกสารไม่สำเร็จ')
+      showToast('error', t('error'))
     }
   }
 
   const handleSubmit = async () => {
     try {
       await updatePermitPackage(permitId, { status: 'submitted' })
-      showToast('success', 'ส่งขอใบอนุญาตสำเร็จ')
+      showToast('success', t('success'))
       router.push(`/deals/${dealId}`)
     } catch {
-      showToast('error', 'ส่งขอใบอนุญาตไม่สำเร็จ')
+      showToast('error', t('error'))
     }
   }
 
@@ -290,13 +292,13 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
   const getDocumentStatusText = (status: string) => {
     switch (status) {
       case 'generated':
-        return 'สร้างแล้ว'
+        return t('uploadDocuments')
       case 'reviewed':
-        return 'ตรวจสอบแล้ว'
+        return t('reviewTitle')
       case 'approved':
-        return 'อนุมัติแล้ว'
+        return t('confirmSubmit')
       default:
-        return 'รอดำเนินการ'
+        return t('requiredDocs')
     }
   }
 
@@ -312,7 +314,9 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Card className="p-6 text-red-600">
-          <p>เกิดข้อผิดพลาด: {permitError}</p>
+          <p>
+            {t('errorDesc')}: {permitError}
+          </p>
         </Card>
       </div>
     )
@@ -322,9 +326,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
     <div className="max-w-6xl mx-auto p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          ใบอนุญาตติดตั้งระบบผลิตไฟฟ้าจากพลังงานแสงอาทิตย์
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('title')}</h1>
         <p className="text-gray-600">
           Solar Installation Permit - {permit?.authority.toUpperCase()} - {permit?.permitType}
         </p>
@@ -363,22 +365,22 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
       <Card className="p-6">
         {currentStep === 0 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">ภาพรวมโครงการ</h2>
+            <h2 className="text-xl font-semibold mb-4">{t('projectName')}</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-gray-600">สถานะ:</p>
+                <p className="text-gray-600">{t('step')}:</p>
                 <p className="font-medium">{permit?.status}</p>
               </div>
               <div>
-                <p className="text-gray-600">หน่วยงาน:</p>
+                <p className="text-gray-600">{t('authorityType')}:</p>
                 <p className="font-medium">{permit?.authority.toUpperCase()}</p>
               </div>
               <div>
-                <p className="text-gray-600">ประเภท:</p>
+                <p className="text-gray-600">{t('systemSize')}:</p>
                 <p className="font-medium">{permit?.permitType}</p>
               </div>
               <div>
-                <p className="text-gray-600">กำหนดส่ง:</p>
+                <p className="text-gray-600">{t('submit')}:</p>
                 <p className="font-medium">
                   {permit?.submissionDeadline
                     ? new Date(permit.submissionDeadline).toLocaleDateString('th-TH')
@@ -391,9 +393,9 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
 
         {currentStep === 1 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">เอกสารที่ต้องการ</h2>
+            <h2 className="text-xl font-semibold mb-4">{t('requiredDocs')}</h2>
             {checklistLoading ? (
-              <p>กำลังโหลด...</p>
+              <p>{t('uploadDocuments')}...</p>
             ) : (
               <div className="space-y-4">
                 {checklist?.map((item) => (
@@ -404,7 +406,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
                     <div>
                       <p className="font-medium">{item.title}</p>
                       <p className="text-sm text-gray-500">
-                        {item.required ? 'จำเป็น' : 'ไม่จำเป็น'}
+                        {item.required ? t('requiredDocs') : t('uploadDocuments')}
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
@@ -425,7 +427,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
                               }
                             }}
                           >
-                            ดู PDF
+                            {t('architecturalPlan')}
                           </Button>
                           {item.status !== 'approved' && (
                             <Button
@@ -434,13 +436,13 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
                                 item.documentId && handleReviewDocument(item.documentId, 'approved')
                               }
                             >
-                              อนุมัติ
+                              {t('confirmSubmit')}
                             </Button>
                           )}
                         </>
                       ) : (
                         <Button size="sm" onClick={() => handleGenerateDocument(item.documentType)}>
-                          สร้างเอกสาร
+                          {t('uploadDocuments')}
                         </Button>
                       )}
                     </div>
@@ -453,7 +455,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
 
         {currentStep === 2 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">ตรวจสอบเอกสาร</h2>
+            <h2 className="text-xl font-semibold mb-4">{t('reviewTitle')}</h2>
             <div className="space-y-4">
               {permit?.documents.map((doc) => (
                 <div key={doc.id} className="p-4 border rounded">
@@ -474,7 +476,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
                       variant="outline"
                       onClick={() => window.open(doc.pdfUrl, '_blank')}
                     >
-                      ดู PDF
+                      {t('architecturalPlan')}
                     </Button>
                   )}
                 </div>
@@ -485,17 +487,23 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
 
         {currentStep === 3 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">ส่งขอใบอนุญาต</h2>
+            <h2 className="text-xl font-semibold mb-4">{t('submit')}</h2>
             <div className="space-y-4">
-              <p className="text-gray-600">ตรวจสอบข้อมูลและเอกสารทั้งหมดก่อนส่งขอใบอนุญาต</p>
+              <p className="text-gray-600">{t('confirmSubmit')}</p>
               <div className="p-4 bg-blue-50 rounded">
-                <p className="font-medium mb-2">สรุป:</p>
+                <p className="font-medium mb-2">{t('reviewTitle')}:</p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>หน่วยงาน: {permit?.authority.toUpperCase()}</li>
-                  <li>ประเภท: {permit?.permitType}</li>
-                  <li>จำนวนเอกสาร: {permit?.documents.length}</li>
                   <li>
-                    กำหนดส่ง:{' '}
+                    {t('authorityType')}: {permit?.authority.toUpperCase()}
+                  </li>
+                  <li>
+                    {t('systemSize')}: {permit?.permitType}
+                  </li>
+                  <li>
+                    {t('requiredDocs')}: {permit?.documents.length}
+                  </li>
+                  <li>
+                    {t('submit')}:{' '}
                     {permit?.submissionDeadline
                       ? new Date(permit.submissionDeadline).toLocaleDateString('th-TH')
                       : '-'}
@@ -503,7 +511,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
                 </ul>
               </div>
               <Button onClick={handleSubmit} className="w-full">
-                ส่งขอใบอนุญาต
+                {t('submit')}
               </Button>
             </div>
           </div>
@@ -517,13 +525,13 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
           onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
           disabled={currentStep === 0}
         >
-          ย้อนกลับ
+          {t('back')}
         </Button>
         <Button
           onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
           disabled={currentStep === steps.length - 1}
         >
-          ถัดไป
+          {t('next')}
         </Button>
       </div>
 

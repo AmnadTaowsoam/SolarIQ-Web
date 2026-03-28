@@ -394,6 +394,7 @@ function CompanyProfileSection() {
 
 function TaxProfileSection() {
   const t = useTranslations('settingsPage')
+  const tExtra = useTranslations('settingsExtra')
   const { data: taxProfile, isLoading } = useTaxProfile()
   const updateTaxProfile = useUpdateTaxProfile()
 
@@ -434,9 +435,9 @@ function TaxProfileSection() {
         tax_contact_email: taxContactEmail || undefined,
         tax_contact_phone: taxContactPhone || undefined,
       })
-      alert('บันทึกข้อมูลสำเร็จ')
+      alert(tExtra('saved'))
     } catch {
-      alert('ไม่สามารถบันทึกข้อมูลได้')
+      alert(tExtra('error'))
     } finally {
       setIsSaving(false)
     }
@@ -459,7 +460,7 @@ function TaxProfileSection() {
     return (
       <Card>
         <CardBody>
-          <div className="text-center py-10 text-gray-500">กำลังโหลด...</div>
+          <div className="text-center py-10 text-gray-500">{tExtra('saving')}</div>
         </CardBody>
       </Card>
     )
@@ -550,7 +551,7 @@ function TaxProfileSection() {
             {t('tax.reset')}
           </Button>
           <Button variant="primary" size="sm" onClick={handleSave} disabled={isSaving}>
-            {isSaving ? 'กำลังบันทึก...' : t('tax.save')}
+            {isSaving ? tExtra('saving') : t('tax.save')}
           </Button>
         </div>
       </CardFooter>
@@ -1255,6 +1256,7 @@ function ApiKeysSection() {
 
 function WhiteLabelSection() {
   const t = useTranslations('settingsPage')
+  const tExtra = useTranslations('settingsExtra')
   const { brand, brands, switchBrand, refresh } = useBrand()
   const manageableBrand = brand && 'id' in brand ? brand : null
   const [activeBrandId, setActiveBrandId] = useState(manageableBrand?.id ?? '')
@@ -1311,7 +1313,11 @@ function WhiteLabelSection() {
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (!file || !manageableBrand) {
+    if (!file) {
+      return
+    }
+    if (!manageableBrand) {
+      alert(tExtra('brandRequired'))
       return
     }
     setIsUploadingLogo(true)
@@ -1327,8 +1333,9 @@ function WhiteLabelSection() {
       )
       setLogoLightUrl(res.data.url)
       await refresh()
+      alert(tExtra('logoUploaded'))
     } catch {
-      alert('Logo upload failed. Please check file size (max 2MB) and try again.')
+      alert(tExtra('logoUploadError'))
     } finally {
       setIsUploadingLogo(false)
     }
@@ -1525,7 +1532,7 @@ function WhiteLabelSection() {
                 disabled={isUploadingLogo}
                 className="text-xs text-[var(--brand-primary)] hover:underline disabled:opacity-50"
               >
-                {isUploadingLogo ? t('branding.uploading') : t('branding.uploadLogo')}
+                {isUploadingLogo ? tExtra('saving') : tExtra('uploadLogo')}
               </button>
               {logoLightUrl && (
                 // eslint-disable-next-line @next/next/no-img-element

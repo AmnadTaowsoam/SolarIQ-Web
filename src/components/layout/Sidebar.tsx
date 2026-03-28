@@ -10,6 +10,8 @@ import { User } from '@/types'
 import { ROUTES } from '@/lib/constants'
 import { extractLocaleFromPath } from '@/lib/locale'
 import { useBrand } from '@/context'
+import { useBillingStatus } from '@/hooks/useBilling'
+import TrialBanner from '@/components/billing/TrialBanner'
 
 interface SidebarProps {
   user: User | null
@@ -38,6 +40,13 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
   const { brand } = useBrand()
   const isAdmin = user?.role === 'admin'
   const { pathname: cleanPath } = extractLocaleFromPath(pathname)
+  const { data: billingStatus } = useBillingStatus()
+  const planLabel = billingStatus?.subscription?.plan_id?.toUpperCase() || 'FREE'
+  const isTrialing = billingStatus?.subscription?.status === 'trialing'
+  const trialEnd = billingStatus?.subscription?.trial_end
+  const trialDaysRemaining = trialEnd
+    ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 0
   const brandName = brand && 'company_name' in brand ? brand.company_name : 'SolarIQ'
   const brandLogo = brand && 'logo' in brand ? brand.logo?.light : brand?.logo_light_url
   const defaultLogo = '/SolarIQ/4.png' // SolarIQ icon (orange, light bg)
@@ -416,7 +425,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
                 {brandName}
               </span>
               <span className="text-[10px] text-[var(--brand-primary)] font-semibold ml-1.5 px-1.5 py-0.5 bg-[var(--brand-primary-light)] rounded-full">
-                PRO
+                {planLabel}
               </span>
             </div>
           </Link>
@@ -478,6 +487,18 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
             ))}
         </nav>
 
+        {/* Trial Banner */}
+        {isTrialing && trialEnd && (
+          <div className="px-3 pb-2">
+            <TrialBanner
+              daysRemaining={trialDaysRemaining}
+              isTrialActive={true}
+              trialEndDate={trialEnd}
+              planName={billingStatus?.subscription?.plan_id || null}
+            />
+          </div>
+        )}
+
         {/* Marketing Links */}
         <div className="border-t border-[var(--brand-border)] px-3 py-3">
           <p className="px-3 text-[10px] font-bold text-[var(--brand-sidebar-text)]/40 uppercase tracking-[0.1em] mb-2">
@@ -508,7 +529,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
                   d="M6 6h.008v.008H6V6z"
                 />
               </svg>
-              แพ็กเกจราคา
+              {tNav('pricingPlans')}
             </Link>
             <Link
               href="/about"
@@ -528,7 +549,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
                   d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
                 />
               </svg>
-              เกี่ยวกับเรา
+              {tNav('about')}
             </Link>
             <Link
               href="/contact"
@@ -548,7 +569,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
                   d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
                 />
               </svg>
-              ติดต่อเรา
+              {tNav('contact')}
             </Link>
           </div>
         </div>

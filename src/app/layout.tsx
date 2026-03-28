@@ -160,8 +160,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <ErrorBoundary>
             <Providers>{children}</Providers>
           </ErrorBoundary>
+          <CookieConsentBanner />
         </NextIntlClientProvider>
-        <CookieConsentBanner />
       </body>
     </html>
   )

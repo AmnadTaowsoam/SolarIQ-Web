@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { DealMilestone, DealStage, DEAL_STAGE_LABELS, DEAL_STAGE_ORDER } from '@/types/quotes'
 
 interface DealProgressTimelineProps {
@@ -15,13 +16,15 @@ export function DealProgressTimeline({
   onCompleteStage,
   isContractor = false,
 }: DealProgressTimelineProps) {
+  const t = useTranslations('dealTimeline')
   const currentIndex = DEAL_STAGE_ORDER.indexOf(currentStage)
 
-  const getMilestone = (stage: DealStage) =>
-    milestones.find((m) => m.stage === stage)
+  const getMilestone = (stage: DealStage) => milestones.find((m) => m.stage === stage)
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return null
+    if (!dateStr) {
+      return null
+    }
     try {
       return new Date(dateStr).toLocaleDateString('th-TH', {
         day: 'numeric',
@@ -37,7 +40,7 @@ export function DealProgressTimeline({
     <div className="space-y-0">
       {DEAL_STAGE_ORDER.map((stage, index) => {
         const milestone = getMilestone(stage)
-        const isCompleted = milestone?.completedAt != null
+        const isCompleted = milestone?.completedAt !== null && milestone?.completedAt !== undefined
         const isCurrent = stage === currentStage && !isCompleted
         const isPending = index > currentIndex
         const isNextAction = isContractor && isCurrent
@@ -51,17 +54,27 @@ export function DealProgressTimeline({
                   isCompleted
                     ? 'bg-green-500 text-white'
                     : isCurrent
-                    ? 'bg-orange-500 text-white ring-4 ring-orange-100'
-                    : 'bg-gray-200 text-gray-400'
+                      ? 'bg-orange-500 text-white ring-4 ring-orange-100'
+                      : 'bg-gray-200 text-gray-400'
                 }`}
               >
                 {isCompleted ? (
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 ) : isCurrent ? (
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 ) : (
                   <span className="text-xs font-bold">{index + 1}</span>
@@ -86,8 +99,8 @@ export function DealProgressTimeline({
                       isCompleted
                         ? 'text-green-700'
                         : isCurrent
-                        ? 'text-orange-700'
-                        : 'text-gray-400'
+                          ? 'text-orange-700'
+                          : 'text-gray-400'
                     }`}
                   >
                     {DEAL_STAGE_LABELS[stage]}
@@ -96,17 +109,17 @@ export function DealProgressTimeline({
                   {/* Dates */}
                   {isCompleted && milestone?.completedAt && (
                     <p className="text-xs text-gray-500 mt-0.5">
-                      เสร็จสิ้น: {formatDate(milestone.completedAt)}
+                      {t('completedOn')}: {formatDate(milestone.completedAt)}
                     </p>
                   )}
                   {isCurrent && milestone?.plannedDate && (
                     <p className="text-xs text-orange-600 mt-0.5">
-                      กำหนด: {formatDate(milestone.plannedDate)}
+                      {t('currentStage')}: {formatDate(milestone.plannedDate)}
                     </p>
                   )}
                   {isPending && milestone?.plannedDate && (
                     <p className="text-xs text-gray-400 mt-0.5">
-                      วางแผน: {formatDate(milestone.plannedDate)}
+                      {formatDate(milestone.plannedDate)}
                     </p>
                   )}
 
@@ -128,10 +141,20 @@ export function DealProgressTimeline({
                           rel="noopener noreferrer"
                           className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded"
                         >
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
                           </svg>
-                          รูปที่ {i + 1}
+                          {i + 1}
                         </a>
                       ))}
                     </div>
@@ -148,10 +171,20 @@ export function DealProgressTimeline({
                           rel="noopener noreferrer"
                           className="flex items-center gap-1 text-xs text-purple-600 hover:text-purple-800 bg-purple-50 px-2 py-1 rounded"
                         >
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
                           </svg>
-                          เอกสาร {i + 1}
+                          {i + 1}
                         </a>
                       ))}
                     </div>
@@ -164,7 +197,7 @@ export function DealProgressTimeline({
                     onClick={() => onCompleteStage(milestone)}
                     className="flex-shrink-0 text-xs px-3 py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium"
                   >
-                    อัพเดต
+                    {t('currentStage')}
                   </button>
                 )}
               </div>

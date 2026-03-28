@@ -23,6 +23,7 @@ import {
 import { api } from '@/lib/api'
 import { API_ENDPOINTS } from '@/lib/constants'
 import type { OpnSourceType, CheckoutResponse } from '@/types/billing'
+import { useTranslations } from 'next-intl'
 
 /* ------------------------------------------------------------------ */
 /*  Plan Data                                                          */
@@ -34,17 +35,18 @@ interface PlanInfo {
   id: PlanId
   name: string
   subtitle: string
+  subtitleKey?: string
   icon: React.ElementType
   monthlyPrice: number
   annualPrice: number
   features: string[]
 }
 
-const PLANS: Record<string, PlanInfo> = {
+const PLANS: Record<string, Omit<PlanInfo, 'subtitle'> & { subtitleKey: string }> = {
   trial: {
     id: 'trial',
     name: 'ทดลองฟรี',
-    subtitle: 'Free Trial - 14 วัน',
+    subtitleKey: 'planStarterSubtitle',
     icon: Gift,
     monthlyPrice: 0,
     annualPrice: 0,
@@ -58,7 +60,7 @@ const PLANS: Record<string, PlanInfo> = {
   starter: {
     id: 'starter',
     name: 'Starter',
-    subtitle: 'สำหรับทีมขนาดเล็ก',
+    subtitleKey: 'planStarterSubtitle',
     icon: Zap,
     monthlyPrice: 2900,
     annualPrice: 2320,
@@ -74,7 +76,7 @@ const PLANS: Record<string, PlanInfo> = {
   professional: {
     id: 'professional',
     name: 'Professional',
-    subtitle: 'สำหรับทีมที่ต้องการเติบโต',
+    subtitleKey: 'planProfessionalSubtitle',
     icon: Rocket,
     monthlyPrice: 7900,
     annualPrice: 6320,
@@ -94,7 +96,7 @@ const PLANS: Record<string, PlanInfo> = {
   enterprise: {
     id: 'enterprise',
     name: 'Enterprise',
-    subtitle: 'สำหรับองค์กรขนาดใหญ่',
+    subtitleKey: 'planEnterpriseSubtitle',
     icon: Building2,
     monthlyPrice: 15000,
     annualPrice: 12000,
@@ -112,20 +114,10 @@ const PLANS: Record<string, PlanInfo> = {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Payment Methods                                                    */
-/* ------------------------------------------------------------------ */
-const PAYMENT_METHODS: { id: OpnSourceType; label: string; icon: React.ElementType }[] = [
-  { id: 'credit_card', label: 'บัตรเครดิต/เดบิต', icon: CreditCard },
-  { id: 'promptpay', label: 'พร้อมเพย์', icon: QrCode },
-  { id: 'internet_banking_scb', label: 'SCB', icon: Landmark },
-  { id: 'internet_banking_kbank', label: 'KBANK', icon: Landmark },
-  { id: 'internet_banking_bbl', label: 'BBL', icon: Landmark },
-]
-
-/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 export default function CheckoutPage() {
+  const t = useTranslations('checkout')
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -143,7 +135,22 @@ export default function CheckoutPage() {
   const [chargeId, setChargeId] = useState<string | null>(null)
   const [isPolling, setIsPolling] = useState(false)
 
-  const plan = PLANS[planId]
+  const PAYMENT_METHODS: { id: OpnSourceType; label: string; icon: React.ElementType }[] = [
+    { id: 'credit_card', label: t('creditCard'), icon: CreditCard },
+    { id: 'promptpay', label: t('promptpay'), icon: QrCode },
+    { id: 'internet_banking_scb', label: 'SCB', icon: Landmark },
+    { id: 'internet_banking_kbank', label: 'KBANK', icon: Landmark },
+    { id: 'internet_banking_bbl', label: 'BBL', icon: Landmark },
+  ]
+
+  const rawPlan = PLANS[planId]
+  const plan: PlanInfo | undefined = useMemo(
+    () =>
+      rawPlan
+        ? { ...rawPlan, subtitle: t(rawPlan.subtitleKey as Parameters<typeof t>[0]) }
+        : undefined,
+    [rawPlan, t]
+  )
 
   // Redirect trial to signup
   useEffect(() => {
@@ -257,7 +264,7 @@ export default function CheckoutPage() {
           className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
-          ย้อนกลับ
+          {t('back')}
         </Link>
 
         <div className="grid gap-8 lg:grid-cols-5">
@@ -267,7 +274,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2 order-2 lg:order-1">
             <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 lg:p-8 shadow-sm sticky top-24">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
-                สรุปคำสั่งซื้อ
+                {t('summary')}
               </h2>
 
               {/* Plan card */}
@@ -300,7 +307,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">
-                    แพ็กเกจ {plan.name} ({billing === 'annual' ? 'รายปี' : 'รายเดือน'})
+                    {t('summary')} {plan.name} ({billing === 'annual' ? t('annual') : t('monthly')})
                   </span>
                   <span className="font-medium text-gray-900 dark:text-white">
                     ฿{price.toLocaleString('th-TH')}
@@ -309,7 +316,7 @@ export default function CheckoutPage() {
 
                 {billing === 'annual' && savings > 0 && (
                   <div className="flex justify-between text-green-600">
-                    <span>ส่วนลดรายปี</span>
+                    <span>{t('annualDiscount')}</span>
                     <span className="font-medium">
                       ประหยัด ฿{savings.toLocaleString('th-TH')}/ปี
                     </span>
@@ -319,14 +326,14 @@ export default function CheckoutPage() {
                 {promoApplied && (
                   <div className="flex justify-between text-green-600">
                     <span>โปรโมชั่น ({promoCode})</span>
-                    <span className="font-medium">ใช้แล้ว</span>
+                    <span className="font-medium">{t('promoApplied')}</span>
                   </div>
                 )}
 
                 <hr className="border-gray-200 dark:border-gray-700" />
 
                 <div className="flex justify-between text-base font-bold">
-                  <span className="text-gray-900 dark:text-white">ยอดรวม</span>
+                  <span className="text-gray-900 dark:text-white">{t('total')}</span>
                   <span className="text-gray-900 dark:text-white">
                     ฿{price.toLocaleString('th-TH')}/เดือน
                   </span>
@@ -346,7 +353,7 @@ export default function CheckoutPage() {
           {/* -------------------------------------------------------- */}
           <div className="lg:col-span-3 order-1 lg:order-2">
             <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 lg:p-8 shadow-sm">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">ชำระเงิน</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('pay')}</h1>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
                 เลือกรอบการชำระเงินและดำเนินการต่อ
               </p>
@@ -354,7 +361,7 @@ export default function CheckoutPage() {
               {/* Billing toggle */}
               <div className="mb-8">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                  รอบการชำระเงิน
+                  {t('billingCycle')}
                 </label>
                 <div className="inline-flex rounded-xl bg-gray-100 dark:bg-gray-700 p-1">
                   <button
@@ -365,7 +372,7 @@ export default function CheckoutPage() {
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
                     }`}
                   >
-                    รายเดือน
+                    {t('monthly')}
                   </button>
                   <button
                     onClick={() => setBilling('annual')}
@@ -375,7 +382,7 @@ export default function CheckoutPage() {
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
                     }`}
                   >
-                    รายปี
+                    {t('annual')}
                     <span className="ml-2 inline-block rounded-full bg-green-500 px-2 py-0.5 text-xs text-white">
                       -20%
                     </span>
@@ -408,7 +415,7 @@ export default function CheckoutPage() {
                     disabled={!promoCode.trim() || promoApplied}
                     className="rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {promoApplied ? 'ใช้แล้ว' : 'ใช้รหัส'}
+                    {promoApplied ? t('promoApplied') : 'ใช้รหัส'}
                   </button>
                 </div>
                 {promoError && <p className="mt-2 text-sm text-red-500">{promoError}</p>}
@@ -420,7 +427,7 @@ export default function CheckoutPage() {
               {/* Payment method selector */}
               <div className="mb-8">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                  วิธีการชำระเงิน
+                  {t('paymentMethod')}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {PAYMENT_METHODS.map((method) => {
@@ -457,7 +464,7 @@ export default function CheckoutPage() {
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                       <QrCode className="h-5 w-5 text-primary-500" />
-                      ชำระเงินผ่านพร้อมเพย์
+                      {t('promptpay')}
                     </h3>
                     <button
                       onClick={() => {
@@ -503,18 +510,18 @@ export default function CheckoutPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    กำลังดำเนินการ...
+                    {t('processing')}
                   </>
                 ) : (
                   <>
                     <CreditCard className="h-5 w-5" />
-                    ชำระเงิน ฿{price.toLocaleString('th-TH')}/เดือน
+                    {t('pay')} ฿{price.toLocaleString('th-TH')}/เดือน
                   </>
                 )}
               </button>
 
               <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
-                ชำระเงินผ่านระบบ Opn Payments ที่ปลอดภัย
+                {t('securePayment')}
               </p>
 
               {/* Trust badges */}
@@ -553,7 +560,7 @@ export default function CheckoutPage() {
 
               {/* Policy info */}
               <div className="mt-8 rounded-lg bg-gray-50 dark:bg-gray-700/50 p-4 text-xs text-gray-500 dark:text-gray-400 space-y-1">
-                <p>ยกเลิกได้ตลอดเวลา ไม่มีค่าใช้จ่ายในการยกเลิก</p>
+                <p>{t('cancelPolicy')}</p>
                 <p>เมื่อยกเลิก คุณจะยังใช้งานได้จนจบรอบบิลปัจจุบัน</p>
                 <p>รับใบเสร็จรับเงินอิเล็กทรอนิกส์ทุกรอบบิลทาง Email</p>
               </div>

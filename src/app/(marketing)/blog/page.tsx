@@ -1,3 +1,5 @@
+export const runtime = 'nodejs'
+
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Calendar, Clock, Tag, Search, Filter } from 'lucide-react'

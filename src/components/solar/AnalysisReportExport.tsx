@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui'
 import { Download, Copy, Check } from 'lucide-react'
 import type { SolarAnalysisAdvanced } from '@/types'
@@ -375,6 +376,7 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
 }
 
 export function AnalysisReportExport({ result }: AnalysisReportExportProps) {
+  const t = useTranslations('analysisReport')
   const [copied, setCopied] = useState(false)
 
   const handlePrintReport = () => {
@@ -415,7 +417,7 @@ export function AnalysisReportExport({ result }: AnalysisReportExportProps) {
         onClick={handlePrintReport}
         leftIcon={<Download className="w-4 h-4" />}
       >
-        ดาวน์โหลดรายงาน
+        {t('downloadPdf')}
       </Button>
       <Button
         variant="outline"
@@ -425,7 +427,7 @@ export function AnalysisReportExport({ result }: AnalysisReportExportProps) {
           copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />
         }
       >
-        {copied ? 'คัดลอกแล้ว!' : 'คัดลอกรายงาน'}
+        {copied ? t('exporting') : t('shareReport')}
       </Button>
     </div>
   )

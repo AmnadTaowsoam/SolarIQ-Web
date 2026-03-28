@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 const STORAGE_KEY = 'solariq_onboarding_progress'
 const DISMISSED_KEY = 'solariq_onboarding_dismissed'
@@ -14,45 +15,47 @@ interface Step {
   icon: string
 }
 
-const STEPS: Step[] = [
-  {
-    id: 'create_lead',
-    title: 'สร้าง Lead แรก',
-    description: 'เพิ่มลูกค้าที่สนใจติดตั้งโซลาร์',
-    href: '/leads',
-    icon: '👤',
-  },
-  {
-    id: 'solar_analysis',
-    title: 'วิเคราะห์ศักยภาพโซลาร์',
-    description: 'กรอกพิกัดและค่าไฟเพื่อคำนวณ ROI',
-    href: '/analyze',
-    icon: '☀️',
-  },
-  {
-    id: 'create_proposal',
-    title: 'สร้างใบเสนอราคา',
-    description: 'สร้าง Proposal จากผลวิเคราะห์',
-    href: '/leads',
-    icon: '📄',
-  },
-  {
-    id: 'close_deal',
-    title: 'ปิดการขาย',
-    description: 'สร้าง Deal เมื่อลูกค้าตกลง',
-    href: '/deals',
-    icon: '🤝',
-  },
-  {
-    id: 'service_area',
-    title: 'ตั้งค่าพื้นที่ให้บริการ',
-    description: 'กำหนดจังหวัดที่รับงานเพื่อรับ Lead อัตโนมัติ',
-    href: '/service-area',
-    icon: '📍',
-  },
-]
-
 export default function GettingStartedCard() {
+  const t = useTranslations('onboardingCard')
+
+  const STEPS: Step[] = [
+    {
+      id: 'create_lead',
+      title: t('createLead'),
+      description: t('createLeadDesc'),
+      href: '/leads',
+      icon: '👤',
+    },
+    {
+      id: 'solar_analysis',
+      title: t('setupProfile'),
+      description: t('setupProfileDesc'),
+      href: '/analyze',
+      icon: '☀️',
+    },
+    {
+      id: 'create_proposal',
+      title: t('addTeam'),
+      description: t('addTeamDesc'),
+      href: '/leads',
+      icon: '📄',
+    },
+    {
+      id: 'close_deal',
+      title: t('viewGuide'),
+      description: t('subtitle'),
+      href: '/deals',
+      icon: '🤝',
+    },
+    {
+      id: 'service_area',
+      title: t('skip'),
+      description: t('progress'),
+      href: '/service-area',
+      icon: '📍',
+    },
+  ]
+
   const [completedSteps, setCompletedSteps] = useState<string[]>([])
   const [isDismissed, setIsDismissed] = useState(true) // default hidden until loaded
 
@@ -102,21 +105,21 @@ export default function GettingStartedCard() {
     <div className="mb-6 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-6">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">เริ่มต้นใช้งาน SolarIQ</h2>
-          <p className="text-sm text-gray-600">ทำตามขั้นตอนเหล่านี้เพื่อเริ่มใช้งานแพลตฟอร์ม</p>
+          <h2 className="text-lg font-semibold text-gray-900">{t('title')}</h2>
+          <p className="text-sm text-gray-600">{t('subtitle')}</p>
         </div>
         <button
           onClick={dismiss}
           className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-white/60 hover:text-gray-700"
         >
-          ซ่อน
+          {t('dismiss')}
         </button>
       </div>
 
       {/* Progress bar */}
       <div className="mb-4">
         <div className="mb-1 flex items-center justify-between text-xs text-gray-500">
-          <span>ความคืบหน้า</span>
+          <span>{t('progress')}</span>
           <span>{progress}%</span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-white/80">
@@ -184,7 +187,7 @@ export default function GettingStartedCard() {
                   href={step.href}
                   className="flex-shrink-0 rounded-md bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700 hover:bg-amber-200"
                 >
-                  เริ่ม
+                  {t('getStarted')}
                 </Link>
               )}
             </div>
@@ -194,7 +197,7 @@ export default function GettingStartedCard() {
 
       {completedSteps.length === STEPS.length && (
         <div className="mt-4 rounded-lg bg-green-100 p-3 text-center text-sm font-medium text-green-800">
-          ยินดีด้วย! คุณพร้อมใช้งาน SolarIQ แล้ว
+          {t('done')}
         </div>
       )}
     </div>

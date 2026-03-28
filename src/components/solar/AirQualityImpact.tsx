@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
+import { useTranslations } from 'next-intl'
 import { Card, CardHeader, CardBody } from '@/components/ui'
 import { Wind, Droplets, AlertTriangle, Calendar } from 'lucide-react'
 import type { AirQualityData, DustSeasonAnalysis } from '@/types'
@@ -13,10 +14,10 @@ interface AirQualityImpactProps {
 const formatNumber = (value: number): string =>
   new Intl.NumberFormat('th-TH', { maximumFractionDigits: 1 }).format(value)
 
-function getAqiConfig(aqi: number) {
+function getAqiConfig(aqi: number, t: (key: string) => string) {
   if (aqi <= 50) {
     return {
-      label: '\u0E14\u0E35',
+      label: t('good'),
       color: 'text-green-600',
       bg: 'bg-green-500',
       bgLight: 'bg-green-500/10',
@@ -25,7 +26,7 @@ function getAqiConfig(aqi: number) {
   }
   if (aqi <= 100) {
     return {
-      label: '\u0E1B\u0E32\u0E19\u0E01\u0E25\u0E32\u0E07',
+      label: t('moderate'),
       color: 'text-yellow-600',
       bg: 'bg-yellow-500',
       bgLight: 'bg-yellow-500/10',
@@ -34,8 +35,7 @@ function getAqiConfig(aqi: number) {
   }
   if (aqi <= 150) {
     return {
-      label:
-        '\u0E44\u0E21\u0E48\u0E14\u0E35\u0E15\u0E48\u0E2D\u0E01\u0E25\u0E38\u0E48\u0E21\u0E40\u0E2A\u0E35\u0E48\u0E22\u0E07',
+      label: t('unhealthy'),
       color: 'text-orange-600',
       bg: 'bg-orange-500',
       bgLight: 'bg-orange-500/10',
@@ -44,7 +44,7 @@ function getAqiConfig(aqi: number) {
   }
   if (aqi <= 200) {
     return {
-      label: '\u0E44\u0E21\u0E48\u0E14\u0E35\u0E15\u0E48\u0E2D\u0E2A\u0E38\u0E02\u0E20\u0E32\u0E1E',
+      label: t('veryUnhealthy'),
       color: 'text-red-600',
       bg: 'bg-red-500',
       bgLight: 'bg-red-500/10',
@@ -52,7 +52,7 @@ function getAqiConfig(aqi: number) {
     }
   }
   return {
-    label: '\u0E2D\u0E31\u0E19\u0E15\u0E23\u0E32\u0E22\u0E21\u0E32\u0E01',
+    label: t('hazardous'),
     color: 'text-purple-600',
     bg: 'bg-purple-500',
     bgLight: 'bg-purple-500/10',
@@ -76,6 +76,7 @@ const DUST_MONTHS = [
 ]
 
 export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactProps) {
+  const t = useTranslations('airQuality')
   const dustMonthSet = useMemo(() => {
     if (!dustSeason?.worstMonths) {
       return new Set<string>()
@@ -94,17 +95,12 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
     )
   }
 
-  const aqiConfig = getAqiConfig(airQuality.aqi)
+  const aqiConfig = getAqiConfig(airQuality.aqi, t)
   const aqiPercent = Math.min((airQuality.aqi / 300) * 100, 100)
 
   return (
     <Card>
-      <CardHeader
-        title={'\u0E04\u0E38\u0E13\u0E20\u0E32\u0E1E\u0E2D\u0E32\u0E01\u0E32\u0E28'}
-        subtitle={
-          '\u0E1C\u0E25\u0E01\u0E23\u0E30\u0E17\u0E1A\u0E15\u0E48\u0E2D\u0E41\u0E1C\u0E07\u0E42\u0E0B\u0E25\u0E32\u0E23\u0E4C'
-        }
-      />
+      <CardHeader title={t('title')} subtitle={t('solarImpact')} />
       <CardBody>
         <div className="space-y-5">
           {/* AQI Gauge */}
@@ -138,9 +134,7 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-2 rounded-lg bg-red-500/5 border border-red-500/10">
                   <div className="text-xs text-[var(--brand-text-secondary)]">
-                    {
-                      '\u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E\u0E25\u0E14\u0E25\u0E07'
-                    }
+                    {t('efficiencyReduction')}
                   </div>
                   <div className="text-lg font-bold text-red-600">
                     -{(airQuality.solarEfficiencyLoss ?? 0).toFixed(1)}%
@@ -148,12 +142,10 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
                 </div>
                 <div className="p-2 rounded-lg bg-blue-500/5 border border-blue-500/10">
                   <div className="text-xs text-[var(--brand-text-secondary)]">
-                    {
-                      '\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E44\u0E21\u0E48\u0E21\u0E35\u0E1D\u0E19'
-                    }
+                    {t('lastCleaned')}
                   </div>
                   <div className="text-lg font-bold text-blue-600">
-                    {airQuality.daysSinceRain} {'\u0E27\u0E31\u0E19'}
+                    {airQuality.daysSinceRain} {t('days')}
                   </div>
                 </div>
               </div>
@@ -165,7 +157,7 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
             <Droplets className="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" />
             <div>
               <div className="text-sm font-medium text-[var(--brand-text)]">
-                {'\u0E41\u0E19\u0E30\u0E19\u0E33\u0E25\u0E49\u0E32\u0E07\u0E41\u0E1C\u0E07'}
+                {t('cleaningRecommended')}
               </div>
               <div className="text-xs text-[var(--brand-text-secondary)] mt-0.5">
                 {airQuality.cleaningRecommendation}
@@ -176,20 +168,18 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
           {/* Panel Efficiency Comparison */}
           <div>
             <h4 className="text-sm font-semibold text-[var(--brand-text)] mb-3">
-              {
-                '\u0E40\u0E1B\u0E23\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E1B\u0E23\u0E30\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E20\u0E32\u0E1E: \u0E2A\u0E30\u0E2D\u0E32\u0E14 vs \u0E21\u0E35\u0E1D\u0E38\u0E48\u0E19'
-              }
+              {t('dustAccumulation')}
             </h4>
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20 text-center">
                 <div className="text-xs text-[var(--brand-text-secondary)] mb-1">
-                  {'\u0E41\u0E1C\u0E07\u0E2A\u0E30\u0E2D\u0E32\u0E14'}
+                  {t('cleaningRecommended')}
                 </div>
                 <div className="text-2xl font-bold text-green-600">100%</div>
               </div>
               <div className="p-3 rounded-lg bg-orange-500/5 border border-orange-500/20 text-center">
                 <div className="text-xs text-[var(--brand-text-secondary)] mb-1">
-                  {'\u0E41\u0E1C\u0E07\u0E21\u0E35\u0E1D\u0E38\u0E48\u0E19'}
+                  {t('dustAccumulation')}
                 </div>
                 <div className="text-2xl font-bold text-orange-600">
                   {(100 - (airQuality.solarEfficiencyLoss ?? 0)).toFixed(1)}%
@@ -203,8 +193,7 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
             <div>
               <h4 className="text-sm font-semibold text-[var(--brand-text)] mb-3 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-orange-500" />
-                {'\u0E24\u0E14\u0E39\u0E2B\u0E21\u0E2D\u0E01\u0E04\u0E27\u0E31\u0E19'} (
-                {dustSeason.region})
+                {t('forecast')} ({dustSeason.region})
               </h4>
               <div className="grid grid-cols-6 sm:grid-cols-12 gap-1 mb-3">
                 {DUST_MONTHS.map((m) => {
@@ -226,10 +215,7 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
               <div className="flex items-center gap-3 text-xs text-[var(--brand-text-secondary)]">
                 <AlertTriangle className="w-3.5 h-3.5 text-orange-500" />
                 <span>
-                  {
-                    '\u0E01\u0E32\u0E23\u0E2A\u0E39\u0E0D\u0E40\u0E2A\u0E35\u0E22\u0E1B\u0E23\u0E30\u0E08\u0E33\u0E1B\u0E35'
-                  }
-                  : -{formatNumber(dustSeason.annualLossPercent)}%
+                  {t('trend')}: -{formatNumber(dustSeason.annualLossPercent)}%
                 </span>
               </div>
             </div>
