@@ -15,7 +15,7 @@ interface BrandContextType {
 
 const BrandContext = createContext<BrandContextType | undefined>(undefined)
 
-const DEFAULT_HOST_SUFFIX = process.env.NEXT_PUBLIC_DEFAULT_BRAND_SUFFIX || 'solariq.app'
+const DEFAULT_HOST_SUFFIX = process.env.NEXT_PUBLIC_DEFAULT_BRAND_SUFFIX || 'solariqapp.com'
 const BRAND_STORAGE_KEY = 'solariq_brand_id'
 
 export function useBrand() {
@@ -27,7 +27,9 @@ export function useBrand() {
 }
 
 function applyTheme(brand: Brand | PublicBrand) {
-  if (typeof document === 'undefined') return
+  if (typeof document === 'undefined') {
+    return
+  }
 
   const root = document.documentElement
   const colors = brand.colors || {}
@@ -128,7 +130,9 @@ function toKebab(value: string) {
 
 function shiftColor(hexColor: string, ratio: number) {
   const value = hexColor.replace('#', '')
-  if (value.length !== 6) return hexColor
+  if (value.length !== 6) {
+    return hexColor
+  }
   const r = parseInt(value.slice(0, 2), 16)
   const g = parseInt(value.slice(2, 4), 16)
   const b = parseInt(value.slice(4, 6), 16)
@@ -140,11 +144,9 @@ function shiftColor(hexColor: string, ratio: number) {
     return Math.round(channel * (1 + ratio))
   }
 
-  const next = [
-    shift(r),
-    shift(g),
-    shift(b),
-  ].map((c) => Math.min(255, Math.max(0, c)).toString(16).padStart(2, '0'))
+  const next = [shift(r), shift(g), shift(b)].map((c) =>
+    Math.min(255, Math.max(0, c)).toString(16).padStart(2, '0')
+  )
 
   return `#${next.join('')}`
 }
@@ -152,7 +154,9 @@ function shiftColor(hexColor: string, ratio: number) {
 /** Darken a hex color by a given percentage (0–100). WK-030 */
 function darkenHex(hexColor: string, percent: number): string {
   const value = hexColor.replace('#', '')
-  if (value.length !== 6) return hexColor
+  if (value.length !== 6) {
+    return hexColor
+  }
   const factor = 1 - percent / 100
   const r = Math.round(parseInt(value.slice(0, 2), 16) * factor)
   const g = Math.round(parseInt(value.slice(2, 4), 16) * factor)
@@ -180,13 +184,13 @@ export function BrandProvider({ children }: { children: React.ReactNode }) {
   const [isWhiteLabel, setIsWhiteLabel] = useState(false)
 
   const resolveBrand = useCallback(async () => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') {
+      return
+    }
 
     const hostname = window.location.hostname
     const isLocalHost =
-      hostname === 'localhost' ||
-      hostname === '127.0.0.1' ||
-      hostname === '0.0.0.0'
+      hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '0.0.0.0'
     const isCustomDomain = !isLocalHost && !hostname.endsWith(DEFAULT_HOST_SUFFIX)
 
     if (isCustomDomain) {
@@ -212,7 +216,8 @@ export function BrandProvider({ children }: { children: React.ReactNode }) {
     try {
       const data = await listBrands()
       const stored = typeof window !== 'undefined' ? localStorage.getItem(BRAND_STORAGE_KEY) : null
-      const selected = data.brands.find((item) => item.id === stored) || data.default || data.brands[0] || null
+      const selected =
+        data.brands.find((item) => item.id === stored) || data.default || data.brands[0] || null
 
       setBrands(data.brands)
       setBrand(selected)
@@ -228,21 +233,26 @@ export function BrandProvider({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated])
 
   useEffect(() => {
-    if (isLoading) return
+    if (isLoading) {
+      return
+    }
     resolveBrand()
   }, [isLoading, resolveBrand])
 
-  const switchBrand = (brandId: string) => {
-    const selected = brands.find((item) => item.id === brandId) || null
-    if (selected) {
-      setBrand(selected)
-      setIsWhiteLabel(Boolean(selected.domain))
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(BRAND_STORAGE_KEY, brandId)
+  const switchBrand = useCallback(
+    (brandId: string) => {
+      const selected = brands.find((item) => item.id === brandId) || null
+      if (selected) {
+        setBrand(selected)
+        setIsWhiteLabel(Boolean(selected.domain))
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(BRAND_STORAGE_KEY, brandId)
+        }
+        applyTheme(selected)
       }
-      applyTheme(selected)
-    }
-  }
+    },
+    [brands]
+  )
 
   const value = useMemo(
     () => ({
@@ -252,7 +262,7 @@ export function BrandProvider({ children }: { children: React.ReactNode }) {
       switchBrand,
       refresh: resolveBrand,
     }),
-    [brand, brands, isWhiteLabel, resolveBrand]
+    [brand, brands, isWhiteLabel, switchBrand, resolveBrand]
   )
 
   return <BrandContext.Provider value={value}>{children}</BrandContext.Provider>
