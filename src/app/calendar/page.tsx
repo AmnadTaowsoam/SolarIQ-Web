@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
+import { useQueryClient } from '@tanstack/react-query'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
 import { useCalendarEvents } from '@/hooks/useCalendar'
@@ -292,6 +293,7 @@ function AddActivityModal({
   onClose: () => void
 }) {
   const t = useTranslations('addActivityModal')
+  const queryClient = useQueryClient()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [form, setForm] = useState({
@@ -322,8 +324,10 @@ function AddActivityModal({
         customer_name: form.customer_name || undefined,
         notes: form.notes || undefined,
       })
+      // Invalidate calendar-related queries so the UI refreshes without a full page reload
+      await queryClient.invalidateQueries({ queryKey: ['upcoming-maintenance'] })
+      await queryClient.invalidateQueries({ queryKey: ['service-requests'] })
       onClose()
-      window.location.reload()
     } catch {
       setError(t('error'))
     } finally {

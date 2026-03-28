@@ -410,7 +410,8 @@
       },
       "timeline": {
         "title": "กิจกรรมล่าสุด"
-      }
+      },
+      "unauthorized": "ไม่ได้รับอนุญาต ต้องมีสิทธิ์ผู้ดูแลระบบ"
     }
   },
   "dashboard": {
@@ -828,7 +829,10 @@
       "notifications": "การแจ้งเตือน",
       "team": "สมาชิกทีม",
       "api": "API Keys",
-      "branding": "White-Label"
+      "branding": "White-Label",
+      "privacy": "ความเป็นส่วนตัว",
+      "security": "ความปลอดภัย",
+      "tax": "ข้อมูลภาษี"
     },
     "title": "ตั้งค่า",
     "subtitle": "จัดการข้อมูลบริษัท การเชื่อมต่อ และสิทธิ์การใช้งาน",
@@ -871,7 +875,10 @@
       "copied": "คัดลอกแล้ว",
       "copy": "คัดลอก",
       "cancel": "ยกเลิก",
-      "save": "บันทึก"
+      "save": "บันทึก",
+      "saving": "กำลังบันทึก...",
+      "saveSuccess": "บันทึกการตั้งค่า LINE สำเร็จ",
+      "saveFailed": "ไม่สามารถบันทึกการตั้งค่า LINE ได้"
     },
     "notifications": {
       "title": "การแจ้งเตือน",
@@ -977,9 +984,38 @@
       "title": "ข้อมูลบัญชี"
     },
     "consent": {
-      "title": "การจัดการความยินยอม"
+      "title": "การจัดการความยินยอม",
+      "marketing": {
+        "label": "การตลาดและโปรโมชั่น",
+        "description": "รับข้อมูลข่าวสารและโปรโมชั่น"
+      },
+      "contactSharing": {
+        "label": "แชร์ข้อมูลติดต่อ",
+        "description": "แชร์ข้อมูลกับผู้ติดตั้งที่ได้รับการรับรอง"
+      },
+      "analysisResults": {
+        "label": "ผลวิเคราะห์ต้นทุน",
+        "description": "เก็บผลการวิเคราะห์ต้นทุนไฟฟ้า"
+      },
+      "proposalSharing": {
+        "label": "รับใบเสนอราคา",
+        "description": "รับใบเสนอราคาจากผู้ติดตั้ง"
+      },
+      "success": {
+        "granted": "ให้ความยินยอมสำเร็จ",
+        "revoked": "ถอนความยินยอมสำเร็จ"
+      },
+      "errors": {
+        "grant": "ไม่สามารถให้ความยินยอมได้",
+        "revoke": "ไม่สามารถถอนความยินยอมได้"
+      }
     },
     "contact": "ติดต่อฝ่ายสนับสนุน",
+    "dataPrivacy": {
+      "title": "ข้อมูลและความปลอดภัย",
+      "history": "ประวัติการวิเคราะห์",
+      "proposals": "ใบเสนอราคา"
+    },
     "dangerZone": {
       "deleteAll": "ลบข้อมูลทั้งหมด",
       "deleteConfirm": "คุณแน่ใจหรือไม่ที่จะลบข้อมูลทั้งหมด?",
@@ -988,9 +1024,33 @@
     },
     "errors": {
       "deleteError": "ไม่สามารถลบข้อมูลได้",
-      "loadError": "ไม่สามารถโหลดการตั้งค่าได้"
+      "loadError": "ไม่สามารถโหลดการตั้งค่าได้",
+      "generalError": "เกิดข้อผิดพลาด"
     },
     "loading": "กำลังโหลด...",
+    "security": {
+      "title": "ความปลอดภัยและ MFA",
+      "subtitle": "จัดการการยืนยันตัวตนแบบสองขั้นตอนสำหรับบัญชีของคุณ",
+      "mfaStatus": "การยืนยันตัวตนแบบสองขั้นตอน",
+      "statusEnabled": "เปิดใช้งาน MFA แล้ว — บัญชีของคุณได้รับการป้องกัน",
+      "statusDisabled": "ยังไม่ได้เปิดใช้งาน MFA",
+      "enableMfa": "เปิดใช้งาน MFA",
+      "disableMfa": "ปิดใช้งาน MFA",
+      "disableConfirm": "คุณแน่ใจหรือไม่ที่จะปิดการใช้งาน MFA? การดำเนินการนี้จะลดความปลอดภัยของบัญชี",
+      "scanQr": "สแกน QR Code ด้วยแอปยืนยันตัวตนของคุณ",
+      "manualEntry": "หรือกรอกรหัสนี้ด้วยตนเอง:",
+      "enterCode": "กรอกรหัส 6 หลักจากแอปของคุณ",
+      "verify": "ยืนยัน",
+      "verifyFailed": "รหัสไม่ถูกต้อง กรุณาลองอีกครั้ง",
+      "codeLength": "รหัสต้องเป็นตัวเลข 6 หลัก",
+      "fetchError": "ไม่สามารถโหลดสถานะ MFA ได้",
+      "enrollError": "ไม่สามารถเริ่มการลงทะเบียน MFA ได้",
+      "disableError": "ไม่สามารถปิดการใช้งาน MFA ได้",
+      "backupCodesTitle": "รหัสสำรอง",
+      "backupCodesWarning": "บันทึกรหัสเหล่านี้ไว้ในที่ปลอดภัย แต่ละรหัสใช้ได้เพียงครั้งเดียว",
+      "backupCodesDone": "ฉันบันทึกรหัสแล้ว",
+      "backupCodesRemaining": "รหัสสำรองคงเหลือ {count} รหัส"
+    },
     "tax": {
       "branchNumber": "สาขา",
       "companyNameEn": "ชื่อบริษัท (ภาษาอังกฤษ)",
@@ -1004,6 +1064,61 @@
       "taxAddress": "ที่อยู่สำหรับออกใบกำกับภาษี",
       "taxId": "เลขประจำตัวผู้เสียภาษี",
       "title": "ข้อมูลภาษี"
+    },
+    "privacy": {
+      "tabs": {
+        "consent": "ความยินยอม",
+        "data": "ข้อมูลส่วนบุคคล",
+        "cookie": "คุกกี้"
+      },
+      "consent": {
+        "title": "จัดการความยินยอม",
+        "subtitle": "ตรวจสอบและจัดการความยินยอมของคุณ",
+        "notice": "คุณสามารถจัดการความยินยอมของคุณได้ที่นี่ การเปลี่ยนแปลงจะมีผลทันที",
+        "storage": "การเก็บข้อมูลส่วนบุคคล",
+        "storageDesc": "จำเป็นสำหรับการให้บริการ",
+        "given": "ยินยอมแล้ว",
+        "analysis": "การวิเคราะห์บิลไฟฟ้า",
+        "analysisDesc": "ใช้สำหรับคำนวณ ROI และข้อเสนอ",
+        "marketing": "การตลาดและการส่งเสริมการขาย",
+        "marketingDesc": "รับข่าวสารและโปรโมชัน",
+        "sharing": "การแชร์ข้อมูลกับพาร์ทเนอร์",
+        "sharingDesc": "แชร์ข้อมูลกับผู้ให้บริการที่เกี่ยวข้อง"
+      },
+      "data": {
+        "title": "ข้อมูลส่วนบุคคล",
+        "subtitle": "ดูและจัดการข้อมูลส่วนบุคคลของคุณ",
+        "accountInfo": "ข้อมูลบัญชี",
+        "name": "ชื่อ:",
+        "email": "อีเมล:",
+        "phone": "เบอร์โทร:",
+        "role": "บทบาท:",
+        "export": "ส่งออกข้อมูล",
+        "exportDesc": "ดาวน์โหลดข้อมูลส่วนบุคคลทั้งหมดของคุณในรูปแบบที่อ่านได้",
+        "exporting": "กำลังส่งออก...",
+        "exportButton": "ส่งออกข้อมูล",
+        "delete": "ลบบัญชี",
+        "deleteDesc": "การลบบัญชีจะลบข้อมูลทั้งหมดของคุณ การกระทำนี้ไม่สามารถย้อนกลับได้",
+        "deleteButton": "ลบบัญชี",
+        "exportSuccess": "ข้อมูลของคุณถูกส่งออกเรียบร้อยแล้ว",
+        "exportError": "เกิดข้อผิดพลาดในการส่งออกข้อมูล",
+        "deleteConfirm": "คุณแน่ใจหรือไม่ที่จะลบบัญชี? การกระทำนี้ไม่สามารถย้อนกลับได้",
+        "deleteSuccess": "คำขอลบบัญชีถูกส่งเรียบร้อยแล้ว คุณจะได้รับอีเมลยืนยัน",
+        "deleteError": "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+      },
+      "cookie": {
+        "title": "การจัดการคุกกี้",
+        "subtitle": "จัดการความยินยอมคุกกี้ของคุณ",
+        "notice": "คุกกี้เป็นไฟล์ขนาดเล็กที่เก็บบนเบราว์เซอร์ของคุณ เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานของคุณ",
+        "essential": "คุกกี้ที่จำเป็น",
+        "essentialDesc": "จำเป็นสำหรับการทำงานของเว็บไซต์",
+        "enabled": "เปิดใช้งานอยู่",
+        "analytics": "คุกกี้วิเคราะห์",
+        "analyticsDesc": "ใช้เพื่อปรับปรุงประสบการณ์การใช้งาน",
+        "marketing": "คุกกี้การตลาด",
+        "marketingDesc": "ใช้สำหรับการโฆษณาและการตลาด",
+        "pdpaLink": "ดูข้อมูลเพิ่มเติมเกี่ยวกับ PDPA Compliance"
+      }
     },
     "version": "เวอร์ชัน"
   },
@@ -1222,11 +1337,15 @@
       "createLead": "สร้างลีด",
       "creatingLead": "กำลังสร้างลีด...",
       "customerName": "ชื่อลูกค้า",
+      "customerNameRequired": "ชื่อลูกค้า *",
       "infoMessage": "สร้างลีดแรกของคุณเพื่อเริ่มต้น",
       "monthlyBill": "ค่าไฟฟ้ารายเดือน",
+      "monthlyBillRequired": "ค่าไฟฟ้ารายเดือนเฉลี่ย (บาท) *",
       "phone": "เบอร์โทรศัพท์",
+      "phoneRequired": "เบอร์โทรศัพท์ *",
       "province": "จังหวัด",
-      "selectProvince": "เลือกจังหวัด"
+      "selectProvince": "เลือกจังหวัด",
+      "skip": "ข้ามขั้นตอนนี้"
     },
     "step5": {
       "title": "ตั้งค่าเสร็จสิ้น!",
@@ -2567,7 +2686,83 @@
     "planStarterSubtitle": "สำหรับทีมขนาดเล็ก",
     "planProfessionalSubtitle": "สำหรับทีมที่ต้องการเติบโต",
     "planEnterpriseSubtitle": "สำหรับองค์กรขนาดใหญ่",
-    "promoApplied": "ใช้แล้ว"
+    "promoApplied": "ใช้แล้ว",
+    "promoCodeLabel": "รหัสโปรโมชั่น (ถ้ามี)",
+    "promoCodePlaceholder": "กรอกรหัสโปรโมชั่น",
+    "applyCode": "ใช้รหัส",
+    "promoInvalid": "รหัสโปรโมชั่นไม่ถูกต้อง",
+    "promoSuccess": "ใช้รหัสโปรโมชั่นสำเร็จ",
+    "promoLabel": "โปรโมชั่น",
+    "paySubtitle": "เลือกรอบการชำระเงินและดำเนินการต่อ",
+    "savingsAmount": "ประหยัด ฿{amount}/ปี",
+    "pricePerMonth": "฿{price}/เดือน",
+    "billedAnnually": "เรียกเก็บ ฿{amount} ต่อปี",
+    "scanQrPromptpay": "สแกน QR Code เพื่อชำระเงินผ่านพร้อมเพย์",
+    "checkingStatus": "กำลังตรวจสอบ...",
+    "checkPaymentStatus": "ตรวจสอบสถานะการชำระเงิน",
+    "checkoutError": "เกิดข้อผิดพลาดในการสร้างรายการชำระเงิน กรุณาลองใหม่อีกครั้ง",
+    "supportedMethods": "รองรับ:",
+    "cancelKeepAccess": "เมื่อยกเลิก คุณจะยังใช้งานได้จนจบรอบบิลปัจจุบัน",
+    "receiptEmail": "รับใบเสร็จรับเงินอิเล็กทรอนิกส์ทุกรอบบิลทาง Email",
+    "trialFree": "ทดลองฟรี",
+    "trialFeature1": "วิเคราะห์โซลาร์: 5 ครั้ง",
+    "trialFeature2": "ROI Calculator พื้นฐาน",
+    "trialFeature3": "1 ผู้ใช้",
+    "trialFeature4": "Community Support",
+    "starterFeature1": "วิเคราะห์โซลาร์: 20 ครั้ง/เดือน",
+    "starterFeature2": "ROI Calculator พื้นฐาน",
+    "starterFeature3": "PDF Proposal Generation",
+    "starterFeature4": "Basic Dashboard",
+    "starterFeature5": "1 ผู้ใช้",
+    "starterFeature6": "Email Support",
+    "proFeature1": "วิเคราะห์โซลาร์: 100 ครั้ง/เดือน",
+    "proFeature2": "Climate Reliability Score",
+    "proFeature3": "Energy Independence Score",
+    "proFeature4": "PM2.5 Impact Analysis",
+    "proFeature5": "เปรียบเทียบการลงทุน (เงินสด/สินเชื่อ/เช่า)",
+    "proFeature6": "Smart Alerts อัจฉริยะ",
+    "proFeature7": "Full Dashboard + CSV Export",
+    "proFeature8": "API Access",
+    "proFeature9": "5 ผู้ใช้",
+    "proFeature10": "Priority Support",
+    "entFeature1": "วิเคราะห์โซลาร์: ไม่จำกัด",
+    "entFeature2": "ทุกอย่างใน Professional +",
+    "entFeature3": "White-label Branding",
+    "entFeature4": "Custom API Integration",
+    "entFeature5": "ผู้ใช้ไม่จำกัด",
+    "entFeature6": "Dedicated Account Manager",
+    "entFeature7": "SLA 99.9% Uptime",
+    "entFeature8": "Custom Report Templates"
+  },
+  "checkoutSuccess": {
+    "title": "ชำระเงินสำเร็จ!",
+    "thankYou": "ขอบคุณที่เลือกใช้ SolarIQ",
+    "accountReady": "บัญชีของคุณพร้อมใช้งานแล้ว",
+    "receiptTitle": "ใบเสร็จรับเงินส่งทาง Email",
+    "receiptDesc": "คุณจะได้รับใบเสร็จรับเงินอิเล็กทรอนิกส์ทาง Email ที่ลงทะเบียนไว้ภายในไม่กี่นาที",
+    "manageTitle": "จัดการการสมัครสมาชิก",
+    "manageDesc": "คุณสามารถจัดการแพ็กเกจ ดูใบเสร็จ และเปลี่ยนแพลนได้ที่หน้า Billing",
+    "startTitle": "เริ่มใช้งานฟีเจอร์ทั้งหมด",
+    "startDesc": "ฟีเจอร์ทั้งหมดในแพ็กเกจของคุณพร้อมใช้งานทันที",
+    "referenceId": "รหัสอ้างอิง:",
+    "startUsing": "เริ่มใช้งาน SolarIQ",
+    "viewDetails": "ดูรายละเอียดการสมัคร"
+  },
+  "commissionDetail": {
+    "notFound": "ไม่พบค่าคอมมิชชัน",
+    "title": "รายละเอียดค่าคอมมิชชัน",
+    "dealLabel": "ดีล",
+    "breakdownTitle": "รายละเอียดค่าคอมมิชชัน",
+    "dealValue": "มูลค่าดีล",
+    "commissionRate": "อัตราคอมมิชชัน",
+    "rawCommission": "คอมมิชชันก่อนหัก",
+    "finalCommission": "คอมมิชชันสุทธิ",
+    "statusTitle": "สถานะ",
+    "statusLabel": "สถานะ",
+    "completedAt": "เสร็จสิ้นเมื่อ",
+    "invoice": "ใบแจ้งหนี้",
+    "notInvoiced": "ยังไม่ออกใบแจ้งหนี้",
+    "raiseDispute": "แจ้งข้อโต้แย้ง"
   },
   "checkoutCancel": {
     "title": "การชำระเงินถูกยกเลิก",
@@ -2830,7 +3025,10 @@
     "paymentDate": "วันที่ชำระ",
     "reference": "อ้างอิง",
     "back": "กลับไปรายการใบแจ้งหนี้",
-    "edit": "แก้ไขใบแจ้งหนี้"
+    "edit": "แก้ไขใบแจ้งหนี้",
+    "voidInvoice": "ยกเลิกใบแจ้งหนี้",
+    "confirmVoid": "ยืนยันการยกเลิก",
+    "sentAt": "วันที่ส่ง"
   },
   "permitWizard": {
     "title": "ยื่นขออนุญาต",
@@ -3532,6 +3730,7 @@
       "phoneRequired": "กรุณากรอกเบอร์โทรศัพท์",
       "province": "จังหวัด",
       "save": "บันทึก",
+      "saveError": "เกิดข้อผิดพลาดในการบันทึกข้อมูล",
       "saving": "กำลังบันทึก...",
       "selectProvince": "เลือกจังหวัด",
       "update": "อัปเดต"
@@ -3561,7 +3760,9 @@
       "name": "ชื่อ",
       "phone": "เบอร์โทรศัพท์",
       "province": "จังหวัด",
-      "title": "สรุปข้อมูล"
+      "title": "สรุปข้อมูล",
+      "timesUnit": "ครั้ง",
+      "itemsUnit": "รายการ"
     },
     "deleteModal": {
       "cancel": "ยกเลิก",
@@ -3575,6 +3776,11 @@
       "email": "อีเมล",
       "phone": "โทรศัพท์",
       "title": "เจ้าหน้าที่คุ้มครองข้อมูล"
+    },
+    "errors": {
+      "downloadError": "ไม่สามารถดาวน์โหลดข้อมูลได้",
+      "requestError": "ไม่สามารถส่งคำขอได้",
+      "generalError": "เกิดข้อผิดพลาด"
     },
     "loading": "กำลังโหลด...",
     "pdpaReference": "สิทธิ์ตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล มาตรา 30-36",
@@ -3959,5 +4165,259 @@
     },
     "subtitle": "แชร์ประสบการณ์ของคุณกับผู้ติดตั้ง",
     "title": "เขียนรีวิว"
+  },
+  "admin": {
+    "revenue": {
+      "title": "วิเคราะห์รายได้",
+      "subtitle": "ติดตามรายได้ MRR และผลงานผู้รับเหมา",
+      "viewForecast": "ดูการพยากรณ์",
+      "totalRevenue": "รายได้รวม",
+      "mrr": "รายได้ประจำรายเดือน",
+      "arpu": "รายได้เฉลี่ยต่อผู้ใช้",
+      "churn": "อัตราการยกเลิก",
+      "revenueBreakdown": "รายละเอียดรายได้",
+      "breakdownSubtitle": "รายได้แยกตามแพลนและช่วงเวลา",
+      "topContractors": "ผู้รับเหมายอดนิยม",
+      "contractorsSubtitle": "ผู้รับเหมาที่มีผลงานสูงสุดตามรายได้",
+      "contractor": "ผู้รับเหมา",
+      "plan": "แพลน",
+      "deals": "ดีล",
+      "commission": "ค่าคอมมิชชัน",
+      "unauthorized": "คุณไม่มีสิทธิ์เข้าถึงหน้านี้",
+      "subscription": "สมัครสมาชิก",
+      "commissionType": "ค่าคอมมิชชัน",
+      "leadFee": "ค่าลีด",
+      "addon": "ส่วนเสริม",
+      "other": "อื่นๆ",
+      "platformSubtitle": "ภาพรวมรายได้และค่าคอมมิชชันทั้งแพลตฟอร์ม",
+      "breakdownChartSubtitle": "สมัครสมาชิก vs ค่าคอมมิชชัน",
+      "contractorsChartSubtitle": "ผู้สร้างค่าคอมมิชชันสูงสุด",
+      "forecast": {
+        "title": "พยากรณ์รายได้",
+        "subtitle": "การคาดการณ์ด้วย AI สำหรับเดือนถัดไป",
+        "backToRevenue": "กลับไปหน้ารายได้",
+        "threeMonthForecast": "พยากรณ์ 3 เดือน",
+        "forecastSubtitle": "สถานการณ์ ต่ำ / กลาง / สูง",
+        "assumptions": "สมมติฐาน",
+        "unauthorized": "คุณไม่มีสิทธิ์เข้าถึงหน้านี้"
+      }
+    },
+    "ai-dashboard": {
+      "title": "แดชบอร์ด AI",
+      "subtitle": "ตรวจสอบการใช้งาน LLM ต้นทุน และประสิทธิภาพ",
+      "tabs": {
+        "overview": "ภาพรวม",
+        "usage": "สถิติการใช้งาน",
+        "organizations": "องค์กร",
+        "cache": "แคช"
+      },
+      "stats": {
+        "todayRequests": "คำขอวันนี้",
+        "todayCost": "ต้นทุนวันนี้",
+        "monthRequests": "คำขอเดือนนี้",
+        "monthCost": "ต้นทุนเดือนนี้",
+        "cacheHitRate": "อัตราการใช้แคช",
+        "avgLatency": "ค่าเฉลี่ยความหน่วง",
+        "activeOrgs": "องค์กรที่ใช้งาน",
+        "cachedRequests": "คำขอที่แคชไว้",
+        "totalRequests": "คำขอทั้งหมด"
+      },
+      "usageHistory": "ประวัติการใช้งาน (30 วันล่าสุด)",
+      "noData": "ไม่มีข้อมูลการใช้งาน",
+      "planUsage": "การใช้งานตามแพลน",
+      "analyses": "การวิเคราะห์",
+      "billOcr": "OCR ใบแจ้งหนี้",
+      "chatMessages": "ข้อความแชท",
+      "ragQueries": "คิวรี RAG",
+      "usageByFeature": "การใช้งานตามฟีเจอร์",
+      "usageByModel": "การใช้งานตามโมเดล",
+      "orgUsage": "การใช้งานขององค์กร",
+      "columns": {
+        "organization": "องค์กร",
+        "plan": "แพลน",
+        "requests": "คำขอ",
+        "costThb": "ต้นทุน (บาท)",
+        "cacheHitRate": "อัตราการใช้แคช"
+      },
+      "cacheManagement": "จัดการแคช",
+      "cleanUpExpired": "ล้างรายการที่หมดอายุ",
+      "cleanUpDescription": "ล้างรายการแคชที่หมดอายุเพื่อเพิ่มหน่วยความจำและปรับปรุงประสิทธิภาพ",
+      "cacheCleanedSuccess": "ล้างแคชสำเร็จ",
+      "cacheCleanedFailed": "ไม่สามารถล้างแคชได้",
+      "retry": "ลองอีกครั้ง",
+      "loadFailed": "ไม่สามารถโหลดข้อมูลแดชบอร์ดได้",
+      "unauthorized": "ไม่ได้รับอนุญาต ต้องมีสิทธิ์ผู้ดูแลระบบ",
+      "unlimited": "ไม่จำกัด",
+      "unknown": "ไม่ทราบ",
+      "requests": "คำขอ"
+    }
+  },
+  "pricingPage": {
+    "title": "จัดการราคา",
+    "subtitle": "จัดการค่าติดตั้งและอัตราค่าไฟฟ้าสำหรับการคำนวณ ROI",
+    "noPermission": "คุณไม่มีสิทธิ์เข้าถึงหน้านี้",
+    "tabs": {
+      "installation": "ค่าติดตั้ง",
+      "electricity": "อัตราค่าไฟฟ้า"
+    },
+    "installationCosts": {
+      "addNewRate": "เพิ่มอัตราใหม่",
+      "emptyTitle": "ไม่มีข้อมูลค่าติดตั้ง",
+      "emptyDescription": "เพิ่มค่าติดตั้งต่อ kWp สำหรับการคำนวณ ROI",
+      "costPerKwp": "ค่าติดตั้งต่อ kWp",
+      "effectiveFrom": "มีผลตั้งแต่",
+      "effectiveTo": "มีผลถึง",
+      "lastUpdated": "อัปเดตล่าสุด",
+      "current": "ปัจจุบัน",
+      "modalTitle": "เพิ่มค่าติดตั้ง",
+      "costPerKwpLabel": "ค่าติดตั้งต่อ kWp (บาท)",
+      "costPerKwpPlaceholder": "เช่น 50000",
+      "costPerKwpHint": "กรอกค่าติดตั้งต่อ kWp เป็นบาท",
+      "cancel": "ยกเลิก",
+      "add": "เพิ่ม",
+      "invalidCost": "กรุณากรอกค่าติดตั้งต่อ kWp ที่ถูกต้อง",
+      "addSuccess": "เพิ่มค่าติดตั้งสำเร็จ",
+      "addFailed": "ไม่สามารถเพิ่มค่าติดตั้งได้"
+    },
+    "electricityRates": {
+      "addNewRate": "เพิ่มอัตราใหม่",
+      "emptyTitle": "ไม่มีข้อมูลอัตราค่าไฟฟ้า",
+      "emptyDescription": "เพิ่มอัตราค่าไฟฟ้า PEA และ MEA สำหรับการคำนวณ",
+      "provider": "ผู้ให้บริการ",
+      "ratePerKwh": "อัตราต่อ kWh",
+      "ftRate": "อัตรา Ft",
+      "effectiveFrom": "มีผลตั้งแต่",
+      "lastUpdated": "อัปเดตล่าสุด",
+      "modalTitle": "เพิ่มอัตราค่าไฟฟ้า",
+      "providerLabel": "ผู้ให้บริการ",
+      "ratePerKwhLabel": "อัตราต่อ kWh (บาท)",
+      "ratePerKwhPlaceholder": "เช่น 4.5",
+      "ftRateLabel": "อัตรา Ft (บาท)",
+      "ftRatePlaceholder": "เช่น 0.5",
+      "ftRateHint": "ค่าไฟฟ้าผันแปร (Ft)",
+      "cancel": "ยกเลิก",
+      "add": "เพิ่ม",
+      "invalidRate": "กรุณากรอกอัตราต่อ kWh ที่ถูกต้อง",
+      "invalidFtRate": "กรุณากรอกอัตรา Ft ที่ถูกต้อง",
+      "addSuccess": "เพิ่มอัตราค่าไฟฟ้าสำเร็จ",
+      "addFailed": "ไม่สามารถเพิ่มอัตราค่าไฟฟ้าได้"
+    }
+  },
+  "quoteRequestPage": {
+    "title": "ขอใบเสนอราคา",
+    "step": "ขั้นตอน {current}/{total}",
+    "next": "ถัดไป",
+    "submitting": "กำลังส่งคำขอ...",
+    "submitRequest": "ส่งคำขอใบเสนอราคา",
+    "budget": {
+      "title": "งบประมาณของคุณ",
+      "description": "เลือกงบประมาณที่ตรงกับความต้องการ"
+    },
+    "timeline": {
+      "title": "ต้องการเร็วแค่ไหน?",
+      "description": "เลือกระยะเวลาที่ต้องการติดตั้ง"
+    },
+    "financing": {
+      "title": "การชำระเงิน",
+      "description": "เลือกรูปแบบการชำระเงินที่ต้องการ"
+    },
+    "additional": {
+      "title": "ข้อมูลเพิ่มเติม",
+      "description": "กรอกข้อมูลเพิ่มเติมเพื่อรับใบเสนอราคาที่ตรงกับความต้องการ",
+      "maxQuotesLabel": "จำนวนใบเสนอราคาที่ต้องการ:",
+      "vendorsUnit": "ราย",
+      "contactPreferenceLabel": "ช่องทางติดต่อที่ต้องการ",
+      "contactPhone": "โทรศัพท์",
+      "contactEmail": "อีเมล",
+      "specialRequirements": "ความต้องการพิเศษ",
+      "optional": "ไม่บังคับ",
+      "requirementsPlaceholder": "เช่น ต้องการแผง Tier 1, อยากได้ระบบ hybrid, มีพื้นที่หลังคา 80 ตร.ม..."
+    },
+    "errors": {
+      "incompleteForm": "กรุณากรอกข้อมูลให้ครบถ้วน",
+      "submitError": "ไม่สามารถส่งคำขอได้ กรุณาลองใหม่"
+    }
+  },
+  "quoteDetailPage": {
+    "title": "ใบเสนอราคา",
+    "accepted": "ยอมรับแล้ว!",
+    "trackProgress": "ติดตามความคืบหน้า",
+    "notFound": "ไม่พบข้อมูลใบเสนอราคา",
+    "goBack": "← ย้อนกลับ",
+    "reviews": "รีวิว",
+    "verified": "✓ ยืนยันแล้ว",
+    "notes": "หมายเหตุ",
+    "validUntil": "ใบเสนอราคานี้มีผลถึงวันที่",
+    "processing": "กำลังดำเนินการ...",
+    "acceptQuote": "ยอมรับใบเสนอราคานี้",
+    "requestRevision": "ขอแก้ไข",
+    "decline": "ปฏิเสธ",
+    "declined": "ปฏิเสธใบเสนอราคานี้แล้ว",
+    "viewOtherQuotes": "ดูใบเสนอราคาอื่น",
+    "sections": {
+      "systemSpecs": "ข้อมูลระบบโซลาร์",
+      "pricing": "รายละเอียดราคา",
+      "timeline": "กำหนดการ",
+      "warranty": "การรับประกัน",
+      "financing": "ตัวเลือกการชำระเงิน"
+    },
+    "specs": {
+      "solarPanel": "แผงโซลาร์",
+      "panelCount": "จำนวนแผง",
+      "panelsUnit": "แผง",
+      "totalSystemSize": "ขนาดระบบรวม",
+      "inverter": "อินเวอร์เตอร์",
+      "battery": "แบตเตอรี่",
+      "mounting": "โครงยึด",
+      "mountingRoofRail": "บนหลังคา (Rail)",
+      "mountingGround": "ภาคพื้นดิน",
+      "monitoring": "ระบบ Monitoring",
+      "monitoringIncluded": "รวมในราคา",
+      "monitoringOptional": "ตัวเลือกเสริม"
+    },
+    "pricing": {
+      "panelCost": "ค่าแผงโซลาร์",
+      "inverterCost": "ค่าอินเวอร์เตอร์",
+      "batteryCost": "ค่าแบตเตอรี่",
+      "mountingCost": "ค่าโครงยึด",
+      "cableCost": "ค่าสายไฟและอุปกรณ์",
+      "laborCost": "ค่าแรงงานและติดตั้ง",
+      "permitCost": "ค่าขออนุญาต",
+      "discount": "ส่วนลด",
+      "grandTotal": "รวมทั้งสิ้น"
+    },
+    "savings": {
+      "monthlyProduction": "ผลิตไฟ/เดือน",
+      "monthlySavings": "ประหยัด/เดือน",
+      "paybackIn": "คืนทุนใน",
+      "years": "ปี"
+    },
+    "timeline": {
+      "siteSurvey": "สำรวจหน้างาน",
+      "installStart": "เริ่มติดตั้ง",
+      "installEnd": "ติดตั้งเสร็จ",
+      "duration": "ระยะเวลา",
+      "days": "วัน"
+    },
+    "warranty": {
+      "panelPerformance": "แผง (ประสิทธิภาพ)",
+      "panelProduct": "แผง (ผลิตภัณฑ์)",
+      "inverter": "อินเวอร์เตอร์",
+      "installation": "งานติดตั้ง",
+      "roofLeak": "หลังคาไม่รั่ว"
+    },
+    "financingDetail": {
+      "cashDiscount": "ส่วนลดเงินสด",
+      "installment": "ผ่อนชำระ (ดอกเบี้ย {rate}%)",
+      "months": "เดือน",
+      "perMonth": "เดือน"
+    },
+    "revisionModal": {
+      "title": "ขอให้แก้ไขใบเสนอราคา",
+      "subtitle": "สามารถขอแก้ไขได้สูงสุด 3 ครั้ง",
+      "placeholder": "ระบุสิ่งที่ต้องการให้แก้ไข เช่น ขอลดราคา, ขอเปลี่ยนยี่ห้อแผง, ขอให้ติดตั้งเร็วขึ้น...",
+      "cancel": "ยกเลิก",
+      "submit": "ส่งคำขอ"
+    }
   }
 }

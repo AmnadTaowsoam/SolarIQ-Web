@@ -176,3 +176,8 @@ export default apiClient
 
 // Alias for backward compatibility
 export const api = apiClient
+
+// Hook-style accessor for components that import useApi
+export function useApi() {
+  return apiClient
+}

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { AppLayout } from '@/components/layout'
 import { Card, CardBody, CardHeader, Badge, Button } from '@/components/ui'
 import { useVATInvoices, VATDocumentStatus, VATDocumentType } from '@/hooks/useVATInvoices'
+import { useAuth } from '@/context'
 import { formatThb } from '@/lib/utils'
 
 const statusColors: Record<string, string> = {
@@ -32,6 +33,7 @@ const statusLabels: Record<string, string> = {
 
 export default function InvoicesPage() {
   const t = useTranslations('invoicesPage')
+  const { user } = useAuth()
   const [page, setPage] = useState(1)
   const [documentType, setDocumentType] = useState<VATDocumentType | undefined>()
   const [status, setStatus] = useState<VATDocumentStatus | undefined>()
@@ -57,7 +59,7 @@ export default function InvoicesPage() {
   }
 
   return (
-    <AppLayout>
+    <AppLayout user={user}>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>

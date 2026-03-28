@@ -9,7 +9,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import { useLIFF, useLIFFUser } from '../../../context/LIFFContext'
 import { sendLocationMessage, closeWindow } from '../../../lib/liff'
-import { env } from '../../../lib/env'
 import { useTranslations } from 'next-intl'
 
 interface LocationState {
@@ -51,7 +50,7 @@ export default function MapPickerPage(): React.ReactElement {
   const [error, setError] = useState<string | null>(null)
 
   const { isLoaded: mapLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
     libraries: ['places'],
   })
 

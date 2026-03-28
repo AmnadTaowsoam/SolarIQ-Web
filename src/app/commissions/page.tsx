@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { Card, CardBody, CardHeader, Badge } from '@/components/ui'
 import { useCommissions, useCommissionSummary } from '@/hooks/useCommissions'
+import { useAuth } from '@/context'
 
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
@@ -22,6 +23,7 @@ function formatThb(value: number) {
 
 export default function CommissionsPage() {
   const t = useTranslations('commissionsPage')
+  const { user } = useAuth()
   const { data, isLoading } = useCommissions()
   const { data: summary } = useCommissionSummary()
 
@@ -39,7 +41,7 @@ export default function CommissionsPage() {
   }, [summary])
 
   return (
-    <AppLayout>
+    <AppLayout user={user}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>

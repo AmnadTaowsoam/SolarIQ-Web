@@ -410,7 +410,8 @@
       },
       "timeline": {
         "title": "Recent activity"
-      }
+      },
+      "unauthorized": "Unauthorized. Admin access required."
     }
   },
   "dashboard": {
@@ -828,7 +829,10 @@
       "notifications": "Notifications",
       "team": "Team Members",
       "api": "API Keys",
-      "branding": "White-Label"
+      "branding": "White-Label",
+      "privacy": "Privacy",
+      "security": "Security",
+      "tax": "Tax Profile"
     },
     "title": "Settings",
     "subtitle": "Manage company info, integrations, and access",
@@ -871,7 +875,10 @@
       "copied": "Copied",
       "copy": "Copy",
       "cancel": "Cancel",
-      "save": "Save"
+      "save": "Save",
+      "saving": "Saving...",
+      "saveSuccess": "LINE settings saved successfully",
+      "saveFailed": "Failed to save LINE settings"
     },
     "notifications": {
       "title": "Notifications",
@@ -977,9 +984,38 @@
       "title": "Account Information"
     },
     "consent": {
-      "title": "Consent Management"
+      "title": "Consent Management",
+      "marketing": {
+        "label": "Marketing and Promotions",
+        "description": "Receive news and promotions"
+      },
+      "contactSharing": {
+        "label": "Share Contact",
+        "description": "Share with certified installers"
+      },
+      "analysisResults": {
+        "label": "Cost Analysis Results",
+        "description": "Store electricity bill analysis"
+      },
+      "proposalSharing": {
+        "label": "Receive Quotes",
+        "description": "Receive quotes from installers"
+      },
+      "success": {
+        "granted": "Consent granted successfully",
+        "revoked": "Consent withdrawn successfully"
+      },
+      "errors": {
+        "grant": "Cannot grant consent",
+        "revoke": "Cannot withdraw consent"
+      }
     },
     "contact": "Contact Support",
+    "dataPrivacy": {
+      "title": "Data and Privacy",
+      "history": "Analysis History",
+      "proposals": "Proposals"
+    },
     "dangerZone": {
       "deleteAll": "Delete All Data",
       "deleteConfirm": "Are you sure you want to delete all data?",
@@ -988,9 +1024,33 @@
     },
     "errors": {
       "deleteError": "Failed to delete data",
-      "loadError": "Failed to load settings"
+      "loadError": "Failed to load settings",
+      "generalError": "An error occurred"
     },
     "loading": "Loading...",
+    "security": {
+      "title": "Security & MFA",
+      "subtitle": "Manage multi-factor authentication for your account",
+      "mfaStatus": "Two-Factor Authentication",
+      "statusEnabled": "MFA is enabled — your account is protected",
+      "statusDisabled": "MFA is not enabled",
+      "enableMfa": "Enable MFA",
+      "disableMfa": "Disable MFA",
+      "disableConfirm": "Are you sure you want to disable MFA? This will reduce your account security.",
+      "scanQr": "Scan this QR code with your authenticator app",
+      "manualEntry": "Or enter this code manually:",
+      "enterCode": "Enter 6-digit code from your app",
+      "verify": "Verify",
+      "verifyFailed": "Invalid code. Please try again.",
+      "codeLength": "Code must be 6 digits.",
+      "fetchError": "Failed to load MFA status.",
+      "enrollError": "Failed to start MFA enrollment.",
+      "disableError": "Failed to disable MFA.",
+      "backupCodesTitle": "Backup Codes",
+      "backupCodesWarning": "Save these codes in a safe place. Each code can only be used once.",
+      "backupCodesDone": "I have saved my codes",
+      "backupCodesRemaining": "{count} backup codes remaining"
+    },
     "tax": {
       "branchNumber": "Branch Number",
       "companyNameEn": "Company Name (English)",
@@ -1004,6 +1064,61 @@
       "taxAddress": "Tax Address",
       "taxId": "Tax ID",
       "title": "Tax Information"
+    },
+    "privacy": {
+      "tabs": {
+        "consent": "Consent",
+        "data": "Personal Data",
+        "cookie": "Cookies"
+      },
+      "consent": {
+        "title": "Manage Consent",
+        "subtitle": "Review and manage your consent",
+        "notice": "You can manage your consent here. Changes will take effect immediately.",
+        "storage": "Personal Data Storage",
+        "storageDesc": "Required for service provision",
+        "given": "Consent Given",
+        "analysis": "Electricity Bill Analysis",
+        "analysisDesc": "Used for ROI calculation and proposals",
+        "marketing": "Marketing and Promotions",
+        "marketingDesc": "Receive news and promotions",
+        "sharing": "Data Sharing with Partners",
+        "sharingDesc": "Share data with related service providers"
+      },
+      "data": {
+        "title": "Personal Data",
+        "subtitle": "View and manage your personal data",
+        "accountInfo": "Account Information",
+        "name": "Name:",
+        "email": "Email:",
+        "phone": "Phone:",
+        "role": "Role:",
+        "export": "Export Data",
+        "exportDesc": "Download all your personal data in a readable format",
+        "exporting": "Exporting...",
+        "exportButton": "Export Data",
+        "delete": "Delete Account",
+        "deleteDesc": "Deleting your account will remove all your data. This action cannot be undone.",
+        "deleteButton": "Delete Account",
+        "exportSuccess": "Your data has been exported successfully",
+        "exportError": "An error occurred while exporting data",
+        "deleteConfirm": "Are you sure you want to delete your account? This action cannot be undone.",
+        "deleteSuccess": "Account deletion request has been submitted. You will receive a confirmation email.",
+        "deleteError": "An error occurred. Please try again."
+      },
+      "cookie": {
+        "title": "Cookie Management",
+        "subtitle": "Manage your cookie consent",
+        "notice": "Cookies are small files stored on your browser. We use cookies to improve your experience.",
+        "essential": "Essential Cookies",
+        "essentialDesc": "Required for website functionality",
+        "enabled": "Enabled",
+        "analytics": "Analytics Cookies",
+        "analyticsDesc": "Used to improve user experience",
+        "marketing": "Marketing Cookies",
+        "marketingDesc": "Used for advertising and marketing",
+        "pdpaLink": "Learn more about PDPA Compliance"
+      }
     },
     "version": "Version"
   },
@@ -2571,7 +2686,83 @@
     "planStarterSubtitle": "For small teams",
     "planProfessionalSubtitle": "For growing teams",
     "planEnterpriseSubtitle": "For large organizations",
-    "promoApplied": "Applied"
+    "promoApplied": "Applied",
+    "promoCodeLabel": "Promo Code (optional)",
+    "promoCodePlaceholder": "Enter promo code",
+    "applyCode": "Apply",
+    "promoInvalid": "Invalid promo code",
+    "promoSuccess": "Promo code applied successfully",
+    "promoLabel": "Promotion",
+    "paySubtitle": "Choose your billing cycle and proceed",
+    "savingsAmount": "Save ฿{amount}/year",
+    "pricePerMonth": "฿{price}/month",
+    "billedAnnually": "Billed ฿{amount} per year",
+    "scanQrPromptpay": "Scan QR Code to pay via PromptPay",
+    "checkingStatus": "Checking...",
+    "checkPaymentStatus": "Check payment status",
+    "checkoutError": "An error occurred while creating payment. Please try again.",
+    "supportedMethods": "Supported:",
+    "cancelKeepAccess": "When cancelled, you can still use until the end of current billing cycle",
+    "receiptEmail": "Electronic receipt sent every billing cycle via Email",
+    "trialFree": "Free Trial",
+    "trialFeature1": "Solar Analysis: 5 times",
+    "trialFeature2": "Basic ROI Calculator",
+    "trialFeature3": "1 User",
+    "trialFeature4": "Community Support",
+    "starterFeature1": "Solar Analysis: 20 times/month",
+    "starterFeature2": "Basic ROI Calculator",
+    "starterFeature3": "PDF Proposal Generation",
+    "starterFeature4": "Basic Dashboard",
+    "starterFeature5": "1 User",
+    "starterFeature6": "Email Support",
+    "proFeature1": "Solar Analysis: 100 times/month",
+    "proFeature2": "Climate Reliability Score",
+    "proFeature3": "Energy Independence Score",
+    "proFeature4": "PM2.5 Impact Analysis",
+    "proFeature5": "Investment Comparison (Cash/Loan/Lease)",
+    "proFeature6": "Smart Alerts",
+    "proFeature7": "Full Dashboard + CSV Export",
+    "proFeature8": "API Access",
+    "proFeature9": "5 Users",
+    "proFeature10": "Priority Support",
+    "entFeature1": "Solar Analysis: Unlimited",
+    "entFeature2": "Everything in Professional +",
+    "entFeature3": "White-label Branding",
+    "entFeature4": "Custom API Integration",
+    "entFeature5": "Unlimited Users",
+    "entFeature6": "Dedicated Account Manager",
+    "entFeature7": "SLA 99.9% Uptime",
+    "entFeature8": "Custom Report Templates"
+  },
+  "checkoutSuccess": {
+    "title": "Payment Successful!",
+    "thankYou": "Thank you for choosing SolarIQ",
+    "accountReady": "Your account is ready to use",
+    "receiptTitle": "Receipt sent via Email",
+    "receiptDesc": "You will receive an electronic receipt via your registered email within a few minutes",
+    "manageTitle": "Manage Subscription",
+    "manageDesc": "You can manage your plan, view receipts, and change plans on the Billing page",
+    "startTitle": "Start using all features",
+    "startDesc": "All features in your plan are available immediately",
+    "referenceId": "Reference ID:",
+    "startUsing": "Start using SolarIQ",
+    "viewDetails": "View subscription details"
+  },
+  "commissionDetail": {
+    "notFound": "Commission not found",
+    "title": "Commission Detail",
+    "dealLabel": "Deal",
+    "breakdownTitle": "Commission Breakdown",
+    "dealValue": "Deal Value",
+    "commissionRate": "Commission Rate",
+    "rawCommission": "Raw Commission",
+    "finalCommission": "Final Commission",
+    "statusTitle": "Status",
+    "statusLabel": "Status",
+    "completedAt": "Completed At",
+    "invoice": "Invoice",
+    "notInvoiced": "Not invoiced",
+    "raiseDispute": "Raise Dispute"
   },
   "checkoutCancel": {
     "title": "Payment Cancelled",
@@ -2834,7 +3025,10 @@
     "paymentDate": "Payment Date",
     "reference": "Reference",
     "back": "Back to Invoices",
-    "edit": "Edit Invoice"
+    "edit": "Edit Invoice",
+    "voidInvoice": "Void Invoice",
+    "confirmVoid": "Confirm Void",
+    "sentAt": "Sent At"
   },
   "permitWizard": {
     "title": "Permit Application",
@@ -3536,6 +3730,7 @@
       "phoneRequired": "Phone number is required",
       "province": "Province",
       "save": "Save",
+      "saveError": "An error occurred while saving data",
       "saving": "Saving...",
       "selectProvince": "Select province",
       "update": "Update"
@@ -3565,7 +3760,9 @@
       "name": "Name",
       "phone": "Phone",
       "province": "Province",
-      "title": "Data Summary"
+      "title": "Data Summary",
+      "timesUnit": "times",
+      "itemsUnit": "items"
     },
     "deleteModal": {
       "cancel": "Cancel",
@@ -3579,6 +3776,11 @@
       "email": "Email",
       "phone": "Phone",
       "title": "Data Protection Officer"
+    },
+    "errors": {
+      "downloadError": "Cannot download data",
+      "requestError": "Cannot submit request",
+      "generalError": "An error occurred"
     },
     "loading": "Loading...",
     "pdpaReference": "Rights under PDPA Section 30-36",
@@ -3963,5 +4165,259 @@
     },
     "subtitle": "Share your experience with this installer",
     "title": "Leave a Review"
+  },
+  "admin": {
+    "revenue": {
+      "title": "Revenue Analytics",
+      "subtitle": "Track revenue, MRR, and contractor performance",
+      "viewForecast": "View Forecast",
+      "totalRevenue": "Total Revenue",
+      "mrr": "Monthly Recurring Revenue",
+      "arpu": "Average Revenue Per User",
+      "churn": "Churn Rate",
+      "revenueBreakdown": "Revenue Breakdown",
+      "breakdownSubtitle": "Revenue by plan and period",
+      "topContractors": "Top Contractors",
+      "contractorsSubtitle": "Highest performing contractors by revenue",
+      "contractor": "Contractor",
+      "plan": "Plan",
+      "deals": "Deals",
+      "commission": "Commission",
+      "unauthorized": "You do not have permission to view this page",
+      "subscription": "Subscription",
+      "commissionType": "Commission",
+      "leadFee": "Lead Fee",
+      "addon": "Add-on",
+      "other": "Other",
+      "platformSubtitle": "Platform-wide revenue and commission insights",
+      "breakdownChartSubtitle": "Subscriptions vs commissions",
+      "contractorsChartSubtitle": "Highest commission generators",
+      "forecast": {
+        "title": "Revenue Forecast",
+        "subtitle": "AI-assisted projection for upcoming months",
+        "backToRevenue": "Back to Revenue",
+        "threeMonthForecast": "3-Month Forecast",
+        "forecastSubtitle": "Low / Mid / High scenarios",
+        "assumptions": "Assumptions",
+        "unauthorized": "You do not have permission to view this page"
+      }
+    },
+    "ai-dashboard": {
+      "title": "AI Dashboard",
+      "subtitle": "Monitor LLM usage, costs, and performance",
+      "tabs": {
+        "overview": "Overview",
+        "usage": "Usage Stats",
+        "organizations": "Organizations",
+        "cache": "Cache"
+      },
+      "stats": {
+        "todayRequests": "Today's Requests",
+        "todayCost": "Today's Cost",
+        "monthRequests": "Month Requests",
+        "monthCost": "Month Cost",
+        "cacheHitRate": "Cache Hit Rate",
+        "avgLatency": "Avg Latency",
+        "activeOrgs": "Active Orgs",
+        "cachedRequests": "Cached Requests",
+        "totalRequests": "Total Requests"
+      },
+      "usageHistory": "Usage History (Last 30 Days)",
+      "noData": "No usage data available",
+      "planUsage": "Plan Usage",
+      "analyses": "Analyses",
+      "billOcr": "Bill OCR",
+      "chatMessages": "Chat Messages",
+      "ragQueries": "RAG Queries",
+      "usageByFeature": "Usage by Feature",
+      "usageByModel": "Usage by Model",
+      "orgUsage": "Organization Usage",
+      "columns": {
+        "organization": "Organization",
+        "plan": "Plan",
+        "requests": "Requests",
+        "costThb": "Cost (THB)",
+        "cacheHitRate": "Cache Hit Rate"
+      },
+      "cacheManagement": "Cache Management",
+      "cleanUpExpired": "Clean Up Expired Entries",
+      "cleanUpDescription": "Clean up expired cache entries to free up memory and improve performance.",
+      "cacheCleanedSuccess": "Cache cleaned up successfully",
+      "cacheCleanedFailed": "Failed to cleanup cache",
+      "retry": "Retry",
+      "loadFailed": "Failed to load dashboard data",
+      "unauthorized": "Unauthorized. Admin access required.",
+      "unlimited": "Unlimited",
+      "unknown": "Unknown",
+      "requests": "requests"
+    }
+  },
+  "pricingPage": {
+    "title": "Pricing Management",
+    "subtitle": "Manage installation costs and electricity rates for ROI calculations",
+    "noPermission": "You do not have permission to access this page",
+    "tabs": {
+      "installation": "Installation Costs",
+      "electricity": "Electricity Rates"
+    },
+    "installationCosts": {
+      "addNewRate": "Add New Rate",
+      "emptyTitle": "No installation costs",
+      "emptyDescription": "Add installation cost per kWp for ROI calculations",
+      "costPerKwp": "Cost per kWp",
+      "effectiveFrom": "Effective From",
+      "effectiveTo": "Effective To",
+      "lastUpdated": "Last Updated",
+      "current": "Current",
+      "modalTitle": "Add Installation Cost",
+      "costPerKwpLabel": "Cost per kWp (THB)",
+      "costPerKwpPlaceholder": "e.g., 50000",
+      "costPerKwpHint": "Enter the installation cost per kWp in Thai Baht",
+      "cancel": "Cancel",
+      "add": "Add",
+      "invalidCost": "Please enter a valid cost per kWp",
+      "addSuccess": "Installation cost added successfully",
+      "addFailed": "Failed to add installation cost"
+    },
+    "electricityRates": {
+      "addNewRate": "Add New Rate",
+      "emptyTitle": "No electricity rates",
+      "emptyDescription": "Add PEA and MEA electricity rates for calculations",
+      "provider": "Provider",
+      "ratePerKwh": "Rate per kWh",
+      "ftRate": "Ft Rate",
+      "effectiveFrom": "Effective From",
+      "lastUpdated": "Last Updated",
+      "modalTitle": "Add Electricity Rate",
+      "providerLabel": "Provider",
+      "ratePerKwhLabel": "Rate per kWh (THB)",
+      "ratePerKwhPlaceholder": "e.g., 4.5",
+      "ftRateLabel": "Ft Rate (THB)",
+      "ftRatePlaceholder": "e.g., 0.5",
+      "ftRateHint": "Fuel adjustment tariff (Ft)",
+      "cancel": "Cancel",
+      "add": "Add",
+      "invalidRate": "Please enter a valid rate per kWh",
+      "invalidFtRate": "Please enter a valid Ft rate",
+      "addSuccess": "Electricity rate added successfully",
+      "addFailed": "Failed to add electricity rate"
+    }
+  },
+  "quoteRequestPage": {
+    "title": "Request a Quote",
+    "step": "Step {current}/{total}",
+    "next": "Next",
+    "submitting": "Submitting...",
+    "submitRequest": "Submit Quote Request",
+    "budget": {
+      "title": "Your Budget",
+      "description": "Select the budget that matches your needs"
+    },
+    "timeline": {
+      "title": "How soon do you need it?",
+      "description": "Select your preferred installation timeline"
+    },
+    "financing": {
+      "title": "Payment Method",
+      "description": "Select your preferred payment method"
+    },
+    "additional": {
+      "title": "Additional Information",
+      "description": "Provide additional details to receive quotes that match your needs",
+      "maxQuotesLabel": "Number of quotes desired:",
+      "vendorsUnit": "vendors",
+      "contactPreferenceLabel": "Preferred contact method",
+      "contactPhone": "Phone",
+      "contactEmail": "Email",
+      "specialRequirements": "Special requirements",
+      "optional": "optional",
+      "requirementsPlaceholder": "e.g., Want Tier 1 panels, prefer hybrid system, roof area is 80 sqm..."
+    },
+    "errors": {
+      "incompleteForm": "Please fill in all required fields",
+      "submitError": "Cannot submit request. Please try again"
+    }
+  },
+  "quoteDetailPage": {
+    "title": "Quote",
+    "accepted": "Accepted!",
+    "trackProgress": "Track Progress",
+    "notFound": "Quote not found",
+    "goBack": "← Go back",
+    "reviews": "reviews",
+    "verified": "✓ Verified",
+    "notes": "Notes",
+    "validUntil": "This quote is valid until",
+    "processing": "Processing...",
+    "acceptQuote": "Accept this quote",
+    "requestRevision": "Request revision",
+    "decline": "Decline",
+    "declined": "This quote has been declined",
+    "viewOtherQuotes": "View other quotes",
+    "sections": {
+      "systemSpecs": "Solar System Details",
+      "pricing": "Price Breakdown",
+      "timeline": "Schedule",
+      "warranty": "Warranty",
+      "financing": "Payment Options"
+    },
+    "specs": {
+      "solarPanel": "Solar Panel",
+      "panelCount": "Panel Count",
+      "panelsUnit": "panels",
+      "totalSystemSize": "Total System Size",
+      "inverter": "Inverter",
+      "battery": "Battery",
+      "mounting": "Mounting",
+      "mountingRoofRail": "Roof (Rail)",
+      "mountingGround": "Ground Mount",
+      "monitoring": "Monitoring System",
+      "monitoringIncluded": "Included",
+      "monitoringOptional": "Optional add-on"
+    },
+    "pricing": {
+      "panelCost": "Solar Panel Cost",
+      "inverterCost": "Inverter Cost",
+      "batteryCost": "Battery Cost",
+      "mountingCost": "Mounting Cost",
+      "cableCost": "Cable & Accessories",
+      "laborCost": "Labor & Installation",
+      "permitCost": "Permit Cost",
+      "discount": "Discount",
+      "grandTotal": "Grand Total"
+    },
+    "savings": {
+      "monthlyProduction": "Monthly Production",
+      "monthlySavings": "Monthly Savings",
+      "paybackIn": "Payback in",
+      "years": "years"
+    },
+    "timeline": {
+      "siteSurvey": "Site Survey",
+      "installStart": "Installation Start",
+      "installEnd": "Installation Complete",
+      "duration": "Duration",
+      "days": "days"
+    },
+    "warranty": {
+      "panelPerformance": "Panel (Performance)",
+      "panelProduct": "Panel (Product)",
+      "inverter": "Inverter",
+      "installation": "Installation",
+      "roofLeak": "Roof Leak"
+    },
+    "financingDetail": {
+      "cashDiscount": "Cash Discount",
+      "installment": "Installment (Interest {rate}%)",
+      "months": "months",
+      "perMonth": "month"
+    },
+    "revisionModal": {
+      "title": "Request Quote Revision",
+      "subtitle": "You can request up to 3 revisions",
+      "placeholder": "Specify what you'd like changed, e.g., lower price, change panel brand, faster installation...",
+      "cancel": "Cancel",
+      "submit": "Submit Request"
+    }
   }
 }

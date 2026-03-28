@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { Card, Button, Input, Modal } from '@/components/ui'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
+import { useToast } from '@/components/ui/Toast'
 import {
   useDocuments,
   useKnowledgeStats,
@@ -15,6 +16,7 @@ import {
 
 export default function KnowledgePage() {
   const { user } = useAuth()
+  const { addToast } = useToast()
   const t = useTranslations('knowledge')
   const { data: documentsData, isLoading: documentsLoading } = useDocuments()
   const { data: statsData, isLoading: statsLoading } = useKnowledgeStats()
@@ -57,7 +59,7 @@ export default function KnowledgePage() {
 
   const handleUpload = async () => {
     if (!uploadForm.content.trim()) {
-      alert(t('errors.contentRequired'))
+      addToast('error', t('errors.contentRequired'))
       return
     }
 

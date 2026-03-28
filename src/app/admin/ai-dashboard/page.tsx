@@ -1,9 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import { useToast } from '@/components/ui/Toast'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -102,11 +104,13 @@ function ProgressBar({
   limit,
   percentage,
   color = 'orange',
+  unlimitedLabel = 'Unlimited',
 }: {
   used: number
   limit: number
   percentage: number
   color?: 'orange' | 'blue' | 'green' | 'red'
+  unlimitedLabel?: string
 }) {
   const colorClasses = {
     orange: 'bg-orange-500',
@@ -128,7 +132,7 @@ function ProgressBar({
             isUnlimited ? 'text-green-600' : percentage >= 90 ? 'text-red-600' : 'text-gray-500'
           }
         >
-          {isUnlimited ? 'Unlimited' : `${percentage.toFixed(1)}%`}
+          {isUnlimited ? unlimitedLabel : `${percentage.toFixed(1)}%`}
         </span>
       </div>
       {!isUnlimited && (
@@ -180,8 +184,9 @@ function UsageBarChart({
 // ---------------------------------------------------------------------------
 
 export default function AIDashboardPage() {
-  const { user, loading: authLoading } = useAuth()
-  useTranslations('admin.ai-dashboard')
+  const { user, isLoading: authLoading } = useAuth()
+  const router = useRouter()
+  const t = useTranslations('admin.ai-dashboard')
 
   const [overview, setOverview] = useState<DashboardOverview | null>(null)
   const [usageStats, setUsageStats] = useState<UsageStats | null>(null)
@@ -192,17 +197,12 @@ export default function AIDashboardPage() {
   >([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { addToast } = useToast()
   const [activeTab, setActiveTab] = useState<'overview' | 'usage' | 'organizations' | 'cache'>(
     'overview'
   )
 
-  useEffect(() => {
-    if (!authLoading && user) {
-      loadDashboardData()
-    }
-  }, [user, authLoading])
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -234,11 +234,17 @@ export default function AIDashboardPage() {
       setOrgUsage(orgData)
       setUsageHistory(historyData.history || [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load dashboard data')
+      setError(err instanceof Error ? err.message : t('loadFailed'))
     } finally {
       setLoading(false)
     }
-  }
+  }, [t])
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      loadDashboardData()
+    }
+  }, [user, authLoading, loadDashboardData])
 
   const handleInvalidateCache = async () => {
     try {
@@ -246,17 +252,34 @@ export default function AIDashboardPage() {
       if (!res.ok) {
         throw new Error('Failed to cleanup cache')
       }
-      alert('Cache cleaned up successfully')
+      addToast('success', t('cacheCleanedSuccess'))
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to cleanup cache')
+      addToast('error', err instanceof Error ? err.message : t('cacheCleanedFailed'))
     }
   }
+
+  // Redirect non-admin users
+  useEffect(() => {
+    if (!authLoading && user && user.role !== 'admin') {
+      router.replace('/dashboard')
+    }
+  }, [authLoading, user, router])
 
   if (authLoading || loading) {
     return (
       <AppLayout>
         <div className="flex items-center justify-center min-h-[50vh]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  if (!user || user.role !== 'admin') {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <p className="text-gray-500">{t('unauthorized')}</p>
         </div>
       </AppLayout>
     )
@@ -272,7 +295,7 @@ export default function AIDashboardPage() {
               onClick={loadDashboardData}
               className="mt-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
             >
-              Retry
+              {t('retry')}
             </button>
           </div>
         </div>
@@ -285,18 +308,18 @@ export default function AIDashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">AI Dashboard</h1>
-          <p className="mt-2 text-gray-600">Monitor LLM usage, costs, and performance</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="mt-2 text-gray-600">{t('subtitle')}</p>
         </div>
 
         {/* Tabs */}
         <div className="border-b border-gray-200 mb-6">
           <nav className="flex space-x-8">
             {[
-              { id: 'overview', label: 'Overview' },
-              { id: 'usage', label: 'Usage Stats' },
-              { id: 'organizations', label: 'Organizations' },
-              { id: 'cache', label: 'Cache' },
+              { id: 'overview', label: t('tabs.overview') },
+              { id: 'usage', label: t('tabs.usage') },
+              { id: 'organizations', label: t('tabs.organizations') },
+              { id: 'cache', label: t('tabs.cache') },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -321,7 +344,7 @@ export default function AIDashboardPage() {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard
-                title="Today's Requests"
+                title={t('stats.todayRequests')}
                 value={overview.today_requests.toLocaleString()}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -335,7 +358,7 @@ export default function AIDashboardPage() {
                 }
               />
               <StatCard
-                title="Today's Cost"
+                title={t('stats.todayCost')}
                 value={`฿${overview.today_cost_thb.toFixed(2)}`}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -350,7 +373,7 @@ export default function AIDashboardPage() {
                 color="green"
               />
               <StatCard
-                title="Month Requests"
+                title={t('stats.monthRequests')}
                 value={overview.month_requests.toLocaleString()}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -365,7 +388,7 @@ export default function AIDashboardPage() {
                 color="blue"
               />
               <StatCard
-                title="Month Cost"
+                title={t('stats.monthCost')}
                 value={`฿${overview.month_cost_thb.toFixed(2)}`}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -384,7 +407,7 @@ export default function AIDashboardPage() {
             {/* Additional Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatCard
-                title="Cache Hit Rate"
+                title={t('stats.cacheHitRate')}
                 value={`${overview.cache_hit_rate.toFixed(1)}%`}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -399,7 +422,7 @@ export default function AIDashboardPage() {
                 color="purple"
               />
               <StatCard
-                title="Avg Latency"
+                title={t('stats.avgLatency')}
                 value={`${overview.avg_latency_ms.toFixed(0)}ms`}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -414,7 +437,7 @@ export default function AIDashboardPage() {
                 color="blue"
               />
               <StatCard
-                title="Active Orgs"
+                title={t('stats.activeOrgs')}
                 value={overview.active_orgs}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -432,13 +455,11 @@ export default function AIDashboardPage() {
 
             {/* Usage History */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Usage History (Last 30 Days)
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('usageHistory')}</h2>
               {usageHistory.length > 0 ? (
                 <UsageBarChart data={usageHistory.slice(0, 14)} />
               ) : (
-                <p className="text-gray-500 text-sm">No usage data available</p>
+                <p className="text-gray-500 text-sm">{t('noData')}</p>
               )}
             </div>
           </div>
@@ -450,51 +471,55 @@ export default function AIDashboardPage() {
             {/* Plan Usage */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Plan Usage ({planUsage.plan_name})
+                {t('planUsage')} ({planUsage.plan_name})
               </h2>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-gray-700">Analyses</span>
+                    <span className="font-medium text-gray-700">{t('analyses')}</span>
                   </div>
                   <ProgressBar
                     used={planUsage.analyses_used}
                     limit={planUsage.analyses_limit}
                     percentage={planUsage.analyses_percentage}
                     color={planUsage.analyses_percentage >= 90 ? 'red' : 'orange'}
+                    unlimitedLabel={t('unlimited')}
                   />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-gray-700">Bill OCR</span>
+                    <span className="font-medium text-gray-700">{t('billOcr')}</span>
                   </div>
                   <ProgressBar
                     used={planUsage.ocr_used}
                     limit={planUsage.ocr_limit}
                     percentage={planUsage.ocr_percentage}
                     color={planUsage.ocr_percentage >= 90 ? 'red' : 'orange'}
+                    unlimitedLabel={t('unlimited')}
                   />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-gray-700">Chat Messages</span>
+                    <span className="font-medium text-gray-700">{t('chatMessages')}</span>
                   </div>
                   <ProgressBar
                     used={planUsage.chat_used}
                     limit={planUsage.chat_limit}
                     percentage={planUsage.chat_percentage}
                     color={planUsage.chat_percentage >= 90 ? 'red' : 'orange'}
+                    unlimitedLabel={t('unlimited')}
                   />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-gray-700">RAG Queries</span>
+                    <span className="font-medium text-gray-700">{t('ragQueries')}</span>
                   </div>
                   <ProgressBar
                     used={planUsage.rag_used}
                     limit={planUsage.rag_limit}
                     percentage={planUsage.rag_percentage}
                     color={planUsage.rag_percentage >= 90 ? 'red' : 'orange'}
+                    unlimitedLabel={t('unlimited')}
                   />
                 </div>
               </div>
@@ -502,7 +527,7 @@ export default function AIDashboardPage() {
 
             {/* Breakdown by Feature */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Usage by Feature</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('usageByFeature')}</h2>
               <div className="space-y-3">
                 {Object.entries(usageStats.breakdown_by_feature).map(([feature, data]) => (
                   <div
@@ -511,7 +536,9 @@ export default function AIDashboardPage() {
                   >
                     <div>
                       <p className="font-medium text-gray-900 capitalize">{feature}</p>
-                      <p className="text-sm text-gray-500">{data.requests} requests</p>
+                      <p className="text-sm text-gray-500">
+                        {data.requests} {t('requests')}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-gray-900">฿{data.cost_thb.toFixed(2)}</p>
@@ -523,7 +550,7 @@ export default function AIDashboardPage() {
 
             {/* Breakdown by Model */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Usage by Model</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('usageByModel')}</h2>
               <div className="space-y-3">
                 {Object.entries(usageStats.breakdown_by_model).map(([model, data]) => (
                   <div
@@ -532,7 +559,9 @@ export default function AIDashboardPage() {
                   >
                     <div>
                       <p className="font-medium text-gray-900">{model}</p>
-                      <p className="text-sm text-gray-500">{data.requests} requests</p>
+                      <p className="text-sm text-gray-500">
+                        {data.requests} {t('requests')}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-gray-900">฿{data.cost_thb.toFixed(2)}</p>
@@ -548,26 +577,26 @@ export default function AIDashboardPage() {
         {activeTab === 'organizations' && (
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Organization Usage</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{t('orgUsage')}</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Organization
+                      {t('columns.organization')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Plan
+                      {t('columns.plan')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Requests
+                      {t('columns.requests')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Cost (THB)
+                      {t('columns.costThb')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Cache Hit Rate
+                      {t('columns.cacheHitRate')}
                     </th>
                   </tr>
                 </thead>
@@ -576,7 +605,7 @@ export default function AIDashboardPage() {
                     <tr key={org.org_id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
-                          {org.org_name || 'Unknown'}
+                          {org.org_name || t('unknown')}
                         </div>
                         <div className="text-xs text-gray-500">{org.org_id}</div>
                       </td>
@@ -607,7 +636,7 @@ export default function AIDashboardPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatCard
-                title="Cache Hit Rate"
+                title={t('stats.cacheHitRate')}
                 value={`${usageStats.cache_hit_rate.toFixed(1)}%`}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -622,7 +651,7 @@ export default function AIDashboardPage() {
                 color="green"
               />
               <StatCard
-                title="Cached Requests"
+                title={t('stats.cachedRequests')}
                 value={usageStats.cached_requests.toLocaleString()}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -637,7 +666,7 @@ export default function AIDashboardPage() {
                 color="blue"
               />
               <StatCard
-                title="Total Requests"
+                title={t('stats.totalRequests')}
                 value={usageStats.total_requests.toLocaleString()}
                 icon={
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -655,17 +684,15 @@ export default function AIDashboardPage() {
 
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Cache Management</h2>
+                <h2 className="text-lg font-semibold text-gray-900">{t('cacheManagement')}</h2>
                 <button
                   onClick={handleInvalidateCache}
                   className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 text-sm font-medium"
                 >
-                  Clean Up Expired Entries
+                  {t('cleanUpExpired')}
                 </button>
               </div>
-              <p className="text-sm text-gray-600">
-                Clean up expired cache entries to free up memory and improve performance.
-              </p>
+              <p className="text-sm text-gray-600">{t('cleanUpDescription')}</p>
             </div>
           </div>
         )}

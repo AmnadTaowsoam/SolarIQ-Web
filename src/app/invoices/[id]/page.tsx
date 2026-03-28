@@ -326,7 +326,7 @@ export default function InvoiceDetailPage() {
                     className="w-full border-red-300 text-red-600 hover:bg-red-50"
                     onClick={() => setShowVoidDialog(true)}
                   >
-                    {t('edit')}
+                    {t('voidInvoice')}
                   </Button>
                 )}
               </CardBody>
@@ -378,7 +378,7 @@ export default function InvoiceDetailPage() {
                 )}
                 {invoice.sent_at && (
                   <div>
-                    <p className="text-gray-500">{t('sendEmail')}</p>
+                    <p className="text-gray-500">{t('sentAt')}</p>
                     <p className="mt-1">
                       {new Date(invoice.sent_at).toLocaleDateString('th-TH', {
                         day: '2-digit',
@@ -398,7 +398,7 @@ export default function InvoiceDetailPage() {
         {showVoidDialog && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <Card className="w-full max-w-md">
-              <CardHeader title={t('edit')} />
+              <CardHeader title={t('confirmVoid')} />
               <CardBody className="space-y-4">
                 <p className="text-sm text-gray-600">This action cannot be undone.</p>
                 <div>

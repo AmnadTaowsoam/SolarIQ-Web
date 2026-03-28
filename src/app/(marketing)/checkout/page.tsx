@@ -31,84 +31,88 @@ import { useTranslations } from 'next-intl'
 type PlanId = 'trial' | 'starter' | 'professional' | 'enterprise'
 type BillingCycle = 'monthly' | 'annual'
 
+interface PlanRaw {
+  id: PlanId
+  nameKey: string
+  subtitleKey: string
+  icon: React.ElementType
+  monthlyPrice: number
+  annualPrice: number
+  featureKeys: string[]
+}
+
 interface PlanInfo {
   id: PlanId
   name: string
   subtitle: string
-  subtitleKey?: string
   icon: React.ElementType
   monthlyPrice: number
   annualPrice: number
   features: string[]
 }
 
-const PLANS: Record<string, Omit<PlanInfo, 'subtitle'> & { subtitleKey: string }> = {
+const PLANS: Record<string, PlanRaw> = {
   trial: {
     id: 'trial',
-    name: 'ทดลองฟรี',
+    nameKey: 'trialFree',
     subtitleKey: 'planStarterSubtitle',
     icon: Gift,
     monthlyPrice: 0,
     annualPrice: 0,
-    features: [
-      'วิเคราะห์โซลาร์: 5 ครั้ง',
-      'ROI Calculator พื้นฐาน',
-      '1 ผู้ใช้',
-      'Community Support',
-    ],
+    featureKeys: ['trialFeature1', 'trialFeature2', 'trialFeature3', 'trialFeature4'],
   },
   starter: {
     id: 'starter',
-    name: 'Starter',
+    nameKey: 'planStarter',
     subtitleKey: 'planStarterSubtitle',
     icon: Zap,
     monthlyPrice: 2900,
     annualPrice: 2320,
-    features: [
-      'วิเคราะห์โซลาร์: 20 ครั้ง/เดือน',
-      'ROI Calculator พื้นฐาน',
-      'PDF Proposal Generation',
-      'Basic Dashboard',
-      '1 ผู้ใช้',
-      'Email Support',
+    featureKeys: [
+      'starterFeature1',
+      'starterFeature2',
+      'starterFeature3',
+      'starterFeature4',
+      'starterFeature5',
+      'starterFeature6',
     ],
   },
   professional: {
     id: 'professional',
-    name: 'Professional',
+    nameKey: 'planPro',
     subtitleKey: 'planProfessionalSubtitle',
     icon: Rocket,
     monthlyPrice: 7900,
     annualPrice: 6320,
-    features: [
-      'วิเคราะห์โซลาร์: 100 ครั้ง/เดือน',
-      'Climate Reliability Score',
-      'Energy Independence Score',
-      'PM2.5 Impact Analysis',
-      'เปรียบเทียบการลงทุน (เงินสด/สินเชื่อ/เช่า)',
-      'Smart Alerts อัจฉริยะ',
-      'Full Dashboard + CSV Export',
-      'API Access',
-      '5 ผู้ใช้',
-      'Priority Support',
+    featureKeys: [
+      'proFeature1',
+      'proFeature2',
+      'proFeature3',
+      'proFeature4',
+      'proFeature5',
+      'proFeature6',
+      'proFeature7',
+      'proFeature8',
+      'proFeature9',
+      'proFeature10',
     ],
   },
   enterprise: {
     id: 'enterprise',
-    name: 'Enterprise',
+    nameKey: 'planEnterprise',
     subtitleKey: 'planEnterpriseSubtitle',
     icon: Building2,
     monthlyPrice: 15000,
     annualPrice: 12000,
-    features: [
-      'วิเคราะห์โซลาร์: ไม่จำกัด',
-      'ทุกอย่างใน Professional +',
-      'White-label Branding',
-      'Custom API Integration',
-      'ผู้ใช้ไม่จำกัด',
-      'Dedicated Account Manager',
-      'SLA 99.9% Uptime',
-      'Custom Report Templates',
+    featureKeys: [
+      'entFeature1',
+      'entFeature2',
+      'entFeature3',
+      'entFeature4',
+      'entFeature5',
+      'entFeature6',
+      'entFeature7',
+      'entFeature8',
     ],
   },
 }
@@ -147,7 +151,15 @@ export default function CheckoutPage() {
   const plan: PlanInfo | undefined = useMemo(
     () =>
       rawPlan
-        ? { ...rawPlan, subtitle: t(rawPlan.subtitleKey as Parameters<typeof t>[0]) }
+        ? {
+            id: rawPlan.id,
+            name: t(rawPlan.nameKey as Parameters<typeof t>[0]),
+            subtitle: t(rawPlan.subtitleKey as Parameters<typeof t>[0]),
+            icon: rawPlan.icon,
+            monthlyPrice: rawPlan.monthlyPrice,
+            annualPrice: rawPlan.annualPrice,
+            features: rawPlan.featureKeys.map((k) => t(k as Parameters<typeof t>[0])),
+          }
         : undefined,
     [rawPlan, t]
   )
@@ -183,7 +195,7 @@ export default function CheckoutPage() {
       // await api.post('/api/v1/billing/validate-promo', { code: promoCode })
       setPromoApplied(true)
     } catch {
-      setPromoError('รหัสโปรโมชั่นไม่ถูกต้อง')
+      setPromoError(t('promoInvalid'))
       setPromoApplied(false)
     }
   }
@@ -235,11 +247,7 @@ export default function CheckoutPage() {
         window.location.href = data.authorize_uri
       }
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'เกิดข้อผิดพลาดในการสร้างรายการชำระเงิน กรุณาลองใหม่อีกครั้ง'
-      )
+      setError(err instanceof Error ? err.message : t('checkoutError'))
     } finally {
       setIsLoading(false)
     }
@@ -318,14 +326,16 @@ export default function CheckoutPage() {
                   <div className="flex justify-between text-green-600">
                     <span>{t('annualDiscount')}</span>
                     <span className="font-medium">
-                      ประหยัด ฿{savings.toLocaleString('th-TH')}/ปี
+                      {t('savingsAmount', { amount: savings.toLocaleString('th-TH') })}
                     </span>
                   </div>
                 )}
 
                 {promoApplied && (
                   <div className="flex justify-between text-green-600">
-                    <span>โปรโมชั่น ({promoCode})</span>
+                    <span>
+                      {t('promoLabel')} ({promoCode})
+                    </span>
                     <span className="font-medium">{t('promoApplied')}</span>
                   </div>
                 )}
@@ -335,13 +345,13 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-base font-bold">
                   <span className="text-gray-900 dark:text-white">{t('total')}</span>
                   <span className="text-gray-900 dark:text-white">
-                    ฿{price.toLocaleString('th-TH')}/เดือน
+                    {t('pricePerMonth', { price: price.toLocaleString('th-TH') })}
                   </span>
                 </div>
 
                 {billing === 'annual' && (
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    เรียกเก็บ ฿{(price * 12).toLocaleString('th-TH')} ต่อปี
+                    {t('billedAnnually', { amount: (price * 12).toLocaleString('th-TH') })}
                   </p>
                 )}
               </div>
@@ -354,9 +364,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-3 order-1 lg:order-2">
             <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 lg:p-8 shadow-sm">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('pay')}</h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-                เลือกรอบการชำระเงินและดำเนินการต่อ
-              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">{t('paySubtitle')}</p>
 
               {/* Billing toggle */}
               <div className="mb-8">
@@ -393,7 +401,7 @@ export default function CheckoutPage() {
               {/* Promo code */}
               <div className="mb-8">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                  รหัสโปรโมชั่น (ถ้ามี)
+                  {t('promoCodeLabel')}
                 </label>
                 <div className="flex gap-3">
                   <div className="relative flex-1">
@@ -406,7 +414,7 @@ export default function CheckoutPage() {
                         setPromoApplied(false)
                         setPromoError('')
                       }}
-                      placeholder="กรอกรหัสโปรโมชั่น"
+                      placeholder={t('promoCodePlaceholder')}
                       className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 pl-10 pr-4 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
                     />
                   </div>
@@ -415,13 +423,11 @@ export default function CheckoutPage() {
                     disabled={!promoCode.trim() || promoApplied}
                     className="rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {promoApplied ? t('promoApplied') : 'ใช้รหัส'}
+                    {promoApplied ? t('promoApplied') : t('applyCode')}
                   </button>
                 </div>
                 {promoError && <p className="mt-2 text-sm text-red-500">{promoError}</p>}
-                {promoApplied && (
-                  <p className="mt-2 text-sm text-green-600">ใช้รหัสโปรโมชั่นสำเร็จ</p>
-                )}
+                {promoApplied && <p className="mt-2 text-sm text-green-600">{t('promoSuccess')}</p>}
               </div>
 
               {/* Payment method selector */}
@@ -487,7 +493,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    สแกน QR Code เพื่อชำระเงินผ่านพร้อมเพย์
+                    {t('scanQrPromptpay')}
                   </p>
 
                   <button
@@ -496,7 +502,7 @@ export default function CheckoutPage() {
                     className="inline-flex items-center gap-2 rounded-lg bg-primary-50 dark:bg-primary-900/20 px-4 py-2.5 text-sm font-medium text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors disabled:opacity-50"
                   >
                     <RefreshCw className={`h-4 w-4 ${isPolling ? 'animate-spin' : ''}`} />
-                    {isPolling ? 'กำลังตรวจสอบ...' : 'ตรวจสอบสถานะการชำระเงิน'}
+                    {isPolling ? t('checkingStatus') : t('checkPaymentStatus')}
                   </button>
                 </div>
               )}
@@ -515,7 +521,7 @@ export default function CheckoutPage() {
                 ) : (
                   <>
                     <CreditCard className="h-5 w-5" />
-                    {t('pay')} ฿{price.toLocaleString('th-TH')}/เดือน
+                    {t('pay')} {t('pricePerMonth', { price: price.toLocaleString('th-TH') })}
                   </>
                 )}
               </button>
@@ -548,11 +554,11 @@ export default function CheckoutPage() {
 
               {/* Payment method logos */}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-gray-400">
-                <span className="text-xs font-medium">รองรับ:</span>
+                <span className="text-xs font-medium">{t('supportedMethods')}</span>
                 <span className="text-xs">Visa</span>
                 <span className="text-xs">Mastercard</span>
                 <span className="text-xs">JCB</span>
-                <span className="text-xs">พร้อมเพย์</span>
+                <span className="text-xs">{t('promptpay')}</span>
                 <span className="text-xs">SCB</span>
                 <span className="text-xs">KBANK</span>
                 <span className="text-xs">BBL</span>
@@ -561,8 +567,8 @@ export default function CheckoutPage() {
               {/* Policy info */}
               <div className="mt-8 rounded-lg bg-gray-50 dark:bg-gray-700/50 p-4 text-xs text-gray-500 dark:text-gray-400 space-y-1">
                 <p>{t('cancelPolicy')}</p>
-                <p>เมื่อยกเลิก คุณจะยังใช้งานได้จนจบรอบบิลปัจจุบัน</p>
-                <p>รับใบเสร็จรับเงินอิเล็กทรอนิกส์ทุกรอบบิลทาง Email</p>
+                <p>{t('cancelKeepAccess')}</p>
+                <p>{t('receiptEmail')}</p>
               </div>
             </div>
           </div>

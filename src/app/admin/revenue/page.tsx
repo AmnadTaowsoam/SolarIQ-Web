@@ -1,16 +1,14 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { Card, CardBody, CardHeader } from '@/components/ui'
+import { useAuth } from '@/context'
 import { useAdminRevenue, useTopContractors } from '@/hooks/useCommissions'
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 
 const COLORS = ['#f97316', '#0ea5e9', '#22c55e', '#a855f7', '#64748b']
 
@@ -19,16 +17,46 @@ function formatThb(value: number) {
 }
 
 export default function AdminRevenuePage() {
+  const t = useTranslations('admin.revenue')
+  const { user, isLoading: authLoading } = useAuth()
+  const router = useRouter()
   const { data } = useAdminRevenue()
   const { data: topContractors } = useTopContractors()
 
+  // Redirect non-admin users
+  useEffect(() => {
+    if (!authLoading && user && user.role !== 'admin') {
+      router.replace('/dashboard')
+    }
+  }, [authLoading, user, router])
+
+  if (authLoading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  if (!user || user.role !== 'admin') {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <p className="text-gray-500">{t('unauthorized')}</p>
+        </div>
+      </AppLayout>
+    )
+  }
+
   const breakdownData = data
     ? [
-        { name: 'Subscription', value: data.breakdown.subscription },
-        { name: 'Commission', value: data.breakdown.commission },
-        { name: 'Lead Fee', value: data.breakdown.lead_fee },
-        { name: 'Add-on', value: data.breakdown.addon },
-        { name: 'Other', value: data.breakdown.other },
+        { name: t('subscription'), value: data.breakdown.subscription },
+        { name: t('commissionType'), value: data.breakdown.commission },
+        { name: t('leadFee'), value: data.breakdown.lead_fee },
+        { name: t('addon'), value: data.breakdown.addon },
+        { name: t('other'), value: data.breakdown.other },
       ]
     : []
 
@@ -37,44 +65,49 @@ export default function AdminRevenuePage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Revenue Dashboard</h1>
-            <p className="text-sm text-gray-500 mt-1">Platform-wide revenue and commission insights</p>
+            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+            <p className="text-sm text-gray-500 mt-1">{t('platformSubtitle')}</p>
           </div>
-          <Link href="/admin/revenue/forecast" className="text-sm font-semibold text-orange-600 hover:text-orange-700">
-            View Forecast
+          <Link
+            href="/admin/revenue/forecast"
+            className="text-sm font-semibold text-orange-600 hover:text-orange-700"
+          >
+            {t('viewForecast')}
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">Total Revenue</p>
+              <p className="text-xs text-gray-500 uppercase">{t('totalRevenue')}</p>
               <p className="text-2xl font-bold text-gray-900 mt-2">{formatThb(data?.total || 0)}</p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">MRR</p>
+              <p className="text-xs text-gray-500 uppercase">{t('mrr')}</p>
               <p className="text-2xl font-bold text-gray-900 mt-2">{formatThb(data?.mrr || 0)}</p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">ARPU</p>
+              <p className="text-xs text-gray-500 uppercase">{t('arpu')}</p>
               <p className="text-2xl font-bold text-gray-900 mt-2">{formatThb(data?.arpu || 0)}</p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">Churn</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{((data?.churnRate || 0) * 100).toFixed(1)}%</p>
+              <p className="text-xs text-gray-500 uppercase">{t('churn')}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-2">
+                {((data?.churnRate || 0) * 100).toFixed(1)}%
+              </p>
             </CardBody>
           </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card>
-            <CardHeader title="Revenue Breakdown" subtitle="Subscriptions vs commissions" />
+            <CardHeader title={t('revenueBreakdown')} subtitle={t('breakdownChartSubtitle')} />
             <CardBody className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -90,16 +123,16 @@ export default function AdminRevenuePage() {
           </Card>
 
           <Card>
-            <CardHeader title="Top Contractors" subtitle="Highest commission generators" />
+            <CardHeader title={t('topContractors')} subtitle={t('contractorsChartSubtitle')} />
             <CardBody className="p-0">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
                     <tr className="border-b border-gray-100 text-left text-xs text-gray-500">
-                      <th className="px-6 py-3">Contractor</th>
-                      <th className="px-6 py-3">Plan</th>
-                      <th className="px-6 py-3">Deals</th>
-                      <th className="px-6 py-3">Commission</th>
+                      <th className="px-6 py-3">{t('contractor')}</th>
+                      <th className="px-6 py-3">{t('plan')}</th>
+                      <th className="px-6 py-3">{t('deals')}</th>
+                      <th className="px-6 py-3">{t('commission')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -108,7 +141,9 @@ export default function AdminRevenuePage() {
                         <td className="px-6 py-3 text-sm font-medium text-gray-900">{row.name}</td>
                         <td className="px-6 py-3 text-sm text-gray-600 capitalize">{row.plan}</td>
                         <td className="px-6 py-3 text-sm text-gray-600">{row.totalDeals}</td>
-                        <td className="px-6 py-3 text-sm font-semibold text-gray-900">{formatThb(row.totalCommission)}</td>
+                        <td className="px-6 py-3 text-sm font-semibold text-gray-900">
+                          {formatThb(row.totalCommission)}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

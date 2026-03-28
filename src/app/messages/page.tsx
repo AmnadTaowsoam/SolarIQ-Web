@@ -809,12 +809,11 @@ export default function MessagesPage() {
                 const newThread: MessageThread = {
                   id: `thread-new-${Date.now()}`,
                   customerName: 'New Conversation',
-                  customerAvatar: '',
+                  customerInitials: 'NC',
                   lastMessage: '',
-                  lastMessageAt: new Date().toISOString(),
+                  lastMessageTime: new Date(),
                   unreadCount: 0,
                   status: 'active' as const,
-                  channel: 'line' as const,
                 }
                 setSelectedThread(newThread)
                 setLocalMessages([])

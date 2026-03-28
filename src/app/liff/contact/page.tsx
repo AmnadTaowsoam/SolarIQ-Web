@@ -174,7 +174,7 @@ export default function ContactPage(): React.ReactElement {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.detail || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล')
+        throw new Error(errorData.detail || t('form.saveError'))
       }
 
       setSuccess(true)

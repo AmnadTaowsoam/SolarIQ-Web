@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle2, ArrowRight, Mail, FileText, Sparkles } from 'lucide-react'
 import { useGA4 } from '@/hooks/useGA4'
+import { useTranslations } from 'next-intl'
 
 /* ------------------------------------------------------------------ */
 /*  Confetti CSS animation (pure CSS approach)                         */
@@ -57,6 +58,7 @@ function ConfettiEffect() {
 /*  Page                                                                */
 /* ------------------------------------------------------------------ */
 export default function CheckoutSuccessPage() {
+  const t = useTranslations('checkoutSuccess')
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('charge_id') ?? searchParams.get('session_id')
   const [showConfetti, setShowConfetti] = useState(true)
@@ -121,10 +123,10 @@ export default function CheckoutSuccessPage() {
 
         {/* Heading */}
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
-          ชำระเงินสำเร็จ!
+          {t('title')}
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">ขอบคุณที่เลือกใช้ SolarIQ</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">บัญชีของคุณพร้อมใช้งานแล้ว</p>
+        <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">{t('thankYou')}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">{t('accountReady')}</p>
 
         {/* Info cards */}
         <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 mb-8 text-left space-y-4 shadow-sm">
@@ -132,11 +134,9 @@ export default function CheckoutSuccessPage() {
             <Mail className="h-5 w-5 mt-0.5 text-primary-500 shrink-0" />
             <div>
               <p className="text-sm font-medium text-gray-900 dark:text-white">
-                ใบเสร็จรับเงินส่งทาง Email
+                {t('receiptTitle')}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                คุณจะได้รับใบเสร็จรับเงินอิเล็กทรอนิกส์ทาง Email ที่ลงทะเบียนไว้ภายในไม่กี่นาที
-              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('receiptDesc')}</p>
             </div>
           </div>
 
@@ -144,23 +144,17 @@ export default function CheckoutSuccessPage() {
             <FileText className="h-5 w-5 mt-0.5 text-primary-500 shrink-0" />
             <div>
               <p className="text-sm font-medium text-gray-900 dark:text-white">
-                จัดการการสมัครสมาชิก
+                {t('manageTitle')}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                คุณสามารถจัดการแพ็กเกจ ดูใบเสร็จ และเปลี่ยนแพลนได้ที่หน้า Billing
-              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('manageDesc')}</p>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
             <Sparkles className="h-5 w-5 mt-0.5 text-primary-500 shrink-0" />
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
-                เริ่มใช้งานฟีเจอร์ทั้งหมด
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                ฟีเจอร์ทั้งหมดในแพ็กเกจของคุณพร้อมใช้งานทันที
-              </p>
+              <p className="text-sm font-medium text-gray-900 dark:text-white">{t('startTitle')}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('startDesc')}</p>
             </div>
           </div>
         </div>
@@ -168,7 +162,7 @@ export default function CheckoutSuccessPage() {
         {/* Session ID */}
         {sessionId && (
           <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
-            รหัสอ้างอิง: {sessionId.slice(0, 20)}...
+            {t('referenceId')} {sessionId.slice(0, 20)}...
           </p>
         )}
 
@@ -178,14 +172,14 @@ export default function CheckoutSuccessPage() {
             href="/dashboard"
             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-amber-500 px-8 py-4 text-base font-bold text-white shadow-lg hover:shadow-xl transition-all"
           >
-            เริ่มใช้งาน SolarIQ
+            {t('startUsing')}
             <ArrowRight className="h-5 w-5" />
           </Link>
           <Link
             href="/billing"
             className="inline-flex items-center gap-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
-            ดูรายละเอียดการสมัคร
+            {t('viewDetails')}
           </Link>
         </div>
       </div>

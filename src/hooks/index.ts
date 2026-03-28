@@ -36,13 +36,7 @@ export {
   useFinancingOptions,
   useSmartAlerts,
 } from './useSolarAdvanced'
-export {
-  useDocuments,
-  useDocument,
-  useUploadDocument,
-  useDeleteDocument,
-  useDocumentPreview,
-} from './useKnowledge'
+export { useDocuments, useUploadDocument, useDeleteDocument } from './useKnowledge'
 export {
   useInstallationCosts,
   useCreateInstallationCost,

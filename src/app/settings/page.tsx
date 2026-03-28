@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card'
@@ -18,6 +18,7 @@ import { useTaxProfile, useUpdateTaxProfile } from '@/hooks'
 import apiClient from '@/lib/api'
 import type { BrandDomain } from '@/types/branding'
 import clsx from 'clsx'
+import Image from 'next/image'
 
 const FONT_OPTIONS = [
   { value: 'Inter', label: 'Inter' },
@@ -39,6 +40,7 @@ type SettingsTab =
   | 'api'
   | 'branding'
   | 'privacy'
+  | 'security'
 
 interface TeamMember {
   id: string
@@ -225,6 +227,21 @@ const TABS: {
           strokeLinejoin="round"
           strokeWidth={1.5}
           d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z"
+        />
+      </svg>
+    ),
+  },
+  {
+    key: 'security',
+    labelKey: 'tabs.security',
+    adminOnly: true,
+    icon: (
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
         />
       </svg>
     ),
@@ -565,17 +582,55 @@ function TaxProfileSection() {
 
 function LineIntegrationSection() {
   const t = useTranslations('settingsPage')
-  const [channelId, setChannelId] = useState('17xxxxxxxx')
-  const [channelSecret, setChannelSecret] = useState('a1b2c3d4e5f6g7h8')
-  const [accessToken, setAccessToken] = useState('eyJhbGciOiJIUzI1NiJ9...')
-  const [liffId, setLiffId] = useState('1657xxxxxx-abcdefgh')
+  const { user } = useAuth()
+  const [channelId, setChannelId] = useState('')
+  const [channelSecret, setChannelSecret] = useState('')
+  const [accessToken, setAccessToken] = useState('')
+  const [liffId, setLiffId] = useState('')
   const [showSecret, setShowSecret] = useState(false)
   const [showToken, setShowToken] = useState(false)
-  const [isConnected] = useState(true)
+  const [isConnected, setIsConnected] = useState(false)
   const [isTesting, setIsTesting] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [statusMessage, setStatusMessage] = useState<{
+    type: 'success' | 'error'
+    text: string
+  } | null>(null)
 
-  const webhookUrl = 'https://api.solariq.co/webhook/line/abc123xyz'
+  const webhookUrl = `https://api.solariq.co/webhook/line/${user?.uid ?? 'unknown'}`
+
+  // Load LINE config on mount
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const res = await apiClient.get<{
+          channelId?: string
+          channelSecret?: string
+          accessToken?: string
+          liffId?: string
+          isConnected?: boolean
+        }>('/api/v1/settings/line')
+        const data = res.data
+        if (data.channelId) {
+          setChannelId(data.channelId)
+        }
+        if (data.channelSecret) {
+          setChannelSecret(data.channelSecret)
+        }
+        if (data.accessToken) {
+          setAccessToken(data.accessToken)
+        }
+        if (data.liffId) {
+          setLiffId(data.liffId)
+        }
+        setIsConnected(data.isConnected ?? false)
+      } catch {
+        // No existing config — fields stay empty
+      }
+    }
+    loadConfig()
+  }, [])
 
   const handleCopyWebhook = () => {
     navigator.clipboard.writeText(webhookUrl)
@@ -583,9 +638,51 @@ function LineIntegrationSection() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleTestConnection = () => {
+  const handleTestConnection = async () => {
     setIsTesting(true)
-    setTimeout(() => setIsTesting(false), 2000)
+    setStatusMessage(null)
+    try {
+      const res = await apiClient.post<{ connected: boolean; message?: string }>(
+        '/api/v1/settings/line/test',
+        { channelId, channelSecret, accessToken }
+      )
+      setIsConnected(res.data.connected)
+      setStatusMessage({
+        type: res.data.connected ? 'success' : 'error',
+        text:
+          res.data.message ??
+          (res.data.connected ? t('line.connectionSuccess') : t('line.connectionFailed')),
+      })
+    } catch (err) {
+      setIsConnected(false)
+      setStatusMessage({
+        type: 'error',
+        text: err instanceof Error ? err.message : t('line.connectionFailed'),
+      })
+    } finally {
+      setIsTesting(false)
+    }
+  }
+
+  const handleSave = async () => {
+    setIsSaving(true)
+    setStatusMessage(null)
+    try {
+      await apiClient.post('/api/v1/settings/line', {
+        channelId,
+        channelSecret,
+        accessToken,
+        liffId,
+      })
+      setStatusMessage({ type: 'success', text: t('line.saveSuccess') })
+    } catch (err) {
+      setStatusMessage({
+        type: 'error',
+        text: err instanceof Error ? err.message : t('line.saveFailed'),
+      })
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -762,17 +859,36 @@ function LineIntegrationSection() {
         </div>
       </CardBody>
       <CardFooter>
-        <div className="flex justify-between items-center">
-          <Button variant="outline" size="sm" isLoading={isTesting} onClick={handleTestConnection}>
-            {isTesting ? t('line.testing') : t('line.testConnection')}
-          </Button>
-          <div className="flex gap-3">
-            <Button variant="outline" size="sm">
-              {t('line.cancel')}
+        <div className="space-y-3">
+          {statusMessage && (
+            <div
+              className={clsx(
+                'px-4 py-2 rounded-lg text-sm',
+                statusMessage.type === 'success'
+                  ? 'bg-green-50 text-green-700 border border-green-200'
+                  : 'bg-red-50 text-red-700 border border-red-200'
+              )}
+            >
+              {statusMessage.text}
+            </div>
+          )}
+          <div className="flex justify-between items-center">
+            <Button
+              variant="outline"
+              size="sm"
+              isLoading={isTesting}
+              onClick={handleTestConnection}
+            >
+              {isTesting ? t('line.testing') : t('line.testConnection')}
             </Button>
-            <Button variant="primary" size="sm">
-              {t('line.save')}
-            </Button>
+            <div className="flex gap-3">
+              <Button variant="outline" size="sm">
+                {t('line.cancel')}
+              </Button>
+              <Button variant="primary" size="sm" isLoading={isSaving} onClick={handleSave}>
+                {isSaving ? t('line.saving') : t('line.save')}
+              </Button>
+            </div>
           </div>
         </div>
       </CardFooter>
@@ -1757,11 +1873,239 @@ function WhiteLabelSection() {
 }
 
 // ---------------------------------------------------------------------------
+// Section: Security & MFA
+// ---------------------------------------------------------------------------
+
+function SecurityMFASection() {
+  const t = useTranslations('settingsPage')
+  const [mfaStatus, setMfaStatus] = useState<
+    'not_enrolled' | 'enrolling' | 'enrolled' | 'disabled'
+  >('not_enrolled')
+  const [loading, setLoading] = useState(true)
+  const [enrollStep, setEnrollStep] = useState<'idle' | 'qr' | 'verify'>('idle')
+  const [qrCodeUrl, setQrCodeUrl] = useState('')
+  const [secret, setSecret] = useState('')
+  const [backupCodes, setBackupCodes] = useState<string[]>([])
+  const [verifyCode, setVerifyCode] = useState('')
+  const [error, setError] = useState('')
+  const [backupCodesRemaining, setBackupCodesRemaining] = useState(0)
+  const [showBackupCodes, setShowBackupCodes] = useState(false)
+
+  const fetchStatus = useCallback(async () => {
+    try {
+      setLoading(true)
+      const res = await apiClient.get('/api/v1/mfa/status')
+      setMfaStatus(res.data.status)
+      setBackupCodesRemaining(res.data.backup_codes_remaining ?? 0)
+    } catch {
+      setError(t('security.fetchError'))
+    } finally {
+      setLoading(false)
+    }
+  }, [t])
+
+  useEffect(() => {
+    fetchStatus()
+  }, [fetchStatus])
+
+  const handleStartEnroll = async () => {
+    try {
+      setError('')
+      const res = await apiClient.post('/api/v1/mfa/enroll/start', { method: 'totp' })
+      setSecret(res.data.secret)
+      setQrCodeUrl(res.data.qr_code_url)
+      setBackupCodes(res.data.backup_codes ?? [])
+      setEnrollStep('qr')
+    } catch {
+      setError(t('security.enrollError'))
+    }
+  }
+
+  const handleVerifyEnroll = async () => {
+    if (verifyCode.length !== 6) {
+      setError(t('security.codeLength'))
+      return
+    }
+    try {
+      setError('')
+      const res = await apiClient.post('/api/v1/mfa/enroll/verify', {
+        secret,
+        code: verifyCode,
+        backup_codes: backupCodes,
+      })
+      if (res.data.success) {
+        setMfaStatus('enrolled')
+        setEnrollStep('idle')
+        setShowBackupCodes(true)
+        setBackupCodesRemaining(res.data.backup_codes_remaining ?? backupCodes.length)
+      } else {
+        setError(t('security.verifyFailed'))
+      }
+    } catch {
+      setError(t('security.verifyFailed'))
+    }
+  }
+
+  const handleDisable = async () => {
+    if (!confirm(t('security.disableConfirm'))) {
+      return
+    }
+    try {
+      setError('')
+      await apiClient.post('/api/v1/mfa/disable')
+      setMfaStatus('not_enrolled')
+      setEnrollStep('idle')
+      setBackupCodes([])
+      setShowBackupCodes(false)
+    } catch {
+      setError(t('security.disableError'))
+    }
+  }
+
+  if (loading) {
+    return (
+      <Card>
+        <CardBody>
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500" />
+          </div>
+        </CardBody>
+      </Card>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* MFA Status Card */}
+      <Card>
+        <CardHeader>
+          <h2 className="text-lg font-semibold text-gray-900">{t('security.title')}</h2>
+          <p className="text-sm text-gray-500 mt-1">{t('security.subtitle')}</p>
+        </CardHeader>
+        <CardBody>
+          {error && (
+            <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          {/* Current status */}
+          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4">
+            <div className="flex items-center gap-3">
+              <div
+                className={clsx(
+                  'w-3 h-3 rounded-full',
+                  mfaStatus === 'enrolled' ? 'bg-green-500' : 'bg-gray-300'
+                )}
+              />
+              <div>
+                <p className="text-sm font-medium text-gray-900">{t('security.mfaStatus')}</p>
+                <p className="text-xs text-gray-500">
+                  {mfaStatus === 'enrolled'
+                    ? t('security.statusEnabled')
+                    : t('security.statusDisabled')}
+                </p>
+              </div>
+            </div>
+            {mfaStatus === 'enrolled' && (
+              <span className="text-xs text-gray-500">
+                {t('security.backupCodesRemaining', { count: backupCodesRemaining })}
+              </span>
+            )}
+          </div>
+
+          {/* Enrollment flow */}
+          {mfaStatus !== 'enrolled' && enrollStep === 'idle' && (
+            <Button onClick={handleStartEnroll} variant="primary">
+              {t('security.enableMfa')}
+            </Button>
+          )}
+
+          {enrollStep === 'qr' && (
+            <div className="space-y-4">
+              <div className="p-4 bg-white border border-gray-200 rounded-lg">
+                <p className="text-sm font-medium text-gray-900 mb-3">{t('security.scanQr')}</p>
+                <div className="flex justify-center mb-3">
+                  <Image
+                    src={qrCodeUrl}
+                    alt="MFA QR Code"
+                    width={192}
+                    height={192}
+                    className="w-48 h-48"
+                  />
+                </div>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 mb-1">{t('security.manualEntry')}</p>
+                  <code className="text-xs bg-gray-100 px-2 py-1 rounded select-all break-all">
+                    {secret}
+                  </code>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t('security.enterCode')}
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    value={verifyCode}
+                    onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    placeholder="000000"
+                    className="w-40 text-center tracking-widest"
+                  />
+                  <Button onClick={handleVerifyEnroll} variant="primary">
+                    {t('security.verify')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Backup codes display */}
+          {showBackupCodes && backupCodes.length > 0 && (
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm font-medium text-yellow-800 mb-2">
+                {t('security.backupCodesTitle')}
+              </p>
+              <p className="text-xs text-yellow-700 mb-3">{t('security.backupCodesWarning')}</p>
+              <div className="grid grid-cols-2 gap-1">
+                {backupCodes.map((code, i) => (
+                  <code
+                    key={i}
+                    className="text-xs bg-white px-2 py-1 rounded text-center select-all"
+                  >
+                    {code}
+                  </code>
+                ))}
+              </div>
+              <Button
+                variant="secondary"
+                className="mt-3"
+                onClick={() => setShowBackupCodes(false)}
+              >
+                {t('security.backupCodesDone')}
+              </Button>
+            </div>
+          )}
+        </CardBody>
+        {mfaStatus === 'enrolled' && (
+          <CardFooter>
+            <Button variant="danger" onClick={handleDisable}>
+              {t('security.disableMfa')}
+            </Button>
+          </CardFooter>
+        )}
+      </Card>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Section: Privacy & PDPA
 // ---------------------------------------------------------------------------
 
 function PrivacySection() {
-  useTranslations('settingsPage')
+  const t = useTranslations('settingsPage')
   const { user } = useAuth()
   const [activePrivacyTab, setActivePrivacyTab] = useState<'consent' | 'data' | 'cookie'>('consent')
   const [isExporting, setIsExporting] = useState(false)
@@ -1784,25 +2128,25 @@ function PrivacySection() {
 
       // Simulate delay
       await new Promise((resolve) => setTimeout(resolve, 1500))
-      alert('ข้อมูลของคุณถูกส่งออกเรียบร้อยแล้ว')
+      alert(t('privacy.data.exportSuccess'))
     } catch {
-      alert('เกิดข้อผิดพลาดในการส่งออกข้อมูล')
+      alert(t('privacy.data.exportError'))
     } finally {
       setIsExporting(false)
     }
   }
 
   const _handleDeleteAccount = async () => {
-    if (!confirm('คุณแน่ใจหรือไม่ที่จะลบบัญชี? การกระทำนี้ไม่สามารถย้อนกลับได้')) {
+    if (!confirm(t('privacy.data.deleteConfirm'))) {
       return
     }
     try {
       // Simulate API call - Replace with actual API call
       // await apiClient.post('/privacy/delete-account')
-      alert('คำขอลบบัญชีถูกส่งเรียบร้อยแล้ว คุณจะได้รับอีเมลยืนยัน')
+      alert(t('privacy.data.deleteSuccess'))
       setShowDeleteModal(false)
     } catch {
-      alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')
+      alert(t('privacy.data.deleteError'))
     }
   }
 
@@ -1819,7 +2163,7 @@ function PrivacySection() {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            ความยินยอม
+            {t('privacy.tabs.consent')}
           </button>
           <button
             onClick={() => setActivePrivacyTab('data')}
@@ -1829,7 +2173,7 @@ function PrivacySection() {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            ข้อมูลส่วนบุคคล
+            {t('privacy.tabs.data')}
           </button>
           <button
             onClick={() => setActivePrivacyTab('cookie')}
@@ -1839,7 +2183,7 @@ function PrivacySection() {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
           >
-            คุกกี้
+            {t('privacy.tabs.cookie')}
           </button>
         </nav>
       </div>
@@ -1847,11 +2191,11 @@ function PrivacySection() {
       {/* Consent Tab */}
       {activePrivacyTab === 'consent' && (
         <Card>
-          <CardHeader title="จัดการความยินยอม" subtitle="ตรวจสอบและจัดการความยินยอมของคุณ" />
+          <CardHeader title={t('privacy.consent.title')} subtitle={t('privacy.consent.subtitle')} />
           <CardBody className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm text-blue-900 dark:text-blue-100">
-                คุณสามารถจัดการความยินยอมของคุณได้ที่นี่ การเปลี่ยนแปลงจะมีผลทันที
+                {t('privacy.consent.notice')}
               </p>
             </div>
 
@@ -1859,35 +2203,39 @@ function PrivacySection() {
               <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">
-                    การเก็บข้อมูลส่วนบุคคล
+                    {t('privacy.consent.storage')}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    จำเป็นสำหรับการให้บริการ
+                    {t('privacy.consent.storageDesc')}
                   </p>
                 </div>
                 <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
-                  ยินยอมแล้ว
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-white">การวิเคราะห์บิลไฟฟ้า</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    ใช้สำหรับคำนวณ ROI และข้อเสนอ
-                  </p>
-                </div>
-                <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
-                  ยินยอมแล้ว
+                  {t('privacy.consent.given')}
                 </div>
               </div>
 
               <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">
-                    การตลาดและการส่งเสริมการขาย
+                    {t('privacy.consent.analysis')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">รับข่าวสารและโปรโมชัน</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('privacy.consent.analysisDesc')}
+                  </p>
+                </div>
+                <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
+                  {t('privacy.consent.given')}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    {t('privacy.consent.marketing')}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('privacy.consent.marketingDesc')}
+                  </p>
                 </div>
                 <Toggle enabled={true} onChange={() => {}} />
               </div>
@@ -1895,10 +2243,10 @@ function PrivacySection() {
               <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">
-                    การแชร์ข้อมูลกับพาร์ทเนอร์
+                    {t('privacy.consent.sharing')}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    แชร์ข้อมูลกับผู้ให้บริการที่เกี่ยวข้อง
+                    {t('privacy.consent.sharingDesc')}
                   </p>
                 </div>
                 <Toggle enabled={false} onChange={() => {}} />
@@ -1911,30 +2259,32 @@ function PrivacySection() {
       {/* Data Tab */}
       {activePrivacyTab === 'data' && (
         <Card>
-          <CardHeader title="ข้อมูลส่วนบุคคล" subtitle="ดูและจัดการข้อมูลส่วนบุคคลของคุณ" />
+          <CardHeader title={t('privacy.data.title')} subtitle={t('privacy.data.subtitle')} />
           <CardBody className="space-y-6">
             {/* User Info */}
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-              <h3 className="font-medium text-gray-900 dark:text-white mb-3">ข้อมูลบัญชี</h3>
+              <h3 className="font-medium text-gray-900 dark:text-white mb-3">
+                {t('privacy.data.accountInfo')}
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400">ชื่อ:</p>
+                  <p className="text-gray-600 dark:text-gray-400">{t('privacy.data.name')}</p>
                   <p className="text-gray-900 dark:text-white font-medium">
                     {user?.displayName || '-'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400">อีเมล:</p>
+                  <p className="text-gray-600 dark:text-gray-400">{t('privacy.data.email')}</p>
                   <p className="text-gray-900 dark:text-white font-medium">{user?.email || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400">เบอร์โทร:</p>
+                  <p className="text-gray-600 dark:text-gray-400">{t('privacy.data.phone')}</p>
                   <p className="text-gray-900 dark:text-white font-medium">
                     {user?.phoneNumber || '-'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400">บทบาท:</p>
+                  <p className="text-gray-600 dark:text-gray-400">{t('privacy.data.role')}</p>
                   <p className="text-gray-900 dark:text-white font-medium">{user?.role || '-'}</p>
                 </div>
               </div>
@@ -1942,27 +2292,31 @@ function PrivacySection() {
 
             {/* Data Export */}
             <div>
-              <h3 className="font-medium text-gray-900 dark:text-white mb-3">ส่งออกข้อมูล</h3>
+              <h3 className="font-medium text-gray-900 dark:text-white mb-3">
+                {t('privacy.data.export')}
+              </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                ดาวน์โหลดข้อมูลส่วนบุคคลทั้งหมดของคุณในรูปแบบที่อ่านได้
+                {t('privacy.data.exportDesc')}
               </p>
               <Button variant="outline" onClick={handleExportData} disabled={isExporting}>
-                {isExporting ? 'กำลังส่งออก...' : 'ส่งออกข้อมูล'}
+                {isExporting ? t('privacy.data.exporting') : t('privacy.data.exportButton')}
               </Button>
             </div>
 
             {/* Delete Account */}
             <div className="border border-red-200 dark:border-red-800 rounded-lg p-4">
-              <h3 className="font-medium text-red-900 dark:text-red-100 mb-2">ลบบัญชี</h3>
+              <h3 className="font-medium text-red-900 dark:text-red-100 mb-2">
+                {t('privacy.data.delete')}
+              </h3>
               <p className="text-sm text-red-700 dark:text-red-300 mb-4">
-                การลบบัญชีจะลบข้อมูลทั้งหมดของคุณ การกระทำนี้ไม่สามารถย้อนกลับได้
+                {t('privacy.data.deleteDesc')}
               </p>
               <Button
                 variant="outline"
                 className="border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                 onClick={() => setShowDeleteModal(true)}
               >
-                ลบบัญชี
+                {t('privacy.data.deleteButton')}
               </Button>
             </div>
           </CardBody>
@@ -1972,33 +2326,36 @@ function PrivacySection() {
       {/* Cookie Tab */}
       {activePrivacyTab === 'cookie' && (
         <Card>
-          <CardHeader title="การจัดการคุกกี้" subtitle="จัดการความยินยอมคุกกี้ของคุณ" />
+          <CardHeader title={t('privacy.cookie.title')} subtitle={t('privacy.cookie.subtitle')} />
           <CardBody className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm text-blue-900 dark:text-blue-100">
-                คุกกี้เป็นไฟล์ขนาดเล็กที่เก็บบนเบราว์เซอร์ของคุณ
-                เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานของคุณ
+                {t('privacy.cookie.notice')}
               </p>
             </div>
 
             <div className="space-y-3">
               <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">คุกกี้ที่จำเป็น</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    {t('privacy.cookie.essential')}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    จำเป็นสำหรับการทำงานของเว็บไซต์
+                    {t('privacy.cookie.essentialDesc')}
                   </p>
                 </div>
                 <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
-                  เปิดใช้งานอยู่
+                  {t('privacy.cookie.enabled')}
                 </div>
               </div>
 
               <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">คุกกี้วิเคราะห์</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    {t('privacy.cookie.analytics')}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    ใช้เพื่อปรับปรุงประสบการณ์การใช้งาน
+                    {t('privacy.cookie.analyticsDesc')}
                   </p>
                 </div>
                 <Toggle enabled={true} onChange={() => {}} />
@@ -2006,9 +2363,11 @@ function PrivacySection() {
 
               <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">คุกกี้การตลาด</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    {t('privacy.cookie.marketing')}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    ใช้สำหรับการโฆษณาและการตลาด
+                    {t('privacy.cookie.marketingDesc')}
                   </p>
                 </div>
                 <Toggle enabled={false} onChange={() => {}} />
@@ -2020,7 +2379,7 @@ function PrivacySection() {
                 href="/pdpa"
                 className="text-sm text-orange-600 dark:text-orange-400 hover:underline"
               >
-                ดูข้อมูลเพิ่มเติมเกี่ยวกับ PDPA Compliance →
+                {t('privacy.cookie.pdpaLink')} &rarr;
               </a>
             </div>
           </CardBody>
@@ -2066,6 +2425,8 @@ export default function SettingsPage() {
         return <WhiteLabelSection />
       case 'privacy':
         return <PrivacySection />
+      case 'security':
+        return <SecurityMFASection />
       default:
         return null
     }

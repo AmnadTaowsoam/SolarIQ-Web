@@ -1,39 +1,86 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
 import { Card, CardBody, CardHeader } from '@/components/ui'
+import { useAuth } from '@/context'
 import { useRevenueForecast } from '@/hooks/useCommissions'
-import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
+import {
+  LineChart,
+  Line,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from 'recharts'
 
 function formatThb(value: number) {
   return `฿${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
 }
 
 export default function RevenueForecastPage() {
+  const t = useTranslations('admin.revenue.forecast')
+  const { user, isLoading: authLoading } = useAuth()
+  const router = useRouter()
   const { data } = useRevenueForecast()
-  const chartData = data?.forecast.map((item) => ({
-    month: item.month,
-    low: item.low,
-    mid: item.mid,
-    high: item.high,
-  })) || []
+
+  // Redirect non-admin users
+  useEffect(() => {
+    if (!authLoading && user && user.role !== 'admin') {
+      router.replace('/dashboard')
+    }
+  }, [authLoading, user, router])
+
+  if (authLoading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  if (!user || user.role !== 'admin') {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <p className="text-gray-500">{t('unauthorized')}</p>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  const chartData =
+    data?.forecast.map((item) => ({
+      month: item.month,
+      low: item.low,
+      mid: item.mid,
+      high: item.high,
+    })) || []
 
   return (
     <AppLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Revenue Forecast</h1>
-            <p className="text-sm text-gray-500 mt-1">AI-assisted projection for upcoming months</p>
+            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+            <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
           </div>
-          <Link href="/admin/revenue" className="text-sm font-semibold text-orange-600 hover:text-orange-700">
-            Back to Revenue
+          <Link
+            href="/admin/revenue"
+            className="text-sm font-semibold text-orange-600 hover:text-orange-700"
+          >
+            {t('backToRevenue')}
           </Link>
         </div>
 
         <Card>
-          <CardHeader title="3-Month Forecast" subtitle="Low / Mid / High scenarios" />
+          <CardHeader title={t('threeMonthForecast')} subtitle={t('forecastSubtitle')} />
           <CardBody className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
@@ -50,7 +97,7 @@ export default function RevenueForecastPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Assumptions" />
+          <CardHeader title={t('assumptions')} />
           <CardBody>
             <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
               {(data?.assumptions || []).map((item) => (

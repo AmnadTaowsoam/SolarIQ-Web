@@ -2,10 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useAuth } from '@/context'
 import { AppLayout } from '@/components/layout'
 import { Card, CardBody, Button, Input, Badge, Modal, ModalFooter } from '@/components/ui'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, EmptyState, TableSkeleton } from '@/components/ui/Table'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+  EmptyState,
+  TableSkeleton,
+} from '@/components/ui/Table'
 import { useToast } from '@/components/ui/Toast'
 import {
   useInstallationCosts,
@@ -62,6 +72,7 @@ function Tabs({
 
 // Installation Costs Tab
 function InstallationCostsTab() {
+  const t = useTranslations('pricingPage.installationCosts')
   const { addToast } = useToast()
   const { data: costs = [], isLoading } = useInstallationCosts()
   const createMutation = useCreateInstallationCost()
@@ -72,62 +83,51 @@ function InstallationCostsTab() {
   const handleCreate = async () => {
     const cost = parseFloat(costPerKwp)
     if (isNaN(cost) || cost <= 0) {
-      addToast('error', 'Please enter a valid cost per kWp')
+      addToast('error', t('invalidCost'))
       return
     }
 
     try {
       await createMutation.mutateAsync({ costPerKwp: cost })
-      addToast('success', 'Installation cost added successfully')
+      addToast('success', t('addSuccess'))
       setIsModalOpen(false)
       setCostPerKwp('')
-    } catch (error) {
-      addToast('error', 'Failed to add installation cost')
+    } catch {
+      addToast('error', t('addFailed'))
     }
   }
 
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={() => setIsModalOpen(true)}>
-          Add New Rate
-        </Button>
+        <Button onClick={() => setIsModalOpen(true)}>{t('addNewRate')}</Button>
       </div>
 
       {isLoading ? (
         <TableSkeleton rows={5} columns={4} />
       ) : costs.length === 0 ? (
-        <EmptyState
-          title="No installation costs"
-          description="Add installation cost per kWp for ROI calculations"
-        />
+        <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Cost per kWp</TableHead>
-              <TableHead>Effective From</TableHead>
-              <TableHead>Effective To</TableHead>
-              <TableHead>Last Updated</TableHead>
+              <TableHead>{t('costPerKwp')}</TableHead>
+              <TableHead>{t('effectiveFrom')}</TableHead>
+              <TableHead>{t('effectiveTo')}</TableHead>
+              <TableHead>{t('lastUpdated')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {costs.map((cost) => (
               <TableRow key={cost.id}>
-                <TableCell className="font-medium">
-                  {formatCurrency(cost.costPerKwp)}
-                </TableCell>
-                <TableCell>
-                  {format(new Date(cost.effectiveFrom), 'MMM dd, yyyy')}
-                </TableCell>
+                <TableCell className="font-medium">{formatCurrency(cost.costPerKwp)}</TableCell>
+                <TableCell>{format(new Date(cost.effectiveFrom), 'MMM dd, yyyy')}</TableCell>
                 <TableCell>
                   {cost.effectiveTo
                     ? format(new Date(cost.effectiveTo), 'MMM dd, yyyy')
-                    : 'Current'}
+                    : t('current')}
                 </TableCell>
-                <TableCell>
-                  {format(new Date(cost.updatedAt), 'MMM dd, yyyy HH:mm')}
-                </TableCell>
+                <TableCell>{format(new Date(cost.updatedAt), 'MMM dd, yyyy HH:mm')}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -137,25 +137,25 @@ function InstallationCostsTab() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Add Installation Cost"
+        title={t('modalTitle')}
         size="sm"
       >
         <div className="space-y-4">
           <Input
-            label="Cost per kWp (THB)"
+            label={t('costPerKwpLabel')}
             type="number"
             value={costPerKwp}
             onChange={(e) => setCostPerKwp(e.target.value)}
-            placeholder="e.g., 50000"
-            hint="Enter the installation cost per kWp in Thai Baht"
+            placeholder={t('costPerKwpPlaceholder')}
+            hint={t('costPerKwpHint')}
           />
         </div>
         <ModalFooter>
           <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-            Cancel
+            {t('cancel')}
           </Button>
           <Button onClick={handleCreate} isLoading={createMutation.isPending}>
-            Add
+            {t('add')}
           </Button>
         </ModalFooter>
       </Modal>
@@ -165,6 +165,7 @@ function InstallationCostsTab() {
 
 // Electricity Rates Tab
 function ElectricityRatesTab() {
+  const t = useTranslations('pricingPage.electricityRates')
   const { addToast } = useToast()
   const { data: rates = [], isLoading } = useElectricityRates()
   const createMutation = useCreateElectricityRate()
@@ -179,12 +180,12 @@ function ElectricityRatesTab() {
     const ft = parseFloat(ftRate)
 
     if (isNaN(rate) || rate <= 0) {
-      addToast('error', 'Please enter a valid rate per kWh')
+      addToast('error', t('invalidRate'))
       return
     }
 
     if (isNaN(ft)) {
-      addToast('error', 'Please enter a valid Ft rate')
+      addToast('error', t('invalidFtRate'))
       return
     }
 
@@ -194,39 +195,34 @@ function ElectricityRatesTab() {
         ratePerKwh: rate,
         ftRate: ft,
       })
-      addToast('success', 'Electricity rate added successfully')
+      addToast('success', t('addSuccess'))
       setIsModalOpen(false)
       setRatePerKwh('')
       setFtRate('')
-    } catch (error) {
-      addToast('error', 'Failed to add electricity rate')
+    } catch {
+      addToast('error', t('addFailed'))
     }
   }
 
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={() => setIsModalOpen(true)}>
-          Add New Rate
-        </Button>
+        <Button onClick={() => setIsModalOpen(true)}>{t('addNewRate')}</Button>
       </div>
 
       {isLoading ? (
         <TableSkeleton rows={5} columns={5} />
       ) : rates.length === 0 ? (
-        <EmptyState
-          title="No electricity rates"
-          description="Add PEA and MEA electricity rates for calculations"
-        />
+        <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Provider</TableHead>
-              <TableHead>Rate per kWh</TableHead>
-              <TableHead>Ft Rate</TableHead>
-              <TableHead>Effective From</TableHead>
-              <TableHead>Last Updated</TableHead>
+              <TableHead>{t('provider')}</TableHead>
+              <TableHead>{t('ratePerKwh')}</TableHead>
+              <TableHead>{t('ftRate')}</TableHead>
+              <TableHead>{t('effectiveFrom')}</TableHead>
+              <TableHead>{t('lastUpdated')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -239,12 +235,8 @@ function ElectricityRatesTab() {
                 </TableCell>
                 <TableCell>{formatCurrency(rate.ratePerKwh)}</TableCell>
                 <TableCell>{formatCurrency(rate.ftRate)}</TableCell>
-                <TableCell>
-                  {format(new Date(rate.effectiveFrom), 'MMM dd, yyyy')}
-                </TableCell>
-                <TableCell>
-                  {format(new Date(rate.updatedAt), 'MMM dd, yyyy HH:mm')}
-                </TableCell>
+                <TableCell>{format(new Date(rate.effectiveFrom), 'MMM dd, yyyy')}</TableCell>
+                <TableCell>{format(new Date(rate.updatedAt), 'MMM dd, yyyy HH:mm')}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -254,12 +246,14 @@ function ElectricityRatesTab() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Add Electricity Rate"
+        title={t('modalTitle')}
         size="sm"
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Provider</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t('providerLabel')}
+            </label>
             <div className="flex gap-4">
               <label className="flex items-center">
                 <input
@@ -286,29 +280,29 @@ function ElectricityRatesTab() {
             </div>
           </div>
           <Input
-            label="Rate per kWh (THB)"
+            label={t('ratePerKwhLabel')}
             type="number"
             value={ratePerKwh}
             onChange={(e) => setRatePerKwh(e.target.value)}
-            placeholder="e.g., 4.5"
+            placeholder={t('ratePerKwhPlaceholder')}
             step="0.01"
           />
           <Input
-            label="Ft Rate (THB)"
+            label={t('ftRateLabel')}
             type="number"
             value={ftRate}
             onChange={(e) => setFtRate(e.target.value)}
-            placeholder="e.g., 0.5"
+            placeholder={t('ftRatePlaceholder')}
             step="0.01"
-            hint="Fuel adjustment tariff (Ft)"
+            hint={t('ftRateHint')}
           />
         </div>
         <ModalFooter>
           <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-            Cancel
+            {t('cancel')}
           </Button>
           <Button onClick={handleCreate} isLoading={createMutation.isPending}>
-            Add
+            {t('add')}
           </Button>
         </ModalFooter>
       </Modal>
@@ -317,6 +311,7 @@ function ElectricityRatesTab() {
 }
 
 export default function PricingPage() {
+  const t = useTranslations('pricingPage')
   const router = useRouter()
   const { user, isLoading: authLoading } = useAuth()
   const { addToast } = useToast()
@@ -327,10 +322,10 @@ export default function PricingPage() {
     if (!authLoading && !user) {
       router.replace(ROUTES.LOGIN)
     } else if (!authLoading && user && user.role !== 'admin') {
-      addToast('error', 'You do not have permission to access this page')
+      addToast('error', t('noPermission'))
       router.replace(ROUTES.DASHBOARD)
     }
-  }, [user, authLoading, router, addToast])
+  }, [user, authLoading, router, addToast, t])
 
   if (authLoading) {
     return (
@@ -345,8 +340,8 @@ export default function PricingPage() {
   }
 
   const tabs = [
-    { id: 'installation', label: 'Installation Costs' },
-    { id: 'electricity', label: 'Electricity Rates' },
+    { id: 'installation', label: t('tabs.installation') },
+    { id: 'electricity', label: t('tabs.electricity') },
   ]
 
   return (
@@ -354,21 +349,15 @@ export default function PricingPage() {
       <div className="space-y-6">
         {/* Page header */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Pricing Management</h1>
-          <p className="text-gray-500 mt-1">
-            Manage installation costs and electricity rates for ROI calculations
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-gray-500 mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Tabs */}
         <Card>
           <CardBody className="p-0">
             <div className="px-6 pt-4">
-              <Tabs
-                tabs={tabs}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-              />
+              <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
             </div>
             <div className="p-6">
               {activeTab === 'installation' && <InstallationCostsTab />}

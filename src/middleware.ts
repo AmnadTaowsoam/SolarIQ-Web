@@ -100,6 +100,24 @@ export function middleware(request: NextRequest) {
     return redirectResponse
   }
 
+  // Protect /admin routes: redirect non-admin users to /dashboard
+  if (pathname.startsWith('/admin')) {
+    const sessionCookie = request.cookies.get('__session')?.value
+    const roleCookie = request.cookies.get('user-role')?.value
+
+    if (!sessionCookie) {
+      const loginUrl = request.nextUrl.clone()
+      loginUrl.pathname = '/login'
+      return NextResponse.redirect(loginUrl)
+    }
+
+    if (roleCookie && roleCookie !== 'admin') {
+      const dashboardUrl = request.nextUrl.clone()
+      dashboardUrl.pathname = '/dashboard'
+      return NextResponse.redirect(dashboardUrl)
+    }
+  }
+
   const response = NextResponse.next({
     request: { headers: requestHeaders },
   })

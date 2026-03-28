@@ -75,7 +75,7 @@ export default function DataRightsPage(): React.ReactElement {
       const lineUserId = localStorage.getItem('line_user_id')
       const response = await fetch(`/api/v1/liff/data-export?line_user_id=${lineUserId}`)
       if (!response.ok) {
-        throw new Error('ไม่สามารถดาวน์โหลดข้อมูลได้')
+        throw new Error(t('errors.downloadError'))
       }
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
@@ -87,7 +87,7 @@ export default function DataRightsPage(): React.ReactElement {
       a.remove()
       window.URL.revokeObjectURL(url)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด')
+      setError(err instanceof Error ? err.message : t('errors.generalError'))
     } finally {
       setIsDownloading(false)
     }
@@ -104,12 +104,12 @@ export default function DataRightsPage(): React.ReactElement {
         body: JSON.stringify({ line_user_id: lineUserId }),
       })
       if (!response.ok) {
-        throw new Error('ไม่สามารถส่งคำขอได้')
+        throw new Error(t('errors.requestError'))
       }
       setDeleteSuccess(true)
       setShowDeleteModal(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด')
+      setError(err instanceof Error ? err.message : t('errors.generalError'))
     } finally {
       setIsDeleting(false)
     }
@@ -187,11 +187,15 @@ export default function DataRightsPage(): React.ReactElement {
             </li>
             <li className="flex justify-between">
               <span className="text-gray-500">{t('dataSummary.analysisHistory')}</span>
-              <span className="font-medium">{dataSummary?.analysis_count ?? 0} ครั้ง</span>
+              <span className="font-medium">
+                {dataSummary?.analysis_count ?? 0} {t('dataSummary.timesUnit')}
+              </span>
             </li>
             <li className="flex justify-between">
               <span className="text-gray-500">{t('dataSummary.consentHistory')}</span>
-              <span className="font-medium">{dataSummary?.consent_count ?? 0} รายการ</span>
+              <span className="font-medium">
+                {dataSummary?.consent_count ?? 0} {t('dataSummary.itemsUnit')}
+              </span>
             </li>
           </ul>
         </div>

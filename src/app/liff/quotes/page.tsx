@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import {
   BudgetRange,
   Timeline,
@@ -13,15 +14,29 @@ import {
 } from '@/types/quotes'
 import { useSubmitQuoteRequest } from '@/hooks/useQuotes'
 
-const BUDGET_OPTIONS: BudgetRange[] = ['under_200k', '200k_400k', '400k_600k', 'over_600k', 'flexible']
-const TIMELINE_OPTIONS: Timeline[] = ['urgent_1month', 'normal_3months', 'flexible', 'just_exploring']
+const BUDGET_OPTIONS: BudgetRange[] = [
+  'under_200k',
+  '200k_400k',
+  '400k_600k',
+  'over_600k',
+  'flexible',
+]
+const TIMELINE_OPTIONS: Timeline[] = [
+  'urgent_1month',
+  'normal_3months',
+  'flexible',
+  'just_exploring',
+]
 const FINANCING_OPTIONS: FinancingPreference[] = ['cash', 'installment', 'leasing', 'undecided']
 
 export default function QuoteRequestPage() {
+  const t = useTranslations('quoteRequestPage')
   const router = useRouter()
   const searchParams = useSearchParams()
   const leadId = searchParams.get('leadId') || 'demo-lead'
-  const systemSizeKw = searchParams.get('sizeKw') ? parseFloat(searchParams.get('sizeKw')!) : undefined
+  const systemSizeKw = searchParams.get('sizeKw')
+    ? parseFloat(searchParams.get('sizeKw') ?? '')
+    : undefined
 
   const { submit, isLoading } = useSubmitQuoteRequest()
 
@@ -40,23 +55,29 @@ export default function QuoteRequestPage() {
   }
 
   const canProceed = () => {
-    if (step === 1) return !!formData.budgetRange
-    if (step === 2) return !!formData.preferredTimeline
-    if (step === 3) return !!formData.financingPreference
+    if (step === 1) {
+      return !!formData.budgetRange
+    }
+    if (step === 2) {
+      return !!formData.preferredTimeline
+    }
+    if (step === 3) {
+      return !!formData.financingPreference
+    }
     return true
   }
 
   const handleSubmit = async () => {
     setError('')
     if (!formData.budgetRange || !formData.preferredTimeline || !formData.financingPreference) {
-      setError('กรุณากรอกข้อมูลให้ครบถ้วน')
+      setError(t('errors.incompleteForm'))
       return
     }
     try {
       const result = await submit(formData as QuoteRequestFormData)
       router.push(`/liff/quotes/request/${result.id}`)
     } catch {
-      setError('ไม่สามารถส่งคำขอได้ กรุณาลองใหม่')
+      setError(t('errors.submitError'))
     }
   }
 
@@ -73,13 +94,20 @@ export default function QuoteRequestPage() {
               className="w-8 h-8 flex items-center justify-center"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
           )}
           <div className="flex-1">
-            <h1 className="text-lg font-bold">ขอใบเสนอราคา</h1>
-            <p className="text-orange-100 text-sm">ขั้นตอน {step}/{totalSteps}</p>
+            <h1 className="text-lg font-bold">{t('title')}</h1>
+            <p className="text-orange-100 text-sm">
+              {t('step', { current: step, total: totalSteps })}
+            </p>
           </div>
         </div>
         {/* Progress bar */}
@@ -96,8 +124,8 @@ export default function QuoteRequestPage() {
         {step === 1 && (
           <>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">งบประมาณของคุณ</h2>
-              <p className="text-gray-500 text-sm">เลือกงบประมาณที่ตรงกับความต้องการ</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-1">{t('budget.title')}</h2>
+              <p className="text-gray-500 text-sm">{t('budget.description')}</p>
             </div>
             <div className="space-y-3">
               {BUDGET_OPTIONS.map((opt) => (
@@ -111,7 +139,9 @@ export default function QuoteRequestPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={`font-medium ${formData.budgetRange === opt ? 'text-orange-700' : 'text-gray-800'}`}>
+                    <span
+                      className={`font-medium ${formData.budgetRange === opt ? 'text-orange-700' : 'text-gray-800'}`}
+                    >
                       {BUDGET_RANGE_LABELS[opt]}
                     </span>
                     <div
@@ -136,8 +166,8 @@ export default function QuoteRequestPage() {
         {step === 2 && (
           <>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">ต้องการเร็วแค่ไหน?</h2>
-              <p className="text-gray-500 text-sm">เลือกระยะเวลาที่ต้องการติดตั้ง</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-1">{t('timeline.title')}</h2>
+              <p className="text-gray-500 text-sm">{t('timeline.description')}</p>
             </div>
             <div className="space-y-3">
               {TIMELINE_OPTIONS.map((opt) => (
@@ -152,7 +182,9 @@ export default function QuoteRequestPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className={`font-medium block ${formData.preferredTimeline === opt ? 'text-orange-700' : 'text-gray-800'}`}>
+                      <span
+                        className={`font-medium block ${formData.preferredTimeline === opt ? 'text-orange-700' : 'text-gray-800'}`}
+                      >
                         {TIMELINE_LABELS[opt].split('(')[0].trim()}
                       </span>
                       {TIMELINE_LABELS[opt].includes('(') && (
@@ -183,8 +215,8 @@ export default function QuoteRequestPage() {
         {step === 3 && (
           <>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">การชำระเงิน</h2>
-              <p className="text-gray-500 text-sm">เลือกรูปแบบการชำระเงินที่ต้องการ</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-1">{t('financing.title')}</h2>
+              <p className="text-gray-500 text-sm">{t('financing.description')}</p>
             </div>
             <div className="space-y-3">
               {FINANCING_OPTIONS.map((opt) => (
@@ -198,7 +230,9 @@ export default function QuoteRequestPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={`font-medium ${formData.financingPreference === opt ? 'text-orange-700' : 'text-gray-800'}`}>
+                    <span
+                      className={`font-medium ${formData.financingPreference === opt ? 'text-orange-700' : 'text-gray-800'}`}
+                    >
                       {FINANCING_LABELS[opt]}
                     </span>
                     <div
@@ -223,15 +257,17 @@ export default function QuoteRequestPage() {
         {step === 4 && (
           <>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">ข้อมูลเพิ่มเติม</h2>
-              <p className="text-gray-500 text-sm">กรอกข้อมูลเพิ่มเติมเพื่อรับใบเสนอราคาที่ตรงกับความต้องการ</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-1">{t('additional.title')}</h2>
+              <p className="text-gray-500 text-sm">{t('additional.description')}</p>
             </div>
 
             {/* Max quotes slider */}
             <div className="bg-white rounded-2xl p-4 border border-gray-200">
               <label className="block font-medium text-gray-800 mb-3">
-                จำนวนใบเสนอราคาที่ต้องการ:{' '}
-                <span className="text-orange-600">{formData.maxQuotes} ราย</span>
+                {t('additional.maxQuotesLabel')}{' '}
+                <span className="text-orange-600">
+                  {formData.maxQuotes} {t('additional.vendorsUnit')}
+                </span>
               </label>
               <input
                 type="range"
@@ -243,20 +279,22 @@ export default function QuoteRequestPage() {
                 className="w-full accent-orange-500"
               />
               <div className="flex justify-between text-xs text-gray-400 mt-1">
-                <span>3 ราย</span>
-                <span>4 ราย</span>
-                <span>5 ราย</span>
+                <span>3 {t('additional.vendorsUnit')}</span>
+                <span>4 {t('additional.vendorsUnit')}</span>
+                <span>5 {t('additional.vendorsUnit')}</span>
               </div>
             </div>
 
             {/* Contact preference */}
             <div className="bg-white rounded-2xl p-4 border border-gray-200">
-              <label className="block font-medium text-gray-800 mb-3">ช่องทางติดต่อที่ต้องการ</label>
+              <label className="block font-medium text-gray-800 mb-3">
+                {t('additional.contactPreferenceLabel')}
+              </label>
               <div className="flex gap-3">
                 {[
                   { value: 'line', label: 'LINE' },
-                  { value: 'phone', label: 'โทรศัพท์' },
-                  { value: 'email', label: 'อีเมล' },
+                  { value: 'phone', label: t('additional.contactPhone') },
+                  { value: 'email', label: t('additional.contactEmail') },
                 ].map((opt) => (
                   <button
                     key={opt.value}
@@ -276,14 +314,16 @@ export default function QuoteRequestPage() {
             {/* Additional requirements */}
             <div className="bg-white rounded-2xl p-4 border border-gray-200">
               <label className="block font-medium text-gray-800 mb-2">
-                ความต้องการพิเศษ{' '}
-                <span className="text-gray-400 font-normal text-sm">(ไม่บังคับ)</span>
+                {t('additional.specialRequirements')}{' '}
+                <span className="text-gray-400 font-normal text-sm">
+                  ({t('additional.optional')})
+                </span>
               </label>
               <textarea
                 value={formData.additionalRequirements || ''}
                 onChange={(e) => update('additionalRequirements', e.target.value.slice(0, 500))}
                 rows={4}
-                placeholder="เช่น ต้องการแผง Tier 1, อยากได้ระบบ hybrid, มีพื้นที่หลังคา 80 ตร.ม..."
+                placeholder={t('additional.requirementsPlaceholder')}
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
               />
               <p className="text-xs text-gray-400 text-right mt-1">
@@ -309,7 +349,7 @@ export default function QuoteRequestPage() {
               disabled={!canProceed()}
               className="w-full py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-bold text-base transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              ถัดไป
+              {t('next')}
             </button>
           ) : (
             <button
@@ -320,10 +360,10 @@ export default function QuoteRequestPage() {
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  กำลังส่งคำขอ...
+                  {t('submitting')}
                 </span>
               ) : (
-                'ส่งคำขอใบเสนอราคา'
+                t('submitRequest')
               )}
             </button>
           )}

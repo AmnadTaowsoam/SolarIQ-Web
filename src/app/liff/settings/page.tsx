@@ -26,26 +26,26 @@ interface ConsentType {
 const CONSENT_DEFINITIONS = [
   {
     type: 'marketing',
-    label: 'การตลาดและโปรโมชั่น',
-    description: 'รับข้อมูลข่าวสารและโปรโมชั่น',
+    labelKey: 'consent.marketing.label',
+    descriptionKey: 'consent.marketing.description',
     icon: '📢',
   },
   {
     type: 'contact_sharing',
-    label: 'แชร์ข้อมูลติดต่อ',
-    description: 'แชร์ข้อมูลกับผู้ติดตั้งที่ได้รับการรับรอง',
+    labelKey: 'consent.contactSharing.label',
+    descriptionKey: 'consent.contactSharing.description',
     icon: '🤝',
   },
   {
     type: 'analysis_results',
-    label: 'ผลวิเคราะห์ต้นทุน',
-    description: 'เก็บผลการวิเคราะห์ต้นทุนไฟฟ้า',
+    labelKey: 'consent.analysisResults.label',
+    descriptionKey: 'consent.analysisResults.description',
     icon: '📊',
   },
   {
     type: 'proposal_sharing',
-    label: 'รับใบเสนอราคา',
-    description: 'รับใบเสนอราคาจากผู้ติดตั้ง',
+    labelKey: 'consent.proposalSharing.label',
+    descriptionKey: 'consent.proposalSharing.description',
     icon: '📋',
   },
 ]
@@ -63,8 +63,8 @@ export default function SettingsPage(): React.ReactElement {
     CONSENT_DEFINITIONS.map((def) => ({
       id: def.type,
       type: def.type,
-      label: def.label,
-      description: def.description,
+      label: def.labelKey,
+      description: def.descriptionKey,
       granted: false,
       granted_at: null,
     }))
@@ -90,15 +90,15 @@ export default function SettingsPage(): React.ReactElement {
 
       if (consentResponse.ok) {
         const consentData = await consentResponse.json()
-        const mergedConsents = consentDefinitions.map((def) => {
+        const mergedConsents = CONSENT_DEFINITIONS.map((def) => {
           const existingConsent = consentData.consents?.find(
             (c: ConsentType) => c.type === def.type
           )
           return {
             id: def.type,
             type: def.type,
-            label: def.label,
-            description: def.description,
+            label: def.labelKey,
+            description: def.descriptionKey,
             granted: existingConsent?.granted ?? false,
             granted_at: existingConsent?.granted_at ?? null,
           }
@@ -136,13 +136,13 @@ export default function SettingsPage(): React.ReactElement {
         })
 
         if (!response.ok) {
-          throw new Error('ไม่สามารถถอนความยินยอมได้')
+          throw new Error(t('consent.errors.revoke'))
         }
 
         setConsents((prev) =>
           prev.map((c) => (c.type === consentType ? { ...c, granted: false, granted_at: null } : c))
         )
-        setSuccessMessage('ถอนความยินยอมสำเร็จ')
+        setSuccessMessage(t('consent.success.revoked'))
       } else {
         const response = await fetch('/api/liff/consent', {
           method: 'POST',
@@ -157,7 +157,7 @@ export default function SettingsPage(): React.ReactElement {
         })
 
         if (!response.ok) {
-          throw new Error('ไม่สามารถให้ความยินยอมได้')
+          throw new Error(t('consent.errors.grant'))
         }
 
         setConsents((prev) =>
@@ -167,12 +167,12 @@ export default function SettingsPage(): React.ReactElement {
               : c
           )
         )
-        setSuccessMessage('ให้ความยินยอมสำเร็จ')
+        setSuccessMessage(t('consent.success.granted'))
       }
 
       setTimeout(() => setSuccessMessage(null), 3000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด')
+      setError(err instanceof Error ? err.message : t('errors.generalError'))
     } finally {
       setIsUpdating(null)
     }
@@ -202,7 +202,7 @@ export default function SettingsPage(): React.ReactElement {
       })
 
       if (!response.ok) {
-        throw new Error('ไม่สามารถลบข้อมูลได้')
+        throw new Error(t('errors.deleteError'))
       }
 
       localStorage.removeItem('line_user_id')
@@ -336,8 +336,8 @@ export default function SettingsPage(): React.ReactElement {
                   <div className="flex items-center gap-3">
                     <span className="text-xl">{definition?.icon}</span>
                     <div>
-                      <p className="font-medium text-gray-900">{consent.label}</p>
-                      <p className="text-xs text-gray-500">{consent.description}</p>
+                      <p className="font-medium text-gray-900">{t(consent.label)}</p>
+                      <p className="text-xs text-gray-500">{t(consent.description)}</p>
                     </div>
                   </div>
                   <button
@@ -360,7 +360,7 @@ export default function SettingsPage(): React.ReactElement {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">ข้อมูลและความปลอดภัย</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('dataPrivacy.title')}</h2>
 
           <div className="space-y-3">
             <button
@@ -369,7 +369,7 @@ export default function SettingsPage(): React.ReactElement {
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">📜</span>
-                <span className="font-medium text-gray-900">ประวัติการวิเคราะห์</span>
+                <span className="font-medium text-gray-900">{t('dataPrivacy.history')}</span>
               </div>
               <svg
                 className="w-5 h-5 text-gray-400"
@@ -392,7 +392,7 @@ export default function SettingsPage(): React.ReactElement {
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">📋</span>
-                <span className="font-medium text-gray-900">ใบเสนอราคา</span>
+                <span className="font-medium text-gray-900">{t('dataPrivacy.proposals')}</span>
               </div>
               <svg
                 className="w-5 h-5 text-gray-400"

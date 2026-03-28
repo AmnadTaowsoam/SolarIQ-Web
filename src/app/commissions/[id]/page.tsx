@@ -6,14 +6,14 @@ import { AppLayout } from '@/components/layout'
 import { Card, CardBody, CardHeader, Button } from '@/components/ui'
 import { useCommissions } from '@/hooks/useCommissions'
 import apiClient from '@/lib/api'
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
+import { useTranslations } from 'next-intl'
 
 function formatThb(value: number) {
   return `฿${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
 }
 
 export default function CommissionDetailPage() {
+  const t = useTranslations('commissionDetail')
   const params = useParams()
   const router = useRouter()
   const commissionId = params?.id as string
@@ -26,10 +26,12 @@ export default function CommissionDetailPage() {
   )
 
   const handleDispute = async () => {
-    if (!commission) return
+    if (!commission) {
+      return
+    }
     setIsSubmitting(true)
     try {
-      await apiClient.post(`${API_BASE}/commissions/${commission.id}/dispute`, {
+      await apiClient.post(`/api/v1/commissions/${commission.id}/dispute`, {
         reason: 'incorrect_deal_value',
         description: 'Please review the deal value and commission amount.',
         evidence_urls: [],
@@ -43,7 +45,7 @@ export default function CommissionDetailPage() {
   if (!commission) {
     return (
       <AppLayout>
-        <div className="text-center py-20 text-gray-500">Commission not found</div>
+        <div className="text-center py-20 text-gray-500">{t('notFound')}</div>
       </AppLayout>
     )
   }
@@ -52,56 +54,68 @@ export default function CommissionDetailPage() {
     <AppLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Commission Detail</h1>
-          <p className="text-sm text-gray-500 mt-1">Deal {commission.dealId || commission.id}</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {t('dealLabel')} {commission.dealId || commission.id}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <Card className="lg:col-span-2">
-            <CardHeader title="Commission Breakdown" />
+            <CardHeader title={t('breakdownTitle')} />
             <CardBody className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Deal Value</span>
-                <span className="text-sm font-semibold text-gray-900">{formatThb(commission.dealValue)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Commission Rate</span>
+                <span className="text-sm text-gray-500">{t('dealValue')}</span>
                 <span className="text-sm font-semibold text-gray-900">
-                  {commission.commissionRate ? `${(commission.commissionRate * 100).toFixed(2)}%` : '-'}
+                  {formatThb(commission.dealValue)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-500">Raw Commission</span>
+                <span className="text-sm text-gray-500">{t('commissionRate')}</span>
+                <span className="text-sm font-semibold text-gray-900">
+                  {commission.commissionRate
+                    ? `${(commission.commissionRate * 100).toFixed(2)}%`
+                    : '-'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500">{t('rawCommission')}</span>
                 <span className="text-sm font-semibold text-gray-900">
                   {commission.rawCommission ? formatThb(commission.rawCommission) : '-'}
                 </span>
               </div>
               <div className="flex justify-between border-t border-gray-100 pt-4">
-                <span className="text-sm text-gray-500">Final Commission</span>
-                <span className="text-lg font-bold text-gray-900">{formatThb(commission.commissionAmount)}</span>
+                <span className="text-sm text-gray-500">{t('finalCommission')}</span>
+                <span className="text-lg font-bold text-gray-900">
+                  {formatThb(commission.commissionAmount)}
+                </span>
               </div>
             </CardBody>
           </Card>
 
           <Card>
-            <CardHeader title="Status" />
+            <CardHeader title={t('statusTitle')} />
             <CardBody className="space-y-3">
               <div>
-                <p className="text-xs text-gray-500">Status</p>
-                <p className="text-sm font-semibold text-gray-900 mt-1 capitalize">{commission.status}</p>
+                <p className="text-xs text-gray-500">{t('statusLabel')}</p>
+                <p className="text-sm font-semibold text-gray-900 mt-1 capitalize">
+                  {commission.status}
+                </p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Completed At</p>
+                <p className="text-xs text-gray-500">{t('completedAt')}</p>
                 <p className="text-sm text-gray-700 mt-1">
                   {new Date(commission.dealCompletedAt).toLocaleString('en-GB')}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Invoice</p>
-                <p className="text-sm text-gray-700 mt-1">{commission.invoiceId || 'Not invoiced'}</p>
+                <p className="text-xs text-gray-500">{t('invoice')}</p>
+                <p className="text-sm text-gray-700 mt-1">
+                  {commission.invoiceId || t('notInvoiced')}
+                </p>
               </div>
               <Button className="w-full" onClick={handleDispute} disabled={isSubmitting}>
-                Raise Dispute
+                {t('raiseDispute')}
               </Button>
             </CardBody>
           </Card>

@@ -61,6 +61,41 @@ export const API_ENDPOINTS = {
     ELECTRICITY_RATES: '/api/v1/pricing/electricity-rates',
     EQUIPMENT: '/api/v1/pricing/equipment',
   },
+  // MFA
+  MFA: {
+    STATUS: '/api/v1/mfa/status',
+    ENROLL_START: '/api/v1/mfa/enroll/start',
+    ENROLL_VERIFY: '/api/v1/mfa/enroll/verify',
+    DISABLE: '/api/v1/mfa/disable',
+  },
+  // LINE Settings
+  LINE_SETTINGS: {
+    CONFIG: '/api/v1/settings/line',
+    TEST: '/api/v1/settings/line/test',
+  },
+  // Service Requests
+  SERVICE_REQUESTS: {
+    LIST: '/api/v1/service-requests',
+    DETAIL: (id: string) => `/api/v1/service-requests/${id}`,
+  },
+  // Maintenance
+  MAINTENANCE: {
+    LIST: '/api/v1/maintenance',
+    DETAIL: (id: string) => `/api/v1/maintenance/${id}`,
+  },
+  // Installations
+  INSTALLATIONS: {
+    LIST: '/api/v1/installations',
+    DETAIL: (id: string) => `/api/v1/installations/${id}`,
+  },
+  // Chat
+  CHAT: {
+    SEND: '/api/v1/chat',
+  },
+  // Developer API
+  DEVELOPER: {
+    BASE: '/api/v1/developer',
+  },
   // Billing
   BILLING: {
     STATUS: '/api/v1/billing/status',
@@ -127,7 +162,11 @@ export const TOAST_DURATION = 5000
 // File upload limits
 export const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 export const ALLOWED_FILE_TYPES = {
-  documents: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  documents: [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ],
   images: ['image/jpeg', 'image/png', 'image/gif'],
 }
 
@@ -180,4 +219,10 @@ export const ROUTES = {
 } as const
 
 // Admin-only routes
-export const ADMIN_ROUTES = [ROUTES.KNOWLEDGE, ROUTES.PRICING, ROUTES.ADMIN_REVENUE, ROUTES.ANALYTICS_REVENUE, ROUTES.AUDIT_LOGS]
+export const ADMIN_ROUTES = [
+  ROUTES.KNOWLEDGE,
+  ROUTES.PRICING,
+  ROUTES.ADMIN_REVENUE,
+  ROUTES.ANALYTICS_REVENUE,
+  ROUTES.AUDIT_LOGS,
+]
