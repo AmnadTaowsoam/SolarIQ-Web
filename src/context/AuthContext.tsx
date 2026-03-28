@@ -223,10 +223,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 return
               }
               const userData = profileData?.user ?? profileData
+              // eslint-disable-next-line no-console
+              console.log('[AuthContext] Login success, role:', userData?.role, 'user:', userData)
               setUser(userData)
               setSessionCookie(true, userData?.role || 'contractor')
-            } catch {
+            } catch (authError) {
               // Fallback: use Firebase user info directly
+              // eslint-disable-next-line no-console
+              console.error('[AuthContext] Auth flow failed, using fallback:', authError)
               const fallbackUser: User = {
                 uid: fbUser.uid,
                 email: fbUser.email,
