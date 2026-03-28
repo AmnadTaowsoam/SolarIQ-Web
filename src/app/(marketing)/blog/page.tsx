@@ -1,10 +1,8 @@
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Calendar, Clock, Tag, Search, Filter } from 'lucide-react'
-import fs from 'fs'
-import path from 'path'
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                               */
@@ -20,83 +18,64 @@ interface BlogPost {
   tags: string[]
 }
 
-interface Frontmatter {
-  title: string
-  slug: string
-  category: string
-  author: string
-  date: string
-  excerpt: string
-  readTime: string
-  tags: string[]
-}
-
 /* ------------------------------------------------------------------ */
-/*  Utilities                                                           */
+/*  Static blog data (edge-compatible, no fs required)                  */
 /* ------------------------------------------------------------------ */
-function parseFrontmatter(content: string): Frontmatter {
-  const frontmatterRegex = /^---\n([\s\S]*?)\n---/
-  const match = content.match(frontmatterRegex)
-
-  if (!match) {
-    throw new Error('No frontmatter found')
-  }
-
-  const frontmatter: Record<string, string | string[]> = {}
-  const lines = match[1].split('\n')
-
-  for (const line of lines) {
-    const colonIndex = line.indexOf(':')
-    if (colonIndex === -1) {
-      continue
-    }
-
-    const key = line.slice(0, colonIndex).trim()
-    const value = line.slice(colonIndex + 1).trim()
-
-    // Parse arrays
-    if (value.startsWith('[') && value.endsWith(']')) {
-      frontmatter[key] = value
-        .slice(1, -1)
-        .split(',')
-        .map((item) => item.trim().replace(/"/g, ''))
-    } else {
-      frontmatter[key] = value.replace(/"/g, '')
-    }
-  }
-
-  return frontmatter as unknown as Frontmatter
-}
+const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: 'solar-rooftop-roi',
+    title: 'คู่มือคำนวณ ROI โซลาร์รูฟท็อป สำหรับผู้รับเหมา',
+    excerpt: 'เรียนรู้วิธีคำนวณผลตอบแทนการลงทุนโซลาร์รูฟท็อปอย่างแม่นยำ พร้อมตัวอย่างจริง',
+    category: 'การเงิน',
+    author: 'SolarIQ Team',
+    date: '2025-03-15',
+    readTime: '8 นาที',
+    tags: ['ROI', 'โซลาร์รูฟท็อป', 'การลงทุน'],
+  },
+  {
+    slug: 'choosing-solar-panels',
+    title: 'วิธีเลือกแผงโซลาร์เซลล์ที่เหมาะสมกับลูกค้า',
+    excerpt: 'เปรียบเทียบแผงโซลาร์เซลล์แต่ละประเภท พร้อมข้อดีข้อเสียเพื่อช่วยแนะนำลูกค้า',
+    category: 'เทคนิค',
+    author: 'SolarIQ Team',
+    date: '2025-03-10',
+    readTime: '6 นาที',
+    tags: ['แผงโซลาร์', 'Mono', 'Poly', 'HJT'],
+  },
+  {
+    slug: 'pm25-solar-impact',
+    title: 'ผลกระทบ PM2.5 ต่อประสิทธิภาพโซลาร์เซลล์',
+    excerpt: 'วิเคราะห์ผลกระทบฝุ่น PM2.5 ต่อการผลิตไฟฟ้าโซลาร์เซลล์ในประเทศไทย',
+    category: 'วิจัย',
+    author: 'SolarIQ Team',
+    date: '2025-03-05',
+    readTime: '5 นาที',
+    tags: ['PM2.5', 'ประสิทธิภาพ', 'คุณภาพอากาศ'],
+  },
+  {
+    slug: 'mea-pea-permit',
+    title: 'คู่มือขอใบอนุญาต MEA/PEA สำหรับโซลาร์รูฟท็อป',
+    excerpt: 'ขั้นตอนการขอใบอนุญาตจาก MEA และ PEA สำหรับระบบโซลาร์รูฟท็อป',
+    category: 'กฎหมาย',
+    author: 'SolarIQ Team',
+    date: '2025-02-28',
+    readTime: '10 นาที',
+    tags: ['MEA', 'PEA', 'ใบอนุญาต', 'กฎหมาย'],
+  },
+  {
+    slug: 'net-metering-thailand',
+    title: 'Net Metering ในประเทศไทย: สิ่งที่ผู้รับเหมาต้องรู้',
+    excerpt: 'ทำความเข้าใจระบบ Net Metering และการขายไฟคืนให้การไฟฟ้าในประเทศไทย',
+    category: 'นโยบาย',
+    author: 'SolarIQ Team',
+    date: '2025-02-20',
+    readTime: '7 นาที',
+    tags: ['Net Metering', 'การขายไฟ', 'นโยบาย'],
+  },
+]
 
 function getBlogPosts(): BlogPost[] {
-  const blogDirectory = path.join(process.cwd(), 'content', 'blog')
-  const filenames = fs.readdirSync(blogDirectory)
-
-  const posts: BlogPost[] = []
-
-  for (const filename of filenames) {
-    if (!filename.endsWith('.md')) {
-      continue
-    }
-
-    const filePath = path.join(blogDirectory, filename)
-    const content = fs.readFileSync(filePath, 'utf-8')
-    const frontmatter = parseFrontmatter(content)
-
-    posts.push({
-      slug: frontmatter.slug,
-      title: frontmatter.title,
-      excerpt: frontmatter.excerpt,
-      category: frontmatter.category,
-      author: frontmatter.author,
-      date: frontmatter.date,
-      readTime: frontmatter.readTime,
-      tags: frontmatter.tags,
-    })
-  }
-
-  // Sort by date (newest first)
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  return [...BLOG_POSTS].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
 function getCategories(posts: BlogPost[]): string[] {
