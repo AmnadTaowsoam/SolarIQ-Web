@@ -53,7 +53,7 @@ export function useCalendarEvents() {
       if (m.schedule?.next_due_date) {
         items.push({
           id: `maint-${m.schedule.id || Math.random()}`,
-          title: `บำรุงรักษา: ${m.schedule.maintenance_type === 'cleaning' ? 'ล้างแผง' : m.schedule.maintenance_type === 'inverter_check' ? 'เช็คอินเวอร์เตอร์' : m.schedule.maintenance_type}`,
+          title: `Maintenance: ${m.schedule.maintenance_type === 'cleaning' ? 'Panel Cleaning' : m.schedule.maintenance_type === 'inverter_check' ? 'Inverter Check' : m.schedule.maintenance_type}`,
           date: m.schedule.next_due_date,
           type: 'maintenance',
           priority: m.days_until_due <= 7 ? 'high' : 'medium',
@@ -69,7 +69,7 @@ export function useCalendarEvents() {
     for (const req of allRequests) {
       items.push({
         id: `sr-${req.id}`,
-        title: `${req.request_type === 'repair' ? 'แจ้งซ่อม' : req.request_type === 'complaint' ? 'ร้องเรียน' : 'คำร้อง'}: ${req.subject}`,
+        title: `${req.request_type === 'repair' ? 'Repair' : req.request_type === 'complaint' ? 'Complaint' : 'Request'}: ${req.subject}`,
         date: req.created_at.split('T')[0],
         type: 'service_request',
         priority: req.priority as CalendarEvent['priority'],

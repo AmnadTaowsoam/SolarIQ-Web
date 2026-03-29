@@ -52,7 +52,12 @@
     "about": "About Us",
     "contact": "Contact Us",
     "pricingPlans": "Pricing Plans",
-    "developerApi": "Developer API"
+    "developerApi": "Developer API",
+    "vatInvoices": "VAT Invoices",
+    "permits": "MEA/PEA Permits",
+    "billAnalysis": "Bill Analysis",
+    "aiDashboard": "AI Dashboard",
+    "helpCenter": "Help Center"
   },
   "navbar": {
     "openMenu": "Open menu",

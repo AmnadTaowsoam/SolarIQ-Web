@@ -52,7 +52,12 @@
     "about": "เกี่ยวกับเรา",
     "contact": "ติดต่อเรา",
     "pricingPlans": "แพ็กเกจราคา",
-    "developerApi": "Developer API"
+    "developerApi": "Developer API",
+    "vatInvoices": "ใบกำกับภาษี",
+    "permits": "ใบอนุญาต MEA/PEA",
+    "billAnalysis": "วิเคราะห์บิลค่าไฟ",
+    "aiDashboard": "AI Dashboard",
+    "helpCenter": "ศูนย์ช่วยเหลือ"
   },
   "navbar": {
     "openMenu": "เปิดเมนู",
