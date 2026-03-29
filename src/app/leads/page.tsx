@@ -200,34 +200,66 @@ export default function LeadsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {leads.map((lead) => (
-                    <TableRow key={lead.id} isClickable onClick={() => viewLeadDetail(lead.id)}>
+                  {leads.map((lead: Record<string, unknown>) => (
+                    <TableRow
+                      key={lead.id as string}
+                      isClickable
+                      onClick={() => viewLeadDetail(lead.id as string)}
+                    >
                       <TableCell>
-                        <div className="font-medium">{lead.name}</div>
+                        <div className="font-medium">
+                          {(lead.name as string) || (lead.address as string) || '-'}
+                        </div>
                       </TableCell>
                       <TableCell>
-                        <div className="text-sm">{lead.phone}</div>
-                        <div className="text-sm text-gray-500">{lead.email}</div>
+                        <div className="text-sm">{(lead.phone as string) || '-'}</div>
+                        <div className="text-sm text-gray-500">{(lead.email as string) || ''}</div>
                       </TableCell>
                       <TableCell>
-                        <div className="text-sm max-w-xs truncate">{lead.address}</div>
+                        <div className="text-sm max-w-xs truncate">
+                          {(lead.address as string) || '-'}
+                        </div>
                       </TableCell>
                       <TableCell>
-                        <div className="font-medium">฿{lead.monthlyBill.toLocaleString()}</div>
+                        <div className="font-medium">
+                          ฿
+                          {(
+                            (lead.monthlyBill as number) ??
+                            (lead.monthly_bill_thb as number) ??
+                            0
+                          ).toLocaleString()}
+                        </div>
                       </TableCell>
                       <TableCell>
-                        <Badge className={LEAD_STATUS_COLORS[lead.status as LeadStatus]}>
-                          {LEAD_STATUS_LABELS[lead.status as LeadStatus]}
+                        <Badge className={LEAD_STATUS_COLORS[(lead.status as LeadStatus) || 'new']}>
+                          {LEAD_STATUS_LABELS[(lead.status as LeadStatus) || 'new']}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
-                          {format(new Date(lead.createdAt), 'MMM dd, yyyy')}
+                          {(() => {
+                            try {
+                              return format(
+                                new Date(
+                                  (lead.createdAt as string) ||
+                                    (lead.created_at as string) ||
+                                    new Date().toISOString()
+                                ),
+                                'MMM dd, yyyy'
+                              )
+                            } catch {
+                              return '-'
+                            }
+                          })()}
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                          <Button size="sm" variant="outline" onClick={() => openStatusModal(lead)}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => openStatusModal(lead as unknown as Lead)}
+                          >
                             {t('updateStatus')}
                           </Button>
                         </div>
