@@ -30,25 +30,29 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-3 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
-          <p className="text-sm text-gray-400">Loading...</p>
+          <p className="text-sm text-[var(--brand-text-secondary)]">Loading...</p>
         </div>
       </div>
     )
   }
 
-  if (!user) return null
+  if (!user) {
+    return null
+  }
 
   return (
     <AppLayout user={user}>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <p className="text-sm text-gray-500 mt-1">Business intelligence and performance insights</p>
+          <h1 className="text-2xl font-bold text-[var(--brand-text)]">Analytics</h1>
+          <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
+            Business intelligence and performance insights
+          </p>
         </div>
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-3">
+        <div className="flex flex-wrap gap-2 border-b border-[var(--brand-border)] pb-3">
           {tabs
             .filter((tab) => !tab.adminOnly || user.role === 'admin')
             .map((tab) => {
@@ -57,10 +61,11 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
                 <Link
                   key={tab.href}
                   href={tab.href}
-                  className={
-                    `px-3 py-1.5 rounded-lg text-sm font-medium transition ` +
-                    (isActive ? 'bg-orange-600 text-white' : 'text-gray-600 hover:bg-gray-100')
-                  }
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+                    isActive
+                      ? 'bg-orange-600 text-white'
+                      : 'text-[var(--brand-text-secondary)] hover:bg-[var(--brand-primary-light)]'
+                  }`}
                 >
                   {tab.name}
                 </Link>

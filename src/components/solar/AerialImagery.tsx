@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Card, CardHeader, CardBody, Badge } from '@/components/ui'
-import { Image, ZoomIn, ZoomOut, Calendar } from 'lucide-react'
+import { Image as ImageIcon, ZoomIn, ZoomOut, Calendar } from 'lucide-react'
 import type { DataLayerUrls } from '@/types'
 
 interface AerialImageryProps {
@@ -22,11 +22,16 @@ export function AerialImagery({ dataLayers, imageryDate }: AerialImageryProps) {
 
   const layerUrl = (() => {
     switch (activeLayer) {
-      case 'rgb': return dataLayers.rgbUrl
-      case 'dsm': return dataLayers.dsmUrl
-      case 'mask': return dataLayers.maskUrl
-      case 'flux': return dataLayers.annualFluxUrl
-      default: return dataLayers.rgbUrl
+      case 'rgb':
+        return dataLayers.rgbUrl
+      case 'dsm':
+        return dataLayers.dsmUrl
+      case 'mask':
+        return dataLayers.maskUrl
+      case 'flux':
+        return dataLayers.annualFluxUrl
+      default:
+        return dataLayers.rgbUrl
     }
   })()
 
@@ -52,9 +57,7 @@ export function AerialImagery({ dataLayers, imageryDate }: AerialImageryProps) {
                 <span>{imageryDate}</span>
               </div>
             )}
-            <Badge variant={QUALITY_COLORS[quality] || 'default'}>
-              {quality}
-            </Badge>
+            <Badge variant={QUALITY_COLORS[quality] || 'default'}>{quality}</Badge>
           </div>
         }
       />
@@ -77,7 +80,7 @@ export function AerialImagery({ dataLayers, imageryDate }: AerialImageryProps) {
         </div>
 
         {/* Image display */}
-        <div className="relative overflow-hidden rounded-lg border border-[var(--brand-border)] bg-gray-100 dark:bg-gray-800 min-h-[300px] flex items-center justify-center">
+        <div className="relative overflow-hidden rounded-lg border border-[var(--brand-border)] bg-[var(--brand-background)] dark:bg-gray-800 min-h-[300px] flex items-center justify-center">
           {layerUrl ? (
             <div
               className="transition-transform duration-200"
@@ -93,8 +96,10 @@ export function AerialImagery({ dataLayers, imageryDate }: AerialImageryProps) {
             </div>
           ) : (
             <div className="flex flex-col items-center gap-2 text-[var(--brand-text-secondary)]">
-              <Image className="w-12 h-12 opacity-30" />
-              <p className="text-sm">No {layerLabels[activeLayer].toLowerCase()} imagery available</p>
+              <ImageIcon className="w-12 h-12 opacity-30" aria-hidden="true" />
+              <p className="text-sm">
+                No {layerLabels[activeLayer].toLowerCase()} imagery available
+              </p>
             </div>
           )}
 

@@ -70,8 +70,8 @@ export default function ContactPage() {
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-500 to-amber-500 py-20 sm:py-24">
-        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-white/5" />
-        <div className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-white/5" />
+        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-[var(--brand-surface)]/5" />
+        <div className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-[var(--brand-surface)]/5" />
         <div className="relative mx-auto max-w-4xl px-4 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
             ติดต่อเรา
@@ -89,16 +89,20 @@ export default function ContactPage() {
             {contactCards.map((card) => (
               <div
                 key={card.title}
-                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 shadow-sm hover:shadow-md transition-shadow text-center"
+                className="rounded-xl border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-surface)] dark:bg-gray-800 p-5 shadow-sm hover:shadow-md transition-shadow text-center"
               >
                 <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400">
                   <card.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white">{card.title}</h3>
-                <p className="mt-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <h3 className="text-sm font-bold text-[var(--brand-text)] dark:text-white">
+                  {card.title}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)]">
                   {card.detail}
                 </p>
-                <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{card.sub}</p>
+                <p className="mt-0.5 text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                  {card.sub}
+                </p>
               </div>
             ))}
           </div>
@@ -106,21 +110,21 @@ export default function ContactPage() {
       </section>
 
       {/* Form + Map */}
-      <section className="py-16 bg-white dark:bg-gray-950">
+      <section className="py-16 bg-[var(--brand-surface)] dark:bg-gray-950">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white mb-2">
                 ส่งข้อความถึงเรา
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-8">
+              <p className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-8">
                 กรอกแบบฟอร์มด้านล่าง เราจะติดต่อกลับโดยเร็วที่สุด
               </p>
 
               {submitted ? (
-                <div className="rounded-2xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 p-8 text-center">
-                  <div className="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400">
+                <div className="rounded-2xl border border-green-200 dark:border-green-800 bg-green-500/10 dark:bg-green-900/20 p-8 text-center">
+                  <div className="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 dark:bg-green-900/40 text-green-600 dark:text-green-400">
                     <Send className="h-8 w-8" />
                   </div>
                   <h3 className="text-xl font-bold text-green-800 dark:text-green-300">
@@ -142,7 +146,7 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                    <label className="block text-sm font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-1.5">
                       ชื่อ-นามสกุล <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -152,12 +156,12 @@ export default function ContactPage() {
                       onChange={handleChange}
                       required
                       placeholder="กรอกชื่อ-นามสกุล"
-                      className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      className="block w-full rounded-lg border border-[var(--brand-border)] dark:border-gray-600 bg-[var(--brand-surface)] dark:bg-gray-800 px-4 py-2.5 text-[var(--brand-text)] dark:text-white placeholder-[var(--brand-text-secondary)] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                    <label className="block text-sm font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-1.5">
                       อีเมล <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -167,13 +171,16 @@ export default function ContactPage() {
                       onChange={handleChange}
                       required
                       placeholder="example@company.com"
-                      className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      className="block w-full rounded-lg border border-[var(--brand-border)] dark:border-gray-600 bg-[var(--brand-surface)] dark:bg-gray-800 px-4 py-2.5 text-[var(--brand-text)] dark:text-white placeholder-[var(--brand-text-secondary)] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
-                      บริษัท <span className="text-gray-400 font-normal">(ไม่บังคับ)</span>
+                    <label className="block text-sm font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-1.5">
+                      บริษัท{' '}
+                      <span className="text-[var(--brand-text-secondary)] font-normal">
+                        (ไม่บังคับ)
+                      </span>
                     </label>
                     <input
                       type="text"
@@ -181,12 +188,12 @@ export default function ContactPage() {
                       value={formData.company}
                       onChange={handleChange}
                       placeholder="ชื่อบริษัท"
-                      className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      className="block w-full rounded-lg border border-[var(--brand-border)] dark:border-gray-600 bg-[var(--brand-surface)] dark:bg-gray-800 px-4 py-2.5 text-[var(--brand-text)] dark:text-white placeholder-[var(--brand-text-secondary)] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                    <label className="block text-sm font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-1.5">
                       หัวข้อ <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -194,7 +201,7 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={handleChange}
                       required
-                      className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                      className="block w-full rounded-lg border border-[var(--brand-border)] dark:border-gray-600 bg-[var(--brand-surface)] dark:bg-gray-800 px-4 py-2.5 text-[var(--brand-text)] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                     >
                       <option value="">เลือกหัวข้อ</option>
                       {subjects.map((s) => (
@@ -206,7 +213,7 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                    <label className="block text-sm font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-1.5">
                       รายละเอียด <span className="text-red-500">*</span>
                     </label>
                     <textarea
@@ -216,7 +223,7 @@ export default function ContactPage() {
                       required
                       rows={5}
                       placeholder="อธิบายรายละเอียดที่ต้องการสอบถาม..."
-                      className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-none"
+                      className="block w-full rounded-lg border border-[var(--brand-border)] dark:border-gray-600 bg-[var(--brand-surface)] dark:bg-gray-800 px-4 py-2.5 text-[var(--brand-text)] dark:text-white placeholder-[var(--brand-text-secondary)] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-none"
                     />
                   </div>
 
@@ -233,13 +240,15 @@ export default function ContactPage() {
 
             {/* Map + Social */}
             <div className="mt-12 lg:mt-0">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white mb-2">
                 ที่ตั้งสำนักงาน
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">นนทบุรี ประเทศไทย</p>
+              <p className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-6">
+                นนทบุรี ประเทศไทย
+              </p>
 
               {/* Map placeholder */}
-              <div className="overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
+              <div className="overflow-hidden rounded-2xl border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-background)] dark:bg-gray-800">
                 <iframe
                   title="SolarIQ Office Location"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62004.19453988828!2d100.48!3d13.86!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29d4e3c6b2e5f%3A0x4019a6a5b4b9460!2sNonthaburi!5e0!3m2!1sen!2sth!4v1700000000000!5m2!1sen!2sth"
@@ -255,26 +264,32 @@ export default function ContactPage() {
 
               {/* Social Links */}
               <div className="mt-8">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-lg font-bold text-[var(--brand-text)] dark:text-white mb-4">
                   ติดตามเราบนโซเชียลมีเดีย
                 </h3>
                 <div className="flex items-center gap-4 flex-wrap">
-                  <span className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-default">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 dark:bg-gray-600 text-white">
+                  <span className="flex items-center gap-2 rounded-lg border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-background)] dark:bg-gray-800 px-4 py-3 text-sm font-medium text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] cursor-default">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--brand-border)] dark:bg-gray-600 text-white">
                       <span className="text-xs font-bold">LINE</span>
                     </div>
                     LINE Official
-                    <span className="ml-1 text-xs text-gray-400">(เร็วๆ นี้)</span>
+                    <span className="ml-1 text-xs text-[var(--brand-text-secondary)]">
+                      (เร็วๆ นี้)
+                    </span>
                   </span>
-                  <span className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-default">
-                    <Facebook className="h-5 w-5 text-gray-400" />
+                  <span className="flex items-center gap-2 rounded-lg border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-background)] dark:bg-gray-800 px-4 py-3 text-sm font-medium text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] cursor-default">
+                    <Facebook className="h-5 w-5 text-[var(--brand-text-secondary)]" />
                     Facebook
-                    <span className="ml-1 text-xs text-gray-400">(เร็วๆ นี้)</span>
+                    <span className="ml-1 text-xs text-[var(--brand-text-secondary)]">
+                      (เร็วๆ นี้)
+                    </span>
                   </span>
-                  <span className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-default">
-                    <Linkedin className="h-5 w-5 text-gray-400" />
+                  <span className="flex items-center gap-2 rounded-lg border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-background)] dark:bg-gray-800 px-4 py-3 text-sm font-medium text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] cursor-default">
+                    <Linkedin className="h-5 w-5 text-[var(--brand-text-secondary)]" />
                     LinkedIn
-                    <span className="ml-1 text-xs text-gray-400">(เร็วๆ นี้)</span>
+                    <span className="ml-1 text-xs text-[var(--brand-text-secondary)]">
+                      (เร็วๆ นี้)
+                    </span>
                   </span>
                 </div>
               </div>

@@ -123,17 +123,17 @@ export function ChatInput({
   }, [])
 
   return (
-    <div className="border-t border-gray-100 bg-white">
+    <div className="border-t border-[var(--brand-border)] bg-[var(--brand-surface)]">
       {/* Quick replies bar */}
       {showQuickReplies && (
-        <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+        <div className="px-4 py-3 border-b border-[var(--brand-border)] bg-[var(--brand-background)]">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <span className="text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
               {t('quickReplies')}
             </span>
             <button
               onClick={() => setShowQuickReplies(false)}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] transition-colors"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -150,7 +150,7 @@ export function ChatInput({
               <button
                 key={qr.id}
                 onClick={() => handleQuickReply(qr)}
-                className="px-3 py-1.5 text-xs font-medium bg-white border border-orange-200 text-orange-700 rounded-full hover:bg-orange-50 hover:border-orange-300 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium bg-[var(--brand-surface)] border border-orange-200 text-orange-700 rounded-full hover:bg-orange-50 hover:border-orange-300 transition-colors"
               >
                 {qr.title}
               </button>
@@ -168,7 +168,7 @@ export function ChatInput({
             'flex-shrink-0 p-2 rounded-xl transition-colors mb-0.5',
             showQuickReplies
               ? 'bg-orange-100 text-orange-600'
-              : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+              : 'text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-primary-light)]'
           )}
           title={t('quickReplies')}
           disabled={disabled}
@@ -186,7 +186,7 @@ export function ChatInput({
         {/* Attach button */}
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors mb-0.5"
+          className="flex-shrink-0 p-2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-background)] rounded-xl transition-colors mb-0.5"
           title={t('attachFile')}
           disabled={disabled}
         >
@@ -218,11 +218,11 @@ export function ChatInput({
             disabled={disabled}
             rows={1}
             className={cn(
-              'w-full resize-none rounded-2xl border px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400',
+              'w-full resize-none rounded-2xl border px-4 py-2.5 text-sm text-[var(--brand-text)] placeholder-[var(--brand-text-secondary)]',
               'focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent',
-              'disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed',
+              'disabled:bg-[var(--brand-background)] disabled:text-[var(--brand-text-secondary)] disabled:cursor-not-allowed',
               'transition-all duration-150',
-              'border-gray-200 bg-gray-50',
+              'border-[var(--brand-border)] bg-[var(--brand-background)]',
               'leading-relaxed'
             )}
             style={{ maxHeight: '120px' }}
@@ -237,7 +237,7 @@ export function ChatInput({
             'flex-shrink-0 p-2.5 rounded-xl transition-all duration-150 mb-0.5',
             message.trim() && !disabled
               ? 'bg-orange-500 text-white hover:bg-orange-600 shadow-sm hover:shadow-md'
-              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] cursor-not-allowed'
           )}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

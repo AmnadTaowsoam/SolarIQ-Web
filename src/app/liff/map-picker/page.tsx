@@ -162,10 +162,10 @@ export default function MapPickerPage(): React.ReactElement {
   // Loading states
   if (liffLoading || !isInitialized || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-surface)]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('loading')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('loading')}</p>
         </div>
       </div>
     )
@@ -174,7 +174,7 @@ export default function MapPickerPage(): React.ReactElement {
   // Error states
   if (liffError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-red-500/10 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">⚠️</div>
           <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.locationError')}</h1>
@@ -186,7 +186,7 @@ export default function MapPickerPage(): React.ReactElement {
 
   if (loadError || !mapLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-red-500/10 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">🗺️</div>
           <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.geocodeError')}</h1>
@@ -197,7 +197,7 @@ export default function MapPickerPage(): React.ReactElement {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-[var(--brand-surface)] flex flex-col">
       {/* Header */}
       <header className="bg-green-600 text-white p-4 shadow-md">
         <h1 className="text-xl font-bold text-center">📍 {t('title')}</h1>
@@ -227,19 +227,21 @@ export default function MapPickerPage(): React.ReactElement {
       </div>
 
       {/* Address Display */}
-      <div className="bg-white border-t p-4">
+      <div className="bg-[var(--brand-surface)] border-t p-4">
         {location.address ? (
           <div className="mb-4">
-            <p className="text-sm text-gray-500 mb-1">{t('address')}:</p>
-            <p className="text-gray-800 font-medium">{location.address}</p>
+            <p className="text-sm text-[var(--brand-text-secondary)] mb-1">{t('address')}:</p>
+            <p className="text-[var(--brand-text)] font-medium">{location.address}</p>
           </div>
         ) : (
           <div className="mb-4">
-            <p className="text-gray-400 text-center">{t('selectOnMap')}</p>
+            <p className="text-[var(--brand-text-secondary)] text-center">{t('selectOnMap')}</p>
           </div>
         )}
 
-        {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">{error}</div>}
+        {error && (
+          <div className="bg-red-500/10 text-red-600 p-3 rounded-lg mb-4 text-sm">{error}</div>
+        )}
 
         {/* Submit Button */}
         <button
@@ -248,7 +250,7 @@ export default function MapPickerPage(): React.ReactElement {
           className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${
             location.address && !isSubmitting
               ? 'bg-green-600 text-white hover:bg-green-700 active:scale-98'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              : 'bg-[var(--brand-border)] text-[var(--brand-text-secondary)] cursor-not-allowed'
           }`}
         >
           {isSubmitting ? (
@@ -264,7 +266,7 @@ export default function MapPickerPage(): React.ReactElement {
 
       {/* User info */}
       {user && (
-        <div className="fixed top-16 right-2 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow text-xs text-gray-600">
+        <div className="fixed top-16 right-2 bg-[var(--brand-surface)]/90 backdrop-blur-sm rounded-full px-3 py-1 shadow text-xs text-[var(--brand-text-secondary)]">
           {user.displayName}
         </div>
       )}

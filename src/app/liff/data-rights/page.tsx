@@ -117,17 +117,17 @@ export default function DataRightsPage(): React.ReactElement {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto" />
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-[var(--brand-text-secondary)]">{t('loading')}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--brand-background)]">
       {/* Header */}
       <header className="bg-green-600 text-white p-4 shadow-md">
         <div className="flex items-center gap-3">
@@ -150,49 +150,57 @@ export default function DataRightsPage(): React.ReactElement {
 
       <main className="p-4 max-w-lg mx-auto space-y-4">
         {deleteSuccess && (
-          <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+          <div className="p-4 bg-green-500/10 border border-green-200 rounded-xl">
             <p className="text-green-800 font-medium text-sm">{t('deleteSuccess')}</p>
           </div>
         )}
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
             <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
 
         {/* Data summary card */}
-        <div className="bg-white rounded-xl shadow-sm p-5">
-          <h2 className="text-base font-semibold text-gray-900 mb-4">{t('dataSummary.title')}</h2>
-          <ul className="space-y-2 text-sm text-gray-700">
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-5">
+          <h2 className="text-base font-semibold text-[var(--brand-text)] mb-4">
+            {t('dataSummary.title')}
+          </h2>
+          <ul className="space-y-2 text-sm text-[var(--brand-text)]">
             <li className="flex justify-between">
-              <span className="text-gray-500">{t('dataSummary.name')}</span>
+              <span className="text-[var(--brand-text-secondary)]">{t('dataSummary.name')}</span>
               <span className="font-medium">{dataSummary?.name ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">{t('dataSummary.phone')}</span>
+              <span className="text-[var(--brand-text-secondary)]">{t('dataSummary.phone')}</span>
               <span className="font-medium">{dataSummary?.phone ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">{t('dataSummary.email')}</span>
+              <span className="text-[var(--brand-text-secondary)]">{t('dataSummary.email')}</span>
               <span className="font-medium">{dataSummary?.email ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">{t('dataSummary.address')}</span>
+              <span className="text-[var(--brand-text-secondary)]">{t('dataSummary.address')}</span>
               <span className="font-medium">{dataSummary?.address ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">{t('dataSummary.province')}</span>
+              <span className="text-[var(--brand-text-secondary)]">
+                {t('dataSummary.province')}
+              </span>
               <span className="font-medium">{dataSummary?.province ?? '-'}</span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">{t('dataSummary.analysisHistory')}</span>
+              <span className="text-[var(--brand-text-secondary)]">
+                {t('dataSummary.analysisHistory')}
+              </span>
               <span className="font-medium">
                 {dataSummary?.analysis_count ?? 0} {t('dataSummary.timesUnit')}
               </span>
             </li>
             <li className="flex justify-between">
-              <span className="text-gray-500">{t('dataSummary.consentHistory')}</span>
+              <span className="text-[var(--brand-text-secondary)]">
+                {t('dataSummary.consentHistory')}
+              </span>
               <span className="font-medium">
                 {dataSummary?.consent_count ?? 0} {t('dataSummary.itemsUnit')}
               </span>
@@ -201,13 +209,15 @@ export default function DataRightsPage(): React.ReactElement {
         </div>
 
         {/* Action buttons */}
-        <div className="bg-white rounded-xl shadow-sm p-5 space-y-3">
-          <h2 className="text-base font-semibold text-gray-900 mb-3">{t('actions.title')}</h2>
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-5 space-y-3">
+          <h2 className="text-base font-semibold text-[var(--brand-text)] mb-3">
+            {t('actions.title')}
+          </h2>
 
           <button
             onClick={handleDownload}
             disabled={isDownloading}
-            className="w-full flex items-center gap-3 p-3 rounded-lg border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition-colors disabled:opacity-50"
+            className="w-full flex items-center gap-3 p-3 rounded-lg border border-green-200 bg-green-500/10 text-green-700 hover:bg-green-500/10 transition-colors disabled:opacity-50"
           >
             <span className="text-xl">⬇️</span>
             <span className="font-medium text-sm">
@@ -217,7 +227,7 @@ export default function DataRightsPage(): React.ReactElement {
 
           <Link
             href="/liff/contact"
-            className="w-full flex items-center gap-3 p-3 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+            className="w-full flex items-center gap-3 p-3 rounded-lg border border-blue-200 bg-blue-500/10 text-blue-700 hover:bg-blue-500/10 transition-colors"
           >
             <span className="text-xl">✏️</span>
             <span className="font-medium text-sm">{t('actions.edit')}</span>
@@ -225,7 +235,7 @@ export default function DataRightsPage(): React.ReactElement {
 
           <Link
             href="/liff/consent"
-            className="w-full flex items-center gap-3 p-3 rounded-lg border border-yellow-200 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition-colors"
+            className="w-full flex items-center gap-3 p-3 rounded-lg border border-yellow-500/20 bg-yellow-500/10 text-yellow-700 hover:bg-yellow-500/10 transition-colors"
           >
             <span className="text-xl">🚫</span>
             <span className="font-medium text-sm">{t('actions.withdraw')}</span>
@@ -234,7 +244,7 @@ export default function DataRightsPage(): React.ReactElement {
           <button
             onClick={() => setShowDeleteModal(true)}
             disabled={deleteSuccess}
-            className="w-full flex items-center gap-3 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 transition-colors disabled:opacity-50"
+            className="w-full flex items-center gap-3 p-3 rounded-lg border border-red-500/20 bg-red-500/10 text-red-700 hover:bg-red-100 transition-colors disabled:opacity-50"
           >
             <span className="text-xl">🗑️</span>
             <span className="font-medium text-sm">{t('actions.delete')}</span>
@@ -242,17 +252,19 @@ export default function DataRightsPage(): React.ReactElement {
         </div>
 
         {/* DPO contact */}
-        <div className="bg-white rounded-xl shadow-sm p-5">
-          <h2 className="text-base font-semibold text-gray-900 mb-3">{t('dpoContact.title')}</h2>
-          <div className="space-y-1 text-sm text-gray-600">
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-5">
+          <h2 className="text-base font-semibold text-[var(--brand-text)] mb-3">
+            {t('dpoContact.title')}
+          </h2>
+          <div className="space-y-1 text-sm text-[var(--brand-text-secondary)]">
             <p>
-              <span className="text-gray-500">{t('dpoContact.email')} </span>
+              <span className="text-[var(--brand-text-secondary)]">{t('dpoContact.email')} </span>
               <a href="mailto:dpo@solariq.app" className="text-green-600 hover:underline">
                 dpo@solariq.app
               </a>
             </p>
             <p>
-              <span className="text-gray-500">{t('dpoContact.phone')} </span>
+              <span className="text-[var(--brand-text-secondary)]">{t('dpoContact.phone')} </span>
               <a href="tel:085-662-1113" className="text-green-600 hover:underline">
                 085-662-1113
               </a>
@@ -260,25 +272,31 @@ export default function DataRightsPage(): React.ReactElement {
           </div>
         </div>
 
-        <p className="text-xs text-gray-400 text-center pb-4">{t('pdpaReference')}</p>
+        <p className="text-xs text-[var(--brand-text-secondary)] text-center pb-4">
+          {t('pdpaReference')}
+        </p>
       </main>
 
       {/* Delete confirmation modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+          <div className="bg-[var(--brand-surface)] rounded-2xl shadow-2xl w-full max-w-sm p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                 <span className="text-xl">🗑️</span>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">{t('deleteModal.title')}</h3>
+              <h3 className="text-lg font-semibold text-[var(--brand-text)]">
+                {t('deleteModal.title')}
+              </h3>
             </div>
-            <p className="text-sm text-gray-600 mb-6">{t('deleteModal.description')}</p>
+            <p className="text-sm text-[var(--brand-text-secondary)] mb-6">
+              {t('deleteModal.description')}
+            </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
                 disabled={isDeleting}
-                className="flex-1 py-2.5 px-4 rounded-lg border border-gray-300 text-gray-700 font-medium text-sm hover:bg-gray-50 transition-colors"
+                className="flex-1 py-2.5 px-4 rounded-lg border border-[var(--brand-border)] text-[var(--brand-text)] font-medium text-sm hover:bg-[var(--brand-background)] transition-colors"
               >
                 {t('deleteModal.cancel')}
               </button>

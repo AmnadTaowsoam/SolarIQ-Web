@@ -77,11 +77,12 @@ const _STATUS_LABELS: Record<DSRRequestStatus, string> = {
 
 const _STATUS_COLORS: Record<DSRRequestStatus, string> = {
   [DSRRequestStatus.PENDING]:
-    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-  [DSRRequestStatus.PROCESSING]: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+    'bg-yellow-500/10 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400',
+  [DSRRequestStatus.PROCESSING]:
+    'bg-blue-500/10 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
   [DSRRequestStatus.COMPLETED]:
-    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-  [DSRRequestStatus.REJECTED]: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+    'bg-green-500/10 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+  [DSRRequestStatus.REJECTED]: 'bg-red-100 text-red-400 dark:bg-red-900/30 dark:text-red-400',
 }
 
 const _STATUS_ICONS: Record<DSRRequestStatus, React.ComponentType<{ className?: string }>> = {
@@ -162,22 +163,24 @@ export default function DSRRequestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-[var(--brand-background)] dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-[var(--brand-surface)] dark:bg-gray-800 border-b border-[var(--brand-border)] dark:border-gray-700">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center gap-4">
             <Link
               href="/pdpa"
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-[var(--brand-primary-light)] dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              <ArrowLeft className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              <ArrowLeft className="h-5 w-5 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]" />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white">
                 Data Subject Request Portal
               </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">จัดการสิทธิของคุณตาม PDPA</p>
+              <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                จัดการสิทธิของคุณตาม PDPA
+              </p>
             </div>
           </div>
         </div>
@@ -188,7 +191,7 @@ export default function DSRRequestPage() {
         {/* Step 1: Select Request Type */}
         {step === 'select' && (
           <div className="space-y-6">
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="bg-blue-500/10 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                 <div>
@@ -201,7 +204,7 @@ export default function DSRRequestPage() {
             </div>
 
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-xl font-semibold text-[var(--brand-text)] dark:text-white mb-4">
                 เลือกประเภทคำขอ
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -218,10 +221,10 @@ export default function DSRRequestPage() {
                           <Icon className="h-6 w-6 text-primary-600" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                          <h3 className="font-semibold text-[var(--brand-text)] dark:text-white mb-1">
                             {type.label}
                           </h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                          <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                             {type.description}
                           </p>
                         </div>
@@ -239,7 +242,7 @@ export default function DSRRequestPage() {
           <Card className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Request Type Display */}
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+              <div className="bg-[var(--brand-background)] dark:bg-gray-800 rounded-lg p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">
                     {(() => {
@@ -249,8 +252,10 @@ export default function DSRRequestPage() {
                     })()}
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">ประเภทคำขอ:</p>
-                    <p className="font-semibold text-gray-900 dark:text-white">
+                    <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                      ประเภทคำขอ:
+                    </p>
+                    <p className="font-semibold text-[var(--brand-text)] dark:text-white">
                       {REQUEST_TYPES.find((t) => t.value === formData.requestType)?.label}
                     </p>
                   </div>
@@ -261,7 +266,7 @@ export default function DSRRequestPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-2"
                 >
                   อีเมล <span className="text-red-500">*</span>
                 </label>
@@ -274,7 +279,7 @@ export default function DSRRequestPage() {
                   required
                   className="w-full"
                 />
-                <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                <p className="mt-1 text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                   เราจะส่งรหัสยืนยันไปยังอีเมลนี้เพื่อยืนยันตัวตน
                 </p>
               </div>
@@ -283,7 +288,7 @@ export default function DSRRequestPage() {
               <div>
                 <label
                   htmlFor="description"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-2"
                 >
                   รายละเอียดคำขอ <span className="text-red-500">*</span>
                 </label>
@@ -294,9 +299,9 @@ export default function DSRRequestPage() {
                   placeholder="อธิบายรายละเอียดเกี่ยวกับคำขอของคุณ..."
                   required
                   rows={5}
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full rounded-lg border border-[var(--brand-border)] dark:border-gray-600 bg-[var(--brand-surface)] dark:bg-gray-800 px-3 py-2 text-[var(--brand-text)] dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
-                <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                <p className="mt-1 text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                   อย่างน้อย 10 ตัวอักษร
                 </p>
               </div>
@@ -305,7 +310,7 @@ export default function DSRRequestPage() {
               <div>
                 <label
                   htmlFor="additionalInfo"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  className="block text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-2"
                 >
                   ข้อมูลเพิ่มเติม (ไม่บังคับ)
                 </label>
@@ -315,13 +320,13 @@ export default function DSRRequestPage() {
                   onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
                   placeholder="ข้อมูลเพิ่มเติมที่อาจช่วยในการดำเนินการ..."
                   rows={3}
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full rounded-lg border border-[var(--brand-border)] dark:border-gray-600 bg-[var(--brand-surface)] dark:bg-gray-800 px-3 py-2 text-[var(--brand-text)] dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
 
               {/* Error Message */}
               {error && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                <div className="bg-red-500/10 dark:bg-red-900/20 border border-red-500/20 dark:border-red-800 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5" />
                     <p className="text-sm text-red-900 dark:text-red-100">{error}</p>
@@ -350,29 +355,31 @@ export default function DSRRequestPage() {
         {/* Step 3: Success */}
         {step === 'success' && (
           <Card className="p-8 text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 dark:bg-green-900/30">
               <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white mb-2">
               ส่งคำขอสำเร็จ!
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-6">
               เราได้รับคำขอของคุณแล้ว และจะดำเนินการภายใน 30 วัน คุณจะได้รับอีเมลยืนยันที่{' '}
               {formData.email}
             </p>
 
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mb-6 text-left">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">ขั้นตอนถัดไป</h3>
+            <div className="bg-[var(--brand-background)] dark:bg-gray-800 rounded-lg p-6 mb-6 text-left">
+              <h3 className="font-semibold text-[var(--brand-text)] dark:text-white mb-4">
+                ขั้นตอนถัดไป
+              </h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-xs font-semibold text-primary-600 dark:text-primary-400">
                     1
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-[var(--brand-text)] dark:text-white">
                       ตรวจสอบอีเมลของคุณ
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                       เราจะส่งอีเมลยืนยันพร้อมรหัสติดตามคำขอ
                     </p>
                   </div>
@@ -382,10 +389,10 @@ export default function DSRRequestPage() {
                     2
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-[var(--brand-text)] dark:text-white">
                       รอการตรวจสอบจากทีมงาน
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                       เราจะตรวจสอบคำขอของคุณและดำเนินการตามที่กฎหมายกำหนด
                     </p>
                   </div>
@@ -395,8 +402,10 @@ export default function DSRRequestPage() {
                     3
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">รับผลลัพธ์</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm font-medium text-[var(--brand-text)] dark:text-white">
+                      รับผลลัพธ์
+                    </p>
+                    <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                       เราจะแจ้งผลลัพธ์ให้คุณทราบทางอีเมล
                     </p>
                   </div>
@@ -415,7 +424,9 @@ export default function DSRRequestPage() {
 
         {/* Contact Info */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">มีคำถามเพิ่มเติม?</p>
+          <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-2">
+            มีคำถามเพิ่มเติม?
+          </p>
           <Link
             href="mailto:dpo@solariqapp.com"
             className="inline-flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 hover:underline"

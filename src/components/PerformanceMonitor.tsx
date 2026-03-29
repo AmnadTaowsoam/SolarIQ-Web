@@ -159,20 +159,24 @@ export function PerformanceMonitor({
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-xs">
+    <div className="fixed bottom-4 right-4 z-50 bg-[var(--brand-surface)] dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-xs">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Performance Metrics</h3>
+        <h3 className="text-sm font-semibold text-[var(--brand-text)] dark:text-white">
+          Performance Metrics
+        </h3>
         <div className={`h-2 w-2 rounded-full ${ratingColors[metrics.overallRating]}`} />
       </div>
       <div className="space-y-2 text-xs">
         {metrics.lcp !== undefined && (
           <div className="flex justify-between">
-            <span className="text-gray-600 dark:text-gray-400">LCP</span>
+            <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+              LCP
+            </span>
             <span
               className={
                 getRating('LCP', metrics.lcp) === 'poor'
                   ? 'text-red-600'
-                  : 'text-gray-900 dark:text-white'
+                  : 'text-[var(--brand-text)] dark:text-white'
               }
             >
               {metrics.lcp.toFixed(0)}ms
@@ -181,12 +185,14 @@ export function PerformanceMonitor({
         )}
         {metrics.fid !== undefined && (
           <div className="flex justify-between">
-            <span className="text-gray-600 dark:text-gray-400">FID</span>
+            <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+              FID
+            </span>
             <span
               className={
                 getRating('FID', metrics.fid) === 'poor'
                   ? 'text-red-600'
-                  : 'text-gray-900 dark:text-white'
+                  : 'text-[var(--brand-text)] dark:text-white'
               }
             >
               {metrics.fid.toFixed(0)}ms
@@ -195,12 +201,14 @@ export function PerformanceMonitor({
         )}
         {metrics.cls !== undefined && (
           <div className="flex justify-between">
-            <span className="text-gray-600 dark:text-gray-400">CLS</span>
+            <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+              CLS
+            </span>
             <span
               className={
                 getRating('CLS', metrics.cls) === 'poor'
                   ? 'text-red-600'
-                  : 'text-gray-900 dark:text-white'
+                  : 'text-[var(--brand-text)] dark:text-white'
               }
             >
               {metrics.cls.toFixed(3)}
@@ -209,12 +217,14 @@ export function PerformanceMonitor({
         )}
         {metrics.fcp !== undefined && (
           <div className="flex justify-between">
-            <span className="text-gray-600 dark:text-gray-400">FCP</span>
+            <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+              FCP
+            </span>
             <span
               className={
                 getRating('FCP', metrics.fcp) === 'poor'
                   ? 'text-red-600'
-                  : 'text-gray-900 dark:text-white'
+                  : 'text-[var(--brand-text)] dark:text-white'
               }
             >
               {metrics.fcp.toFixed(0)}ms
@@ -223,12 +233,14 @@ export function PerformanceMonitor({
         )}
         {metrics.ttfb !== undefined && (
           <div className="flex justify-between">
-            <span className="text-gray-600 dark:text-gray-400">TTFB</span>
+            <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+              TTFB
+            </span>
             <span
               className={
                 getRating('TTFB', metrics.ttfb) === 'poor'
                   ? 'text-red-600'
-                  : 'text-gray-900 dark:text-white'
+                  : 'text-[var(--brand-text)] dark:text-white'
               }
             >
               {metrics.ttfb.toFixed(0)}ms
@@ -236,9 +248,12 @@ export function PerformanceMonitor({
           </div>
         )}
       </div>
-      <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          Press <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">Ctrl+Shift+P</kbd>{' '}
+      <div className="mt-3 pt-3 border-t border-[var(--brand-border)] dark:border-gray-700">
+        <p className="text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+          Press{' '}
+          <kbd className="px-1 py-0.5 bg-[var(--brand-background)] dark:bg-gray-700 rounded">
+            Ctrl+Shift+P
+          </kbd>{' '}
           to toggle
         </p>
       </div>

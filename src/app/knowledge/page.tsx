@@ -96,21 +96,27 @@ export default function KnowledgePage() {
       <div className="container mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
-          <p className="text-gray-600">{t('description')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('description')}</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="p-6">
-            <div className="text-sm text-gray-600 mb-1">{t('stats.totalDocuments')}</div>
+            <div className="text-sm text-[var(--brand-text-secondary)] mb-1">
+              {t('stats.totalDocuments')}
+            </div>
             <div className="text-3xl font-bold">{stats.total_documents}</div>
           </Card>
           <Card className="p-6">
-            <div className="text-sm text-gray-600 mb-1">{t('stats.totalChunks')}</div>
+            <div className="text-sm text-[var(--brand-text-secondary)] mb-1">
+              {t('stats.totalChunks')}
+            </div>
             <div className="text-3xl font-bold">{stats.total_chunks}</div>
           </Card>
           <Card className="p-6">
-            <div className="text-sm text-gray-600 mb-1">{t('stats.sources')}</div>
+            <div className="text-sm text-[var(--brand-text-secondary)] mb-1">
+              {t('stats.sources')}
+            </div>
             <div className="text-3xl font-bold">{stats.by_source.length}</div>
           </Card>
         </div>
@@ -143,12 +149,12 @@ export default function KnowledgePage() {
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <div className="font-semibold">{result.title || result.source}</div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-[var(--brand-text-secondary)]">
                         {t('search.score')}: {(result.score * 100).toFixed(1)}%
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-700">{result.content}</p>
+                  <p className="text-[var(--brand-text)]">{result.content}</p>
                 </div>
               ))}
             </div>

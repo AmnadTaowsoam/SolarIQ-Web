@@ -34,7 +34,7 @@ function QuoteCard({
         'rounded-lg p-3 border mt-1',
         isOwn
           ? 'bg-orange-600 border-orange-400 text-white'
-          : 'bg-white border-gray-200 text-gray-900'
+          : 'bg-[var(--brand-surface)] border-[var(--brand-border)] text-[var(--brand-text)]'
       )}
     >
       <div className="flex items-center gap-2 mb-2">
@@ -52,7 +52,12 @@ function QuoteCard({
         <p className="text-lg font-bold">{quoteData.systemSize} kW</p>
         <p className="text-sm font-medium">฿{quoteData.totalPrice.toLocaleString()}</p>
         {quoteData.validUntil && (
-          <p className={cn('text-xs', isOwn ? 'text-orange-100' : 'text-gray-500')}>
+          <p
+            className={cn(
+              'text-xs',
+              isOwn ? 'text-orange-100' : 'text-[var(--brand-text-secondary)]'
+            )}
+          >
             {format(new Date(quoteData.validUntil), 'd MMM yyyy', { locale: th })}
           </p>
         )}
@@ -71,7 +76,7 @@ export function MessageBubble({ message, showAvatar = true }: MessageBubbleProps
   if (isSystem) {
     return (
       <div className="flex justify-center my-3">
-        <div className="bg-gray-100 rounded-full px-4 py-1.5 text-xs text-gray-500">
+        <div className="bg-[var(--brand-background)] rounded-full px-4 py-1.5 text-xs text-[var(--brand-text-secondary)]">
           {message.content}
         </div>
       </div>
@@ -107,7 +112,7 @@ export function MessageBubble({ message, showAvatar = true }: MessageBubbleProps
             'rounded-2xl px-4 py-2.5 shadow-sm',
             isOwn
               ? 'bg-orange-500 text-white rounded-tr-sm'
-              : 'bg-white text-gray-900 border border-gray-100 rounded-tl-sm'
+              : 'bg-[var(--brand-surface)] text-[var(--brand-text)] border border-[var(--brand-border)] rounded-tl-sm'
           )}
         >
           {message.contentType === 'quote_card' && message.quoteData ? (
@@ -162,7 +167,7 @@ export function MessageBubble({ message, showAvatar = true }: MessageBubbleProps
           <div
             className={cn(
               'flex items-center gap-1 mt-1 text-[10px]',
-              isOwn ? 'text-orange-100 justify-end' : 'text-gray-400'
+              isOwn ? 'text-orange-100 justify-end' : 'text-[var(--brand-text-secondary)]'
             )}
           >
             <span>{formatTime(message.createdAt)}</span>

@@ -4,27 +4,13 @@
 
 // ── Enums ─────────────────────────────────────────────────────────────────────
 
-export type BudgetRange =
-  | 'under_200k'
-  | '200k_400k'
-  | '400k_600k'
-  | 'over_600k'
-  | 'flexible'
+export type BudgetRange = 'under_200k' | '200k_400k' | '400k_600k' | 'over_600k' | 'flexible'
 
-export type Timeline =
-  | 'urgent_1month'
-  | 'normal_3months'
-  | 'flexible'
-  | 'just_exploring'
+export type Timeline = 'urgent_1month' | 'normal_3months' | 'flexible' | 'just_exploring'
 
 export type FinancingPreference = 'cash' | 'installment' | 'leasing' | 'undecided'
 
-export type QuoteRequestStatus =
-  | 'open'
-  | 'quotes_received'
-  | 'closed'
-  | 'expired'
-  | 'cancelled'
+export type QuoteRequestStatus = 'open' | 'quotes_received' | 'closed' | 'expired' | 'cancelled'
 
 export type QuoteStatus =
   | 'draft'
@@ -422,15 +408,15 @@ export const QUOTE_STATUS_LABELS: Record<QuoteStatus, string> = {
 }
 
 export const QUOTE_STATUS_COLORS: Record<QuoteStatus, string> = {
-  draft: 'bg-gray-100 text-gray-700',
+  draft: 'bg-[var(--brand-background)] text-[var(--brand-text)]',
   submitted: 'bg-blue-100 text-blue-800',
   viewed: 'bg-purple-100 text-purple-800',
   revision_requested: 'bg-yellow-100 text-yellow-800',
   revised: 'bg-indigo-100 text-indigo-800',
   accepted: 'bg-green-100 text-green-800',
   declined: 'bg-red-100 text-red-800',
-  expired: 'bg-gray-100 text-gray-600',
-  withdrawn: 'bg-gray-100 text-gray-600',
+  expired: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
+  withdrawn: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
 }
 
 export const DEAL_STAGE_LABELS: Record<DealStage, string> = {

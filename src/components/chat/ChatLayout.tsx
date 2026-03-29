@@ -51,7 +51,7 @@ export function ChatLayout({
   return (
     <div className={cn('flex h-screen', className)}>
       {/* Sidebar - Thread list */}
-      <div className="w-80 lg:w-1/4 border-r border-gray-200 flex flex-col">
+      <div className="w-80 lg:w-1/4 border-r border-[var(--brand-border)] flex flex-col">
         <ThreadList
           threads={threads}
           selectedThreadId={selectedThreadId ?? undefined}
@@ -61,7 +61,7 @@ export function ChatLayout({
       </div>
 
       {/* Main chat area */}
-      <div className="flex-1 flex flex-col border-l border-gray-200">
+      <div className="flex-1 flex flex-col border-l border-[var(--brand-border)]">
         <ChatArea
           thread={currentThread}
           messages={messages}
@@ -73,7 +73,7 @@ export function ChatLayout({
 
       {/* Right sidebar - Quick Replies & Notes */}
       {showQuickReplies && (
-        <div className="w-80 lg:w-1/4 border-r border-gray-200 bg-white">
+        <div className="w-80 lg:w-1/4 border-r border-[var(--brand-border)] bg-[var(--brand-surface)]">
           <QuickReplyPanel
             replies={[]}
             onSelect={(reply: QuickReplyInDB) => {
@@ -85,7 +85,7 @@ export function ChatLayout({
       )}
 
       {showInternalNotes && (
-        <div className="w-80 lg:w-1/4 border-r border-gray-200 bg-white">
+        <div className="w-80 lg:w-1/4 border-r border-[var(--brand-border)] bg-[var(--brand-surface)]">
           <InternalNotesPanel />
         </div>
       )}

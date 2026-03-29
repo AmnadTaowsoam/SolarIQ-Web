@@ -29,11 +29,11 @@ function MilestoneProgress({ deal }: { deal: Deal }) {
 
   return (
     <div className="mt-3">
-      <div className="flex justify-between text-xs text-gray-500 mb-1">
+      <div className="flex justify-between text-xs text-[var(--brand-text-secondary)] mb-1">
         <span>{t('progress')}</span>
         <span>{t('steps', { completed, total })}</span>
       </div>
-      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-[var(--brand-background)] rounded-full overflow-hidden">
         <div
           className="h-full bg-orange-400 rounded-full transition-all"
           style={{ width: `${pct}%` }}
@@ -59,7 +59,7 @@ export default function DealsPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500" />
       </div>
     )
@@ -98,8 +98,8 @@ export default function DealsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-gray-500 mt-1">{t('subtitle')}</p>
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
@@ -112,14 +112,14 @@ export default function DealsPage() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: t('stats.total'), value: deals.length, color: 'text-gray-900' },
+            { label: t('stats.total'), value: deals.length, color: 'text-[var(--brand-text)]' },
             { label: t('stats.inProgress'), value: activeDeals, color: 'text-orange-600' },
             { label: t('stats.completed'), value: completedDeals, color: 'text-green-600' },
           ].map((stat) => (
             <Card key={stat.label}>
               <CardBody className="p-4 text-center">
                 <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-                <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+                <p className="text-xs text-[var(--brand-text-secondary)] mt-1">{stat.label}</p>
               </CardBody>
             </Card>
           ))}
@@ -138,7 +138,7 @@ export default function DealsPage() {
             className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               stageFilter === 'all'
                 ? 'bg-orange-500 text-white'
-                : 'bg-white text-gray-600 border border-gray-200 hover:border-orange-300'
+                : 'bg-[var(--brand-surface)] text-[var(--brand-text-secondary)] border border-[var(--brand-border)] hover:border-orange-300'
             }`}
           >
             {t('all')} ({deals.length})
@@ -162,7 +162,7 @@ export default function DealsPage() {
                 className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   stageFilter === stage
                     ? 'bg-orange-500 text-white'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-orange-300'
+                    : 'bg-[var(--brand-surface)] text-[var(--brand-text-secondary)] border border-[var(--brand-border)] hover:border-orange-300'
                 }`}
               >
                 {DEAL_STAGE_LABELS[stage]} ({count})
@@ -177,14 +177,14 @@ export default function DealsPage() {
             {[1, 2].map((i) => (
               <div
                 key={i}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 animate-pulse"
+                className="bg-[var(--brand-surface)] rounded-xl shadow-sm border border-[var(--brand-border)] p-5 animate-pulse"
               >
                 <div className="flex justify-between mb-3">
-                  <div className="h-4 bg-gray-200 rounded w-1/3" />
-                  <div className="h-5 bg-gray-200 rounded-full w-24" />
+                  <div className="h-4 bg-[var(--brand-border)] rounded w-1/3" />
+                  <div className="h-5 bg-[var(--brand-border)] rounded-full w-24" />
                 </div>
-                <div className="h-3 bg-gray-200 rounded w-1/2 mb-4" />
-                <div className="h-2 bg-gray-200 rounded-full" />
+                <div className="h-3 bg-[var(--brand-border)] rounded w-1/2 mb-4" />
+                <div className="h-2 bg-[var(--brand-border)] rounded-full" />
               </div>
             ))}
           </div>
@@ -192,7 +192,7 @@ export default function DealsPage() {
           <Card>
             <CardBody className="py-16 text-center">
               <svg
-                className="w-16 h-16 mx-auto text-gray-300 mb-4"
+                className="w-16 h-16 mx-auto text-[var(--brand-text-secondary)] mb-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -204,8 +204,10 @@ export default function DealsPage() {
                   d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                 />
               </svg>
-              <h3 className="text-lg font-semibold text-gray-700 mb-1">{t('empty.title')}</h3>
-              <p className="text-gray-500 text-sm">{t('empty.description')}</p>
+              <h3 className="text-lg font-semibold text-[var(--brand-text)] mb-1">
+                {t('empty.title')}
+              </h3>
+              <p className="text-[var(--brand-text-secondary)] text-sm">{t('empty.description')}</p>
             </CardBody>
           </Card>
         ) : (
@@ -219,9 +221,11 @@ export default function DealsPage() {
                 <CardBody className="p-5">
                   <div className="flex items-start justify-between mb-2">
                     <div>
-                      <p className="font-semibold text-gray-900">{deal.dealNumber}</p>
+                      <p className="font-semibold text-[var(--brand-text)]">{deal.dealNumber}</p>
                       {deal.contractor && (
-                        <p className="text-sm text-gray-500">{deal.contractor.companyName}</p>
+                        <p className="text-sm text-[var(--brand-text-secondary)]">
+                          {deal.contractor.companyName}
+                        </p>
                       )}
                     </div>
                     <span
@@ -234,7 +238,7 @@ export default function DealsPage() {
                   <div className="flex items-center justify-between text-sm">
                     <div>
                       {deal.quote && (
-                        <span className="text-gray-600">
+                        <span className="text-[var(--brand-text-secondary)]">
                           {deal.quote.specifications.totalPanelKw} kW •{' '}
                           {deal.quote.specifications.panelBrand}
                         </span>
@@ -304,16 +308,16 @@ function CreateDealModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">{t('title')}</h2>
+      <div className="w-full max-w-md rounded-2xl bg-[var(--brand-surface)] p-6 shadow-xl">
+        <h2 className="text-lg font-bold text-[var(--brand-text)] mb-4">{t('title')}</h2>
         {error && (
-          <div className="mb-3 rounded-lg bg-red-50 border border-red-200 p-2 text-sm text-red-700">
+          <div className="mb-3 rounded-lg bg-red-500/10 border border-red-500/20 p-2 text-sm text-red-700">
             {error}
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('fields.customerName')} *
             </label>
             <input
@@ -322,11 +326,11 @@ function CreateDealModal({ onClose }: { onClose: () => void }) {
               value={form.customer_name}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
+              className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('fields.address')}
             </label>
             <input
@@ -334,12 +338,12 @@ function CreateDealModal({ onClose }: { onClose: () => void }) {
               name="address"
               value={form.address}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
+              className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('fields.systemSize')} *
               </label>
               <input
@@ -350,11 +354,11 @@ function CreateDealModal({ onClose }: { onClose: () => void }) {
                 required
                 step="any"
                 min="0.1"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
+                className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('fields.totalValue')} *
               </label>
               <input
@@ -364,19 +368,19 @@ function CreateDealModal({ onClose }: { onClose: () => void }) {
                 onChange={handleChange}
                 required
                 min="0"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
+                className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('fields.stage')}
             </label>
             <select
               name="stage"
               value={form.stage}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
+              className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500"
             >
               {(
                 ['accepted', 'survey_scheduled', 'contract_signed', 'installation_started'] as const
@@ -388,7 +392,7 @@ function CreateDealModal({ onClose }: { onClose: () => void }) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('fields.notes')}
             </label>
             <textarea
@@ -396,14 +400,14 @@ function CreateDealModal({ onClose }: { onClose: () => void }) {
               value={form.notes}
               onChange={handleChange}
               rows={2}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500 resize-none"
+              className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-orange-500 focus:ring-orange-500 resize-none"
             />
           </div>
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-gray-300 bg-white py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="flex-1 rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] py-2.5 text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-background)]"
             >
               {t('cancel')}
             </button>

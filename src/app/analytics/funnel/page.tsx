@@ -413,10 +413,10 @@ export default function FunnelDashboardPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-[var(--brand-text)]">
               {t('title') || 'B2B SaaS Funnel Dashboard'}
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-[var(--brand-text-secondary)] mt-1">
               {t('subtitle') || 'Track conversion metrics from visit to purchase'}
             </p>
           </div>
@@ -441,7 +441,7 @@ export default function FunnelDashboardPage() {
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                 selectedPeriod === period
                   ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                  : 'bg-[var(--brand-surface)] text-[var(--brand-text)] hover:bg-[var(--brand-primary-light)] border border-[var(--brand-border)]'
               }`}
             >
               {period === '7d' ? '7 Days' : period === '30d' ? '30 Days' : '90 Days'}
@@ -455,10 +455,10 @@ export default function FunnelDashboardPage() {
             <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-[var(--brand-text-secondary)]">
                     {t('overallConversion') || 'Overall Conversion Rate'}
                   </p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">
+                  <p className="text-3xl font-bold text-[var(--brand-text)] mt-1">
                     {funnelData.overallConversionRate.toFixed(1)}%
                   </p>
                 </div>
@@ -472,8 +472,10 @@ export default function FunnelDashboardPage() {
             <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">{t('totalRevenue') || 'Total Revenue'}</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">
+                  <p className="text-sm text-[var(--brand-text-secondary)]">
+                    {t('totalRevenue') || 'Total Revenue'}
+                  </p>
+                  <p className="text-3xl font-bold text-[var(--brand-text)] mt-1">
                     {formatCurrency(funnelData.totalRevenue)}
                   </p>
                 </div>
@@ -487,10 +489,10 @@ export default function FunnelDashboardPage() {
             <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-[var(--brand-text-secondary)]">
                     {t('avgTimeToPurchase') || 'Avg Time to Purchase'}
                   </p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">
+                  <p className="text-3xl font-bold text-[var(--brand-text)] mt-1">
                     {funnelData.avgTimeToPurchase.toFixed(1)}d
                   </p>
                 </div>
@@ -520,8 +522,8 @@ export default function FunnelDashboardPage() {
                           <div className={stage.color.replace('bg-', 'text-')}>{stage.icon}</div>
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">{stage.name}</p>
-                          <p className="text-sm text-gray-600">
+                          <p className="font-medium text-[var(--brand-text)]">{stage.name}</p>
+                          <p className="text-sm text-[var(--brand-text-secondary)]">
                             {stage.count.toLocaleString()} users
                           </p>
                         </div>
@@ -529,7 +531,7 @@ export default function FunnelDashboardPage() {
                       <div className="flex items-center gap-4">
                         {stage.conversionRate !== undefined && (
                           <div className="text-right">
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-[var(--brand-text-secondary)]">
                               {t('conversion') || 'Conversion'}
                             </p>
                             <p className="font-semibold text-green-600">
@@ -539,7 +541,9 @@ export default function FunnelDashboardPage() {
                         )}
                         {stage.dropOffRate !== undefined && index > 0 && (
                           <div className="text-right">
-                            <p className="text-sm text-gray-600">{t('dropOff') || 'Drop-off'}</p>
+                            <p className="text-sm text-[var(--brand-text-secondary)]">
+                              {t('dropOff') || 'Drop-off'}
+                            </p>
                             <p className="font-semibold text-red-600">
                               {stage.dropOffRate.toFixed(1)}%
                             </p>
@@ -562,7 +566,7 @@ export default function FunnelDashboardPage() {
                       </div>
                     </div>
                     {/* Funnel bar */}
-                    <div className="h-8 bg-gray-100 rounded-lg overflow-hidden">
+                    <div className="h-8 bg-[var(--brand-background)] rounded-lg overflow-hidden">
                       <div
                         className={`h-full ${stage.color} rounded-lg transition-all duration-500`}
                         style={{ width: `${widthPercent}%` }}
@@ -580,7 +584,7 @@ export default function FunnelDashboardPage() {
           <CardHeader title={t('insights') || 'Key Insights'} />
           <CardBody>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-200">
                 <h3 className="font-semibold text-blue-900 mb-2">
                   {t('insight1Title') || 'Highest Drop-off Stage'}
                 </h3>
@@ -589,7 +593,7 @@ export default function FunnelDashboardPage() {
                     'Sign Up to Trial Start has the highest drop-off rate. Consider improving the trial activation flow.'}
                 </p>
               </div>
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+              <div className="p-4 bg-green-500/10 rounded-lg border border-green-200">
                 <h3 className="font-semibold text-green-900 mb-2">
                   {t('insight2Title') || 'Strong Onboarding Completion'}
                 </h3>

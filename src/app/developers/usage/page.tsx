@@ -13,10 +13,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 function StatCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-5">
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{label}</p>
-      <p className="text-2xl font-bold text-gray-900 mt-2">{value}</p>
-      {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
+    <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-5">
+      <p className="text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
+        {label}
+      </p>
+      <p className="text-2xl font-bold text-[var(--brand-text)] mt-2">{value}</p>
+      {sub && <p className="text-xs text-[var(--brand-text-secondary)] mt-1">{sub}</p>}
     </div>
   )
 }
@@ -38,8 +40,8 @@ export default function ApiUsagePage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-bold text-gray-900">{t('usage.title')}</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-lg font-bold text-[var(--brand-text)]">{t('usage.title')}</h2>
+        <p className="text-sm text-[var(--brand-text-secondary)] mt-0.5">
           {format(new Date(), 'MMMM yyyy', { locale: th })}
         </p>
       </div>
@@ -48,10 +50,10 @@ export default function ApiUsagePage() {
         <div className="space-y-4 animate-pulse">
           <div className="grid grid-cols-3 gap-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-24 bg-gray-100 rounded-xl" />
+              <div key={i} className="h-24 bg-[var(--brand-background)] rounded-xl" />
             ))}
           </div>
-          <div className="h-64 bg-gray-100 rounded-xl" />
+          <div className="h-64 bg-[var(--brand-background)] rounded-xl" />
         </div>
       ) : (
         <>
@@ -75,12 +77,14 @@ export default function ApiUsagePage() {
           </div>
 
           {/* Monthly quota bar */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <div className="bg-[var(--brand-surface)] rounded-2xl border border-[var(--brand-border)] p-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-gray-900">{t('usage.thisMonth')}</h3>
-              <span className="text-sm font-semibold text-gray-700">{usagePercent}%</span>
+              <h3 className="text-sm font-bold text-[var(--brand-text)]">{t('usage.thisMonth')}</h3>
+              <span className="text-sm font-semibold text-[var(--brand-text)]">
+                {usagePercent}%
+              </span>
             </div>
-            <div className="w-full bg-gray-100 rounded-full h-3 mb-2">
+            <div className="w-full bg-[var(--brand-background)] rounded-full h-3 mb-2">
               <div
                 className="h-3 rounded-full transition-all"
                 style={{
@@ -90,7 +94,7 @@ export default function ApiUsagePage() {
                 }}
               />
             </div>
-            <div className="flex justify-between text-xs text-gray-500">
+            <div className="flex justify-between text-xs text-[var(--brand-text-secondary)]">
               <span>{(usage?.totalCallsMonth ?? 0).toLocaleString()} calls</span>
               <span>{(usage?.monthLimit ?? 0).toLocaleString()} calls</span>
             </div>
@@ -102,8 +106,10 @@ export default function ApiUsagePage() {
           </div>
 
           {/* Daily chart */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 className="text-sm font-bold text-gray-900 mb-4">{t('usage.requests')}</h3>
+          <div className="bg-[var(--brand-surface)] rounded-2xl border border-[var(--brand-border)] p-6">
+            <h3 className="text-sm font-bold text-[var(--brand-text)] mb-4">
+              {t('usage.requests')}
+            </h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} barSize={8}>
@@ -142,33 +148,37 @@ export default function ApiUsagePage() {
             <div className="flex items-center gap-4 mt-3 justify-center">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-orange-500" />
-                <span className="text-xs text-gray-500">API Calls</span>
+                <span className="text-xs text-[var(--brand-text-secondary)]">API Calls</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-sm bg-red-500" />
-                <span className="text-xs text-gray-500">Errors</span>
+                <span className="text-xs text-[var(--brand-text-secondary)]">Errors</span>
               </div>
             </div>
           </div>
 
           {/* Endpoint breakdown */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 className="text-sm font-bold text-gray-900 mb-4">{t('usage.endpoint')}</h3>
+          <div className="bg-[var(--brand-surface)] rounded-2xl border border-[var(--brand-border)] p-6">
+            <h3 className="text-sm font-bold text-[var(--brand-text)] mb-4">
+              {t('usage.endpoint')}
+            </h3>
             <div className="space-y-3">
               {(usage?.endpointBreakdown ?? []).map((ep) => (
                 <div key={ep.endpoint}>
                   <div className="flex items-center justify-between mb-1">
-                    <code className="text-xs font-mono text-gray-700">{ep.endpoint}</code>
+                    <code className="text-xs font-mono text-[var(--brand-text)]">
+                      {ep.endpoint}
+                    </code>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-[var(--brand-text-secondary)]">
                         {ep.calls.toLocaleString()} calls
                       </span>
-                      <span className="text-xs font-semibold text-gray-700 w-10 text-right">
+                      <span className="text-xs font-semibold text-[var(--brand-text)] w-10 text-right">
                         {ep.percentage}%
                       </span>
                     </div>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-1.5">
+                  <div className="w-full bg-[var(--brand-background)] rounded-full h-1.5">
                     <div
                       className="h-1.5 rounded-full bg-orange-400 transition-all"
                       style={{ width: `${ep.percentage}%` }}

@@ -135,8 +135,8 @@ export function InvoiceTable({
 
       {/* Pagination */}
       {paginated && totalPages > 1 && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-          <p className="text-sm text-gray-500">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--brand-border)]">
+          <p className="text-sm text-[var(--brand-text-secondary)]">
             {t('showing')} {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, total)}{' '}
             {t('of')} {total} {t('items')}
           </p>
@@ -144,18 +144,18 @@ export function InvoiceTable({
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-[var(--brand-text)] bg-[var(--brand-surface)] border border-[var(--brand-border)] rounded-lg hover:bg-[var(--brand-primary-light)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
               {t('previous')}
             </button>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-[var(--brand-text-secondary)]">
               {t('page')} {page} / {totalPages}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-[var(--brand-text)] bg-[var(--brand-surface)] border border-[var(--brand-border)] rounded-lg hover:bg-[var(--brand-primary-light)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {t('next')}
               <ChevronRight className="w-4 h-4" />
@@ -189,12 +189,14 @@ function InvoiceRow({ invoice }: InvoiceRowProps) {
     invoice.due_date && new Date(invoice.due_date) < new Date() && invoice.status !== 'paid'
 
   return (
-    <TableRow className={isOverdue ? 'bg-red-50' : ''}>
+    <TableRow className={isOverdue ? 'bg-red-500/10' : ''}>
       <TableCell>
         <div className="flex flex-col">
           <span className="font-mono text-sm font-medium">{invoice.invoice_number}</span>
           {invoice.description && (
-            <span className="text-xs text-gray-500 mt-0.5">{invoice.description}</span>
+            <span className="text-xs text-[var(--brand-text-secondary)] mt-0.5">
+              {invoice.description}
+            </span>
           )}
         </div>
       </TableCell>
@@ -214,7 +216,7 @@ function InvoiceRow({ invoice }: InvoiceRowProps) {
         {isOverdue && <span className="text-xs text-red-600 mt-1 block">{t('overdue')}</span>}
       </TableCell>
       <TableCell>
-        <div className="text-sm text-gray-600">{getPaymentMethod()}</div>
+        <div className="text-sm text-[var(--brand-text-secondary)]">{getPaymentMethod()}</div>
       </TableCell>
       <TableCell>
         {invoice.invoice_pdf_url ? (
@@ -222,15 +224,15 @@ function InvoiceRow({ invoice }: InvoiceRowProps) {
             href={invoice.invoice_pdf_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-blue-500 bg-blue-500/10 rounded-lg hover:bg-blue-500/20 transition-colors"
           >
             <Download className="w-4 h-4" />
             PDF
           </a>
         ) : invoice.status === 'paid' ? (
-          <span className="text-xs text-gray-400">{t('processing')}</span>
+          <span className="text-xs text-[var(--brand-text-secondary)]">{t('processing')}</span>
         ) : (
-          <span className="text-sm text-gray-400">-</span>
+          <span className="text-sm text-[var(--brand-text-secondary)]">-</span>
         )}
       </TableCell>
     </TableRow>

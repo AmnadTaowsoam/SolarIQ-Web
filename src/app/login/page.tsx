@@ -152,7 +152,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Logo and title */}
         <div className="text-center">
@@ -171,8 +171,8 @@ export default function LoginPage() {
               />
             </svg>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">SolarIQ</h2>
-          <p className="mt-2 text-sm text-gray-600">{t('subtitle')}</p>
+          <h2 className="mt-6 text-3xl font-bold text-[var(--brand-text)]">SolarIQ</h2>
+          <p className="mt-2 text-sm text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
         </div>
 
         {isDevLoginEnabled && (
@@ -213,9 +213,11 @@ export default function LoginPage() {
                 <label className="flex items-center">
                   <input
                     type="checkbox"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-[var(--brand-border)] rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-600">{t('rememberMe')}</span>
+                  <span className="ml-2 text-sm text-[var(--brand-text-secondary)]">
+                    {t('rememberMe')}
+                  </span>
                 </label>
                 <Link
                   href={forgotPasswordPath}
@@ -239,14 +241,16 @@ export default function LoginPage() {
         </Card>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-[var(--brand-text-secondary)]">
           {t('noAccount')}{' '}
           <Link href={signupPath} className="font-medium text-primary-600 hover:text-primary-500">
             {t('createAccount')}
           </Link>
         </p>
 
-        <p className="text-center text-xs text-gray-400">{t('provisionedAccountsHint')}</p>
+        <p className="text-center text-xs text-[var(--brand-text-secondary)]">
+          {t('provisionedAccountsHint')}
+        </p>
       </div>
     </div>
   )

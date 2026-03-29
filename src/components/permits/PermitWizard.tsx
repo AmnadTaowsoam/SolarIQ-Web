@@ -279,13 +279,13 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
   const getDocumentStatusColor = (status: string) => {
     switch (status) {
       case 'generated':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-500/10 text-blue-800'
       case 'reviewed':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-yellow-500/10 text-yellow-600'
       case 'approved':
-        return 'bg-green-100 text-green-800'
+        return 'bg-green-500/10 text-green-800'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-[var(--brand-background)] text-[var(--brand-text)]'
     }
   }
 
@@ -326,8 +326,8 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
     <div className="max-w-6xl mx-auto p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('title')}</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-[var(--brand-text)] mb-2">{t('title')}</h1>
+        <p className="text-[var(--brand-text-secondary)]">
           Solar Installation Permit - {permit?.authority.toUpperCase()} - {permit?.permitType}
         </p>
       </div>
@@ -339,19 +339,21 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
             <div key={step.id} className="flex items-center">
               <div
                 className={`flex items-center justify-center w-10 h-10 rounded-full ${
-                  index <= currentStep ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
+                  index <= currentStep
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-[var(--brand-border)] text-[var(--brand-text-secondary)]'
                 }`}
               >
                 {index + 1}
               </div>
               <div className="ml-3">
                 <p className="font-medium">{step.title}</p>
-                <p className="text-sm text-gray-500">{step.titleEn}</p>
+                <p className="text-sm text-[var(--brand-text-secondary)]">{step.titleEn}</p>
               </div>
               {index < steps.length - 1 && (
-                <div className="flex-1 h-1 mx-4 bg-gray-200">
+                <div className="flex-1 h-1 mx-4 bg-[var(--brand-border)]">
                   <div
-                    className={`h-full ${index < currentStep ? 'bg-blue-600' : 'bg-gray-200'}`}
+                    className={`h-full ${index < currentStep ? 'bg-blue-600' : 'bg-[var(--brand-border)]'}`}
                     style={{ width: index < currentStep ? '100%' : '0%' }}
                   ></div>
                 </div>
@@ -368,19 +370,19 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
             <h2 className="text-xl font-semibold mb-4">{t('projectName')}</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-gray-600">{t('step')}:</p>
+                <p className="text-[var(--brand-text-secondary)]">{t('step')}:</p>
                 <p className="font-medium">{permit?.status}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('authorityType')}:</p>
+                <p className="text-[var(--brand-text-secondary)]">{t('authorityType')}:</p>
                 <p className="font-medium">{permit?.authority.toUpperCase()}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('systemSize')}:</p>
+                <p className="text-[var(--brand-text-secondary)]">{t('systemSize')}:</p>
                 <p className="font-medium">{permit?.permitType}</p>
               </div>
               <div>
-                <p className="text-gray-600">{t('submit')}:</p>
+                <p className="text-[var(--brand-text-secondary)]">{t('submit')}:</p>
                 <p className="font-medium">
                   {permit?.submissionDeadline
                     ? new Date(permit.submissionDeadline).toLocaleDateString('th-TH')
@@ -405,7 +407,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
                   >
                     <div>
                       <p className="font-medium">{item.title}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-[var(--brand-text-secondary)]">
                         {item.required ? t('requiredDocs') : t('uploadDocuments')}
                       </p>
                     </div>
@@ -468,7 +470,9 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
                     </span>
                   </div>
                   {doc.reviewNotes && (
-                    <p className="text-sm text-gray-600 mb-2">{doc.reviewNotes}</p>
+                    <p className="text-sm text-[var(--brand-text-secondary)] mb-2">
+                      {doc.reviewNotes}
+                    </p>
                   )}
                   {doc.pdfUrl && (
                     <Button
@@ -489,8 +493,8 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
           <div>
             <h2 className="text-xl font-semibold mb-4">{t('submit')}</h2>
             <div className="space-y-4">
-              <p className="text-gray-600">{t('confirmSubmit')}</p>
-              <div className="p-4 bg-blue-50 rounded">
+              <p className="text-[var(--brand-text-secondary)]">{t('confirmSubmit')}</p>
+              <div className="p-4 bg-blue-500/10 rounded">
                 <p className="font-medium mb-2">{t('reviewTitle')}:</p>
                 <ul className="list-disc list-inside space-y-1">
                   <li>

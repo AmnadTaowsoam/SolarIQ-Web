@@ -13,21 +13,23 @@ function FAQItem({ question, answer }: FAQItemProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="border-b border-gray-200 dark:border-gray-700">
+    <div className="border-b border-[var(--brand-border)] dark:border-gray-700">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between py-5 text-left"
         aria-expanded={isOpen}
       >
-        <span className="text-base font-semibold text-gray-900 dark:text-white">{question}</span>
+        <span className="text-base font-semibold text-[var(--brand-text)] dark:text-white">
+          {question}
+        </span>
         {isOpen ? (
           <ChevronUp className="h-5 w-5 shrink-0 text-primary-500" />
         ) : (
-          <ChevronDown className="h-5 w-5 shrink-0 text-gray-400" />
+          <ChevronDown className="h-5 w-5 shrink-0 text-[var(--brand-text-secondary)]" />
         )}
       </button>
       {isOpen && (
-        <div className="pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <div className="pb-5 text-sm leading-relaxed text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
           {answer}
         </div>
       )}
@@ -66,7 +68,7 @@ export function BillingFAQ({ _locale = 'th' }: BillingFAQProps) {
   ]
 
   return (
-    <div className="divide-y divide-gray-200 dark:divide-gray-700 border-t border-gray-200 dark:border-gray-700">
+    <div className="divide-y divide-[var(--brand-border)] dark:divide-gray-700 border-t border-[var(--brand-border)] dark:border-gray-700">
       {faqs.map((faq, index) => (
         <FAQItem key={index} question={faq.question} answer={faq.answer} />
       ))}

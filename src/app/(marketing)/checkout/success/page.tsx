@@ -115,53 +115,65 @@ export default function CheckoutSuccessPage() {
       <div className="w-full max-w-lg text-center">
         {/* Success icon with animation */}
         <div className="relative mx-auto mb-8 flex h-24 w-24 items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-green-100 dark:bg-green-900/30 animate-ping opacity-20" />
-          <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+          <div className="absolute inset-0 rounded-full bg-green-500/10 dark:bg-green-900/30 animate-ping opacity-20" />
+          <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-green-500/10 dark:bg-green-900/30">
             <CheckCircle2 className="h-14 w-14 text-green-500 dark:text-green-400" />
           </div>
         </div>
 
         {/* Heading */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--brand-text)] dark:text-white mb-3">
           {t('title')}
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">{t('thankYou')}</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">{t('accountReady')}</p>
+        <p className="text-lg text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-2">
+          {t('thankYou')}
+        </p>
+        <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-8">
+          {t('accountReady')}
+        </p>
 
         {/* Info cards */}
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 mb-8 text-left space-y-4 shadow-sm">
+        <div className="rounded-2xl border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-surface)] dark:bg-gray-800 p-6 mb-8 text-left space-y-4 shadow-sm">
           <div className="flex items-start gap-3">
             <Mail className="h-5 w-5 mt-0.5 text-primary-500 shrink-0" />
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <p className="text-sm font-medium text-[var(--brand-text)] dark:text-white">
                 {t('receiptTitle')}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('receiptDesc')}</p>
+              <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                {t('receiptDesc')}
+              </p>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
             <FileText className="h-5 w-5 mt-0.5 text-primary-500 shrink-0" />
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <p className="text-sm font-medium text-[var(--brand-text)] dark:text-white">
                 {t('manageTitle')}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('manageDesc')}</p>
+              <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                {t('manageDesc')}
+              </p>
             </div>
           </div>
 
           <div className="flex items-start gap-3">
             <Sparkles className="h-5 w-5 mt-0.5 text-primary-500 shrink-0" />
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">{t('startTitle')}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('startDesc')}</p>
+              <p className="text-sm font-medium text-[var(--brand-text)] dark:text-white">
+                {t('startTitle')}
+              </p>
+              <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                {t('startDesc')}
+              </p>
             </div>
           </div>
         </div>
 
         {/* Session ID */}
         {sessionId && (
-          <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
+          <p className="text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-6">
             {t('referenceId')} {sessionId.slice(0, 20)}...
           </p>
         )}
@@ -177,7 +189,7 @@ export default function CheckoutSuccessPage() {
           </Link>
           <Link
             href="/billing"
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-[var(--brand-border)] dark:border-gray-700 px-6 py-4 text-sm font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-primary-light)] dark:hover:bg-gray-800 transition-colors"
           >
             {t('viewDetails')}
           </Link>

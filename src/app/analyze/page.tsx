@@ -437,7 +437,7 @@ class TabErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="rounded-xl border-2 border-dashed border-red-200 bg-red-50 p-8 text-center">
+        <div className="rounded-xl border-2 border-dashed border-red-500/20 bg-red-500/10 p-8 text-center">
           <svg
             className="mx-auto h-10 w-10 text-red-400 mb-3"
             fill="none"
@@ -1125,7 +1125,7 @@ export default function AnalyzePage() {
             <CardBody>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Mini Map Preview */}
-                <div className="rounded-lg overflow-hidden h-48 bg-gray-100">
+                <div className="rounded-lg overflow-hidden h-48 bg-[var(--brand-background)]">
                   <iframe
                     src={`https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&center=${latitude},${longitude}&zoom=18&maptype=satellite`}
                     width="100%"
@@ -1263,19 +1263,21 @@ export default function AnalyzePage() {
                 <div className="text-2xl font-bold text-orange-600">
                   {(result.panelConfig.capacityKw ?? 0).toFixed(1)} kWp
                 </div>
-                <div className="text-xs text-gray-600">{t('systemSize')}</div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">{t('systemSize')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
                   {formatCurrency(result.financialAnalysis.yearlySavings)}
                 </div>
-                <div className="text-xs text-gray-600">{t('savingsYear1')}</div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">
+                  {t('savingsYear1')}
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">
                   {(result.financialAnalysis.paybackYears ?? 0).toFixed(1)} {t('years')}
                 </div>
-                <div className="text-xs text-gray-600">{t('payback')}</div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">{t('payback')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-emerald-600">
@@ -1286,7 +1288,9 @@ export default function AnalyzePage() {
                   ).toFixed(1)}{' '}
                   t
                 </div>
-                <div className="text-xs text-gray-600">CO&#8322; {t('co2Saved')}</div>
+                <div className="text-xs text-[var(--brand-text-secondary)]">
+                  CO&#8322; {t('co2Saved')}
+                </div>
               </div>
             </div>
 

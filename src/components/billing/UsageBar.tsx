@@ -77,8 +77,8 @@ export function UsageBar({ label, current, limit, percentage }: UsageBarProps) {
       {/* Label and value row */}
       {label && (
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">{label}</span>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm font-medium text-[var(--brand-text)]">{label}</span>
+          <span className="text-sm text-[var(--brand-text-secondary)]">
             {isUnlimited ? (
               <>
                 {formatNumber(current)} /{' '}
@@ -98,7 +98,7 @@ export function UsageBar({ label, current, limit, percentage }: UsageBarProps) {
 
       {/* Progress bar */}
       {isUnlimited ? (
-        <div className="w-full h-3 rounded-full bg-purple-100 overflow-hidden">
+        <div className="w-full h-3 rounded-full bg-purple-500/10 overflow-hidden">
           <div
             className="h-full rounded-full bg-purple-400 transition-all duration-500"
             style={{ width: '100%' }}

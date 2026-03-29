@@ -120,7 +120,7 @@ export function Navbar({ user, onMenuClick }: NavbarProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={onMenuClick}
-            className="lg:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            className="lg:hidden p-2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] hover:bg-[var(--brand-background)] rounded-lg transition-colors"
             aria-label={tNavbar('openMenu')}
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -303,7 +303,7 @@ export function Navbar({ user, onMenuClick }: NavbarProps) {
                         router.push(ROUTES.LOGIN)
                       }
                     }}
-                    className="flex items-center gap-2.5 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    className="flex items-center gap-2.5 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-500/10 transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path

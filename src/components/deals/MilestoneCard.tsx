@@ -101,7 +101,7 @@ export function MilestoneCard({
             >
               {DEAL_STAGE_LABELS[milestone.stage as DealStage]}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-[var(--brand-text-secondary)]">
               {isCompleted
                 ? `${t('completed')}: ${formatDate(milestone.completedAt)}`
                 : `${t('dueDate')}: ${formatDate(milestone.plannedDate)}`}
@@ -111,7 +111,7 @@ export function MilestoneCard({
 
         {!isCompleted && (
           <svg
-            className={`w-4 h-4 text-gray-400 transition-transform ${expanded ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 text-[var(--brand-text-secondary)] transition-transform ${expanded ? 'rotate-180' : ''}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -125,7 +125,9 @@ export function MilestoneCard({
       {isCompleted && (
         <div className="px-4 pb-4 space-y-2">
           {milestone.notes && (
-            <p className="text-xs text-gray-600 bg-white rounded-lg px-3 py-2">{milestone.notes}</p>
+            <p className="text-xs text-[var(--brand-text-secondary)] bg-[var(--brand-surface)] rounded-lg px-3 py-2">
+              {milestone.notes}
+            </p>
           )}
           {milestone.photos.length > 0 && (
             <div className="flex gap-2 flex-wrap">
@@ -135,7 +137,7 @@ export function MilestoneCard({
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-blue-600 bg-white px-2 py-1 rounded border border-blue-100 hover:border-blue-300"
+                  className="text-xs text-blue-600 bg-[var(--brand-surface)] px-2 py-1 rounded border border-blue-100 hover:border-blue-300"
                 >
                   {i + 1}
                 </a>
@@ -150,7 +152,7 @@ export function MilestoneCard({
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-purple-600 bg-white px-2 py-1 rounded border border-purple-100 hover:border-purple-300"
+                  className="text-xs text-purple-600 bg-[var(--brand-surface)] px-2 py-1 rounded border border-purple-100 hover:border-purple-300"
                 >
                   {i + 1}
                 </a>
@@ -164,18 +166,22 @@ export function MilestoneCard({
       {!isCompleted && expanded && (
         <div className="px-4 pb-4 space-y-3 border-t border-orange-200">
           <div className="pt-3">
-            <label className="block text-xs font-medium text-gray-700 mb-1">{t('name')}</label>
+            <label className="block text-xs font-medium text-[var(--brand-text)] mb-1">
+              {t('name')}
+            </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               placeholder="..."
-              className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full text-sm border border-[var(--brand-border)] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">{t('status')}</label>
+            <label className="block text-xs font-medium text-[var(--brand-text)] mb-1">
+              {t('status')}
+            </label>
             <input
               ref={fileInputRef}
               type="file"

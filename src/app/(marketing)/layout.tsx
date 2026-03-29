@@ -28,8 +28,8 @@ function MarketingNavbar() {
     <nav
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur shadow-md'
-          : 'bg-white dark:bg-gray-900 shadow-sm'
+          ? 'bg-[var(--brand-surface)]/95 dark:bg-gray-900/95 backdrop-blur shadow-md'
+          : 'bg-[var(--brand-surface)] dark:bg-gray-900 shadow-sm'
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -39,7 +39,9 @@ function MarketingNavbar() {
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-amber-500">
               <Zap className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-white">SolarIQ</span>
+            <span className="text-xl font-bold text-[var(--brand-text)] dark:text-white">
+              SolarIQ
+            </span>
           </Link>
 
           {/* Desktop links */}
@@ -48,7 +50,7 @@ function MarketingNavbar() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors hover:text-primary-500"
+                className="text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] transition-colors hover:text-primary-500"
               >
                 {l.label}
               </Link>
@@ -59,7 +61,7 @@ function MarketingNavbar() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/login"
-              className="rounded-lg px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 transition-colors"
+              className="rounded-lg px-4 py-2 text-sm font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:text-primary-600 transition-colors"
             >
               เข้าสู่ระบบ
             </Link>
@@ -74,7 +76,7 @@ function MarketingNavbar() {
           {/* Mobile toggle */}
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-300"
+            className="md:hidden p-2 rounded-lg text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)]"
             aria-label="Toggle menu"
           >
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -84,23 +86,23 @@ function MarketingNavbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-white dark:bg-gray-900 border-t shadow-lg">
+        <div className="md:hidden bg-[var(--brand-surface)] dark:bg-gray-900 border-t shadow-lg">
           <div className="px-4 py-3 space-y-2">
             {navLinks.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-600"
+                className="block rounded-lg px-3 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:bg-primary-50 dark:hover:bg-gray-800 hover:text-primary-600"
               >
                 {l.label}
               </Link>
             ))}
-            <div className="pt-2 border-t border-gray-200 dark:border-gray-700 space-y-2">
+            <div className="pt-2 border-t border-[var(--brand-border)] dark:border-gray-700 space-y-2">
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800"
+                className="block rounded-lg px-3 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:bg-primary-50 dark:hover:bg-gray-800"
               >
                 เข้าสู่ระบบ
               </Link>
@@ -154,7 +156,7 @@ const footerSections = [
 
 function MarketingFooter() {
   return (
-    <footer className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+    <footer className="border-t border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-background)] dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand column */}
@@ -163,27 +165,29 @@ function MarketingFooter() {
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-amber-500">
                 <Zap className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">SolarIQ</span>
+              <span className="text-xl font-bold text-[var(--brand-text)] dark:text-white">
+                SolarIQ
+              </span>
             </Link>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
               แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ สำหรับธุรกิจโซลาร์ยุคใหม่ในประเทศไทย
             </p>
 
             {/* Contact info */}
             <div className="mt-6 space-y-2">
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                 <Mail className="h-4 w-4" />
                 <span>contact@solariqapp.com</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                 <Phone className="h-4 w-4" />
                 <span>085-662-1113</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                 <MapPin className="h-4 w-4" />
                 <span>นนทบุรี, ประเทศไทย</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                 <Clock className="h-4 w-4" />
                 <span>จ.-ศ. 9:00-18:00</span>
               </div>
@@ -193,14 +197,14 @@ function MarketingFooter() {
             <div className="mt-6 flex items-center gap-4">
               <a
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900 dark:hover:text-primary-400 transition-colors"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--brand-border)] dark:bg-gray-700 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900 dark:hover:text-primary-400 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-4 w-4" />
               </a>
               <a
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900 dark:hover:text-primary-400 transition-colors"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--brand-border)] dark:bg-gray-700 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:bg-primary-100 hover:text-primary-600 dark:hover:bg-primary-900 dark:hover:text-primary-400 transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-4 w-4" />
@@ -218,7 +222,7 @@ function MarketingFooter() {
           {/* Link columns */}
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">
+              <h3 className="text-sm font-semibold text-[var(--brand-text)] dark:text-white uppercase tracking-wider">
                 {section.title}
               </h3>
               <ul className="mt-4 space-y-3">
@@ -226,7 +230,7 @@ function MarketingFooter() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                      className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -238,11 +242,11 @@ function MarketingFooter() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-400">
+        <div className="mt-12 border-t border-[var(--brand-border)] dark:border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-[var(--brand-text-secondary)]">
             &copy; {new Date().getFullYear()} SolarIQ. All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-sm text-gray-400">
+          <div className="flex items-center gap-6 text-sm text-[var(--brand-text-secondary)]">
             <Link href="/terms" className="hover:text-primary-600 transition-colors">
               ข้อกำหนดการใช้งาน
             </Link>
@@ -267,7 +271,7 @@ function MarketingFooter() {
 /* ------------------------------------------------------------------ */
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950">
+    <div className="min-h-screen flex flex-col bg-[var(--brand-surface)] dark:bg-gray-950">
       <MarketingNavbar />
       <main className="flex-1 pt-16">{children}</main>
       <MarketingFooter />

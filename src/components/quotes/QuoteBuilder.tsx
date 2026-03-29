@@ -199,7 +199,7 @@ export function QuoteBuilder({
             className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               activeSection === s.id
                 ? 'bg-orange-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]'
             }`}
           >
             {s.label}
@@ -210,11 +210,11 @@ export function QuoteBuilder({
       {/* Section 1: System Specification */}
       {activeSection === 1 && (
         <div className="space-y-4">
-          <h3 className="font-semibold text-gray-800">{t('systemSize')}</h3>
+          <h3 className="font-semibold text-[var(--brand-text)]">{t('systemSize')}</h3>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('panelBrand')} *
               </label>
               <input
@@ -222,11 +222,11 @@ export function QuoteBuilder({
                 placeholder="เช่น JA Solar, LONGi, Canadian Solar"
                 value={specifications.panelBrand}
                 onChange={(e) => setSpecifications((p) => ({ ...p, panelBrand: e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('panelModel')} *
               </label>
               <input
@@ -234,11 +234,11 @@ export function QuoteBuilder({
                 placeholder="เช่น JAM72S30-545/MR"
                 value={specifications.panelModel}
                 onChange={(e) => setSpecifications((p) => ({ ...p, panelModel: e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('installationType')}
               </label>
               <select
@@ -246,7 +246,7 @@ export function QuoteBuilder({
                 onChange={(e) =>
                   setSpecifications((p) => ({ ...p, panelType: e.target.value as PanelType }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="monocrystalline">Monocrystalline</option>
                 <option value="polycrystalline">Polycrystalline</option>
@@ -254,41 +254,41 @@ export function QuoteBuilder({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('panelCount')} (W) *
               </label>
               <input
                 type="number"
                 value={specifications.panelWattage}
                 onChange={(e) => updatePanelWattage(parseInt(e.target.value) || 0)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('panelCount')} *
               </label>
               <input
                 type="number"
                 value={specifications.panelCount}
                 onChange={(e) => updatePanelCount(parseInt(e.target.value) || 0)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
           </div>
 
           <div className="bg-orange-50 rounded-lg px-4 py-3 text-sm">
-            <span className="text-gray-600">{t('systemSize')}: </span>
+            <span className="text-[var(--brand-text-secondary)]">{t('systemSize')}: </span>
             <span className="font-bold text-orange-600 text-base">
               {specifications.totalPanelKw} kW
             </span>
           </div>
 
           {/* Inverter */}
-          <h4 className="font-medium text-gray-700 mt-4">{t('inverterBrand')}</h4>
+          <h4 className="font-medium text-[var(--brand-text)] mt-4">{t('inverterBrand')}</h4>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('inverterBrand')} *
               </label>
               <input
@@ -298,11 +298,11 @@ export function QuoteBuilder({
                 onChange={(e) =>
                   setSpecifications((p) => ({ ...p, inverterBrand: e.target.value }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('inverterModel')} *
               </label>
               <input
@@ -312,11 +312,11 @@ export function QuoteBuilder({
                 onChange={(e) =>
                   setSpecifications((p) => ({ ...p, inverterModel: e.target.value }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('systemSize')} (kW)
               </label>
               <input
@@ -328,11 +328,11 @@ export function QuoteBuilder({
                     inverterCapacityKw: parseFloat(e.target.value) || 0,
                   }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('installationType')}
               </label>
               <select
@@ -340,7 +340,7 @@ export function QuoteBuilder({
                 onChange={(e) =>
                   setSpecifications((p) => ({ ...p, inverterType: e.target.value as InverterType }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="string">String Inverter</option>
                 <option value="micro">Micro Inverter</option>
@@ -350,10 +350,10 @@ export function QuoteBuilder({
           </div>
 
           {/* Mounting */}
-          <h4 className="font-medium text-gray-700 mt-4">{t('mounting')}</h4>
+          <h4 className="font-medium text-[var(--brand-text)] mt-4">{t('mounting')}</h4>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('roofType')}
               </label>
               <select
@@ -361,7 +361,7 @@ export function QuoteBuilder({
                 onChange={(e) =>
                   setSpecifications((p) => ({ ...p, mountingType: e.target.value as MountingType }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="roof_rail">{t('roofSloped')} (Rail)</option>
                 <option value="ballast">Ballast ({t('roofFlat')})</option>
@@ -370,7 +370,7 @@ export function QuoteBuilder({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('mounting')}
               </label>
               <select
@@ -381,7 +381,7 @@ export function QuoteBuilder({
                     monitoringSystem: e.target.value as MonitoringStatus,
                   }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="included">{t('addItem')}</option>
                 <option value="optional">{t('addCustomItem')}</option>
@@ -391,10 +391,10 @@ export function QuoteBuilder({
           </div>
 
           {/* Performance */}
-          <h4 className="font-medium text-gray-700 mt-4">{t('estimatedSavings')}</h4>
+          <h4 className="font-medium text-[var(--brand-text)] mt-4">{t('estimatedSavings')}</h4>
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('estimatedSavings')} (kWh)
               </label>
               <input
@@ -406,11 +406,11 @@ export function QuoteBuilder({
                     estimatedMonthlyKwh: parseFloat(e.target.value) || 0,
                   }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('discount')} ({t('thb')})
               </label>
               <input
@@ -422,11 +422,11 @@ export function QuoteBuilder({
                     estimatedMonthlySavingsThb: parseFloat(e.target.value) || 0,
                   }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('paybackPeriod')} ({t('years')})
               </label>
               <input
@@ -439,7 +439,7 @@ export function QuoteBuilder({
                     estimatedPaybackYears: parseFloat(e.target.value) || 0,
                   }))
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
           </div>
@@ -449,7 +449,7 @@ export function QuoteBuilder({
       {/* Section 2: Pricing */}
       {activeSection === 2 && (
         <div className="space-y-4">
-          <h3 className="font-semibold text-gray-800">{t('total')}</h3>
+          <h3 className="font-semibold text-[var(--brand-text)]">{t('total')}</h3>
           <PricingCalculator
             pricing={pricing}
             onChange={setPricing}
@@ -461,7 +461,7 @@ export function QuoteBuilder({
       {/* Section 3: Timeline */}
       {activeSection === 3 && (
         <div className="space-y-4">
-          <h3 className="font-semibold text-gray-800">{t('step3')}</h3>
+          <h3 className="font-semibold text-[var(--brand-text)]">{t('step3')}</h3>
           <div className="space-y-3">
             {[
               { key: 'siteSurveyDate', label: t('step1'), required: false },
@@ -472,7 +472,9 @@ export function QuoteBuilder({
               { key: 'gridConnectionDate', label: t('step4'), required: false },
             ].map(({ key, label, required }) => (
               <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+                  {label}
+                </label>
                 <input
                   type="date"
                   value={(timeline as unknown as Record<string, string>)[key] || ''}
@@ -490,13 +492,13 @@ export function QuoteBuilder({
                     setTimeline(updated)
                   }}
                   required={required}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
             ))}
           </div>
           {timeline.estimatedTotalDays > 0 && (
-            <div className="bg-blue-50 rounded-lg px-4 py-3 text-sm text-blue-800">
+            <div className="bg-blue-500/10 rounded-lg px-4 py-3 text-sm text-blue-800">
               {t('step3')}:{' '}
               <strong>
                 {timeline.estimatedTotalDays} {t('days' as Parameters<typeof t>[0]) || 'วัน'}
@@ -509,7 +511,7 @@ export function QuoteBuilder({
       {/* Section 4: Warranty */}
       {activeSection === 4 && (
         <div className="space-y-4">
-          <h3 className="font-semibold text-gray-800">{t('warrantyPanel')}</h3>
+          <h3 className="font-semibold text-[var(--brand-text)]">{t('warrantyPanel')}</h3>
           <div className="space-y-3">
             {[
               {
@@ -536,14 +538,14 @@ export function QuoteBuilder({
               { key: 'batteryYears', label: `${t('accessories')} (${t('years')})`, default: 0 },
             ].map(({ key, label }) => (
               <div key={key} className="flex items-center justify-between">
-                <label className="text-sm text-gray-700">{label}</label>
+                <label className="text-sm text-[var(--brand-text)]">{label}</label>
                 <input
                   type="number"
                   value={(warranty as unknown as Record<string, number>)[key] || 0}
                   onChange={(e) =>
                     setWarranty((w) => ({ ...w, [key]: parseInt(e.target.value) || 0 }))
                   }
-                  className="w-20 text-right border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-20 text-right border border-[var(--brand-border)] rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   min={0}
                   max={99}
                 />
@@ -551,7 +553,7 @@ export function QuoteBuilder({
             ))}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('warrantyPanel')}
             </label>
             <textarea
@@ -559,7 +561,7 @@ export function QuoteBuilder({
               onChange={(e) => setWarranty((w) => ({ ...w, additionalTerms: e.target.value }))}
               rows={3}
               placeholder="ระบุเงื่อนไขพิเศษเพิ่มเติม..."
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
         </div>
@@ -568,19 +570,19 @@ export function QuoteBuilder({
       {/* Section 5: Financing */}
       {activeSection === 5 && (
         <div className="space-y-4">
-          <h3 className="font-semibold text-gray-800">{t('paymentTerms')}</h3>
+          <h3 className="font-semibold text-[var(--brand-text)]">{t('paymentTerms')}</h3>
 
-          <div className="bg-gray-50 rounded-xl p-4 space-y-3">
-            <h4 className="text-sm font-semibold text-gray-700">{t('discount')}</h4>
+          <div className="bg-[var(--brand-background)] rounded-xl p-4 space-y-3">
+            <h4 className="text-sm font-semibold text-[var(--brand-text)]">{t('discount')}</h4>
             <div className="flex items-center justify-between">
-              <label className="text-sm text-gray-700">{t('discount')} (%)</label>
+              <label className="text-sm text-[var(--brand-text)]">{t('discount')} (%)</label>
               <input
                 type="number"
                 value={financing.cashDiscountPct || 0}
                 onChange={(e) =>
                   setFinancing((f) => ({ ...f, cashDiscountPct: parseFloat(e.target.value) || 0 }))
                 }
-                className="w-20 text-right border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-20 text-right border border-[var(--brand-border)] rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 min={0}
                 max={100}
                 step={0.5}
@@ -588,9 +590,9 @@ export function QuoteBuilder({
             </div>
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+          <div className="bg-[var(--brand-background)] rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-gray-700">{t('balance')}</h4>
+              <h4 className="text-sm font-semibold text-[var(--brand-text)]">{t('balance')}</h4>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -600,13 +602,15 @@ export function QuoteBuilder({
                   }
                   className="w-4 h-4 accent-orange-500"
                 />
-                <span className="text-sm text-gray-600">{t('includeVat')}</span>
+                <span className="text-sm text-[var(--brand-text-secondary)]">
+                  {t('includeVat')}
+                </span>
               </label>
             </div>
             {financing.installmentAvailable && (
               <>
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  <label className="text-sm font-medium text-[var(--brand-text)] mb-2 block">
                     {t('months')}
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -618,7 +622,7 @@ export function QuoteBuilder({
                         className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
                           (financing.installmentMonths || []).includes(m)
                             ? 'bg-orange-500 text-white border-orange-500'
-                            : 'bg-white text-gray-600 border-gray-300'
+                            : 'bg-[var(--brand-surface)] text-[var(--brand-text-secondary)] border-[var(--brand-border)]'
                         }`}
                       >
                         {m} {t('months')}
@@ -627,7 +631,7 @@ export function QuoteBuilder({
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <label className="text-sm text-gray-700">
+                  <label className="text-sm text-[var(--brand-text)]">
                     {t('vat')} (% {t('years')})
                   </label>
                   <input
@@ -639,13 +643,13 @@ export function QuoteBuilder({
                         installmentInterestRate: parseFloat(e.target.value) || 0,
                       }))
                     }
-                    className="w-20 text-right border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-20 text-right border border-[var(--brand-border)] rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                     min={0}
                     step={0.1}
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                  <label className="text-sm font-medium text-[var(--brand-text)] mb-1 block">
                     {t('paymentTerms')}
                   </label>
                   <input
@@ -661,16 +665,16 @@ export function QuoteBuilder({
                           .filter(Boolean),
                       }))
                     }
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </>
             )}
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+          <div className="bg-[var(--brand-background)] rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-gray-700">{t('currency')}</h4>
+              <h4 className="text-sm font-semibold text-[var(--brand-text)]">{t('currency')}</h4>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -680,13 +684,15 @@ export function QuoteBuilder({
                   }
                   className="w-4 h-4 accent-orange-500"
                 />
-                <span className="text-sm text-gray-600">{t('includeVat')}</span>
+                <span className="text-sm text-[var(--brand-text-secondary)]">
+                  {t('includeVat')}
+                </span>
               </label>
             </div>
             {financing.leasingAvailable && (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                  <label className="text-sm font-medium text-[var(--brand-text)] mb-1 block">
                     {t('thb')}/{t('months')}
                   </label>
                   <input
@@ -698,11 +704,11 @@ export function QuoteBuilder({
                         leasingMonthly: parseFloat(e.target.value) || 0,
                       }))
                     }
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                  <label className="text-sm font-medium text-[var(--brand-text)] mb-1 block">
                     {t('years')}
                   </label>
                   <input
@@ -714,7 +720,7 @@ export function QuoteBuilder({
                         leasingTermYears: parseInt(e.target.value) || 0,
                       }))
                     }
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
@@ -722,10 +728,13 @@ export function QuoteBuilder({
           </div>
 
           {/* Additional services */}
-          <h4 className="font-semibold text-gray-700">{t('accessories')}</h4>
+          <h4 className="font-semibold text-[var(--brand-text)]">{t('accessories')}</h4>
           <div className="space-y-2">
             {additionalServices.map((svc, idx) => (
-              <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div
+                key={idx}
+                className="flex items-start gap-3 p-3 bg-[var(--brand-background)] rounded-lg"
+              >
                 <input
                   type="checkbox"
                   checked={svc.included}
@@ -738,9 +747,9 @@ export function QuoteBuilder({
                 />
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-800">{svc.name}</span>
+                    <span className="text-sm font-medium text-[var(--brand-text)]">{svc.name}</span>
                     {svc.price > 0 && (
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-[var(--brand-text-secondary)]">
                         (+฿{svc.price.toLocaleString('en-US')})
                       </span>
                     )}
@@ -748,7 +757,7 @@ export function QuoteBuilder({
                       <span className="text-xs text-green-600">({t('includeVat')})</span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500">{svc.description}</p>
+                  <p className="text-xs text-[var(--brand-text-secondary)]">{svc.description}</p>
                 </div>
               </div>
             ))}
@@ -759,24 +768,30 @@ export function QuoteBuilder({
       {/* Section 6: Notes */}
       {activeSection === 6 && (
         <div className="space-y-4">
-          <h3 className="font-semibold text-gray-800">{t('notes')}</h3>
+          <h3 className="font-semibold text-[var(--brand-text)]">{t('notes')}</h3>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t('notes')}</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+              {t('notes')}
+            </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value.slice(0, 1000))}
               rows={5}
               placeholder="ระบุข้อมูลเพิ่มเติม เงื่อนไขพิเศษ หรือข้อควรรู้สำหรับลูกค้า..."
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            <p className="text-xs text-gray-400 text-right mt-1">{notes.length}/1,000</p>
+            <p className="text-xs text-[var(--brand-text-secondary)] text-right mt-1">
+              {notes.length}/1,000
+            </p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t('validity')}</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+              {t('validity')}
+            </label>
             <select
               value={validDays}
               onChange={(e) => setValidDays(parseInt(e.target.value))}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               {[7, 14, 30, 45, 60].map((d) => (
                 <option key={d} value={d}>
@@ -789,12 +804,12 @@ export function QuoteBuilder({
       )}
 
       {/* Action buttons */}
-      <div className="pt-4 border-t border-gray-200 flex gap-3 flex-wrap">
+      <div className="pt-4 border-t border-[var(--brand-border)] flex gap-3 flex-wrap">
         <button
           type="button"
           onClick={() => onSaveDraft(getData())}
           disabled={isSaving}
-          className="flex-1 min-w-[120px] py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+          className="flex-1 min-w-[120px] py-2.5 border border-[var(--brand-border)] rounded-lg text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-background)] transition-colors disabled:opacity-50"
         >
           {isSaving ? t('saving') : t('save')}
         </button>

@@ -67,7 +67,11 @@ const DEMO_PERMITS: PermitRecord[] = [
 ]
 
 const statusConfig = {
-  draft: { label: 'Draft', color: 'bg-gray-500/10 text-gray-600', icon: FileText },
+  draft: {
+    label: 'Draft',
+    color: 'bg-gray-500/10 text-[var(--brand-text-secondary)]',
+    icon: FileText,
+  },
   submitted: { label: 'Submitted', color: 'bg-blue-500/10 text-blue-600', icon: Clock },
   reviewing: { label: 'Reviewing', color: 'bg-yellow-500/10 text-yellow-600', icon: AlertTriangle },
   approved: { label: 'Approved', color: 'bg-green-500/10 text-green-600', icon: CheckCircle },
@@ -115,7 +119,7 @@ export default function PermitsPage() {
             { label: 'Total', value: stats.total, color: 'text-[var(--brand-text)]' },
             { label: 'Approved', value: stats.approved, color: 'text-green-600' },
             { label: 'Pending', value: stats.pending, color: 'text-yellow-600' },
-            { label: 'Draft', value: stats.draft, color: 'text-gray-600' },
+            { label: 'Draft', value: stats.draft, color: 'text-[var(--brand-text-secondary)]' },
           ].map((stat) => (
             <div
               key={stat.label}

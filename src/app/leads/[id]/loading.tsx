@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 
 export default function LeadDetailLoading() {
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-[var(--brand-background)]">
       <div className="p-4 lg:p-6 xl:p-8 max-w-[1400px] mx-auto space-y-6">
         {/* Header skeleton */}
         <div>
@@ -25,7 +25,7 @@ export default function LeadDetailLoading() {
         </div>
 
         {/* Pipeline skeleton — 6 stages + Lost */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-5">
           <div className="flex items-center gap-0">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex items-center flex-shrink-0">
@@ -42,8 +42,8 @@ export default function LeadDetailLoading() {
           {/* Left column (2/3) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Customer Info card */}
-            <div className="bg-white rounded-xl border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+              <div className="px-6 py-4 border-b border-[var(--brand-border)] flex items-center justify-between">
                 <Skeleton className="h-5 w-44" />
                 <Skeleton className="h-5 w-20 rounded-full" />
               </div>
@@ -61,15 +61,15 @@ export default function LeadDetailLoading() {
             </div>
 
             {/* Bill Analysis card — 5 stat blocks */}
-            <div className="bg-white rounded-xl border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+              <div className="px-6 py-4 border-b border-[var(--brand-border)]">
                 <Skeleton className="h-5 w-28" />
                 <Skeleton className="h-3 w-48 mt-1" />
               </div>
               <div className="px-6 py-4">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div key={i} className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
                       <Skeleton className="h-3 w-16" />
                       <Skeleton className="h-8 w-20" />
                       <Skeleton className="h-3 w-14" />
@@ -80,8 +80,8 @@ export default function LeadDetailLoading() {
             </div>
 
             {/* Solar Analysis card — 4 stat blocks + map placeholder */}
-            <div className="bg-white rounded-xl border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+              <div className="px-6 py-4 border-b border-[var(--brand-border)] flex items-center justify-between">
                 <div>
                   <Skeleton className="h-5 w-32" />
                   <Skeleton className="h-3 w-28 mt-1" />
@@ -91,7 +91,7 @@ export default function LeadDetailLoading() {
               <div className="px-6 py-4">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div key={i} className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
                       <Skeleton className="h-3 w-16" />
                       <Skeleton className="h-8 w-20" />
                       <Skeleton className="h-3 w-14" />
@@ -103,22 +103,22 @@ export default function LeadDetailLoading() {
             </div>
 
             {/* ROI Summary card — 5 stat blocks + savings bar */}
-            <div className="bg-white rounded-xl border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+              <div className="px-6 py-4 border-b border-[var(--brand-border)]">
                 <Skeleton className="h-5 w-28" />
                 <Skeleton className="h-3 w-52 mt-1" />
               </div>
               <div className="px-6 py-4">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div key={i} className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
                       <Skeleton className="h-3 w-16" />
                       <Skeleton className="h-8 w-20" />
                       <Skeleton className="h-3 w-14" />
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 pt-4 border-t border-gray-100 space-y-3">
+                <div className="mt-6 pt-4 border-t border-[var(--brand-border)] space-y-3">
                   <Skeleton className="h-4 w-40" />
                   <div className="space-y-2">
                     <Skeleton className="h-3 w-full rounded-full" />
@@ -129,8 +129,8 @@ export default function LeadDetailLoading() {
             </div>
 
             {/* Carbon Footprint card — 2 stat blocks */}
-            <div className="bg-white rounded-xl border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+              <div className="px-6 py-4 border-b border-[var(--brand-border)] flex items-center justify-between">
                 <div>
                   <Skeleton className="h-5 w-36" />
                   <Skeleton className="h-3 w-48 mt-1" />
@@ -139,7 +139,7 @@ export default function LeadDetailLoading() {
               </div>
               <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {Array.from({ length: 2 }).map((_, i) => (
-                  <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                  <div key={i} className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
                     <Skeleton className="h-3 w-24" />
                     <Skeleton className="h-8 w-24" />
                     <Skeleton className="h-3 w-20" />
@@ -152,8 +152,8 @@ export default function LeadDetailLoading() {
           {/* Right column (1/3) */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <div className="bg-white rounded-xl border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+              <div className="px-6 py-4 border-b border-[var(--brand-border)]">
                 <Skeleton className="h-5 w-28" />
               </div>
               <div className="px-6 py-4 space-y-2.5">
@@ -164,8 +164,8 @@ export default function LeadDetailLoading() {
             </div>
 
             {/* Activity Timeline */}
-            <div className="bg-white rounded-xl border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+              <div className="px-6 py-4 border-b border-[var(--brand-border)]">
                 <Skeleton className="h-5 w-36" />
               </div>
               <div className="px-6 py-4 space-y-4">
@@ -182,15 +182,15 @@ export default function LeadDetailLoading() {
             </div>
 
             {/* Notes */}
-            <div className="bg-white rounded-xl border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+              <div className="px-6 py-4 border-b border-[var(--brand-border)]">
                 <Skeleton className="h-5 w-16" />
                 <Skeleton className="h-3 w-20 mt-1" />
               </div>
               <div className="px-6 py-4 space-y-3">
                 <Skeleton className="h-20 w-full rounded-lg" />
                 <Skeleton className="h-8 w-24 rounded-lg" />
-                <div className="border-t border-gray-100 pt-3 space-y-3">
+                <div className="border-t border-[var(--brand-border)] pt-3 space-y-3">
                   <div>
                     <Skeleton className="h-4 w-full" />
                     <Skeleton className="h-4 w-3/4 mt-1" />

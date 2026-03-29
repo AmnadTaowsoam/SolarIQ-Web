@@ -99,7 +99,7 @@ export default function BillingPage() {
 
   if (authLoading || isLoadingStatus) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     )
@@ -121,12 +121,12 @@ export default function BillingPage() {
       <div className="max-w-7xl py-2">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-          <p className="mt-2 text-gray-600">{t('subtitle')}</p>
+          <h1 className="text-3xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+          <p className="mt-2 text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-8">
+        <div className="border-b border-[var(--brand-border)] mb-8">
           <nav className="-mb-px flex space-x-8">
             {tabs.map((tab) => (
               <button
@@ -135,7 +135,7 @@ export default function BillingPage() {
                 className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
                     ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] hover:border-[var(--brand-border)]'
                 }`}
               >
                 <tab.icon className="w-5 h-5" />
@@ -160,8 +160,10 @@ export default function BillingPage() {
 
             {/* Usage Summary */}
             {usageData && (
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('usage.title')}</h2>
+              <div className="bg-[var(--brand-surface)] rounded-lg shadow p-6">
+                <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
+                  {t('usage.title')}
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {usageData.usage.map((item, index) => (
                     <UsageBar
@@ -177,8 +179,8 @@ export default function BillingPage() {
             )}
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-[var(--brand-surface)] rounded-lg shadow p-6">
+              <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
                 {t('quickActions.title')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -194,28 +196,28 @@ export default function BillingPage() {
                     }
                     setActiveTab('plans')
                   }}
-                  className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-3 p-4 border rounded-lg hover:bg-[var(--brand-background)] transition-colors"
                 >
                   <Settings className="w-6 h-6 text-blue-600" />
                   <div className="text-left">
                     <div className="font-medium">{t('quickActions.changePlanTitle')}</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-[var(--brand-text-secondary)]">
                       {t('quickActions.changePlanDescription')}
                     </div>
                   </div>
                 </button>
                 <button
                   onClick={handleOpenPortal}
-                  className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-3 p-4 border rounded-lg hover:bg-[var(--brand-background)] transition-colors"
                 >
                   <CreditCard className="w-6 h-6 text-blue-600" />
                   <div className="text-left">
                     <div className="font-medium">{t('quickActions.managePaymentTitle')}</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-[var(--brand-text-secondary)]">
                       {t('quickActions.managePaymentDescription')}
                     </div>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-gray-400 ml-auto" />
+                  <ExternalLink className="w-4 h-4 text-[var(--brand-text-secondary)] ml-auto" />
                 </button>
               </div>
             </div>
@@ -225,8 +227,8 @@ export default function BillingPage() {
         {activeTab === 'plans' && (
           <div>
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">{t('plans.title')}</h2>
-              <p className="text-gray-600 mt-1">{t('plans.subtitle')}</p>
+              <h2 className="text-xl font-semibold text-[var(--brand-text)]">{t('plans.title')}</h2>
+              <p className="text-[var(--brand-text-secondary)] mt-1">{t('plans.subtitle')}</p>
             </div>
             <PlanSelector
               currentPlan={billingStatus?.subscription?.plan_id}
@@ -237,10 +239,12 @@ export default function BillingPage() {
         )}
 
         {activeTab === 'invoices' && (
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-[var(--brand-surface)] rounded-lg shadow">
             <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold text-gray-900">{t('invoices.title')}</h2>
-              <p className="text-gray-600 mt-1">{t('invoices.subtitle')}</p>
+              <h2 className="text-xl font-semibold text-[var(--brand-text)]">
+                {t('invoices.title')}
+              </h2>
+              <p className="text-[var(--brand-text-secondary)] mt-1">{t('invoices.subtitle')}</p>
             </div>
             {isLoadingInvoices ? (
               <div className="p-6 text-center">
@@ -254,11 +258,11 @@ export default function BillingPage() {
 
         {activeTab === 'usage' && usageData && (
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <div className="bg-[var(--brand-surface)] rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold text-[var(--brand-text)] mb-2">
                 {t('usage.detailsTitle')}
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-[var(--brand-text-secondary)] mb-6">
                 {t('usage.detailsSubtitle', {
                   start: new Date(usageData.period_start).toLocaleDateString(),
                   end: new Date(usageData.period_end).toLocaleDateString(),
@@ -268,10 +272,10 @@ export default function BillingPage() {
                 {usageData.usage.map((item, index) => (
                   <div key={index} className="border-b pb-4 last:border-0">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="font-medium text-gray-900">
+                      <span className="font-medium text-[var(--brand-text)]">
                         {item.resource_type.replace('_', ' ').toUpperCase()}
                       </span>
-                      <span className="text-gray-600">
+                      <span className="text-[var(--brand-text-secondary)]">
                         {item.total_quantity} / {item.limit ?? '∞'}
                       </span>
                     </div>

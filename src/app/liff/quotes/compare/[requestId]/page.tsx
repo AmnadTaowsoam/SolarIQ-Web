@@ -10,7 +10,7 @@ export default function QuoteComparePage() {
   const router = useRouter()
   const requestId = params.requestId as string
   const { data, isLoading, error } = useQuoteComparison(requestId)
-  const { accept, isLoading: isAccepting } = useAcceptQuote()
+  const { accept, isLoading: _isAccepting } = useAcceptQuote()
   const { decline } = useDeclineQuote()
   const [acceptingId, setAcceptingId] = useState<string | null>(null)
   const [acceptedDealId, setAcceptedDealId] = useState<string | null>(null)
@@ -40,15 +40,27 @@ export default function QuoteComparePage() {
 
   if (acceptedDealId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
         <div className="text-center max-w-sm">
-          <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-            <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+            <svg
+              className="w-10 h-10 text-green-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">ยอมรับใบเสนอราคาแล้ว!</h2>
-          <p className="text-gray-500 mb-6 text-sm">
+          <h2 className="text-2xl font-bold text-[var(--brand-text)] mb-2">
+            ยอมรับใบเสนอราคาแล้ว!
+          </h2>
+          <p className="text-[var(--brand-text-secondary)] mb-6 text-sm">
             ผู้รับเหมาได้รับการแจ้งเตือนแล้ว และจะติดต่อกลับเพื่อนัดสำรวจหน้างาน
           </p>
           <div className="space-y-3">
@@ -60,7 +72,7 @@ export default function QuoteComparePage() {
             </button>
             <button
               onClick={() => router.push('/liff/quotes')}
-              className="w-full py-3 border border-gray-200 rounded-2xl text-sm text-gray-600 hover:bg-gray-50"
+              className="w-full py-3 border border-[var(--brand-border)] rounded-2xl text-sm text-[var(--brand-text-secondary)] hover:bg-[var(--brand-background)]"
             >
               กลับหน้าหลัก
             </button>
@@ -71,20 +83,26 @@ export default function QuoteComparePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-6">
+    <div className="min-h-screen bg-[var(--brand-background)] pb-6">
       {/* Header */}
       <div className="bg-orange-500 text-white px-4 py-5 safe-top">
         <div className="flex items-center gap-3 mb-1">
-          <button onClick={() => router.back()} className="w-8 h-8 flex items-center justify-center">
+          <button
+            onClick={() => router.back()}
+            className="w-8 h-8 flex items-center justify-center"
+          >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
           <div>
             <h1 className="text-lg font-bold">เปรียบเทียบใบเสนอราคา</h1>
-            {data && (
-              <p className="text-orange-100 text-xs">{data.quotes.length} ใบเสนอราคา</p>
-            )}
+            {data && <p className="text-orange-100 text-xs">{data.quotes.length} ใบเสนอราคา</p>}
           </div>
         </div>
       </div>
@@ -93,48 +111,66 @@ export default function QuoteComparePage() {
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2].map((i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 animate-pulse space-y-3">
+              <div
+                key={i}
+                className="bg-[var(--brand-surface)] rounded-2xl p-5 animate-pulse space-y-3"
+              >
                 <div className="flex gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                  <div className="w-10 h-10 bg-[var(--brand-border)] rounded-full" />
                   <div className="flex-1 space-y-2">
-                    <div className="h-3 bg-gray-200 rounded w-1/2" />
-                    <div className="h-3 bg-gray-200 rounded w-1/3" />
+                    <div className="h-3 bg-[var(--brand-border)] rounded w-1/2" />
+                    <div className="h-3 bg-[var(--brand-border)] rounded w-1/3" />
                   </div>
                 </div>
-                <div className="h-12 bg-gray-200 rounded-xl" />
+                <div className="h-12 bg-[var(--brand-border)] rounded-xl" />
                 <div className="grid grid-cols-3 gap-2">
                   {[1, 2, 3].map((j) => (
-                    <div key={j} className="h-8 bg-gray-200 rounded-lg" />
+                    <div key={j} className="h-8 bg-[var(--brand-border)] rounded-lg" />
                   ))}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="h-10 bg-gray-200 rounded-xl" />
+                  <div className="h-10 bg-[var(--brand-border)] rounded-xl" />
                   <div className="h-10 bg-orange-100 rounded-xl" />
                 </div>
               </div>
             ))}
           </div>
         ) : error ? (
-          <div className="bg-red-50 rounded-2xl p-5 text-center">
+          <div className="bg-red-500/10 rounded-2xl p-5 text-center">
             <p className="text-red-700 text-sm">ไม่สามารถโหลดข้อมูลได้</p>
-            <button onClick={() => window.location.reload()} className="mt-3 text-orange-500 text-sm hover:underline">
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-3 text-orange-500 text-sm hover:underline"
+            >
               ลองใหม่
             </button>
           </div>
         ) : !data || data.quotes.length === 0 ? (
-          <div className="bg-white rounded-2xl p-8 text-center shadow-sm">
-            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
-              <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <div className="bg-[var(--brand-surface)] rounded-2xl p-8 text-center shadow-sm">
+            <div className="w-16 h-16 rounded-full bg-[var(--brand-background)] flex items-center justify-center mx-auto mb-3">
+              <svg
+                className="w-8 h-8 text-[var(--brand-text-secondary)]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
             </div>
-            <h3 className="font-semibold text-gray-700 mb-1">ยังไม่มีใบเสนอราคา</h3>
-            <p className="text-gray-400 text-sm">กรุณารอผู้รับเหมาส่งใบเสนอราคา</p>
+            <h3 className="font-semibold text-[var(--brand-text)] mb-1">ยังไม่มีใบเสนอราคา</h3>
+            <p className="text-[var(--brand-text-secondary)] text-sm">
+              กรุณารอผู้รับเหมาส่งใบเสนอราคา
+            </p>
           </div>
         ) : (
           <>
             {errorMsg && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700">
                 {errorMsg}
               </div>
             )}

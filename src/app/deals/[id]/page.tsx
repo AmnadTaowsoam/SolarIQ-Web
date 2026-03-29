@@ -51,7 +51,7 @@ export default function DealDetailPage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500" />
       </div>
     )
@@ -65,7 +65,7 @@ export default function DealDetailPage() {
     return (
       <AppLayout user={user}>
         <div className="text-center py-20">
-          <p className="text-gray-500">{t('notFound')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('notFound')}</p>
           <button
             onClick={() => router.push('/deals')}
             className="mt-4 text-orange-500 hover:underline text-sm"
@@ -106,7 +106,7 @@ export default function DealDetailPage() {
     <AppLayout user={user}>
       <div className="max-w-3xl space-y-5">
         {/* Back navigation */}
-        <div className="flex items-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center gap-2 text-sm text-[var(--brand-text-secondary)]">
           <button onClick={() => router.push('/deals')} className="hover:text-orange-500">
             ← Deals
           </button>
@@ -116,7 +116,7 @@ export default function DealDetailPage() {
 
         {/* Success message */}
         {successMsg && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">
+          <div className="bg-green-500/10 border border-green-200 rounded-lg p-3 text-sm text-green-800">
             {successMsg}
           </div>
         )}
@@ -126,9 +126,11 @@ export default function DealDetailPage() {
           <CardBody className="p-5">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h1 className="text-xl font-bold text-gray-900">{deal.dealNumber}</h1>
+                <h1 className="text-xl font-bold text-[var(--brand-text)]">{deal.dealNumber}</h1>
                 {deal.contractor && (
-                  <p className="text-gray-500 text-sm mt-0.5">{deal.contractor.companyName}</p>
+                  <p className="text-[var(--brand-text-secondary)] text-sm mt-0.5">
+                    {deal.contractor.companyName}
+                  </p>
                 )}
               </div>
               <span
@@ -141,32 +143,38 @@ export default function DealDetailPage() {
             {/* Deal info */}
             {deal.quote && (
               <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-gray-500 text-xs mb-1">{t('systemSize')}</p>
-                  <p className="font-semibold text-gray-900">
+                <div className="bg-[var(--brand-background)] rounded-lg p-3">
+                  <p className="text-[var(--brand-text-secondary)] text-xs mb-1">
+                    {t('systemSize')}
+                  </p>
+                  <p className="font-semibold text-[var(--brand-text)]">
                     {deal.quote.specifications.totalPanelKw} kW
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-[var(--brand-text-secondary)]">
                     {deal.quote.specifications.panelBrand} {deal.quote.specifications.panelCount}{' '}
                     {t('panels')}
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-gray-500 text-xs mb-1">{t('dealValue')}</p>
+                <div className="bg-[var(--brand-background)] rounded-lg p-3">
+                  <p className="text-[var(--brand-text-secondary)] text-xs mb-1">
+                    {t('dealValue')}
+                  </p>
                   <p className="font-semibold text-orange-600 text-base">
                     {formatThb(deal.totalValue)}
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-gray-500 text-xs mb-1">{t('inverter')}</p>
-                  <p className="font-medium text-gray-800 text-xs">
+                <div className="bg-[var(--brand-background)] rounded-lg p-3">
+                  <p className="text-[var(--brand-text-secondary)] text-xs mb-1">{t('inverter')}</p>
+                  <p className="font-medium text-[var(--brand-text)] text-xs">
                     {deal.quote.specifications.inverterBrand}{' '}
                     {deal.quote.specifications.inverterCapacityKw} kW
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-gray-500 text-xs mb-1">{t('installDate')}</p>
-                  <p className="font-medium text-gray-800 text-xs">
+                <div className="bg-[var(--brand-background)] rounded-lg p-3">
+                  <p className="text-[var(--brand-text-secondary)] text-xs mb-1">
+                    {t('installDate')}
+                  </p>
+                  <p className="font-medium text-[var(--brand-text)] text-xs">
                     {deal.quote.timeline.installationStartDate
                       ? new Date(deal.quote.timeline.installationStartDate).toLocaleDateString(
                           'th-TH',
@@ -184,7 +192,7 @@ export default function DealDetailPage() {
                 {deal.contractor.phone && (
                   <a
                     href={`tel:${deal.contractor.phone}`}
-                    className="flex-1 flex items-center justify-center gap-2 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+                    className="flex-1 flex items-center justify-center gap-2 py-2 border border-[var(--brand-border)] rounded-lg text-sm text-[var(--brand-text)] hover:bg-[var(--brand-background)]"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
@@ -202,7 +210,7 @@ export default function DealDetailPage() {
                     href={`https://line.me/R/ti/p/${deal.contractor.lineId}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600"
+                    className="flex-1 flex items-center justify-center gap-2 py-2 bg-green-500/100 text-white rounded-lg text-sm hover:bg-green-600"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.48 2 2 6.02 2 11c0 3.56 2.05 6.68 5.14 8.45.12.06.19.19.19.33v2.21c0 .25.27.41.49.29l2.5-1.45c.1-.06.22-.08.33-.05.76.2 1.56.22 2.35.22 5.52 0 10-4.02 10-9S17.52 2 12 2z" />
@@ -246,7 +254,9 @@ export default function DealDetailPage() {
         {/* Current milestone action card */}
         {currentMilestone && deal.stage !== 'completed' && deal.stage !== 'cancelled' && (
           <div className="space-y-2">
-            <h3 className="font-semibold text-gray-700 text-sm px-1">{t('currentStep')}</h3>
+            <h3 className="font-semibold text-[var(--brand-text)] text-sm px-1">
+              {t('currentStep')}
+            </h3>
             <MilestoneCard
               milestone={currentMilestone}
               onComplete={handleCompleteMilestone}
@@ -258,8 +268,8 @@ export default function DealDetailPage() {
 
         {/* Deal completed */}
         {deal.stage === 'completed' && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
-            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
+          <div className="bg-green-500/10 border border-green-200 rounded-xl p-6 text-center">
+            <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-3">
               <svg
                 className="w-8 h-8 text-green-600"
                 fill="none"
@@ -283,17 +293,17 @@ export default function DealDetailPage() {
       {/* Update stage modal */}
       {showUpdateModal && nextStage && (
         <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
-            <div className="p-5 border-b border-gray-200">
-              <h3 className="font-semibold text-gray-900">{t('updateStatus')}</h3>
-              <p className="text-sm text-gray-500 mt-1">
+          <div className="bg-[var(--brand-surface)] rounded-2xl shadow-xl w-full max-w-md">
+            <div className="p-5 border-b border-[var(--brand-border)]">
+              <h3 className="font-semibold text-[var(--brand-text)]">{t('updateStatus')}</h3>
+              <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
                 {t('changeFrom')} &quot;{DEAL_STAGE_LABELS[deal.stage]}&quot; {t('changeTo')} &quot;
                 {DEAL_STAGE_LABELS[nextStage]}&quot;
               </p>
             </div>
             <div className="p-5 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   {t('notesOptional')}
                 </label>
                 <textarea
@@ -301,13 +311,13 @@ export default function DealDetailPage() {
                   onChange={(e) => setStageNotes(e.target.value)}
                   rows={3}
                   placeholder={t('notesPlaceholder')}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full border border-[var(--brand-border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowUpdateModal(false)}
-                  className="flex-1 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+                  className="flex-1 py-2.5 border border-[var(--brand-border)] rounded-lg text-sm text-[var(--brand-text)] hover:bg-[var(--brand-background)]"
                 >
                   {t('cancel')}
                 </button>

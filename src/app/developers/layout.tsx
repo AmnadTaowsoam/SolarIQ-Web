@@ -106,7 +106,7 @@ export default function DevelopersLayout({ children }: { children: ReactNode }) 
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="w-10 h-10 border-2 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
       </div>
     )
@@ -137,13 +137,15 @@ export default function DevelopersLayout({ children }: { children: ReactNode }) 
             </svg>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Developer Portal</h1>
-            <p className="text-sm text-gray-500">จัดการ API Keys, Webhooks และทดสอบ API</p>
+            <h1 className="text-xl font-bold text-[var(--brand-text)]">Developer Portal</h1>
+            <p className="text-sm text-[var(--brand-text-secondary)]">
+              จัดการ API Keys, Webhooks และทดสอบ API
+            </p>
           </div>
         </div>
 
         {/* Sub-navigation */}
-        <div className="flex items-center gap-1 border-b border-gray-200 overflow-x-auto">
+        <div className="flex items-center gap-1 border-b border-[var(--brand-border)] overflow-x-auto">
           {subNav.map((item) => {
             const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href)
             return (
@@ -154,7 +156,7 @@ export default function DevelopersLayout({ children }: { children: ReactNode }) 
                   'flex items-center gap-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -mb-px',
                   isActive
                     ? 'text-orange-600 border-orange-500'
-                    : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
+                    : 'text-[var(--brand-text-secondary)] border-transparent hover:text-[var(--brand-text)] hover:border-[var(--brand-border)]'
                 )}
               >
                 {item.icon}

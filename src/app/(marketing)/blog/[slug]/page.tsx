@@ -181,7 +181,7 @@ export default function BlogPostPage({ params }: PageProps) {
 
       {/* Article Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 md:p-12">
+        <div className="bg-[var(--brand-surface)] dark:bg-gray-800 rounded-xl shadow-lg p-8 md:p-12">
           <div
             className="prose prose-lg dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: contentHtml }}
@@ -192,11 +192,11 @@ export default function BlogPostPage({ params }: PageProps) {
       {/* Tags */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <div className="flex items-center gap-3 flex-wrap">
-          <Tag className="h-5 w-5 text-gray-400" />
+          <Tag className="h-5 w-5 text-[var(--brand-text-secondary)]" />
           {post.tags.map((tag) => (
             <span
               key={tag}
-              className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium"
+              className="px-4 py-2 bg-[var(--brand-background)] dark:bg-gray-800 text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] rounded-full text-sm font-medium"
             >
               #{tag}
             </span>
@@ -206,10 +206,12 @@ export default function BlogPostPage({ params }: PageProps) {
 
       {/* Share Buttons */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-[var(--brand-surface)] dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-[var(--brand-border)] dark:border-gray-700">
           <div className="flex items-center gap-3 mb-4">
-            <Share2 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-            <h3 className="font-semibold text-gray-900 dark:text-white">แบ่งปันบทความ</h3>
+            <Share2 className="h-5 w-5 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]" />
+            <h3 className="font-semibold text-[var(--brand-text)] dark:text-white">
+              แบ่งปันบทความ
+            </h3>
           </div>
           <div className="flex gap-3">
             <a
@@ -246,7 +248,7 @@ export default function BlogPostPage({ params }: PageProps) {
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white mb-6">
             บทความที่เกี่ยวข้อง
           </h2>
           <div className="grid gap-6 md:grid-cols-3">
@@ -254,13 +256,13 @@ export default function BlogPostPage({ params }: PageProps) {
               <Link
                 key={relatedPost.slug}
                 href={`/blog/${relatedPost.slug}`}
-                className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700"
+                className="group block bg-[var(--brand-surface)] dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-[var(--brand-border)] dark:border-gray-700"
               >
                 <div className="p-6">
                   <span className="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 text-xs font-medium rounded-full mb-3">
                     {relatedPost.category}
                   </span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                  <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {relatedPost.title}
                   </h3>
                 </div>
@@ -279,7 +281,7 @@ export default function BlogPostPage({ params }: PageProps) {
           </p>
           <Link
             href="/signup"
-            className="inline-block bg-white text-primary-600 font-semibold py-3 px-8 rounded-lg hover:bg-primary-50 transition-colors"
+            className="inline-block bg-[var(--brand-surface)] text-primary-600 font-semibold py-3 px-8 rounded-lg hover:bg-primary-50 transition-colors"
           >
             ทดลองฟรี
           </Link>

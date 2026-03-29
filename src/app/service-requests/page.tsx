@@ -12,17 +12,17 @@ import {
 import Link from 'next/link'
 
 const STATUS_CONFIG: Record<string, { color: string }> = {
-  open: { color: 'bg-blue-100 text-blue-700' },
+  open: { color: 'bg-blue-500/10 text-blue-700' },
   in_progress: { color: 'bg-amber-100 text-amber-700' },
-  resolved: { color: 'bg-green-100 text-green-700' },
-  closed: { color: 'bg-gray-100 text-gray-600' },
+  resolved: { color: 'bg-green-500/10 text-green-700' },
+  closed: { color: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]' },
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
   urgent: 'bg-red-100 text-red-700',
   high: 'bg-orange-100 text-orange-700',
   medium: 'bg-amber-100 text-amber-700',
-  low: 'bg-gray-100 text-gray-600',
+  low: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
 }
 
 export default function ServiceRequestsPage() {
@@ -45,8 +45,8 @@ export default function ServiceRequestsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="mt-0.5 text-sm text-gray-500">{t('subtitle')}</p>
+            <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="mt-0.5 text-sm text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
@@ -60,7 +60,7 @@ export default function ServiceRequestsPage() {
         {stats && (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
             {[
-              { label: t('stats.total'), value: stats.total, color: 'text-gray-900' },
+              { label: t('stats.total'), value: stats.total, color: 'text-[var(--brand-text)]' },
               { label: t('stats.open'), value: stats.open, color: 'text-blue-600' },
               { label: t('stats.inProgress'), value: stats.in_progress, color: 'text-amber-600' },
               { label: t('stats.resolved'), value: stats.resolved, color: 'text-green-600' },
@@ -72,9 +72,12 @@ export default function ServiceRequestsPage() {
                 color: 'text-purple-600',
               },
             ].map((s) => (
-              <div key={s.label} className="rounded-xl border bg-white p-4 text-center">
+              <div
+                key={s.label}
+                className="rounded-xl border bg-[var(--brand-surface)] p-4 text-center"
+              >
                 <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-xs text-gray-500">{s.label}</p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">{s.label}</p>
               </div>
             ))}
           </div>
@@ -101,7 +104,7 @@ export default function ServiceRequestsPage() {
               form.reset()
             }}
           >
-            <h3 className="mb-3 font-semibold text-gray-900">{t('form.title')}</h3>
+            <h3 className="mb-3 font-semibold text-[var(--brand-text)]">{t('form.title')}</h3>
             <div className="grid gap-3 md:grid-cols-3">
               <input
                 name="customer_name"
@@ -158,7 +161,7 @@ export default function ServiceRequestsPage() {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-600 hover:bg-gray-200"
+                className="rounded-lg bg-[var(--brand-background)] px-4 py-2 text-sm text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]"
               >
                 {tc('cancel')}
               </button>
@@ -180,7 +183,7 @@ export default function ServiceRequestsPage() {
               className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 statusFilter === f.value
                   ? 'bg-amber-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]'
               }`}
             >
               {f.label}
@@ -192,7 +195,10 @@ export default function ServiceRequestsPage() {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl border bg-gray-100" />
+              <div
+                key={i}
+                className="h-24 animate-pulse rounded-xl border bg-[var(--brand-background)]"
+              />
             ))}
           </div>
         ) : requests && requests.length > 0 ? (
@@ -201,12 +207,12 @@ export default function ServiceRequestsPage() {
               <Link
                 key={req.id}
                 href={`/service-requests/${req.id}`}
-                className="block rounded-xl border bg-white p-4 transition-shadow hover:shadow-md"
+                className="block rounded-xl border bg-[var(--brand-surface)] p-4 transition-shadow hover:shadow-md"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-gray-900">{req.subject}</h3>
+                      <h3 className="font-medium text-[var(--brand-text)]">{req.subject}</h3>
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_CONFIG[req.status]?.color || ''}`}
                       >
@@ -218,8 +224,10 @@ export default function ServiceRequestsPage() {
                         {t(`priority.${req.priority}`)}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-gray-500 line-clamp-1">{req.description}</p>
-                    <div className="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                    <p className="mt-1 text-sm text-[var(--brand-text-secondary)] line-clamp-1">
+                      {req.description}
+                    </p>
+                    <div className="mt-2 flex items-center gap-3 text-xs text-[var(--brand-text-secondary)]">
                       <span>{req.customer_name}</span>
                       <span>{t(`types.${req.request_type}`)}</span>
                       <span>{new Date(req.created_at).toLocaleDateString('th-TH')}</span>
@@ -236,9 +244,11 @@ export default function ServiceRequestsPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
-            <h3 className="text-sm font-medium text-gray-900">{t('empty.title')}</h3>
-            <p className="mt-1 text-sm text-gray-500">{t('empty.description')}</p>
+          <div className="rounded-xl border-2 border-dashed border-[var(--brand-border)] p-12 text-center">
+            <h3 className="text-sm font-medium text-[var(--brand-text)]">{t('empty.title')}</h3>
+            <p className="mt-1 text-sm text-[var(--brand-text-secondary)]">
+              {t('empty.description')}
+            </p>
           </div>
         )}
       </div>

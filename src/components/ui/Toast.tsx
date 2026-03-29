@@ -89,10 +89,10 @@ interface ToastItemProps {
 }
 
 const toastStyles: Record<ToastVariant, string> = {
-  success: 'bg-green-50 border-green-200 text-green-800',
-  error: 'bg-red-50 border-red-200 text-red-800',
-  warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-  info: 'bg-blue-50 border-blue-200 text-blue-800',
+  success: 'bg-green-500/10 border-green-200 text-green-800',
+  error: 'bg-red-500/10 border-red-500/20 text-red-400',
+  warning: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-600',
+  info: 'bg-blue-500/10 border-blue-200 text-blue-800',
 }
 
 const toastIcons: Record<ToastVariant, ReactNode> = {
@@ -153,7 +153,7 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
       <p className="flex-1 text-sm font-medium">{toast.message}</p>
       <button
         onClick={onClose}
-        className="text-gray-400 hover:text-gray-600 focus:outline-none"
+        className="text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] focus:outline-none"
         aria-label="Close notification"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

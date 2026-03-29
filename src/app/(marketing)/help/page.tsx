@@ -270,11 +270,11 @@ export default function HelpPage() {
       {/* Search Bar */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-[var(--brand-text-secondary)]" />
           <input
             type="text"
             placeholder="ค้นหาคำถามหรือหัวข้อ..."
-            className="w-full pl-12 pr-4 py-4 border border-gray-300 dark:border-gray-600 rounded-xl shadow-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-800 dark:text-white text-lg"
+            className="w-full pl-12 pr-4 py-4 border border-[var(--brand-border)] dark:border-gray-600 rounded-xl shadow-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-800 dark:text-white text-lg"
           />
         </div>
       </section>
@@ -284,33 +284,37 @@ export default function HelpPage() {
         <section className="mb-16">
           <div className="flex items-center gap-2 mb-8">
             <LayoutGrid className="h-6 w-6 text-primary-600" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">หมวดหมู่</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white">
+              หมวดหมู่
+            </h2>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {helpCategories.map((category) => (
               <div
                 key={category.id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700"
+                className="bg-[var(--brand-surface)] dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-[var(--brand-border)] dark:border-gray-700"
               >
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-100 dark:bg-primary-900">
                       <category.icon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white">
                       {category.title}
                     </h3>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">{category.description}</p>
+                  <p className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-4">
+                    {category.description}
+                  </p>
                   <ul className="space-y-2">
                     {category.articles.map((article) => (
                       <li key={article.id}>
                         <Link
                           href={`/help/${article.slug}`}
-                          className="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors group"
+                          className="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-[var(--brand-primary-light)] dark:hover:bg-gray-700 text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] transition-colors group"
                         >
                           <span className="flex-1">{article.title}</span>
-                          <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors" />
+                          <ArrowRight className="h-4 w-4 text-[var(--brand-text-secondary)] group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors" />
                         </Link>
                       </li>
                     ))}
@@ -325,24 +329,26 @@ export default function HelpPage() {
         <section className="mb-16">
           <div className="flex items-center gap-2 mb-8">
             <HelpCircle className="h-6 w-6 text-primary-600" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">คำถามที่พบบ่อย</h2>
+            <h2 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white">
+              คำถามที่พบบ่อย
+            </h2>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <div className="bg-[var(--brand-surface)] dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-[var(--brand-border)] dark:border-gray-700">
             <div className="space-y-4">
               {faqs.map((faq) => (
                 <details
                   key={faq.id}
-                  className="group border-b border-gray-200 dark:border-gray-700 last:border-0 pb-4 last:pb-0"
+                  className="group border-b border-[var(--brand-border)] dark:border-gray-700 last:border-0 pb-4 last:pb-0"
                 >
                   <summary className="flex items-center justify-between cursor-pointer list-none">
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white pr-4">
+                    <h3 className="text-lg font-medium text-[var(--brand-text)] dark:text-white pr-4">
                       {faq.question}
                     </h3>
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 group-open:bg-primary-100 dark:group-open:bg-primary-900 group-open:text-primary-600 dark:group-open:text-primary-400 transition-colors">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--brand-background)] dark:bg-gray-700 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] group-open:bg-primary-100 dark:group-open:bg-primary-900 group-open:text-primary-600 dark:group-open:text-primary-400 transition-colors">
                       +
                     </span>
                   </summary>
-                  <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+                  <p className="mt-4 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -355,7 +361,7 @@ export default function HelpPage() {
         <section className="mb-16">
           <div className="flex items-center gap-2 mb-8">
             <Video className="h-6 w-6 text-primary-600" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white">
               วิดีโอการสอนการใช้งาน
             </h2>
           </div>
@@ -382,12 +388,12 @@ export default function HelpPage() {
             ].map((video) => (
               <div
                 key={video.id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 group"
+                className="bg-[var(--brand-surface)] dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-[var(--brand-border)] dark:border-gray-700 group"
               >
-                <div className="relative aspect-video bg-gray-200 dark:bg-gray-700">
+                <div className="relative aspect-video bg-[var(--brand-border)] dark:bg-gray-700">
                   <Image src={video.thumbnail} alt={video.title} fill className="object-cover" />
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-primary-600">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--brand-surface)]/90 text-primary-600">
                       <PlayIcon className="h-8 w-8 ml-1" />
                     </div>
                   </div>
@@ -396,7 +402,9 @@ export default function HelpPage() {
                   </div>
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{video.title}</h3>
+                  <h3 className="font-semibold text-[var(--brand-text)] dark:text-white">
+                    {video.title}
+                  </h3>
                 </div>
               </div>
             ))}
@@ -413,7 +421,7 @@ export default function HelpPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-white text-primary-600 font-semibold py-3 px-8 rounded-lg hover:bg-primary-50 transition-colors"
+                className="inline-flex items-center justify-center gap-2 bg-[var(--brand-surface)] text-primary-600 font-semibold py-3 px-8 rounded-lg hover:bg-primary-50 transition-colors"
               >
                 ติดต่อเรา
               </Link>

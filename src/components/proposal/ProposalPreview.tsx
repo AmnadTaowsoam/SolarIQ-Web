@@ -31,10 +31,13 @@ export function ProposalPreview({
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { label: t('note'), color: 'bg-yellow-100 text-yellow-800' },
-      accepted: { label: t('accept'), color: 'bg-green-100 text-green-800' },
-      declined: { label: t('decline'), color: 'bg-red-100 text-red-800' },
-      expired: { label: t('validUntil'), color: 'bg-gray-100 text-gray-800' },
+      pending: { label: t('note'), color: 'bg-yellow-500/10 text-yellow-600' },
+      accepted: { label: t('accept'), color: 'bg-green-500/10 text-green-800' },
+      declined: { label: t('decline'), color: 'bg-red-100 text-red-400' },
+      expired: {
+        label: t('validUntil'),
+        color: 'bg-[var(--brand-background)] text-[var(--brand-text)]',
+      },
     }
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending
     return <Badge className={config.color}>{config.label}</Badge>
@@ -103,7 +106,7 @@ export function ProposalPreview({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-[var(--brand-surface)] rounded-lg shadow-sm border border-[var(--brand-border)] overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
         <div className="flex justify-between items-start">
@@ -121,27 +124,31 @@ export function ProposalPreview({
       <div className="p-6 space-y-6">
         {/* Key Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-blue-50 rounded-lg p-4 text-center">
-            <div className="text-sm text-gray-600 mb-1">{t('systemSize')}</div>
+          <div className="bg-blue-500/10 rounded-lg p-4 text-center">
+            <div className="text-sm text-[var(--brand-text-secondary)] mb-1">{t('systemSize')}</div>
             <div className="text-2xl font-bold text-blue-900">
               {proposal.system_size_kw.toFixed(2)} <span className="text-sm font-normal">kWp</span>
             </div>
           </div>
-          <div className="bg-green-50 rounded-lg p-4 text-center">
-            <div className="text-sm text-gray-600 mb-1">{t('installationCost')}</div>
+          <div className="bg-green-500/10 rounded-lg p-4 text-center">
+            <div className="text-sm text-[var(--brand-text-secondary)] mb-1">
+              {t('installationCost')}
+            </div>
             <div className="text-2xl font-bold text-green-900">
               {formatCurrency(proposal.estimated_cost)}
             </div>
           </div>
           <div className="bg-purple-50 rounded-lg p-4 text-center">
-            <div className="text-sm text-gray-600 mb-1">{t('payback')}</div>
+            <div className="text-sm text-[var(--brand-text-secondary)] mb-1">{t('payback')}</div>
             <div className="text-2xl font-bold text-purple-900">
               {proposal.payback_years.toFixed(1)}{' '}
               <span className="text-sm font-normal">{t('years')}</span>
             </div>
           </div>
           <div className="bg-amber-50 rounded-lg p-4 text-center">
-            <div className="text-sm text-gray-600 mb-1">{t('annualSavings')}</div>
+            <div className="text-sm text-[var(--brand-text-secondary)] mb-1">
+              {t('annualSavings')}
+            </div>
             <div className="text-2xl font-bold text-amber-900">
               {formatCurrency(proposal.annual_savings / 12)}
             </div>
@@ -150,51 +157,51 @@ export function ProposalPreview({
 
         {/* Details */}
         <div className="space-y-3">
-          <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">{t('annualProduction')}</span>
+          <div className="flex justify-between items-center py-2 border-b border-[var(--brand-border)]">
+            <span className="text-[var(--brand-text-secondary)]">{t('annualProduction')}</span>
             <span className="font-semibold">{proposal.annual_production_kwh.toFixed(0)} kWh</span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">{t('annualSavings')}</span>
+          <div className="flex justify-between items-center py-2 border-b border-[var(--brand-border)]">
+            <span className="text-[var(--brand-text-secondary)]">{t('annualSavings')}</span>
             <span className="font-semibold text-green-600">
               {formatCurrency(proposal.annual_savings)}
             </span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">
+          <div className="flex justify-between items-center py-2 border-b border-[var(--brand-border)]">
+            <span className="text-[var(--brand-text-secondary)]">
               {t('roi')} 25 {t('years')}
             </span>
             <span className="font-semibold text-blue-600">{proposal.roi_percent.toFixed(1)}%</span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-gray-100">
-            <span className="text-gray-600">{t('validUntil')}</span>
+          <div className="flex justify-between items-center py-2 border-b border-[var(--brand-border)]">
+            <span className="text-[var(--brand-text-secondary)]">{t('validUntil')}</span>
             <span className="font-semibold">{formatDate(proposal.valid_until)}</span>
           </div>
         </div>
 
         {/* Tracking Info */}
-        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+        <div className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">{t('page')}</span>
+            <span className="text-sm text-[var(--brand-text-secondary)]">{t('page')}</span>
             <span className="font-semibold">{proposal.view_count}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">{t('of')}</span>
+            <span className="text-sm text-[var(--brand-text-secondary)]">{t('of')}</span>
             <span className="font-semibold">
               {Math.floor(proposal.total_view_duration_seconds / 60)} {t('of')}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">{t('share')} LINE</span>
+            <span className="text-sm text-[var(--brand-text-secondary)]">{t('share')} LINE</span>
             <span className="font-semibold">{proposal.sent_via_line ? '✅' : '❌'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">{t('email')}</span>
+            <span className="text-sm text-[var(--brand-text-secondary)]">{t('email')}</span>
             <span className="font-semibold">{proposal.sent_via_email ? '✅' : '❌'}</span>
           </div>
           {proposal.last_viewed_at && (
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{t('date')}</span>
+              <span className="text-sm text-[var(--brand-text-secondary)]">{t('date')}</span>
               <span className="font-semibold text-sm">{formatDate(proposal.last_viewed_at)}</span>
             </div>
           )}
@@ -210,7 +217,7 @@ export function ProposalPreview({
 
         {/* Custom Notes */}
         {proposal.custom_notes && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-blue-500/10 border border-blue-200 rounded-lg p-4">
             <h4 className="font-semibold text-blue-900 mb-2">{t('note')}</h4>
             <p className="text-sm text-blue-800 whitespace-pre-wrap">{proposal.custom_notes}</p>
           </div>
@@ -218,15 +225,17 @@ export function ProposalPreview({
 
         {/* Response Notes */}
         {proposal.response_notes && (
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <h4 className="font-semibold text-gray-900 mb-2">{t('terms')}</h4>
-            <p className="text-sm text-gray-800 whitespace-pre-wrap">{proposal.response_notes}</p>
+          <div className="bg-[var(--brand-background)] border border-[var(--brand-border)] rounded-lg p-4">
+            <h4 className="font-semibold text-[var(--brand-text)] mb-2">{t('terms')}</h4>
+            <p className="text-sm text-[var(--brand-text)] whitespace-pre-wrap">
+              {proposal.response_notes}
+            </p>
           </div>
         )}
       </div>
 
       {/* Actions */}
-      <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+      <div className="bg-[var(--brand-background)] px-6 py-4 border-t border-[var(--brand-border)]">
         <div className="flex flex-wrap gap-2 justify-between">
           <div className="flex gap-2">
             {proposal.pdf_url && (
@@ -258,24 +267,24 @@ export function ProposalPreview({
       {/* Send Modal */}
       {showSendModal && (
         <Modal onClose={() => setShowSendModal(false)}>
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-[var(--brand-surface)] rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-bold mb-4">{t('title')}</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
                   {t('contactUs')}
                 </label>
                 <select
                   value={sendChannel}
                   onChange={(e) => setSendChannel(e.target.value as 'line' | 'email')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   <option value="line">LINE</option>
                   <option value="email">Email</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
                   {t('preparedFor')} {sendChannel === 'line' ? '(LINE User ID)' : `(${t('email')})`}
                 </label>
                 <input
@@ -283,17 +292,19 @@ export function ProposalPreview({
                   value={sendRecipient}
                   onChange={(e) => setSendRecipient(e.target.value)}
                   placeholder={sendChannel === 'line' ? 'U1234567890...' : 'customer@example.com'}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('note')}</label>
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+                  {t('note')}
+                </label>
                 <textarea
                   value={sendMessage}
                   onChange={(e) => setSendMessage(e.target.value)}
                   rows={3}
                   placeholder="เพิ่มข้อความส่วนตัว..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
               <div className="flex gap-2 justify-end">
@@ -316,17 +327,17 @@ export function ProposalPreview({
       {/* Status Modal */}
       {showStatusModal && (
         <Modal onClose={() => setShowStatusModal(false)}>
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-[var(--brand-surface)] rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-bold mb-4">{t('nextSteps')}</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
                   {t('financialAnalysis')}
                 </label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as 'accepted' | 'declined' | 'expired')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   <option value="accepted">{t('accept')}</option>
                   <option value="declined">{t('decline')}</option>
@@ -334,13 +345,15 @@ export function ProposalPreview({
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('note')}</label>
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+                  {t('note')}
+                </label>
                 <textarea
                   value={responseNotes}
                   onChange={(e) => setResponseNotes(e.target.value)}
                   rows={3}
                   placeholder="เพิ่มหมายเหตุ..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
               <div className="flex gap-2 justify-end">

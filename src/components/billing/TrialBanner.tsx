@@ -90,10 +90,10 @@ export default function TrialBanner({
       <div
         className={`rounded-lg border px-4 py-3 text-sm ${
           critical
-            ? 'border-red-300 bg-red-50 text-red-900'
+            ? 'border-red-300 bg-red-500/10 text-red-900'
             : urgent
               ? 'border-amber-300 bg-amber-50 text-amber-900'
-              : 'border-blue-200 bg-blue-50 text-blue-900'
+              : 'border-blue-200 bg-blue-500/10 text-blue-900'
         }`}
       >
         <div className="flex items-center justify-between">
@@ -135,7 +135,7 @@ export default function TrialBanner({
                 <Clock className="w-5 h-5 text-amber-600" />
               </div>
             ) : (
-              <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <div className="flex-shrink-0 w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center">
                 <CheckCircle className="w-5 h-5 text-blue-600" />
               </div>
             )}
@@ -161,7 +161,7 @@ export default function TrialBanner({
           {showDismiss && (
             <button
               onClick={handleDismiss}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -183,7 +183,7 @@ export default function TrialBanner({
               >
                 {timeRemaining.days}
               </div>
-              <div className="text-xs text-gray-600">Days</div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">Days</div>
             </div>
             <div className="text-center">
               <div
@@ -193,7 +193,7 @@ export default function TrialBanner({
               >
                 {timeRemaining.hours}
               </div>
-              <div className="text-xs text-gray-600">Hours</div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">Hours</div>
             </div>
             <div className="text-center">
               <div
@@ -203,7 +203,7 @@ export default function TrialBanner({
               >
                 {timeRemaining.minutes}
               </div>
-              <div className="text-xs text-gray-600">Minutes</div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">Minutes</div>
             </div>
             <div className="text-center">
               <div
@@ -213,7 +213,7 @@ export default function TrialBanner({
               >
                 {timeRemaining.seconds}
               </div>
-              <div className="text-xs text-gray-600">Seconds</div>
+              <div className="text-xs text-[var(--brand-text-secondary)]">Seconds</div>
             </div>
           </div>
         )}
@@ -241,7 +241,7 @@ export default function TrialBanner({
           )}
           <Link
             href="/pricing-plans"
-            className="flex-1 rounded-md border px-4 py-2 text-sm font-medium text-gray-700 text-center hover:bg-gray-50"
+            className="flex-1 rounded-md border px-4 py-2 text-sm font-medium text-[var(--brand-text)] text-center hover:bg-[var(--brand-primary-light)]"
           >
             View Plans
           </Link>
@@ -249,9 +249,9 @@ export default function TrialBanner({
 
         {/* Trial Benefits */}
         {daysRemaining > 0 && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <p className="text-xs text-gray-600 mb-2">Your trial includes:</p>
-            <ul className="text-xs text-gray-600 space-y-1">
+          <div className="mt-4 pt-4 border-t border-[var(--brand-border)]">
+            <p className="text-xs text-[var(--brand-text-secondary)] mb-2">Your trial includes:</p>
+            <ul className="text-xs text-[var(--brand-text-secondary)] space-y-1">
               <li className="flex items-center gap-2">
                 <CheckCircle className="w-3 h-3 text-green-600" />
                 Full access to all features

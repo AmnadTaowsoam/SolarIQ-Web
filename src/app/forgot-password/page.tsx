@@ -64,25 +64,33 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="mx-auto h-16 w-16 bg-primary-600 rounded-xl flex items-center justify-center">
-            <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8l8 5 8-5M4 8l8-5 8 5M4 8v8l8 5 8-5V8" />
+            <svg
+              className="w-10 h-10 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 8l8 5 8-5M4 8l8-5 8 5M4 8v8l8 5 8-5V8"
+              />
             </svg>
           </div>
-          <h1 className="mt-6 text-3xl font-bold text-gray-900">{t('title')}</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            {t('subtitle')}
-          </p>
+          <h1 className="mt-6 text-3xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+          <p className="mt-2 text-sm text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
         </div>
 
         <Card>
           <CardBody className="p-8">
             {isSuccess ? (
-              <div className="space-y-4 text-sm text-gray-600">
-                <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800">
+              <div className="space-y-4 text-sm text-[var(--brand-text-secondary)]">
+                <div className="rounded-lg border border-green-200 bg-green-500/10 px-4 py-3 text-green-800">
                   {t('successMessage')}
                 </div>
                 {isDevLoginEnabled && (
@@ -94,7 +102,10 @@ export default function ForgotPasswordPage() {
                     .
                   </div>
                 )}
-                <Link href={loginPath} className="inline-flex text-sm font-medium text-primary-600 hover:text-primary-500">
+                <Link
+                  href={loginPath}
+                  className="inline-flex text-sm font-medium text-primary-600 hover:text-primary-500"
+                >
                   {t('backToSignIn')}
                 </Link>
               </div>
@@ -125,7 +136,7 @@ export default function ForgotPasswordPage() {
           </CardBody>
         </Card>
 
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-[var(--brand-text-secondary)]">
           {t('needAccount')}{' '}
           <Link href={signupPath} className="font-medium text-primary-600 hover:text-primary-500">
             {t('createAccount')}

@@ -44,7 +44,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
   if (!installation) {
     return (
       <AppLayout user={user}>
-        <div className="p-12 text-center text-gray-500">{t('notFound')}</div>
+        <div className="p-12 text-center text-[var(--brand-text-secondary)]">{t('notFound')}</div>
       </AppLayout>
     )
   }
@@ -53,28 +53,30 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
     <AppLayout user={user}>
       <div className="max-w-5xl space-y-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center gap-2 text-sm text-[var(--brand-text-secondary)]">
           <Link href="/maintenance" className="hover:text-amber-600">
             {t('title')}
           </Link>
           <span>/</span>
-          <span className="text-gray-900">{installation.customer_name}</span>
+          <span className="text-[var(--brand-text)]">{installation.customer_name}</span>
         </div>
 
         {/* Header */}
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-[var(--brand-surface)] p-6">
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">{installation.customer_name}</h1>
-              <p className="mt-1 text-sm text-gray-500">
+              <h1 className="text-xl font-bold text-[var(--brand-text)]">
+                {installation.customer_name}
+              </h1>
+              <p className="mt-1 text-sm text-[var(--brand-text-secondary)]">
                 {installation.address || t('addressNotSpecified')}
               </p>
             </div>
             <span
               className={`rounded-full px-3 py-1 text-xs font-medium ${
                 installation.status === 'active'
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-600'
+                  ? 'bg-green-500/10 text-green-700'
+                  : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
               }`}
             >
               {installation.status === 'active' ? t('status.active') : installation.status}
@@ -83,23 +85,29 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
 
           <div className="mt-4 grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
             <div>
-              <span className="text-gray-500">{t('systemInfo.systemSize')}</span>
+              <span className="text-[var(--brand-text-secondary)]">
+                {t('systemInfo.systemSize')}
+              </span>
               <p className="font-semibold">{installation.system_size_kw} kWp</p>
             </div>
             <div>
-              <span className="text-gray-500">{t('systemInfo.solarPanels')}</span>
+              <span className="text-[var(--brand-text-secondary)]">
+                {t('systemInfo.solarPanels')}
+              </span>
               <p className="font-semibold">
                 {installation.panel_brand || '-'} {installation.panel_model || ''}
               </p>
             </div>
             <div>
-              <span className="text-gray-500">{t('systemInfo.inverter')}</span>
+              <span className="text-[var(--brand-text-secondary)]">{t('systemInfo.inverter')}</span>
               <p className="font-semibold">
                 {installation.inverter_brand || '-'} {installation.inverter_model || ''}
               </p>
             </div>
             <div>
-              <span className="text-gray-500">{t('systemInfo.installationDate')}</span>
+              <span className="text-[var(--brand-text-secondary)]">
+                {t('systemInfo.installationDate')}
+              </span>
               <p className="font-semibold">
                 {installation.installation_date
                   ? new Date(installation.installation_date).toLocaleDateString('th-TH')
@@ -131,9 +139,11 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
         </div>
 
         {/* Maintenance Schedules */}
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-[var(--brand-surface)] p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">{t('schedule.title')}</h2>
+            <h2 className="text-lg font-semibold text-[var(--brand-text)]">
+              {t('schedule.title')}
+            </h2>
             <button
               onClick={() => setShowScheduleForm(!showScheduleForm)}
               className="rounded-lg bg-amber-100 px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-200"
@@ -197,7 +207,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
               {schedules.map((s) => (
                 <div key={s.id} className="flex items-center justify-between rounded-lg border p-3">
                   <div>
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm font-medium text-[var(--brand-text)]">
                       {s.maintenance_type === 'cleaning'
                         ? t('schedule.type.cleaning')
                         : s.maintenance_type === 'inspection'
@@ -206,11 +216,11 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                             ? t('schedule.type.inverterCheck')
                             : s.maintenance_type}
                     </span>
-                    <span className="ml-2 text-xs text-gray-500">
+                    <span className="ml-2 text-xs text-[var(--brand-text-secondary)]">
                       {t('schedule.everyXMonths', { count: s.frequency_months })}
                     </span>
                   </div>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
                     {s.next_due_date
                       ? `${t('schedule.nextDue')} ${new Date(s.next_due_date).toLocaleDateString('th-TH')}`
                       : t('schedule.notSet')}
@@ -219,17 +229,17 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">{t('schedule.noSchedule')}</p>
+            <p className="text-sm text-[var(--brand-text-secondary)]">{t('schedule.noSchedule')}</p>
           )}
         </div>
 
         {/* Service Records */}
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-[var(--brand-surface)] p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">{t('records.title')}</h2>
+            <h2 className="text-lg font-semibold text-[var(--brand-text)]">{t('records.title')}</h2>
             <button
               onClick={() => setShowRecordForm(!showRecordForm)}
-              className="rounded-lg bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-200"
+              className="rounded-lg bg-blue-500/10 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-200"
             >
               {t('records.addRecord')}
             </button>
@@ -237,7 +247,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
 
           {showRecordForm && (
             <form
-              className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4"
+              className="mb-4 rounded-lg border border-blue-200 bg-blue-500/10 p-4"
               onSubmit={async (e) => {
                 e.preventDefault()
                 const form = e.target as HTMLFormElement
@@ -298,7 +308,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
               {records.map((r) => (
                 <div key={r.id} className="rounded-lg border p-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm font-medium text-[var(--brand-text)]">
                       {r.service_type === 'cleaning'
                         ? t('records.type.cleaning')
                         : r.service_type === 'inspection'
@@ -309,12 +319,16 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
                               ? t('records.type.replacement')
                               : r.service_type}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-[var(--brand-text-secondary)]">
                       {new Date(r.service_date).toLocaleDateString('th-TH')}
                     </span>
                   </div>
-                  {r.description && <p className="mt-1 text-sm text-gray-600">{r.description}</p>}
-                  <div className="mt-2 flex gap-4 text-xs text-gray-500">
+                  {r.description && (
+                    <p className="mt-1 text-sm text-[var(--brand-text-secondary)]">
+                      {r.description}
+                    </p>
+                  )}
+                  <div className="mt-2 flex gap-4 text-xs text-[var(--brand-text-secondary)]">
                     {r.technician_name && (
                       <span>{t('records.technicianLabel', { name: r.technician_name })}</span>
                     )}
@@ -326,7 +340,7 @@ export default function InstallationDetailPage({ params }: { params: Promise<{ i
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">{t('records.noRecords')}</p>
+            <p className="text-sm text-[var(--brand-text-secondary)]">{t('records.noRecords')}</p>
           )}
         </div>
       </div>

@@ -500,11 +500,15 @@ function InfoRow({
 }) {
   return (
     <div className="flex items-start gap-3 py-2.5">
-      {icon && <span className="mt-0.5 text-gray-400 flex-shrink-0">{icon}</span>}
+      {icon && (
+        <span className="mt-0.5 text-[var(--brand-text-secondary)] flex-shrink-0">{icon}</span>
+      )}
       <div className="min-w-0">
-        <dt className="text-xs font-medium text-gray-500 uppercase tracking-wider">{label}</dt>
-        <dd className="mt-0.5 text-sm text-gray-900 break-words">
-          {value || <span className="text-gray-400">--</span>}
+        <dt className="text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider">
+          {label}
+        </dt>
+        <dd className="mt-0.5 text-sm text-[var(--brand-text)] break-words">
+          {value || <span className="text-[var(--brand-text-secondary)]">--</span>}
         </dd>
       </div>
     </div>
@@ -524,13 +528,17 @@ function StatBlock({
 }) {
   return (
     <div
-      className={`rounded-lg p-4 ${highlight ? 'bg-orange-50 ring-1 ring-orange-200' : 'bg-gray-50'}`}
+      className={`rounded-lg p-4 ${highlight ? 'bg-orange-50 ring-1 ring-orange-200' : 'bg-[var(--brand-background)]'}`}
     >
-      <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{label}</p>
-      <p className={`mt-1 text-2xl font-bold ${highlight ? 'text-orange-700' : 'text-gray-900'}`}>
+      <p className="text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider">
+        {label}
+      </p>
+      <p
+        className={`mt-1 text-2xl font-bold ${highlight ? 'text-orange-700' : 'text-[var(--brand-text)]'}`}
+      >
         {value}
       </p>
-      {sub && <p className="mt-0.5 text-xs text-gray-500">{sub}</p>}
+      {sub && <p className="mt-0.5 text-xs text-[var(--brand-text-secondary)]">{sub}</p>}
     </div>
   )
 }
@@ -542,10 +550,12 @@ function SavingsBar({ currentBill, afterSolar }: { currentBill: number; afterSol
     <div className="space-y-3 mt-4">
       <div>
         <div className="flex justify-between text-xs mb-1">
-          <span className="text-gray-600">Current Monthly Bill</span>
-          <span className="font-semibold text-gray-900">{formatCurrency(currentBill)}</span>
+          <span className="text-[var(--brand-text-secondary)]">Current Monthly Bill</span>
+          <span className="font-semibold text-[var(--brand-text)]">
+            {formatCurrency(currentBill)}
+          </span>
         </div>
-        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-3 bg-[var(--brand-border)] rounded-full overflow-hidden">
           <div
             className="h-full bg-red-400 rounded-full transition-all duration-500"
             style={{ width: `${(currentBill / maxVal) * 100}%` }}
@@ -554,10 +564,10 @@ function SavingsBar({ currentBill, afterSolar }: { currentBill: number; afterSol
       </div>
       <div>
         <div className="flex justify-between text-xs mb-1">
-          <span className="text-gray-600">After Solar</span>
+          <span className="text-[var(--brand-text-secondary)]">After Solar</span>
           <span className="font-semibold text-green-700">{formatCurrency(afterSolar)}</span>
         </div>
-        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-3 bg-[var(--brand-border)] rounded-full overflow-hidden">
           <div
             className="h-full bg-green-500 rounded-full transition-all duration-500"
             style={{ width: `${(afterSolar / maxVal) * 100}%` }}
@@ -600,7 +610,7 @@ function PipelineBar({
                         ? 'bg-orange-500 text-white shadow-md shadow-orange-200'
                         : isCompleted
                           ? 'bg-orange-100 text-orange-800'
-                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                          : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]'
                     }
                     disabled:opacity-50
                   `}
@@ -613,7 +623,7 @@ function PipelineBar({
                 {idx < PIPELINE_STEPS.length - 1 && (
                   <div
                     className={`w-6 lg:w-10 h-0.5 flex-shrink-0 ${
-                      !isLost && currentIndex > idx ? 'bg-orange-400' : 'bg-gray-200'
+                      !isLost && currentIndex > idx ? 'bg-orange-400' : 'bg-[var(--brand-border)]'
                     }`}
                   />
                 )}
@@ -631,7 +641,7 @@ function PipelineBar({
                 ${
                   isLost
                     ? 'bg-red-600 text-white shadow-md shadow-red-200'
-                    : 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
+                    : 'bg-red-500/10 text-red-600 hover:bg-red-100 border border-red-500/20'
                 }
                 disabled:opacity-50
               `}
@@ -658,7 +668,7 @@ function PipelineBar({
                         ? 'bg-orange-500 text-white shadow-sm'
                         : isCompleted
                           ? 'bg-orange-100 text-orange-800'
-                          : 'bg-gray-100 text-gray-500'
+                          : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
                     }
                     disabled:opacity-50
                   `}
@@ -668,7 +678,7 @@ function PipelineBar({
                 {idx < PIPELINE_STEPS.length - 1 && (
                   <div
                     className={`w-3 h-0.5 flex-shrink-0 ${
-                      !isLost && currentIndex > idx ? 'bg-orange-400' : 'bg-gray-200'
+                      !isLost && currentIndex > idx ? 'bg-orange-400' : 'bg-[var(--brand-border)]'
                     }`}
                   />
                 )}
@@ -680,7 +690,7 @@ function PipelineBar({
             disabled={disabled}
             className={`
               ml-1 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all flex-shrink-0
-              ${isLost ? 'bg-red-600 text-white' : 'bg-red-50 text-red-600 border border-red-200'}
+              ${isLost ? 'bg-red-600 text-white' : 'bg-red-500/10 text-red-600 border border-red-500/20'}
               disabled:opacity-50
             `}
           >
@@ -829,10 +839,10 @@ export default function LeadDetailPage() {
   // ---------- Auth loading state ----------
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-3 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
-          <p className="text-sm text-gray-400">Loading...</p>
+          <p className="text-sm text-[var(--brand-text-secondary)]">Loading...</p>
         </div>
       </div>
     )
@@ -889,28 +899,29 @@ export default function LeadDetailPage() {
           <div className="flex-1 min-w-0">
             <button
               onClick={() => router.push(ROUTES.LEADS)}
-              className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors mb-2"
+              className="inline-flex items-center gap-1.5 text-sm text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] transition-colors mb-2"
             >
               <ArrowLeftIcon className="w-4 h-4" />
               Back to Leads
             </button>
             <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-2xl font-bold text-gray-900 truncate">{lead.name}</h1>
+              <h1 className="text-2xl font-bold text-[var(--brand-text)] truncate">{lead.name}</h1>
               {company && (
-                <span className="text-sm text-gray-500 flex items-center gap-1">
+                <span className="text-sm text-[var(--brand-text-secondary)] flex items-center gap-1">
                   <BuildingIcon className="w-4 h-4" />
                   {company}
                 </span>
               )}
               <Badge
                 className={
-                  LEAD_STATUS_COLORS[lead.status as LeadStatus] ?? 'bg-gray-100 text-gray-800'
+                  LEAD_STATUS_COLORS[lead.status as LeadStatus] ??
+                  'bg-[var(--brand-background)] text-[var(--brand-text)]'
                 }
               >
                 {LEAD_STATUS_LABELS[lead.status as LeadStatus] ?? lead.status}
               </Badge>
             </div>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
               Created {format(new Date(lead.createdAt), 'MMM dd, yyyy')} &middot; Last updated{' '}
               {formatDistanceToNow(new Date(lead.updatedAt), { addSuffix: true })}
             </p>
@@ -1117,12 +1128,14 @@ export default function LeadDetailPage() {
                     </div>
                     {/* Map placeholder */}
                     {lead.latitude && lead.longitude && (
-                      <div className="rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
+                      <div className="rounded-lg overflow-hidden border border-[var(--brand-border)] bg-[var(--brand-background)]">
                         <div className="relative aspect-[16/7] flex items-center justify-center bg-gradient-to-br from-blue-50 to-green-50">
                           <div className="text-center p-6">
                             <SunIcon className="w-10 h-10 text-orange-400 mx-auto mb-2" />
-                            <p className="text-sm font-medium text-gray-700">Roof Analysis Area</p>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-sm font-medium text-[var(--brand-text)]">
+                              Roof Analysis Area
+                            </p>
+                            <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
                               {lead.latitude.toFixed(4)}, {lead.longitude.toFixed(4)}
                             </p>
                             <a
@@ -1140,8 +1153,8 @@ export default function LeadDetailPage() {
                   </div>
                 ) : (
                   <div className="text-center py-10">
-                    <SunIcon className="w-12 h-12 text-gray-300 mx-auto" />
-                    <p className="mt-3 text-sm text-gray-500">
+                    <SunIcon className="w-12 h-12 text-[var(--brand-text-secondary)] mx-auto" />
+                    <p className="mt-3 text-sm text-[var(--brand-text-secondary)]">
                       Solar analysis has not been completed for this lead yet.
                     </p>
                     <Button
@@ -1193,8 +1206,8 @@ export default function LeadDetailPage() {
                     </div>
 
                     {/* Savings comparison bar */}
-                    <div className="border-t border-gray-100 pt-4">
-                      <h4 className="text-sm font-semibold text-gray-700 mb-1">
+                    <div className="border-t border-[var(--brand-border)] pt-4">
+                      <h4 className="text-sm font-semibold text-[var(--brand-text)] mb-1">
                         Monthly Bill Comparison
                       </h4>
                       <SavingsBar
@@ -1205,8 +1218,8 @@ export default function LeadDetailPage() {
                   </div>
                 ) : (
                   <div className="text-center py-10">
-                    <CurrencyIcon className="w-12 h-12 text-gray-300 mx-auto" />
-                    <p className="mt-3 text-sm text-gray-500">
+                    <CurrencyIcon className="w-12 h-12 text-[var(--brand-text-secondary)] mx-auto" />
+                    <p className="mt-3 text-sm text-[var(--brand-text-secondary)]">
                       Financial analysis will be available after solar analysis is completed.
                     </p>
                   </div>
@@ -1247,8 +1260,8 @@ export default function LeadDetailPage() {
                   </div>
                 ) : (
                   <div className="text-center py-10">
-                    <LeafIcon className="w-12 h-12 text-gray-300 mx-auto" />
-                    <p className="mt-3 text-sm text-gray-500">
+                    <LeafIcon className="w-12 h-12 text-[var(--brand-text-secondary)] mx-auto" />
+                    <p className="mt-3 text-sm text-[var(--brand-text-secondary)]">
                       Environmental impact data will be available after solar analysis.
                     </p>
                   </div>
@@ -1326,15 +1339,17 @@ export default function LeadDetailPage() {
                       {activityTimeline.map((event, idx) => (
                         <li key={event.id} className="relative pb-4">
                           {idx !== activityTimeline.length - 1 && (
-                            <span className="absolute top-5 left-[11px] -ml-px h-full w-0.5 bg-gray-200" />
+                            <span className="absolute top-5 left-[11px] -ml-px h-full w-0.5 bg-[var(--brand-border)]" />
                           )}
                           <div className="relative flex items-start gap-3">
                             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-50 text-orange-600 ring-4 ring-white">
                               {activityIconElement(event.icon)}
                             </span>
                             <div className="min-w-0 flex-1">
-                              <p className="text-sm text-gray-900">{event.description}</p>
-                              <p className="mt-0.5 text-xs text-gray-500">
+                              <p className="text-sm text-[var(--brand-text)]">
+                                {event.description}
+                              </p>
+                              <p className="mt-0.5 text-xs text-[var(--brand-text-secondary)]">
                                 {formatDistanceToNow(new Date(event.date), { addSuffix: true })}
                               </p>
                             </div>
@@ -1344,7 +1359,9 @@ export default function LeadDetailPage() {
                     </ul>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">No activity yet</p>
+                  <p className="text-sm text-[var(--brand-text-secondary)] text-center py-4">
+                    No activity yet
+                  </p>
                 )}
               </CardBody>
             </Card>
@@ -1359,7 +1376,7 @@ export default function LeadDetailPage() {
                 {/* Add note form */}
                 <div>
                   <textarea
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none resize-none"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm placeholder-[var(--brand-text-secondary)] focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none resize-none"
                     rows={3}
                     placeholder="Add an internal note..."
                     value={noteText}
@@ -1376,11 +1393,13 @@ export default function LeadDetailPage() {
                 </div>
 
                 {/* Notes list */}
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-[var(--brand-border)]">
                   {localNotes.map((note) => (
                     <div key={note.id} className="py-3">
-                      <p className="text-sm text-gray-900 whitespace-pre-wrap">{note.text}</p>
-                      <p className="mt-1 text-xs text-gray-400">
+                      <p className="text-sm text-[var(--brand-text)] whitespace-pre-wrap">
+                        {note.text}
+                      </p>
+                      <p className="mt-1 text-xs text-[var(--brand-text-secondary)]">
                         {user.displayName || 'You'} &middot;{' '}
                         {formatDistanceToNow(new Date(note.date), { addSuffix: true })}
                       </p>
@@ -1388,14 +1407,18 @@ export default function LeadDetailPage() {
                   ))}
                   {lead.notes && (
                     <div className="py-3">
-                      <p className="text-sm text-gray-900 whitespace-pre-wrap">{lead.notes}</p>
-                      <p className="mt-1 text-xs text-gray-400">
+                      <p className="text-sm text-[var(--brand-text)] whitespace-pre-wrap">
+                        {lead.notes}
+                      </p>
+                      <p className="mt-1 text-xs text-[var(--brand-text-secondary)]">
                         System &middot; {format(new Date(lead.createdAt), 'MMM dd, yyyy')}
                       </p>
                     </div>
                   )}
                   {localNotes.length === 0 && !lead.notes && (
-                    <p className="text-sm text-gray-400 text-center py-2">No notes yet</p>
+                    <p className="text-sm text-[var(--brand-text-secondary)] text-center py-2">
+                      No notes yet
+                    </p>
                   )}
                 </div>
               </CardBody>
@@ -1413,7 +1436,7 @@ export default function LeadDetailPage() {
           size="sm"
         >
           <div className="space-y-3">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-[var(--brand-text-secondary)]">
               Are you sure you want to delete <strong>{lead.name}</strong>? This action cannot be
               undone.
             </p>
@@ -1451,7 +1474,7 @@ function LeadDetailSkeleton() {
       </div>
 
       {/* Pipeline skeleton */}
-      <div className="bg-white rounded-xl border border-gray-200 p-5">
+      <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-5">
         <div className="flex items-center gap-2">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-center">
@@ -1467,8 +1490,8 @@ function LeadDetailSkeleton() {
         {/* Left column */}
         <div className="lg:col-span-2 space-y-6">
           {/* Customer info */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+            <div className="px-6 py-4 border-b border-[var(--brand-border)]">
               <Skeleton className="h-5 w-44" />
             </div>
             <div className="px-6 py-4 grid grid-cols-2 gap-4">
@@ -1485,13 +1508,13 @@ function LeadDetailSkeleton() {
           </div>
 
           {/* Bill analysis */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+            <div className="px-6 py-4 border-b border-[var(--brand-border)]">
               <Skeleton className="h-5 w-28" />
             </div>
             <div className="px-6 py-4 grid grid-cols-5 gap-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div key={i} className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="h-8 w-20" />
                   <Skeleton className="h-3 w-14" />
@@ -1501,13 +1524,13 @@ function LeadDetailSkeleton() {
           </div>
 
           {/* Solar analysis */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+            <div className="px-6 py-4 border-b border-[var(--brand-border)]">
               <Skeleton className="h-5 w-32" />
             </div>
             <div className="px-6 py-4 grid grid-cols-4 gap-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div key={i} className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="h-8 w-20" />
                   <Skeleton className="h-3 w-14" />
@@ -1517,13 +1540,13 @@ function LeadDetailSkeleton() {
           </div>
 
           {/* ROI */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+            <div className="px-6 py-4 border-b border-[var(--brand-border)]">
               <Skeleton className="h-5 w-28" />
             </div>
             <div className="px-6 py-4 grid grid-cols-5 gap-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div key={i} className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="h-8 w-20" />
                   <Skeleton className="h-3 w-14" />
@@ -1533,13 +1556,13 @@ function LeadDetailSkeleton() {
           </div>
 
           {/* Carbon */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+            <div className="px-6 py-4 border-b border-[var(--brand-border)]">
               <Skeleton className="h-5 w-36" />
             </div>
             <div className="px-6 py-4 grid grid-cols-2 gap-4">
               {Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div key={i} className="bg-[var(--brand-background)] rounded-lg p-4 space-y-2">
                   <Skeleton className="h-3 w-20" />
                   <Skeleton className="h-8 w-24" />
                   <Skeleton className="h-3 w-16" />
@@ -1552,8 +1575,8 @@ function LeadDetailSkeleton() {
         {/* Right column */}
         <div className="space-y-6">
           {/* Quick actions */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+            <div className="px-6 py-4 border-b border-[var(--brand-border)]">
               <Skeleton className="h-5 w-28" />
             </div>
             <div className="px-6 py-4 space-y-2.5">
@@ -1564,8 +1587,8 @@ function LeadDetailSkeleton() {
           </div>
 
           {/* Activity timeline */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+            <div className="px-6 py-4 border-b border-[var(--brand-border)]">
               <Skeleton className="h-5 w-36" />
             </div>
             <div className="px-6 py-4 space-y-4">
@@ -1582,8 +1605,8 @@ function LeadDetailSkeleton() {
           </div>
 
           {/* Notes */}
-          <div className="bg-white rounded-xl border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+            <div className="px-6 py-4 border-b border-[var(--brand-border)]">
               <Skeleton className="h-5 w-16" />
             </div>
             <div className="px-6 py-4 space-y-3">

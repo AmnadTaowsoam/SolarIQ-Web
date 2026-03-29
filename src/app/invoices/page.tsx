@@ -10,11 +10,11 @@ import { useAuth } from '@/context'
 import { formatThb } from '@/lib/utils'
 
 const statusColors: Record<string, string> = {
-  draft: 'bg-gray-100 text-gray-600',
-  issued: 'bg-blue-100 text-blue-800',
-  sent: 'bg-purple-100 text-purple-800',
-  paid: 'bg-green-100 text-green-800',
-  void: 'bg-gray-100 text-gray-600',
+  draft: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
+  issued: 'bg-blue-500/10 text-blue-800',
+  sent: 'bg-purple-500/10 text-purple-800',
+  paid: 'bg-green-500/10 text-green-800',
+  void: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
 }
 
 const typeLabels: Record<string, string> = {
@@ -63,8 +63,8 @@ export default function InvoicesPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
           </div>
         </div>
 
@@ -73,13 +73,15 @@ export default function InvoicesPage() {
           <CardBody className="p-4">
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">{t('filterStatus')}:</label>
+                <label className="text-sm font-medium text-[var(--brand-text)]">
+                  {t('filterStatus')}:
+                </label>
                 <select
                   value={documentType || ''}
                   onChange={(e) =>
                     handleFilterChange(e.target.value as VATDocumentType | undefined)
                   }
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="px-3 py-2 border border-[var(--brand-border)] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
                   <option value="">{t('allStatuses')}</option>
                   <option value={VATDocumentType.INVOICE}>{typeLabels.invoice}</option>
@@ -88,13 +90,15 @@ export default function InvoicesPage() {
                 </select>
               </div>
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">{t('status')}:</label>
+                <label className="text-sm font-medium text-[var(--brand-text)]">
+                  {t('status')}:
+                </label>
                 <select
                   value={status || ''}
                   onChange={(e) =>
                     handleStatusChange(e.target.value as VATDocumentStatus | undefined)
                   }
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="px-3 py-2 border border-[var(--brand-border)] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
                   <option value="">{t('allStatuses')}</option>
                   <option value={VATDocumentStatus.DRAFT}>{statusLabels.draft}</option>
@@ -115,7 +119,7 @@ export default function InvoicesPage() {
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs text-gray-500">
+                  <tr className="border-b border-[var(--brand-border)] text-left text-xs text-[var(--brand-text-secondary)]">
                     <th className="px-6 py-3">{t('table.documentNumber')}</th>
                     <th className="px-6 py-3">{t('table.documentType')}</th>
                     <th className="px-6 py-3">{t('table.issuedDate')}</th>
@@ -124,16 +128,16 @@ export default function InvoicesPage() {
                     <th className="px-6 py-3">{t('table.action')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[var(--brand-border)]">
                   {invoices.map((invoice) => (
-                    <tr key={invoice.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-3 text-sm font-medium text-gray-900">
+                    <tr key={invoice.id} className="hover:bg-[var(--brand-background)]">
+                      <td className="px-6 py-3 text-sm font-medium text-[var(--brand-text)]">
                         {invoice.document_number}
                       </td>
-                      <td className="px-6 py-3 text-sm text-gray-700">
+                      <td className="px-6 py-3 text-sm text-[var(--brand-text)]">
                         {typeLabels[invoice.document_type] || invoice.document_type}
                       </td>
-                      <td className="px-6 py-3 text-sm text-gray-700">
+                      <td className="px-6 py-3 text-sm text-[var(--brand-text)]">
                         {invoice.issued_at
                           ? new Date(invoice.issued_at).toLocaleDateString('th-TH', {
                               day: '2-digit',
@@ -142,12 +146,15 @@ export default function InvoicesPage() {
                             })
                           : '-'}
                       </td>
-                      <td className="px-6 py-3 text-sm font-semibold text-gray-900">
+                      <td className="px-6 py-3 text-sm font-semibold text-[var(--brand-text)]">
                         {formatThb(invoice.total)}
                       </td>
                       <td className="px-6 py-3">
                         <Badge
-                          className={statusColors[invoice.status] || 'bg-gray-100 text-gray-600'}
+                          className={
+                            statusColors[invoice.status] ||
+                            'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
+                          }
                         >
                           {statusLabels[invoice.status] || invoice.status}
                         </Badge>
@@ -166,14 +173,16 @@ export default function InvoicesPage() {
               </table>
             </div>
             {invoices.length === 0 && !isLoading && (
-              <div className="text-center py-10 text-sm text-gray-500">{t('empty')}</div>
+              <div className="text-center py-10 text-sm text-[var(--brand-text-secondary)]">
+                {t('empty')}
+              </div>
             )}
           </CardBody>
 
           {/* Pagination */}
           {total > 20 && (
-            <div className="px-6 py-4 border-t border-gray-100 flex justify-between items-center">
-              <div className="text-sm text-gray-500">
+            <div className="px-6 py-4 border-t border-[var(--brand-border)] flex justify-between items-center">
+              <div className="text-sm text-[var(--brand-text-secondary)]">
                 {t('totalInvoices')}: {total}
               </div>
               <div className="flex gap-2">

@@ -276,20 +276,20 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="border-b border-gray-200 dark:border-gray-700">
+    <div className="border-b border-[var(--brand-border)]">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between py-5 text-left"
       >
-        <span className="text-base font-semibold text-gray-900 dark:text-white">{q}</span>
+        <span className="text-base font-semibold text-[var(--brand-text)]">{q}</span>
         {isOpen ? (
           <ChevronUp className="h-5 w-5 shrink-0 text-primary-500" />
         ) : (
-          <ChevronDown className="h-5 w-5 shrink-0 text-gray-400" />
+          <ChevronDown className="h-5 w-5 shrink-0 text-[var(--brand-text-secondary)]" />
         )}
       </button>
       {isOpen && (
-        <div className="pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{a}</div>
+        <div className="pb-5 text-sm leading-relaxed text-[var(--brand-text-secondary)]">{a}</div>
       )}
     </div>
   )
@@ -303,9 +303,11 @@ function CellValue({ value }: { value: string | boolean }) {
     return <Check className="mx-auto h-5 w-5 text-primary-500" />
   }
   if (value === false) {
-    return <XIcon className="mx-auto h-5 w-5 text-gray-300 dark:text-gray-600" />
+    return (
+      <XIcon className="mx-auto h-5 w-5 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]" />
+    )
   }
-  return <span className="text-sm text-gray-700 dark:text-gray-300">{value}</span>
+  return <span className="text-sm text-[var(--brand-text)]">{value}</span>
 }
 
 /* ------------------------------------------------------------------ */
@@ -328,8 +330,8 @@ export default function PricingPlansPage() {
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-500 to-amber-500 py-20 sm:py-28">
-        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-white/5" />
-        <div className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-white/5" />
+        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-[var(--brand-surface)]/5" />
+        <div className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-[var(--brand-surface)]/5" />
         <div className="relative mx-auto max-w-4xl px-4 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
             เลือกแพ็กเกจที่เหมาะกับธุรกิจของคุณ
@@ -339,11 +341,13 @@ export default function PricingPlansPage() {
           </p>
 
           {/* Toggle */}
-          <div className="mt-10 inline-flex items-center gap-4 rounded-full bg-white/15 backdrop-blur p-1.5">
+          <div className="mt-10 inline-flex items-center gap-4 rounded-full bg-[var(--brand-surface)]/15 backdrop-blur p-1.5">
             <button
               onClick={() => setAnnual(false)}
               className={`rounded-full px-6 py-2 text-sm font-semibold transition-all ${
-                !annual ? 'bg-white text-primary-600 shadow' : 'text-white hover:text-white/80'
+                !annual
+                  ? 'bg-[var(--brand-surface)] text-primary-600 shadow'
+                  : 'text-white hover:text-white/80'
               }`}
             >
               รายเดือน
@@ -351,7 +355,9 @@ export default function PricingPlansPage() {
             <button
               onClick={() => setAnnual(true)}
               className={`rounded-full px-6 py-2 text-sm font-semibold transition-all ${
-                annual ? 'bg-white text-primary-600 shadow' : 'text-white hover:text-white/80'
+                annual
+                  ? 'bg-[var(--brand-surface)] text-primary-600 shadow'
+                  : 'text-white hover:text-white/80'
               }`}
             >
               รายปี
@@ -375,10 +381,10 @@ export default function PricingPlansPage() {
               return (
                 <div
                   key={plan.id}
-                  className={`relative flex flex-col rounded-2xl border p-6 lg:p-8 bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-xl ${
+                  className={`relative flex flex-col rounded-2xl border p-6 lg:p-8 bg-[var(--brand-surface)] transition-all duration-300 hover:shadow-xl ${
                     plan.popular
                       ? 'border-primary-400 shadow-lg ring-2 ring-primary-400'
-                      : 'border-gray-200 dark:border-gray-700 shadow-sm'
+                      : 'border-[var(--brand-border)] shadow-sm'
                   }`}
                 >
                   {plan.popular && plan.highlight && (
@@ -391,38 +397,42 @@ export default function PricingPlansPage() {
                     <Icon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                   </div>
 
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">{plan.name}</h3>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{plan.subtitle}</p>
+                  <h3 className="text-xl font-bold text-[var(--brand-text)]">{plan.name}</h3>
+                  <p className="mt-1 text-sm text-[var(--brand-text-secondary)]">{plan.subtitle}</p>
 
                   <div className="mt-6">
                     {price === 0 ? (
                       <div>
-                        <span className="text-3xl font-extrabold text-gray-900 dark:text-white">
+                        <span className="text-3xl font-extrabold text-[var(--brand-text)]">
                           ฟรี
                         </span>
-                        <span className="ml-2 text-sm text-gray-500">14 วัน</span>
+                        <span className="ml-2 text-sm text-[var(--brand-text-secondary)]">
+                          14 วัน
+                        </span>
                       </div>
                     ) : price !== null ? (
                       <div className="flex items-baseline gap-1">
-                        <span className="text-sm text-gray-500">฿</span>
-                        <span className="text-3xl font-extrabold text-gray-900 dark:text-white">
+                        <span className="text-sm text-[var(--brand-text-secondary)]">฿</span>
+                        <span className="text-3xl font-extrabold text-[var(--brand-text)]">
                           {price.toLocaleString('th-TH')}
                         </span>
-                        <span className="text-sm text-gray-500">/เดือน</span>
+                        <span className="text-sm text-[var(--brand-text-secondary)]">/เดือน</span>
                       </div>
                     ) : (
-                      <span className="text-2xl font-extrabold text-gray-900 dark:text-white">
+                      <span className="text-2xl font-extrabold text-[var(--brand-text)]">
                         ติดต่อเรา
                       </span>
                     )}
                     {plan.priceLabel && price !== 0 && (
-                      <p className="mt-1 text-xs text-gray-500">{plan.priceLabel}</p>
+                      <p className="mt-1 text-xs text-[var(--brand-text-secondary)]">
+                        {plan.priceLabel}
+                      </p>
                     )}
                     {annual &&
                       plan.annualPrice !== null &&
                       plan.monthlyPrice !== null &&
                       plan.monthlyPrice > 0 && (
-                        <p className="mt-1 text-xs text-gray-400 line-through">
+                        <p className="mt-1 text-xs text-[var(--brand-text-secondary)] line-through">
                           ฿{plan.monthlyPrice.toLocaleString('th-TH')}/เดือน
                         </p>
                       )}
@@ -432,7 +442,7 @@ export default function PricingPlansPage() {
                     {plan.features.map((f, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-2.5 text-sm text-gray-700 dark:text-gray-300"
+                        className="flex items-start gap-2.5 text-sm text-[var(--brand-text)]"
                       >
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
                         {f.text}
@@ -458,34 +468,34 @@ export default function PricingPlansPage() {
       </section>
 
       {/* Feature Comparison Table */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      <section className="py-20 bg-[var(--brand-background)]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-3xl font-bold text-[var(--brand-text)]">
               เปรียบเทียบฟีเจอร์ทั้งหมด
             </h2>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
+            <p className="mt-4 text-[var(--brand-text-secondary)]">
               ดูรายละเอียดทุกฟีเจอร์ในแต่ละแพ็กเกจ
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] shadow-sm">
             <table className="w-full min-w-[700px]">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
+                <tr className="border-b border-[var(--brand-border)]">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--brand-text)]">
                     ฟีเจอร์
                   </th>
-                  <th className="px-4 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+                  <th className="px-4 py-4 text-center text-sm font-semibold text-[var(--brand-text)]">
                     ทดลองฟรี
                   </th>
-                  <th className="px-4 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+                  <th className="px-4 py-4 text-center text-sm font-semibold text-[var(--brand-text)]">
                     Starter
                   </th>
                   <th className="px-4 py-4 text-center text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-50/50 dark:bg-primary-900/10">
                     Professional
                   </th>
-                  <th className="px-4 py-4 text-center text-sm font-semibold text-gray-900 dark:text-white">
+                  <th className="px-4 py-4 text-center text-sm font-semibold text-[var(--brand-text)]">
                     Enterprise
                   </th>
                 </tr>
@@ -494,13 +504,13 @@ export default function PricingPlansPage() {
                 {comparisonData.map((row, i) => (
                   <tr
                     key={row.feature}
-                    className={`border-b border-gray-100 dark:border-gray-700/50 ${
+                    className={`border-b border-[var(--brand-border)] dark:border-gray-700/50 ${
                       i % 2 === 0
-                        ? 'bg-white dark:bg-gray-800'
-                        : 'bg-gray-50/50 dark:bg-gray-800/50'
+                        ? 'bg-[var(--brand-surface)]'
+                        : 'bg-[var(--brand-background)]/50 dark:bg-gray-800/50'
                     }`}
                   >
-                    <td className="px-6 py-3.5 text-sm text-gray-700 dark:text-gray-300 font-medium">
+                    <td className="px-6 py-3.5 text-sm text-[var(--brand-text)] font-medium">
                       {row.feature}
                     </td>
                     <td className="px-4 py-3.5 text-center">
@@ -524,13 +534,11 @@ export default function PricingPlansPage() {
       </section>
 
       {/* How Billing Works */}
-      <section className="py-20 bg-white dark:bg-gray-950">
+      <section className="py-20 bg-[var(--brand-background)]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              วิธีการเรียกเก็บเงิน
-            </h2>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
+            <h2 className="text-3xl font-bold text-[var(--brand-text)]">วิธีการเรียกเก็บเงิน</h2>
+            <p className="mt-4 text-[var(--brand-text-secondary)]">
               เข้าใจกระบวนการการเรียกเก็บเงินที่โปร่งใสและง่ายดาย
             </p>
           </div>
@@ -564,14 +572,14 @@ export default function PricingPlansPage() {
             ].map((item) => (
               <div
                 key={item.step}
-                className="relative rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-6 text-center"
+                className="relative rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-background)] dark:bg-gray-800 p-6 text-center"
               >
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-xl font-bold text-primary-600 dark:text-primary-400">
                   {item.step}
                 </div>
                 <item.icon className="mx-auto mb-3 h-8 w-8 text-primary-500" />
-                <h3 className="mb-2 font-semibold text-gray-900 dark:text-white">{item.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
+                <h3 className="mb-2 font-semibold text-[var(--brand-text)]">{item.title}</h3>
+                <p className="text-sm text-[var(--brand-text-secondary)]">{item.description}</p>
               </div>
             ))}
           </div>
@@ -579,16 +587,16 @@ export default function PricingPlansPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 bg-white dark:bg-gray-950">
+      <section className="py-20 bg-[var(--brand-background)]">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">คำถามที่พบบ่อย</h2>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
+            <h2 className="text-3xl font-bold text-[var(--brand-text)]">คำถามที่พบบ่อย</h2>
+            <p className="mt-4 text-[var(--brand-text-secondary)]">
               หากมีคำถามเพิ่มเติม สามารถติดต่อเราได้ตลอดเวลา
             </p>
           </div>
 
-          <div className="divide-y divide-gray-200 dark:divide-gray-700 border-t border-gray-200 dark:border-gray-700">
+          <div className="divide-y divide-[var(--brand-border)] dark:divide-gray-700 border-t border-[var(--brand-border)]">
             {faqs.map((faq) => (
               <FAQItem key={faq.q} q={faq.q} a={faq.a} />
             ))}
@@ -597,7 +605,7 @@ export default function PricingPlansPage() {
       </section>
 
       {/* Trust Badges */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-16 bg-[var(--brand-background)]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
@@ -608,10 +616,10 @@ export default function PricingPlansPage() {
             ].map((badge) => (
               <div
                 key={badge.label}
-                className="flex flex-col items-center gap-3 rounded-xl bg-white dark:bg-gray-800 p-6 shadow-sm border border-gray-200 dark:border-gray-700 text-center"
+                className="flex flex-col items-center gap-3 rounded-xl bg-[var(--brand-surface)] p-6 shadow-sm border border-[var(--brand-border)] text-center"
               >
                 <badge.icon className="h-8 w-8 text-primary-500" />
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <span className="text-sm font-semibold text-[var(--brand-text)]">
                   {badge.label}
                 </span>
               </div>
@@ -630,13 +638,13 @@ export default function PricingPlansPage() {
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/signup?trial=true"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-bold text-primary-600 shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all"
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand-surface)] px-8 py-4 text-base font-bold text-primary-600 shadow-lg hover:shadow-xl hover:bg-[var(--brand-primary-light)] transition-all"
             >
               เริ่มทดลองฟรี
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-xl border-2 border-white/40 px-8 py-4 text-base font-bold text-white hover:bg-white/10 transition-all"
+              className="inline-flex items-center gap-2 rounded-xl border-2 border-white/40 px-8 py-4 text-base font-bold text-white hover:bg-[var(--brand-surface)]/10 transition-all"
             >
               ติดต่อฝ่ายขาย
             </Link>

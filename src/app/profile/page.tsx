@@ -139,11 +139,11 @@ function Toggle({
         aria-checked={enabled}
         onClick={() => onChange(!enabled)}
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:ring-offset-2 ${
-          enabled ? 'bg-[var(--brand-primary)]' : 'bg-gray-300'
+          enabled ? 'bg-[var(--brand-primary)]' : 'bg-[var(--brand-border)]'
         }`}
       >
         <span
-          className={`inline-block h-4 w-4 rounded-full bg-white transition-transform ${
+          className={`inline-block h-4 w-4 rounded-full bg-[var(--brand-surface)] transition-transform ${
             enabled ? 'translate-x-6' : 'translate-x-1'
           }`}
         />
@@ -306,9 +306,9 @@ export default function ProfilePage() {
   }
 
   const roleBadgeColor: Record<string, string> = {
-    admin: 'bg-purple-100 text-purple-800',
-    contractor: 'bg-blue-100 text-blue-800',
-    viewer: 'bg-gray-100 text-gray-800',
+    admin: 'bg-purple-500/10 text-purple-800',
+    contractor: 'bg-blue-500/10 text-blue-800',
+    viewer: 'bg-[var(--brand-background)] text-[var(--brand-text)]',
   }
 
   const roleLabel: Record<string, string> = {
@@ -394,7 +394,7 @@ export default function ProfilePage() {
                   <Mail className="w-4 h-4 inline mr-1.5 -mt-0.5" />
                   {t('photoSection.email')}
                   {profile.emailVerified && (
-                    <span className="inline-flex items-center gap-1 ml-2 px-2 py-0.5 text-[10px] font-semibold text-green-700 bg-green-100 rounded-full">
+                    <span className="inline-flex items-center gap-1 ml-2 px-2 py-0.5 text-[10px] font-semibold text-green-700 bg-green-500/10 rounded-full">
                       <BadgeCheck className="w-3 h-3" />
                       {t('photoSection.emailVerified')}
                     </span>
@@ -703,7 +703,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Delete account */}
-                <div className="border-t border-red-200 pt-4">
+                <div className="border-t border-red-500/20 pt-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Trash2 className="w-5 h-5 text-red-500" />
@@ -823,7 +823,7 @@ export default function ProfilePage() {
         size="sm"
       >
         <div className="space-y-4 p-4">
-          <div className="flex items-center gap-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-center gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
             <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
             <p className="text-sm text-red-700">{t('dangerZone.deleteConfirmWarning')}</p>
           </div>

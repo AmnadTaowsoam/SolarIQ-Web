@@ -43,7 +43,7 @@ export default function QuotePage() {
 
   if (authLoading || requestLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500" />
       </div>
     )
@@ -100,14 +100,14 @@ export default function QuotePage() {
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+            <div className="flex items-center gap-2 text-sm text-[var(--brand-text-secondary)] mb-1">
               <button onClick={() => router.back()} className="hover:text-orange-500">
                 ← {t('back')}
               </button>
               <span>/</span>
               <span>{t('createQuote')}</span>
             </div>
-            <h1 className="text-xl font-bold text-gray-900">{t('createQuote')}</h1>
+            <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('createQuote')}</h1>
           </div>
           <button
             onClick={() => setShowTemplateModal(true)}
@@ -127,7 +127,7 @@ export default function QuotePage() {
 
         {/* Request summary */}
         {request && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm">
+          <div className="bg-blue-500/10 border border-blue-200 rounded-xl p-4 text-sm">
             <div className="flex items-center gap-2 font-semibold text-blue-800 mb-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -139,30 +139,30 @@ export default function QuotePage() {
               </svg>
               {t('requestDetails')}
             </div>
-            <div className="grid grid-cols-2 gap-2 text-gray-700">
+            <div className="grid grid-cols-2 gap-2 text-[var(--brand-text)]">
               <div>
-                <span className="text-gray-500">{t('location')}: </span>
+                <span className="text-[var(--brand-text-secondary)]">{t('location')}: </span>
                 <span className="font-medium">{request.locationDisplay || t('notSpecified')}</span>
               </div>
               <div>
-                <span className="text-gray-500">{t('systemSize')}: </span>
+                <span className="text-[var(--brand-text-secondary)]">{t('systemSize')}: </span>
                 <span className="font-medium">{request.systemSizeKw || '—'} kW</span>
               </div>
               <div>
-                <span className="text-gray-500">{t('budget')}: </span>
+                <span className="text-[var(--brand-text-secondary)]">{t('budget')}: </span>
                 <span className="font-medium">
                   {BUDGET_RANGE_LABELS[request.preferences.budgetRange as BudgetRange]}
                 </span>
               </div>
               <div>
-                <span className="text-gray-500">{t('timeline')}: </span>
+                <span className="text-[var(--brand-text-secondary)]">{t('timeline')}: </span>
                 <span className="font-medium">
                   {TIMELINE_LABELS[request.preferences.preferredTimeline as Timeline]}
                 </span>
               </div>
             </div>
             {request.preferences.additionalRequirements && (
-              <div className="mt-2 p-2 bg-white rounded-lg text-gray-600 text-xs border border-blue-100">
+              <div className="mt-2 p-2 bg-[var(--brand-surface)] rounded-lg text-[var(--brand-text-secondary)] text-xs border border-blue-100">
                 {t('additionalRequirements')}: {request.preferences.additionalRequirements}
               </div>
             )}
@@ -171,7 +171,7 @@ export default function QuotePage() {
 
         {/* Template applied banner */}
         {selectedTemplate && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center justify-between">
+          <div className="bg-green-500/10 border border-green-200 rounded-xl p-3 flex items-center justify-between">
             <span className="text-sm text-green-800">
               {t('usingTemplate')}: <strong>{selectedTemplate.name}</strong>
             </span>
@@ -189,12 +189,12 @@ export default function QuotePage() {
 
         {/* Messages */}
         {successMsg && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">
+          <div className="bg-green-500/10 border border-green-200 rounded-lg p-3 text-sm text-green-800">
             {successMsg}
           </div>
         )}
         {errorMsg && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 text-sm text-red-400">
             {errorMsg}
           </div>
         )}
@@ -220,12 +220,12 @@ export default function QuotePage() {
       {/* Template modal */}
       {showTemplateModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[80vh] overflow-y-auto">
-            <div className="p-5 border-b border-gray-200 flex items-center justify-between">
-              <h3 className="font-semibold text-gray-900">{t('templates.select')}</h3>
+          <div className="bg-[var(--brand-surface)] rounded-2xl shadow-xl w-full max-w-md max-h-[80vh] overflow-y-auto">
+            <div className="p-5 border-b border-[var(--brand-border)] flex items-center justify-between">
+              <h3 className="font-semibold text-[var(--brand-text)]">{t('templates.select')}</h3>
               <button
                 onClick={() => setShowTemplateModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)]"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -239,25 +239,35 @@ export default function QuotePage() {
             </div>
             <div className="p-4 space-y-3">
               {templatesLoading ? (
-                <div className="text-center py-8 text-gray-400">{t('loading')}</div>
+                <div className="text-center py-8 text-[var(--brand-text-secondary)]">
+                  {t('loading')}
+                </div>
               ) : templates.length === 0 ? (
-                <div className="text-center py-8 text-gray-400">{t('templates.noTemplates')}</div>
+                <div className="text-center py-8 text-[var(--brand-text-secondary)]">
+                  {t('templates.noTemplates')}
+                </div>
               ) : (
                 templates.map((tpl) => (
                   <div
                     key={tpl.id}
                     onClick={() => handleApplyTemplate(tpl)}
-                    className="p-4 border border-gray-200 rounded-xl hover:border-orange-400 hover:bg-orange-50 cursor-pointer transition-colors"
+                    className="p-4 border border-[var(--brand-border)] rounded-xl hover:border-orange-400 hover:bg-orange-50 cursor-pointer transition-colors"
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-gray-900 text-sm">{tpl.name}</span>
+                      <span className="font-medium text-[var(--brand-text)] text-sm">
+                        {tpl.name}
+                      </span>
                       {tpl.isDefault && (
                         <span className="text-xs bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">
                           Default
                         </span>
                       )}
                     </div>
-                    {tpl.description && <p className="text-xs text-gray-500">{tpl.description}</p>}
+                    {tpl.description && (
+                      <p className="text-xs text-[var(--brand-text-secondary)]">
+                        {tpl.description}
+                      </p>
+                    )}
                     {tpl.pricing?.totalPrice && (
                       <p className="text-xs text-orange-600 mt-1 font-medium">
                         {t('approximatePrice')} ฿{tpl.pricing.totalPrice.toLocaleString('en-US')}

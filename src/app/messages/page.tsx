@@ -115,11 +115,11 @@ function ThreadListPanel({
   ]
 
   return (
-    <div className="flex flex-col h-full bg-white border-r border-gray-100">
+    <div className="flex flex-col h-full bg-[var(--brand-surface)] border-r border-[var(--brand-border)]">
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-gray-100">
+      <div className="px-4 pt-4 pb-3 border-b border-[var(--brand-border)]">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-gray-900">{t('title')}</h2>
+          <h2 className="text-base font-bold text-[var(--brand-text)]">{t('title')}</h2>
           {isDemoMode && (
             <span className="text-[10px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
               Demo
@@ -129,7 +129,7 @@ function ThreadListPanel({
         {/* Search */}
         <div className="relative">
           <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--brand-text-secondary)]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -146,13 +146,13 @@ function ThreadListPanel({
             placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-gray-50"
+            className="w-full pl-9 pr-4 py-2 text-sm border border-[var(--brand-border)] rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-[var(--brand-background)]"
           />
         </div>
       </div>
 
       {/* Filter tabs */}
-      <div className="flex border-b border-gray-100 overflow-x-auto">
+      <div className="flex border-b border-[var(--brand-border)] overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -161,7 +161,7 @@ function ThreadListPanel({
               'flex-shrink-0 px-3 py-2.5 text-xs font-medium transition-colors whitespace-nowrap',
               filter === tab.key
                 ? 'text-orange-600 border-b-2 border-orange-500'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
             )}
           >
             {tab.label}
@@ -179,7 +179,7 @@ function ThreadListPanel({
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center px-4">
             <svg
-              className="w-10 h-10 text-gray-300 mb-3"
+              className="w-10 h-10 text-[var(--brand-text-secondary)] mb-3"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -191,7 +191,7 @@ function ThreadListPanel({
                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
               />
             </svg>
-            <p className="text-sm text-gray-500">{t('noConversations')}</p>
+            <p className="text-sm text-[var(--brand-text-secondary)]">{t('noConversations')}</p>
           </div>
         ) : (
           filtered.map((thread) => (
@@ -221,13 +221,13 @@ function ThreadListPanel({
                       className={cn(
                         'text-sm truncate',
                         thread.unreadCount > 0
-                          ? 'font-bold text-gray-900'
-                          : 'font-medium text-gray-800'
+                          ? 'font-bold text-[var(--brand-text)]'
+                          : 'font-medium text-[var(--brand-text)]'
                       )}
                     >
                       {thread.customerName}
                     </span>
-                    <span className="text-[10px] text-gray-400 flex-shrink-0">
+                    <span className="text-[10px] text-[var(--brand-text-secondary)] flex-shrink-0">
                       {formatThreadTime(new Date(thread.lastMessageTime), t('yesterday'))}
                     </span>
                   </div>
@@ -236,7 +236,9 @@ function ThreadListPanel({
                     <p
                       className={cn(
                         'text-xs truncate flex-1',
-                        thread.unreadCount > 0 ? 'text-gray-700 font-medium' : 'text-gray-500'
+                        thread.unreadCount > 0
+                          ? 'text-[var(--brand-text)] font-medium'
+                          : 'text-[var(--brand-text-secondary)]'
                       )}
                     >
                       {thread.lastMessage || t('noMessages')}
@@ -254,10 +256,10 @@ function ThreadListPanel({
                       className={cn(
                         'inline-block text-[10px] font-medium px-1.5 py-0.5 rounded-full',
                         thread.status === 'active'
-                          ? 'bg-green-100 text-green-700'
+                          ? 'bg-green-500/10 text-green-700'
                           : thread.status === 'completed'
-                            ? 'bg-gray-100 text-gray-600'
-                            : 'bg-yellow-100 text-yellow-700'
+                            ? 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
+                            : 'bg-yellow-500/10 text-yellow-700'
                       )}
                     >
                       {thread.status === 'active'
@@ -275,7 +277,7 @@ function ThreadListPanel({
       </div>
 
       {/* New conversation button */}
-      <div className="p-3 border-t border-gray-100">
+      <div className="p-3 border-t border-[var(--brand-border)]">
         <button
           onClick={onNewConversation}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-500 text-white text-sm font-semibold rounded-xl hover:bg-orange-600 transition-colors shadow-sm"
@@ -319,7 +321,7 @@ function ChatAreaPanel({
 
   if (!thread) {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50 text-center px-6">
+      <div className="flex flex-col items-center justify-center h-full bg-[var(--brand-background)] text-center px-6">
         <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
           <svg
             className="w-8 h-8 text-orange-500"
@@ -335,8 +337,10 @@ function ChatAreaPanel({
             />
           </svg>
         </div>
-        <h3 className="text-base font-semibold text-gray-700 mb-1">{t('selectConversation')}</h3>
-        <p className="text-sm text-gray-500">{t('selectConversationHint')}</p>
+        <h3 className="text-base font-semibold text-[var(--brand-text)] mb-1">
+          {t('selectConversation')}
+        </h3>
+        <p className="text-sm text-[var(--brand-text-secondary)]">{t('selectConversationHint')}</p>
       </div>
     )
   }
@@ -344,9 +348,9 @@ function ChatAreaPanel({
   const grouped = groupMessagesByDate(messages, t('today'), t('yesterday'))
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-[var(--brand-background)]">
       {/* Chat header */}
-      <div className="flex items-center justify-between px-5 py-3.5 bg-white border-b border-gray-100 flex-shrink-0">
+      <div className="flex items-center justify-between px-5 py-3.5 bg-[var(--brand-surface)] border-b border-[var(--brand-border)] flex-shrink-0">
         <div className="flex items-center gap-3">
           <div
             className={cn(
@@ -357,7 +361,7 @@ function ChatAreaPanel({
             {thread.customerInitials}
           </div>
           <div>
-            <h3 className="text-sm font-bold text-gray-900">{thread.customerName}</h3>
+            <h3 className="text-sm font-bold text-[var(--brand-text)]">{thread.customerName}</h3>
             <div className="flex items-center gap-2">
               {thread.leadId && (
                 <span className="text-xs text-orange-600 font-medium bg-orange-50 px-2 py-0.5 rounded-full">
@@ -365,7 +369,7 @@ function ChatAreaPanel({
                 </span>
               )}
               {thread.dealId && (
-                <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-0.5 rounded-full">
+                <span className="text-xs text-green-600 font-medium bg-green-500/10 px-2 py-0.5 rounded-full">
                   Deal #{thread.dealId.slice(-4)}
                 </span>
               )}
@@ -375,7 +379,7 @@ function ChatAreaPanel({
                   thread.status === 'active'
                     ? 'text-green-600'
                     : thread.status === 'completed'
-                      ? 'text-gray-500'
+                      ? 'text-[var(--brand-text-secondary)]'
                       : 'text-yellow-600'
                 )}
               >
@@ -409,7 +413,7 @@ function ChatAreaPanel({
         ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <svg
-              className="w-12 h-12 text-gray-300 mb-3"
+              className="w-12 h-12 text-[var(--brand-text-secondary)] mb-3"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -421,8 +425,10 @@ function ChatAreaPanel({
                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
               />
             </svg>
-            <p className="text-sm text-gray-500">{t('startConversation')}</p>
-            <p className="text-xs text-gray-400 mt-1">{t('sendMessagePrompt')}</p>
+            <p className="text-sm text-[var(--brand-text-secondary)]">{t('startConversation')}</p>
+            <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
+              {t('sendMessagePrompt')}
+            </p>
           </div>
         ) : (
           <>
@@ -430,7 +436,7 @@ function ChatAreaPanel({
               <div key={date}>
                 {/* Date separator */}
                 <div className="flex items-center justify-center my-4">
-                  <div className="bg-gray-200 rounded-full px-4 py-1 text-[11px] text-gray-500 font-medium">
+                  <div className="bg-[var(--brand-border)] rounded-full px-4 py-1 text-[11px] text-[var(--brand-text-secondary)] font-medium">
                     {date}
                   </div>
                 </div>
@@ -452,7 +458,9 @@ function ChatAreaPanel({
                     />
                   ))}
                 </div>
-                <span className="text-xs text-gray-500">{t('typingIndicator')}</span>
+                <span className="text-xs text-[var(--brand-text-secondary)]">
+                  {t('typingIndicator')}
+                </span>
               </div>
             )}
           </>
@@ -502,9 +510,9 @@ function InfoPanel({
   }
 
   return (
-    <div className="flex flex-col h-full bg-white border-l border-gray-100">
+    <div className="flex flex-col h-full bg-[var(--brand-surface)] border-l border-[var(--brand-border)]">
       {/* Tabs */}
-      <div className="flex border-b border-gray-100">
+      <div className="flex border-b border-[var(--brand-border)]">
         {(['info', 'notes'] as const).map((tab) => (
           <button
             key={tab}
@@ -513,7 +521,7 @@ function InfoPanel({
               'flex-1 py-3 text-xs font-semibold transition-colors',
               activeTab === tab
                 ? 'text-orange-600 border-b-2 border-orange-500'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
             )}
           >
             {tab === 'info' ? t('infoPanel.customerInfo') : t('infoPanel.internalNotes')}
@@ -526,7 +534,7 @@ function InfoPanel({
           <div className="p-4 space-y-4">
             {/* Customer info */}
             <div>
-              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              <h4 className="text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider mb-3">
                 {t('infoPanel.customerInfo')}
               </h4>
               <div className="space-y-2.5">
@@ -540,14 +548,16 @@ function InfoPanel({
                     {thread.customerInitials}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">{thread.customerName}</p>
+                    <p className="text-sm font-semibold text-[var(--brand-text)]">
+                      {thread.customerName}
+                    </p>
                   </div>
                 </div>
 
                 {thread.customerPhone && (
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <div className="flex items-center gap-2 text-sm text-[var(--brand-text)]">
                     <svg
-                      className="w-4 h-4 text-gray-400 flex-shrink-0"
+                      className="w-4 h-4 text-[var(--brand-text-secondary)] flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -560,14 +570,14 @@ function InfoPanel({
                       />
                     </svg>
                     <span className="font-medium">{thread.customerPhone}</span>
-                    <span className="text-xs text-gray-400">(masked)</span>
+                    <span className="text-xs text-[var(--brand-text-secondary)]">(masked)</span>
                   </div>
                 )}
 
                 {thread.customerEmail && (
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <div className="flex items-center gap-2 text-sm text-[var(--brand-text)]">
                     <svg
-                      className="w-4 h-4 text-gray-400 flex-shrink-0"
+                      className="w-4 h-4 text-[var(--brand-text-secondary)] flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -588,7 +598,7 @@ function InfoPanel({
             {/* Related Lead / Deal */}
             {(thread.leadId || thread.dealId) && (
               <div>
-                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                <h4 className="text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider mb-3">
                   {t('infoPanel.relatedLeadDeal')}
                 </h4>
                 <div className="space-y-2">
@@ -615,7 +625,7 @@ function InfoPanel({
                     </div>
                   )}
                   {thread.dealId && (
-                    <div className="flex items-center justify-between p-2.5 bg-green-50 rounded-lg border border-green-100">
+                    <div className="flex items-center justify-between p-2.5 bg-green-500/10 rounded-lg border border-green-100">
                       <div>
                         <p className="text-xs font-semibold text-green-800">Deal</p>
                         <p className="text-xs text-green-700">
@@ -638,20 +648,24 @@ function InfoPanel({
           </div>
         ) : (
           <div className="p-4 space-y-3">
-            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <h4 className="text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
               {t('infoPanel.notesVisibleToTeam')}
             </h4>
 
             {/* Notes list */}
             {notes.length === 0 ? (
-              <p className="text-xs text-gray-400 text-center py-4">{t('infoPanel.noNotesYet')}</p>
+              <p className="text-xs text-[var(--brand-text-secondary)] text-center py-4">
+                {t('infoPanel.noNotesYet')}
+              </p>
             ) : (
               notes.map((note) => (
                 <div
                   key={note.id}
                   className={cn(
                     'p-3 rounded-lg border text-xs',
-                    note.pinned ? 'bg-yellow-50 border-yellow-200' : 'bg-gray-50 border-gray-100'
+                    note.pinned
+                      ? 'bg-yellow-500/10 border-yellow-500/20'
+                      : 'bg-[var(--brand-background)] border-[var(--brand-border)]'
                   )}
                 >
                   {note.pinned && (
@@ -666,8 +680,8 @@ function InfoPanel({
                       <span className="text-yellow-600 font-semibold">{t('infoPanel.pinned')}</span>
                     </div>
                   )}
-                  <p className="text-gray-800 leading-relaxed">{note.content}</p>
-                  <p className="text-gray-400 mt-1.5">
+                  <p className="text-[var(--brand-text)] leading-relaxed">{note.content}</p>
+                  <p className="text-[var(--brand-text-secondary)] mt-1.5">
                     {note.authorName} •{' '}
                     {formatDistanceToNow(new Date(note.createdAt), { addSuffix: true, locale: th })}
                   </p>
@@ -682,7 +696,7 @@ function InfoPanel({
                 onChange={(e) => setNewNote(e.target.value)}
                 placeholder={t('infoPanel.addNotePlaceholder')}
                 rows={3}
-                className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-orange-400"
+                className="w-full text-xs border border-[var(--brand-border)] rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
               <button
                 onClick={handleAddNote}
@@ -757,7 +771,7 @@ export default function MessagesPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="w-8 h-8 border-2 border-orange-200 border-t-orange-500 rounded-full animate-spin" />
       </div>
     )
@@ -828,7 +842,7 @@ export default function MessagesPage() {
             <div className="lg:hidden fixed top-16 left-0 z-10 p-2">
               <button
                 onClick={() => setMobileView('threads')}
-                className="flex items-center gap-1 px-3 py-2 bg-white shadow-md rounded-full text-sm font-medium text-gray-700 border border-gray-200"
+                className="flex items-center gap-1 px-3 py-2 bg-[var(--brand-surface)] shadow-md rounded-full text-sm font-medium text-[var(--brand-text)] border border-[var(--brand-border)]"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path

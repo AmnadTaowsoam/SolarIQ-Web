@@ -14,19 +14,21 @@ export default function InstallationCard({ installation: inst }: InstallationCar
   return (
     <Link
       href={`/maintenance/${inst.id}`}
-      className="block rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md"
+      className="block rounded-xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-5 transition-shadow hover:shadow-md"
     >
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="font-semibold text-gray-900">{inst.customer_name}</h3>
-          <p className="mt-0.5 text-sm text-gray-500">{inst.address || t('address')}</p>
+          <h3 className="font-semibold text-[var(--brand-text)]">{inst.customer_name}</h3>
+          <p className="mt-0.5 text-sm text-[var(--brand-text-secondary)]">
+            {inst.address || t('address')}
+          </p>
         </div>
         <span
           className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
             inst.status === 'active'
-              ? 'bg-green-100 text-green-700'
+              ? 'bg-green-500/10 text-green-700'
               : inst.status === 'inactive'
-                ? 'bg-gray-100 text-gray-600'
+                ? 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
                 : 'bg-red-100 text-red-700'
           }`}
         >
@@ -38,7 +40,7 @@ export default function InstallationCard({ installation: inst }: InstallationCar
         </span>
       </div>
 
-      <div className="mt-3 flex items-center gap-4 text-sm text-gray-600">
+      <div className="mt-3 flex items-center gap-4 text-sm text-[var(--brand-text-secondary)]">
         <span className="flex items-center gap-1">
           <svg
             className="h-4 w-4 text-amber-500"

@@ -25,8 +25,8 @@ export default function MaintenancePage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="mt-0.5 text-sm text-gray-500">{t('subtitle')}</p>
+            <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="mt-0.5 text-sm text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
           </div>
           <Link
             href="/maintenance/new"
@@ -47,13 +47,15 @@ export default function MaintenancePage() {
                 <Link
                   key={i}
                   href={`/maintenance/${item.installation.id}`}
-                  className="flex items-center justify-between rounded-lg bg-white p-3 text-sm hover:bg-amber-50"
+                  className="flex items-center justify-between rounded-lg bg-[var(--brand-surface)] p-3 text-sm hover:bg-amber-50"
                 >
                   <div>
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-[var(--brand-text)]">
                       {item.installation.customer_name}
                     </span>
-                    <span className="ml-2 text-gray-500">{item.schedule.maintenance_type}</span>
+                    <span className="ml-2 text-[var(--brand-text-secondary)]">
+                      {item.schedule.maintenance_type}
+                    </span>
                   </div>
                   <span
                     className={`text-xs font-medium ${item.days_until_due <= 7 ? 'text-red-600' : 'text-amber-600'}`}
@@ -81,7 +83,7 @@ export default function MaintenancePage() {
               className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 statusFilter === f.value
                   ? 'bg-amber-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]'
               }`}
             >
               {f.label}
@@ -93,7 +95,10 @@ export default function MaintenancePage() {
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-40 animate-pulse rounded-xl border bg-gray-100" />
+              <div
+                key={i}
+                className="h-40 animate-pulse rounded-xl border bg-[var(--brand-background)]"
+              />
             ))}
           </div>
         ) : installations && installations.length > 0 ? (
@@ -103,9 +108,9 @@ export default function MaintenancePage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-xl border-2 border-dashed border-gray-300 p-12 text-center">
+          <div className="rounded-xl border-2 border-dashed border-[var(--brand-border)] p-12 text-center">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="mx-auto h-12 w-12 text-[var(--brand-text-secondary)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -117,8 +122,12 @@ export default function MaintenancePage() {
                 d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
               />
             </svg>
-            <h3 className="mt-3 text-sm font-medium text-gray-900">{t('empty.title')}</h3>
-            <p className="mt-1 text-sm text-gray-500">{t('empty.description')}</p>
+            <h3 className="mt-3 text-sm font-medium text-[var(--brand-text)]">
+              {t('empty.title')}
+            </h3>
+            <p className="mt-1 text-sm text-[var(--brand-text-secondary)]">
+              {t('empty.description')}
+            </p>
           </div>
         )}
       </div>

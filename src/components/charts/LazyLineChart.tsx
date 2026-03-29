@@ -32,8 +32,8 @@ interface LineChartProps {
 const LineChartComponent = dynamic(() => import('./LineChart'), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center h-full w-full bg-gray-100 dark:bg-gray-800 animate-pulse">
-      <div className="h-4 w-4 bg-gray-300 dark:bg-gray-600 rounded-full animate-bounce" />
+    <div className="flex items-center justify-center h-full w-full bg-[var(--brand-background)] dark:bg-gray-800 animate-pulse">
+      <div className="h-4 w-4 bg-[var(--brand-border)] dark:bg-gray-600 rounded-full animate-bounce" />
     </div>
   ),
 }) as ComponentType<LineChartProps>

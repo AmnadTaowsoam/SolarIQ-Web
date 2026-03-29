@@ -28,33 +28,62 @@ function getBadgeConfig(badgeLevel: string) {
     case 'Gold':
       return { stars: '\u2B50\u2B50\u2B50', color: 'text-yellow-600', bg: 'bg-yellow-500/10' }
     case 'Silver':
-      return { stars: '\u2B50\u2B50', color: 'text-gray-500', bg: 'bg-gray-500/10' }
+      return {
+        stars: '\u2B50\u2B50',
+        color: 'text-[var(--brand-text-secondary)]',
+        bg: 'bg-gray-500/10',
+      }
     default:
       return { stars: '\u2B50', color: 'text-orange-600', bg: 'bg-orange-500/10' }
   }
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 80) return '#22c55e'
-  if (score >= 60) return '#eab308'
-  if (score >= 40) return '#f97316'
+  if (score >= 80) {
+    return '#22c55e'
+  }
+  if (score >= 60) {
+    return '#eab308'
+  }
+  if (score >= 40) {
+    return '#f97316'
+  }
   return '#ef4444'
 }
 
 function getSeverityColor(severity: string): string {
   switch (severity) {
-    case 'high': return 'text-red-500 bg-red-500/10'
-    case 'medium': return 'text-yellow-500 bg-yellow-500/10'
-    case 'low': return 'text-green-500 bg-green-500/10'
-    default: return 'text-blue-500 bg-blue-500/10'
+    case 'high':
+      return 'text-red-500 bg-red-500/10'
+    case 'medium':
+      return 'text-yellow-500 bg-yellow-500/10'
+    case 'low':
+      return 'text-green-500 bg-green-500/10'
+    default:
+      return 'text-blue-500 bg-blue-500/10'
   }
 }
 
-const THAI_MONTHS = ['\u0E21.\u0E04.', '\u0E01.\u0E1E.', '\u0E21\u0E35.\u0E04.', '\u0E40\u0E21.\u0E22.', '\u0E1E.\u0E04.', '\u0E21\u0E34.\u0E22.', '\u0E01.\u0E04.', '\u0E2A.\u0E04.', '\u0E01.\u0E22.', '\u0E15.\u0E04.', '\u0E1E.\u0E22.', '\u0E18.\u0E04.']
+const THAI_MONTHS = [
+  '\u0E21.\u0E04.',
+  '\u0E01.\u0E1E.',
+  '\u0E21\u0E35.\u0E04.',
+  '\u0E40\u0E21.\u0E22.',
+  '\u0E1E.\u0E04.',
+  '\u0E21\u0E34.\u0E22.',
+  '\u0E01.\u0E04.',
+  '\u0E2A.\u0E04.',
+  '\u0E01.\u0E22.',
+  '\u0E15.\u0E04.',
+  '\u0E1E.\u0E22.',
+  '\u0E18.\u0E04.',
+]
 
 export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) {
   const radiationChartData = useMemo(() => {
-    if (!data?.monthlyRadiation) return []
+    if (!data?.monthlyRadiation) {
+      return []
+    }
     return data.monthlyRadiation.map((r) => ({
       label: r.month,
       radiation: r.radiation,
@@ -63,7 +92,9 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
   }, [data])
 
   const seasonalCalendar = useMemo(() => {
-    if (!data?.seasonalPattern) return []
+    if (!data?.seasonalPattern) {
+      return []
+    }
     return data.seasonalPattern
   }, [data])
 
@@ -86,7 +117,9 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
   return (
     <Card>
       <CardHeader
-        title={'\u0E14\u0E31\u0E0A\u0E19\u0E35\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D\u0E02\u0E2D\u0E07\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14'}
+        title={
+          '\u0E14\u0E31\u0E0A\u0E19\u0E35\u0E04\u0E27\u0E32\u0E21\u0E19\u0E48\u0E32\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E16\u0E37\u0E2D\u0E02\u0E2D\u0E07\u0E41\u0E2A\u0E07\u0E41\u0E14\u0E14'
+        }
         subtitle="Climate Reliability Score"
       />
       <CardBody>
@@ -96,13 +129,17 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
             <div className="relative w-40 h-40">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 140 140">
                 <circle
-                  cx="70" cy="70" r="60"
+                  cx="70"
+                  cy="70"
+                  r="60"
                   fill="none"
                   stroke="var(--brand-border)"
                   strokeWidth="10"
                 />
                 <circle
-                  cx="70" cy="70" r="60"
+                  cx="70"
+                  cy="70"
+                  r="60"
                   fill="none"
                   stroke={scoreColor}
                   strokeWidth="10"
@@ -113,7 +150,9 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl font-extrabold text-[var(--brand-text)]">{data.score}</span>
+                <span className="text-3xl font-extrabold text-[var(--brand-text)]">
+                  {data.score}
+                </span>
                 <span className="text-xs text-[var(--brand-text-secondary)]">/100</span>
               </div>
             </div>
@@ -135,13 +174,26 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
               </h4>
               <div className="space-y-2">
                 {data.riskFactors.map((risk, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-2 rounded-lg border border-[var(--brand-border)]">
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${getSeverityColor(risk.severity)}`}>
-                      {risk.severity === 'high' ? '\u0E2A\u0E39\u0E07' : risk.severity === 'medium' ? '\u0E1B\u0E32\u0E19\u0E01\u0E25\u0E32\u0E07' : '\u0E15\u0E48\u0E33'}
+                  <div
+                    key={idx}
+                    className="flex items-start gap-3 p-2 rounded-lg border border-[var(--brand-border)]"
+                  >
+                    <span
+                      className={`text-xs font-bold px-2 py-0.5 rounded-full ${getSeverityColor(risk.severity)}`}
+                    >
+                      {risk.severity === 'high'
+                        ? '\u0E2A\u0E39\u0E07'
+                        : risk.severity === 'medium'
+                          ? '\u0E1B\u0E32\u0E19\u0E01\u0E25\u0E32\u0E07'
+                          : '\u0E15\u0E48\u0E33'}
                     </span>
                     <div className="flex-1">
-                      <div className="text-sm font-medium text-[var(--brand-text)]">{risk.factor}</div>
-                      <div className="text-xs text-[var(--brand-text-secondary)]">{risk.description}</div>
+                      <div className="text-sm font-medium text-[var(--brand-text)]">
+                        {risk.factor}
+                      </div>
+                      <div className="text-xs text-[var(--brand-text-secondary)]">
+                        {risk.description}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -170,7 +222,11 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
                     >
                       <div className="font-medium">{THAI_MONTHS[s.month - 1] || s.month}</div>
                       <div className="mt-0.5">
-                        {isMonsoon ? <CloudRain className="w-3 h-3 mx-auto" /> : <Sun className="w-3 h-3 mx-auto" />}
+                        {isMonsoon ? (
+                          <CloudRain className="w-3 h-3 mx-auto" />
+                        ) : (
+                          <Sun className="w-3 h-3 mx-auto" />
+                        )}
                       </div>
                     </div>
                   )
@@ -179,11 +235,15 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
               <div className="flex items-center gap-4 mt-2 text-xs">
                 <div className="flex items-center gap-1">
                   <Sun className="w-3 h-3 text-yellow-500" />
-                  <span className="text-[var(--brand-text-secondary)]">{'\u0E24\u0E14\u0E39\u0E41\u0E25\u0E49\u0E07'}</span>
+                  <span className="text-[var(--brand-text-secondary)]">
+                    {'\u0E24\u0E14\u0E39\u0E41\u0E25\u0E49\u0E07'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <CloudRain className="w-3 h-3 text-blue-500" />
-                  <span className="text-[var(--brand-text-secondary)]">{'\u0E24\u0E14\u0E39\u0E21\u0E23\u0E2A\u0E38\u0E21'}</span>
+                  <span className="text-[var(--brand-text-secondary)]">
+                    {'\u0E24\u0E14\u0E39\u0E21\u0E23\u0E2A\u0E38\u0E21'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -193,11 +253,16 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
           {radiationChartData.length > 0 && (
             <div>
               <h4 className="text-sm font-semibold text-[var(--brand-text)] mb-3">
-                {'\u0E41\u0E19\u0E27\u0E42\u0E19\u0E49\u0E21\u0E23\u0E31\u0E07\u0E2A\u0E35\u0E22\u0E49\u0E2D\u0E19\u0E2B\u0E25\u0E31\u0E07'}
+                {
+                  '\u0E41\u0E19\u0E27\u0E42\u0E19\u0E49\u0E21\u0E23\u0E31\u0E07\u0E2A\u0E35\u0E22\u0E49\u0E2D\u0E19\u0E2B\u0E25\u0E31\u0E07'
+                }
               </h4>
               <div className="h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={radiationChartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                  <LineChart
+                    data={radiationChartData}
+                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--brand-border)" />
                     <XAxis
                       dataKey="label"
@@ -213,7 +278,10 @@ export function ClimateReliabilityScore({ data }: ClimateReliabilityScoreProps) 
                         color: 'var(--brand-text)',
                         fontSize: 12,
                       }}
-                      formatter={(value: number) => [`${formatNumber(value)} kWh/m\u00B2`, '\u0E23\u0E31\u0E07\u0E2A\u0E35']}
+                      formatter={(value: number) => [
+                        `${formatNumber(value)} kWh/m\u00B2`,
+                        '\u0E23\u0E31\u0E07\u0E2A\u0E35',
+                      ]}
                     />
                     <Line
                       type="monotone"

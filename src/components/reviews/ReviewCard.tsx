@@ -16,7 +16,7 @@ interface ReviewCardProps {
 
 // Simple Avatar fallback component
 const AvatarFallback: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium">
+  <div className="h-10 w-10 rounded-full bg-[var(--brand-border)] flex items-center justify-center text-sm font-medium">
     {children}
   </div>
 )
@@ -38,7 +38,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, showActions = false, on
       } else if (i === fullStars && hasHalf) {
         stars.push(<StarHalf key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)
       } else {
-        stars.push(<Star key={i} className="w-4 h-4 text-gray-300" />)
+        stars.push(<Star key={i} className="w-4 h-4 text-[var(--brand-text-secondary)]" />)
       }
     }
     return stars
@@ -66,7 +66,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, showActions = false, on
             <AvatarFallback>?</AvatarFallback>
             <div>
               <p className="font-medium text-sm">ผู้ใช้ SolarIQ</p>
-              <p className="text-xs text-gray-500">{formatRelativeDate(review.createdAt)}</p>
+              <p className="text-xs text-[var(--brand-text-secondary)]">
+                {formatRelativeDate(review.createdAt)}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-1">
@@ -78,7 +80,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, showActions = false, on
         {/* Review text */}
         <div className="mb-3">
           {review.title && <h4 className="font-medium text-sm mb-1">{review.title}</h4>}
-          <p className="text-sm text-gray-600 line-clamp-3">{review.body}</p>
+          <p className="text-sm text-[var(--brand-text-secondary)] line-clamp-3">{review.body}</p>
         </div>
 
         {/* Category ratings */}
@@ -94,11 +96,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, showActions = false, on
 
         {/* Contractor Reply */}
         {review.contractorReply && (
-          <div className="bg-gray-50 p-3 rounded-lg mb-3">
-            <p className="text-xs text-gray-500 mb-1">Contractor Response</p>
-            <p className="text-sm text-gray-700">{review.contractorReply}</p>
+          <div className="bg-[var(--brand-background)] p-3 rounded-lg mb-3">
+            <p className="text-xs text-[var(--brand-text-secondary)] mb-1">Contractor Response</p>
+            <p className="text-sm text-[var(--brand-text)]">{review.contractorReply}</p>
             {review.contractorReplyAt && (
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
                 {formatRelativeDate(review.contractorReplyAt)}
               </p>
             )}
@@ -117,7 +119,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, showActions = false, on
               onClick={() => handleHelpfulVote(true)}
               disabled={isVoting || review.userVotedHelpful}
               className={`flex items-center gap-1 text-xs ${
-                review.userVotedHelpful ? 'text-green-600' : 'text-gray-500 hover:text-gray-700'
+                review.userVotedHelpful
+                  ? 'text-green-600'
+                  : 'text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
               }`}
             >
               <ThumbsUp className="w-3 h-3" />
@@ -127,7 +131,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, showActions = false, on
           {showActions && (
             <button
               onClick={() => setShowReportModal(true)}
-              className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700"
+              className="flex items-center gap-1 text-xs text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]"
             >
               <Flag className="w-3 h-3" />
               Report

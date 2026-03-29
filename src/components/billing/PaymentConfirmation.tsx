@@ -50,11 +50,11 @@ export function PaymentConfirmation({
     <div className="max-w-2xl mx-auto">
       {/* Success Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-green-500/10 rounded-full mb-4">
           <CheckCircle className="w-10 h-10 text-green-600" />
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-[var(--brand-text)] mb-2">Payment Successful!</h1>
+        <p className="text-[var(--brand-text-secondary)]">
           Your payment has been processed successfully. Thank you for your subscription.
         </p>
       </div>
@@ -74,55 +74,61 @@ export function PaymentConfirmation({
         <CardBody>
           <div className="space-y-6">
             {/* Amount */}
-            <div className="bg-gray-50 rounded-lg p-6 text-center">
-              <p className="text-sm text-gray-600 mb-1">Total Amount</p>
-              <p className="text-4xl font-bold text-gray-900">{formatPrice(invoice.amount_thb)}</p>
-              <p className="text-sm text-gray-500 mt-1">THB</p>
+            <div className="bg-[var(--brand-background)] rounded-lg p-6 text-center">
+              <p className="text-sm text-[var(--brand-text-secondary)] mb-1">Total Amount</p>
+              <p className="text-4xl font-bold text-[var(--brand-text)]">
+                {formatPrice(invoice.amount_thb)}
+              </p>
+              <p className="text-sm text-[var(--brand-text-secondary)] mt-1">THB</p>
             </div>
 
             {/* Details */}
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <div className="flex-shrink-0 w-10 h-10 bg-blue-500/100/10 rounded-lg flex items-center justify-center">
                   <FileText className="w-5 h-5 text-blue-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-gray-500">Invoice Number</p>
-                  <p className="font-medium text-gray-900">{invoice.invoice_number}</p>
+                  <p className="text-sm text-[var(--brand-text-secondary)]">Invoice Number</p>
+                  <p className="font-medium text-[var(--brand-text)]">{invoice.invoice_number}</p>
                 </div>
               </div>
 
               {invoice.paid_at && (
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-green-600" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-500">Payment Date</p>
-                    <p className="font-medium text-gray-900">{formatDateThai(invoice.paid_at)}</p>
+                    <p className="text-sm text-[var(--brand-text-secondary)]">Payment Date</p>
+                    <p className="font-medium text-[var(--brand-text)]">
+                      {formatDateThai(invoice.paid_at)}
+                    </p>
                   </div>
                 </div>
               )}
 
               {invoice.due_date && (
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-purple-600" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-500">Due Date</p>
-                    <p className="font-medium text-gray-900">{formatDateThai(invoice.due_date)}</p>
+                    <p className="text-sm text-[var(--brand-text-secondary)]">Due Date</p>
+                    <p className="font-medium text-[var(--brand-text)]">
+                      {formatDateThai(invoice.due_date)}
+                    </p>
                   </div>
                 </div>
               )}
 
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <div className="flex-shrink-0 w-10 h-10 bg-yellow-500/10 rounded-lg flex items-center justify-center">
                   <CreditCard className="w-5 h-5 text-yellow-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-gray-500">Payment Method</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-[var(--brand-text-secondary)]">Payment Method</p>
+                  <p className="font-medium text-[var(--brand-text)]">
                     {invoice.provider_invoice_id
                       ? `Opn Payments (${invoice.provider_invoice_id.slice(-4)})`
                       : 'N/A'}
@@ -132,19 +138,19 @@ export function PaymentConfirmation({
 
               {invoice.description && (
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-gray-600" />
+                  <div className="flex-shrink-0 w-10 h-10 bg-[var(--brand-background)] rounded-lg flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-[var(--brand-text-secondary)]" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-500">Description</p>
-                    <p className="font-medium text-gray-900">{invoice.description}</p>
+                    <p className="text-sm text-[var(--brand-text-secondary)]">Description</p>
+                    <p className="font-medium text-[var(--brand-text)]">{invoice.description}</p>
                   </div>
                 </div>
               )}
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-[var(--brand-border)]">
               {onDownloadReceipt && (
                 <Button variant="outline" size="lg" className="flex-1" onClick={onDownloadReceipt}>
                   <Download className="w-4 h-4 mr-2" />
@@ -162,7 +168,7 @@ export function PaymentConfirmation({
       </Card>
 
       {/* Next Steps */}
-      <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div className="mt-6 bg-blue-500/10 border border-blue-200 rounded-lg p-4">
         <h3 className="font-semibold text-blue-900 mb-2">What's Next?</h3>
         <ul className="text-sm text-blue-800 space-y-1">
           <li>• Your subscription is now active and all features are unlocked</li>

@@ -45,22 +45,26 @@ export function UpgradeCTA({
   ]
 
   return (
-    <div className={`rounded-xl border bg-white dark:bg-gray-800 shadow-sm ${className}`}>
+    <div
+      className={`rounded-xl border bg-[var(--brand-surface)] dark:bg-gray-800 shadow-sm ${className}`}
+    >
       <div className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white">
               {currentPlan === 'free' ? t('upgradeTitle') : t('changeTitle')}
             </h3>
             {currentPlan === 'free' && (
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{t('freeDesc')}</p>
+              <p className="mt-1 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                {t('freeDesc')}
+              </p>
             )}
           </div>
 
           {showBillingInfo && (
             <button
               onClick={() => setShowDetails(!showDetails)}
-              className="shrink-0 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="shrink-0 rounded-lg border border-[var(--brand-border)] dark:border-gray-700 px-3 py-2 text-sm font-medium text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-primary-light)] dark:hover:bg-gray-700 transition-colors"
               aria-expanded={showDetails}
             >
               {showDetails ? (
@@ -79,43 +83,53 @@ export function UpgradeCTA({
         </div>
 
         {showBillingInfo && showDetails && (
-          <div className="mt-6 space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
+          <div className="mt-6 space-y-4 border-t border-[var(--brand-border)] dark:border-gray-700 pt-6">
             <div className="grid gap-4 md:grid-cols-2">
               {steps.map((step, index) => (
                 <div
                   key={index}
-                  className="flex gap-3 rounded-lg bg-gray-50 dark:bg-gray-900/50 p-4"
+                  className="flex gap-3 rounded-lg bg-[var(--brand-background)] dark:bg-gray-900/50 p-4"
                 >
                   <div className="shrink-0">
                     <step.icon className="h-6 w-6 text-primary-500" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-[var(--brand-text)] dark:text-white">
                       {step.title}
                     </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{step.description}</p>
+                    <p className="text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                      {step.description}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 p-4">
-              <h4 className="mb-3 font-semibold text-gray-900 dark:text-white">{t('faqTitle')}</h4>
-              <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+            <div className="rounded-lg bg-blue-500/10 dark:bg-blue-900/20 p-4">
+              <h4 className="mb-3 font-semibold text-[var(--brand-text)] dark:text-white">
+                {t('faqTitle')}
+              </h4>
+              <div className="space-y-2 text-sm text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)]">
                 <p>
                   <strong>Q: {t('faq1Question')}</strong>
                   <br />
-                  <span className="text-gray-600 dark:text-gray-400">A: {t('faq1Answer')}</span>
+                  <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    A: {t('faq1Answer')}
+                  </span>
                 </p>
                 <p>
                   <strong>Q: {t('faq2Question')}</strong>
                   <br />
-                  <span className="text-gray-600 dark:text-gray-400">A: {t('faq2Answer')}</span>
+                  <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    A: {t('faq2Answer')}
+                  </span>
                 </p>
                 <p>
                   <strong>Q: {t('faq3Question')}</strong>
                   <br />
-                  <span className="text-gray-600 dark:text-gray-400">A: {t('faq3Answer')}</span>
+                  <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    A: {t('faq3Answer')}
+                  </span>
                 </p>
               </div>
             </div>

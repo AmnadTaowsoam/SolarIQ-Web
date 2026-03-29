@@ -141,13 +141,13 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
       <CardBody>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Order Summary */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-[var(--brand-background)] rounded-lg p-4">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-600">{plan.name} Plan</span>
+              <span className="text-[var(--brand-text-secondary)]">{plan.name} Plan</span>
               <span className="font-semibold">{formatPrice(price)}</span>
             </div>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-gray-600">Billing Cycle</span>
+              <span className="text-[var(--brand-text-secondary)]">Billing Cycle</span>
               <span className="font-semibold capitalize">{billingCycle}</span>
             </div>
             {billingCycle === 'annual' && (
@@ -156,7 +156,7 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
                 <span>-{formatPrice(plan.price_thb * 12 * 0.2)}</span>
               </div>
             )}
-            <div className="border-t border-gray-200 pt-2 mt-2">
+            <div className="border-t border-[var(--brand-border)] pt-2 mt-2">
               <div className="flex justify-between items-center font-bold text-lg">
                 <span>Total</span>
                 <span>{formatPrice(price)}</span>
@@ -166,7 +166,9 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
 
           {/* Payment Method Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">Payment Method</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-3">
+              Payment Method
+            </label>
             <div className="grid grid-cols-1 gap-3">
               {PAYMENT_METHODS.map((method) => (
                 <button
@@ -175,22 +177,24 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
                   onClick={() => handlePaymentMethodChange(method.id)}
                   className={`flex items-center gap-3 p-4 border-2 rounded-lg transition-colors ${
                     selectedMethod === method.id
-                      ? 'border-blue-600 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-blue-600 bg-blue-500/10'
+                      : 'border-[var(--brand-border)] hover:border-[var(--brand-border)]'
                   }`}
                 >
                   <div
                     className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
                       selectedMethod === method.id
                         ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-600'
+                        : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
                     }`}
                   >
                     {method.icon}
                   </div>
                   <div className="flex-1 text-left">
                     <div className="font-medium">{method.name}</div>
-                    <div className="text-sm text-gray-500">{method.description}</div>
+                    <div className="text-sm text-[var(--brand-text-secondary)]">
+                      {method.description}
+                    </div>
                   </div>
                   {selectedMethod === method.id && (
                     <CheckCircle className="w-5 h-5 text-blue-600" />
@@ -203,7 +207,9 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
           {/* Bank Selection for Bank Transfer */}
           {selectedMethod === 'bank_transfer' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Select Bank</label>
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-3">
+                Select Bank
+              </label>
               <div className="grid grid-cols-1 gap-2">
                 {BANK_OPTIONS.map((bank) => (
                   <button
@@ -212,20 +218,20 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
                     onClick={() => handleBankChange(bank.value)}
                     className={`flex items-center gap-3 p-3 border-2 rounded-lg transition-colors ${
                       selectedBank === bank.value
-                        ? 'border-blue-600 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-blue-600 bg-blue-500/10'
+                        : 'border-[var(--brand-border)] hover:border-[var(--brand-border)]'
                     }`}
                   >
                     <div
                       className={`flex-shrink-0 w-4 h-4 rounded-full border-2 ${
                         selectedBank === bank.value
                           ? 'border-blue-600 bg-blue-600'
-                          : 'border-gray-300'
+                          : 'border-[var(--brand-border)]'
                       }`}
                     >
                       {selectedBank === bank.value && (
                         <div className="w-full h-full flex items-center justify-center">
-                          <div className="w-2 h-2 bg-white rounded-full" />
+                          <div className="w-2 h-2 bg-[var(--brand-surface)] rounded-full" />
                         </div>
                       )}
                     </div>
@@ -238,7 +244,7 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
 
           {/* PromptPay QR Code Display */}
           {checkoutResult?.qrCodeUri && selectedMethod === 'promptpay' && (
-            <div className="bg-gray-50 rounded-lg p-6 text-center">
+            <div className="bg-[var(--brand-background)] rounded-lg p-6 text-center">
               <div className="mb-4">
                 <Image
                   src={checkoutResult.qrCodeUri}
@@ -248,11 +254,13 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
                   className="mx-auto"
                 />
               </div>
-              <p className="text-sm text-gray-600 mb-2">
+              <p className="text-sm text-[var(--brand-text-secondary)] mb-2">
                 Scan this QR code with your mobile banking app to complete payment
               </p>
-              <p className="text-sm text-gray-500">Amount: {formatPrice(price)}</p>
-              <p className="text-xs text-gray-400 mt-4">
+              <p className="text-sm text-[var(--brand-text-secondary)]">
+                Amount: {formatPrice(price)}
+              </p>
+              <p className="text-xs text-[var(--brand-text-secondary)] mt-4">
                 Payment will be processed automatically after scanning
               </p>
             </div>
@@ -260,10 +268,10 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
 
           {/* Error Display */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <p className="text-sm text-red-800 font-medium">Payment Error</p>
+                <p className="text-sm text-red-400 font-medium">Payment Error</p>
                 <p className="text-sm text-red-700">{error}</p>
               </div>
             </div>
@@ -290,7 +298,7 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
           </Button>
 
           {/* Security Notice */}
-          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center justify-center gap-2 text-xs text-[var(--brand-text-secondary)]">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"

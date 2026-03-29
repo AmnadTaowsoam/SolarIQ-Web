@@ -18,7 +18,9 @@ export function CurrencyDisplay({
   conversionAmount,
 }: CurrencyDisplayProps) {
   const { formatCurrency, formatCurrencyCompact } = useCurrency()
-  const primary = compact ? formatCurrencyCompact(amount, currency) : formatCurrency(amount, currency)
+  const primary = compact
+    ? formatCurrencyCompact(amount, currency)
+    : formatCurrency(amount, currency)
 
   if (!showConversion || conversionAmount === undefined) {
     return <span>{primary}</span>
@@ -28,7 +30,7 @@ export function CurrencyDisplay({
 
   return (
     <span>
-      {primary} <span className="text-xs text-gray-400">(~{secondary})</span>
+      {primary} <span className="text-xs text-[var(--brand-text-secondary)]">(~{secondary})</span>
     </span>
   )
 }

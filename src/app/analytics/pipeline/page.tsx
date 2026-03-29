@@ -31,9 +31,9 @@ export default function PipelinePage() {
           <CardBody>
             <ul className="space-y-3">
               {data.bottlenecks.map((item) => (
-                <li key={item.stage} className="p-3 border border-gray-100 rounded-lg">
-                  <p className="text-sm font-semibold text-gray-900">{item.stage}</p>
-                  <p className="text-xs text-gray-500 mt-1">{item.issue}</p>
+                <li key={item.stage} className="p-3 border border-[var(--brand-border)] rounded-lg">
+                  <p className="text-sm font-semibold text-[var(--brand-text)]">{item.stage}</p>
+                  <p className="text-xs text-[var(--brand-text-secondary)] mt-1">{item.issue}</p>
                   <p className="text-xs text-orange-600 mt-2">{item.recommendation}</p>
                 </li>
               ))}
@@ -46,16 +46,20 @@ export default function PipelinePage() {
           <CardBody>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">Weighted</span>
-                <span className="font-semibold">฿{data.forecast.weighted.toLocaleString('en-US')}</span>
+                <span className="text-[var(--brand-text-secondary)]">Weighted</span>
+                <span className="font-semibold">
+                  ฿{data.forecast.weighted.toLocaleString('en-US')}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Best case</span>
+                <span className="text-[var(--brand-text-secondary)]">Best case</span>
                 <span className="font-semibold">฿{data.forecast.best.toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Worst case</span>
-                <span className="font-semibold">฿{data.forecast.worst.toLocaleString('en-US')}</span>
+                <span className="text-[var(--brand-text-secondary)]">Worst case</span>
+                <span className="font-semibold">
+                  ฿{data.forecast.worst.toLocaleString('en-US')}
+                </span>
               </div>
             </div>
           </CardBody>

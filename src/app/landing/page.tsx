@@ -105,7 +105,7 @@ function Navbar() {
   return (
     <nav
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/95 backdrop-blur shadow-md' : 'bg-transparent'
+        scrolled ? 'bg-[var(--brand-surface)]/95 backdrop-blur shadow-md' : 'bg-transparent'
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -117,7 +117,7 @@ function Navbar() {
             </div>
             <span
               className={`text-xl font-bold transition-colors ${
-                scrolled ? 'text-gray-900' : 'text-white'
+                scrolled ? 'text-[var(--brand-text)]' : 'text-white'
               }`}
             >
               SolarIQ
@@ -131,7 +131,7 @@ function Navbar() {
                 key={l.href}
                 href={l.href}
                 className={`text-sm font-medium transition-colors hover:text-primary-500 ${
-                  scrolled ? 'text-gray-700' : 'text-white/90'
+                  scrolled ? 'text-[var(--brand-text)]' : 'text-white/90'
                 }`}
               >
                 {l.label}
@@ -149,7 +149,7 @@ function Navbar() {
           <button
             onClick={() => setOpen(!open)}
             className={`md:hidden p-2 rounded-lg transition-colors ${
-              scrolled ? 'text-gray-700' : 'text-white'
+              scrolled ? 'text-[var(--brand-text)]' : 'text-white'
             }`}
             aria-label="Toggle menu"
           >
@@ -160,14 +160,14 @@ function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-white border-t shadow-lg">
+        <div className="md:hidden bg-[var(--brand-surface)] border-t shadow-lg">
           <div className="px-4 py-3 space-y-2">
             {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-600"
+                className="block rounded-lg px-3 py-2 text-sm font-medium text-[var(--brand-text)] hover:bg-primary-50 hover:text-primary-600"
               >
                 {l.label}
               </a>
@@ -192,12 +192,12 @@ function Hero() {
   return (
     <div className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-primary-600 via-primary-500 to-amber-500">
       {/* Decorative circles */}
-      <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full bg-white/5" />
-      <div className="absolute -bottom-60 -left-60 h-[500px] w-[500px] rounded-full bg-white/5" />
+      <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full bg-[var(--brand-surface)]/5" />
+      <div className="absolute -bottom-60 -left-60 h-[500px] w-[500px] rounded-full bg-[var(--brand-surface)]/5" />
       <div className="absolute top-1/3 right-1/4 h-72 w-72 rounded-full bg-amber-400/10" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-32 sm:px-6 lg:px-8 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-4 py-1.5 text-sm font-medium text-white mb-8">
+        <div className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-surface)]/15 backdrop-blur px-4 py-1.5 text-sm font-medium text-white mb-8">
           <Zap className="h-4 w-4" />
           <span>แพลตฟอร์ม AI สำหรับธุรกิจโซลาร์เซลล์</span>
         </div>
@@ -217,14 +217,14 @@ function Hero() {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/login"
-            className="group inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-bold text-primary-600 shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all"
+            className="group inline-flex items-center gap-2 rounded-xl bg-[var(--brand-surface)] px-8 py-4 text-base font-bold text-primary-600 shadow-lg hover:shadow-xl hover:bg-[var(--brand-background)] transition-all"
           >
             เริ่มใช้งานฟรี
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Link>
           <a
             href="#how-it-works"
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-white/40 px-8 py-4 text-base font-bold text-white hover:bg-white/10 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-white/40 px-8 py-4 text-base font-bold text-white hover:bg-[var(--brand-surface)]/10 transition-all"
           >
             ดูตัวอย่าง
             <ChevronDown className="h-5 w-5" />
@@ -277,16 +277,16 @@ const painPoints = [
 
 function PainPoints() {
   return (
-    <Section id="pain-points" className="py-20 sm:py-28 bg-gray-50">
+    <Section id="pain-points" className="py-20 sm:py-28 bg-[var(--brand-background)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <span className="inline-block rounded-full bg-red-100 px-4 py-1 text-sm font-semibold text-red-600 mb-4">
             ปัญหาที่พบบ่อย
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--brand-text)]">
             ปัญหาที่ธุรกิจโซลาร์กำลังเผชิญ
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--brand-text-secondary)]">
             หลายธุรกิจโซลาร์เซลล์ยังคงใช้วิธีดั้งเดิมที่ไม่มีประสิทธิภาพ
             ทำให้สูญเสียโอกาสในการเติบโต
           </p>
@@ -296,13 +296,15 @@ function PainPoints() {
           {painPoints.map((p, i) => (
             <div
               key={i}
-              className="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:border-primary-200 transition-all duration-300"
+              className="group rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-sm hover:shadow-lg hover:border-primary-200 transition-all duration-300"
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-red-500 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/10 text-red-500 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
                 <p.icon className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">{p.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">{p.desc}</p>
+              <h3 className="text-lg font-semibold text-[var(--brand-text)]">{p.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-secondary)]">
+                {p.desc}
+              </p>
             </div>
           ))}
         </div>
@@ -337,13 +339,15 @@ const steps = [
 
 function HowItWorks() {
   return (
-    <Section id="how-it-works" className="py-20 sm:py-28 bg-white">
+    <Section id="how-it-works" className="py-20 sm:py-28 bg-[var(--brand-surface)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <span className="inline-block rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-600 mb-4">
             ง่ายใน 3 ขั้นตอน
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">ใช้งานง่าย ได้ผลจริง</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--brand-text)]">
+            ใช้งานง่าย ได้ผลจริง
+          </h2>
         </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
@@ -362,8 +366,8 @@ function HowItWorks() {
                   {s.num}
                 </span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900">{s.title}</h3>
-              <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-gray-600">
+              <h3 className="text-xl font-semibold text-[var(--brand-text)]">{s.title}</h3>
+              <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-[var(--brand-text-secondary)]">
                 {s.desc}
               </p>
             </div>
@@ -430,14 +434,16 @@ const features = [
 
 function Features() {
   return (
-    <Section id="features" className="py-20 sm:py-28 bg-gray-50">
+    <Section id="features" className="py-20 sm:py-28 bg-[var(--brand-background)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <span className="inline-block rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-600 mb-4">
             ฟีเจอร์ทั้งหมด
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">ฟีเจอร์ที่ไม่เหมือนใคร</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--brand-text)]">
+            ฟีเจอร์ที่ไม่เหมือนใคร
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--brand-text-secondary)]">
             เทคโนโลยี AI ขั้นสูง ผสาน Google Solar API, ข้อมูลอากาศ 10 ปี, และ PM2.5
             เพื่อการวิเคราะห์ที่แม่นยำที่สุดในไทย
           </p>
@@ -447,14 +453,16 @@ function Features() {
           {features.map((f, i) => (
             <div
               key={i}
-              className="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg hover:border-primary-200 transition-all duration-300"
+              className="group rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-sm hover:shadow-lg hover:border-primary-200 transition-all duration-300"
             >
               <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-50 to-amber-50 text-primary-600 group-hover:from-primary-100 group-hover:to-amber-100 transition-colors">
                 <f.icon className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">{f.title}</h3>
+              <h3 className="text-lg font-semibold text-[var(--brand-text)]">{f.title}</h3>
               <p className="text-sm text-primary-600 font-medium">{f.thai}</p>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">{f.desc}</p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-secondary)]">
+                {f.desc}
+              </p>
             </div>
           ))}
         </div>
@@ -522,16 +530,16 @@ const tiers = [
 
 function Pricing() {
   return (
-    <Section id="pricing" className="py-20 sm:py-28 bg-white">
+    <Section id="pricing" className="py-20 sm:py-28 bg-[var(--brand-surface)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <span className="inline-block rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-600 mb-4">
             ราคา
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--brand-text)]">
             แพ็กเกจที่เหมาะกับทุกธุรกิจ
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--brand-text-secondary)]">
             ทดลองใช้ฟรี 14 วัน ไม่ต้องใส่บัตรเครดิต
           </p>
         </div>
@@ -542,8 +550,8 @@ function Pricing() {
               key={i}
               className={`relative rounded-2xl border p-8 transition-all duration-300 hover:shadow-xl ${
                 t.popular
-                  ? 'border-primary-400 bg-white shadow-lg ring-2 ring-primary-400'
-                  : 'border-gray-200 bg-white shadow-sm'
+                  ? 'border-primary-400 bg-[var(--brand-surface)] shadow-lg ring-2 ring-primary-400'
+                  : 'border-[var(--brand-border)] bg-[var(--brand-surface)] shadow-sm'
               }`}
             >
               {t.popular && (
@@ -551,24 +559,28 @@ function Pricing() {
                   แนะนำ
                 </span>
               )}
-              <h3 className="text-xl font-bold text-gray-900">{t.name}</h3>
-              <p className="mt-1 text-sm text-gray-500">{t.desc}</p>
+              <h3 className="text-xl font-bold text-[var(--brand-text)]">{t.name}</h3>
+              <p className="mt-1 text-sm text-[var(--brand-text-secondary)]">{t.desc}</p>
 
               <div className="mt-6">
                 {t.price === 'ติดต่อเรา' ? (
-                  <span className="text-3xl font-extrabold text-gray-900">{t.price}</span>
+                  <span className="text-3xl font-extrabold text-[var(--brand-text)]">
+                    {t.price}
+                  </span>
                 ) : (
                   <div className="flex items-baseline gap-1">
-                    <span className="text-sm text-gray-500">฿</span>
-                    <span className="text-4xl font-extrabold text-gray-900">{t.price}</span>
-                    <span className="text-sm text-gray-500">/เดือน</span>
+                    <span className="text-sm text-[var(--brand-text-secondary)]">฿</span>
+                    <span className="text-4xl font-extrabold text-[var(--brand-text)]">
+                      {t.price}
+                    </span>
+                    <span className="text-sm text-[var(--brand-text-secondary)]">/เดือน</span>
                   </div>
                 )}
               </div>
 
               <ul className="mt-8 space-y-3">
                 {t.features.map((f, fi) => (
-                  <li key={fi} className="flex items-start gap-3 text-sm text-gray-700">
+                  <li key={fi} className="flex items-start gap-3 text-sm text-[var(--brand-text)]">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
                     {f}
                   </li>
@@ -617,7 +629,7 @@ function ROICalculator() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <span className="inline-block rounded-full bg-white/20 backdrop-blur px-4 py-1 text-sm font-semibold text-white mb-4">
+          <span className="inline-block rounded-full bg-[var(--brand-surface)]/20 backdrop-blur px-4 py-1 text-sm font-semibold text-white mb-4">
             ROI Calculator
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white">คำนวณผลตอบแทนของคุณ</h2>
@@ -626,8 +638,8 @@ function ROICalculator() {
           </p>
         </div>
 
-        <div className="mx-auto mt-12 max-w-3xl rounded-2xl bg-white p-8 shadow-2xl">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <div className="mx-auto mt-12 max-w-3xl rounded-2xl bg-[var(--brand-surface)] p-8 shadow-2xl">
+          <label className="block text-sm font-semibold text-[var(--brand-text)] mb-2">
             จำนวนลูกค้าเฉลี่ยต่อเดือน
           </label>
           <div className="flex items-center gap-4">
@@ -698,34 +710,38 @@ const testimonials = [
 
 function Testimonials() {
   return (
-    <Section className="py-20 sm:py-28 bg-gray-50">
+    <Section className="py-20 sm:py-28 bg-[var(--brand-background)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <span className="inline-block rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-600 mb-4">
             ลูกค้าของเรา
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">เสียงจากผู้ใช้จริง</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[var(--brand-text)]">
+            เสียงจากผู้ใช้จริง
+          </h2>
         </div>
 
         <div className="mt-14 grid gap-8 md:grid-cols-3">
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-lg transition-shadow duration-300"
+              className="rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-sm hover:shadow-lg transition-shadow duration-300"
             >
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: t.rating }).map((_, si) => (
                   <Star key={si} className="h-5 w-5 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <p className="text-sm leading-relaxed text-gray-700">&ldquo;{t.text}&rdquo;</p>
+              <p className="text-sm leading-relaxed text-[var(--brand-text)]">
+                &ldquo;{t.text}&rdquo;
+              </p>
               <div className="mt-6 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-amber-400 text-sm font-bold text-white">
                   {t.name.charAt(3)}
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-gray-900">{t.name}</div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-sm font-semibold text-[var(--brand-text)]">{t.name}</div>
+                  <div className="text-xs text-[var(--brand-text-secondary)]">
                     {t.role}, {t.company}
                   </div>
                 </div>
@@ -743,12 +759,12 @@ function Testimonials() {
 /* ------------------------------------------------------------------ */
 function CTAFooter() {
   return (
-    <Section className="py-20 sm:py-28 bg-white">
+    <Section className="py-20 sm:py-28 bg-[var(--brand-surface)]">
       <div className="mx-auto max-w-4xl px-4 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+        <h2 className="text-3xl sm:text-4xl font-bold text-[var(--brand-text)]">
           พร้อมเพิ่มยอดขายโซลาร์ของคุณ?
         </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--brand-text-secondary)]">
           เริ่มทดลองใช้ฟรี 14 วัน ไม่ต้องใส่บัตรเครดิต ยกเลิกได้ตลอดเวลา
         </p>
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -761,7 +777,7 @@ function CTAFooter() {
           </Link>
           <Link
             href="/pricing-plans"
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-gray-300 px-8 py-4 text-base font-bold text-gray-700 hover:border-primary-400 hover:text-primary-600 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-[var(--brand-border)] px-8 py-4 text-base font-bold text-[var(--brand-text)] hover:border-primary-400 hover:text-primary-600 transition-all"
           >
             ดูแพ็กเกจราคา
           </Link>
@@ -776,16 +792,16 @@ function CTAFooter() {
 /* ------------------------------------------------------------------ */
 function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-gray-50 py-12">
+    <footer className="border-t border-[var(--brand-border)] bg-[var(--brand-background)] py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-amber-500">
               <Zap className="h-4 w-4 text-white" />
             </div>
-            <span className="text-lg font-bold text-gray-900">SolarIQ</span>
+            <span className="text-lg font-bold text-[var(--brand-text)]">SolarIQ</span>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-[var(--brand-text-secondary)]">
             <Link href="/pricing-plans" className="hover:text-primary-600 transition-colors">
               แพ็กเกจ
             </Link>
@@ -805,7 +821,7 @@ function Footer() {
               เข้าสู่ระบบ
             </Link>
           </div>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-[var(--brand-text-secondary)]">
             &copy; {new Date().getFullYear()} SolarIQ. All rights reserved.
           </p>
         </div>

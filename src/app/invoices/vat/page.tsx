@@ -213,7 +213,7 @@ export default function VATInvoicePage() {
                           inv.status === 'issued'
                             ? 'bg-green-500/10 text-green-600'
                             : inv.status === 'draft'
-                              ? 'bg-gray-500/10 text-gray-600'
+                              ? 'bg-gray-500/10 text-[var(--brand-text-secondary)]'
                               : 'bg-red-500/10 text-red-600'
                         }`}
                       >

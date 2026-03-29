@@ -15,12 +15,12 @@ export default async function NotFound() {
         {/* SolarIQ branding */}
         <div className="mb-6">
           <span className="text-3xl font-bold text-orange-600">Solar</span>
-          <span className="text-3xl font-bold text-gray-800">IQ</span>
+          <span className="text-3xl font-bold text-[var(--brand-text)]">IQ</span>
         </div>
 
         <h1 className="text-8xl font-extrabold text-orange-200 mb-2">404</h1>
-        <h2 className="text-2xl font-semibold text-gray-900 mb-3">{t('title')}</h2>
-        <p className="text-gray-600 mb-8">{t('description')}</p>
+        <h2 className="text-2xl font-semibold text-[var(--brand-text)] mb-3">{t('title')}</h2>
+        <p className="text-[var(--brand-text-secondary)] mb-8">{t('description')}</p>
 
         <div className="flex flex-wrap gap-3 justify-center mb-10">
           <Link
@@ -31,7 +31,7 @@ export default async function NotFound() {
           </Link>
           <Link
             href="/pricing-plans"
-            className="inline-flex items-center px-5 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            className="inline-flex items-center px-5 py-2.5 bg-[var(--brand-surface)] text-[var(--brand-text)] border border-[var(--brand-border)] rounded-lg hover:bg-[var(--brand-background)] transition-colors font-medium"
           >
             {t('goBack')}
           </Link>

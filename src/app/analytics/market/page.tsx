@@ -6,7 +6,10 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recha
 
 export default function MarketPage() {
   const { data } = useAnalyticsMarket()
-  const distribution = Object.entries(data.systemSize.distribution).map(([label, count]) => ({ label, count }))
+  const distribution = Object.entries(data.systemSize.distribution).map(([label, count]) => ({
+    label,
+    count,
+  }))
 
   return (
     <div className="space-y-6">
@@ -33,7 +36,7 @@ export default function MarketPage() {
             <ul className="space-y-2 text-sm">
               {data.popularBrands.panels.map((brand) => (
                 <li key={brand.name} className="flex justify-between">
-                  <span className="text-gray-700">{brand.name}</span>
+                  <span className="text-[var(--brand-text)]">{brand.name}</span>
                   <span className="font-semibold">{brand.count}</span>
                 </li>
               ))}
@@ -46,7 +49,7 @@ export default function MarketPage() {
             <ul className="space-y-2 text-sm">
               {data.popularBrands.inverters.map((brand) => (
                 <li key={brand.name} className="flex justify-between">
-                  <span className="text-gray-700">{brand.name}</span>
+                  <span className="text-[var(--brand-text)]">{brand.name}</span>
                   <span className="font-semibold">{brand.count}</span>
                 </li>
               ))}

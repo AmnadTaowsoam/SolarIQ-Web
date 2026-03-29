@@ -78,23 +78,18 @@ export function Modal({
             >
               <Dialog.Panel
                 className={clsx(
-                  'w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all',
+                  'w-full transform overflow-hidden rounded-2xl bg-[var(--brand-surface)] p-6 text-left align-middle shadow-xl transition-all',
                   sizeStyles[size]
                 )}
               >
                 {showCloseButton && (
                   <button
                     type="button"
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="absolute top-4 right-4 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] focus:outline-none"
                     onClick={onClose}
                     aria-label="Close modal"
                   >
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -106,13 +101,16 @@ export function Modal({
                 )}
 
                 {title && (
-                  <Dialog.Title as="h3" className="text-lg font-semibold text-gray-900 mb-2">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-semibold text-[var(--brand-text)] mb-2"
+                  >
                     {title}
                   </Dialog.Title>
                 )}
 
                 {description && (
-                  <Dialog.Description className="text-sm text-gray-500 mb-4">
+                  <Dialog.Description className="text-sm text-[var(--brand-text-secondary)] mb-4">
                     {description}
                   </Dialog.Description>
                 )}
@@ -134,8 +132,6 @@ export interface ModalFooterProps {
 
 export function ModalFooter({ children, className }: ModalFooterProps) {
   return (
-    <div className={clsx('mt-6 flex items-center justify-end gap-3', className)}>
-      {children}
-    </div>
+    <div className={clsx('mt-6 flex items-center justify-end gap-3', className)}>{children}</div>
   )
 }

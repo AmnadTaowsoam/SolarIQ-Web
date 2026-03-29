@@ -98,7 +98,10 @@ export default function NewInstallationPage() {
       <div className="max-w-2xl">
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
-          <Link href="/maintenance" className="text-gray-400 hover:text-gray-600">
+          <Link
+            href="/maintenance"
+            className="text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)]"
+          >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -109,24 +112,26 @@ export default function NewInstallationPage() {
             </svg>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-sm text-gray-500">{t('subtitle')}</p>
+            <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-sm text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
           </div>
         </div>
 
         {error && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div className="mb-4 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Customer Info */}
-          <div className="rounded-xl border bg-white p-5">
-            <h2 className="mb-4 text-sm font-semibold text-gray-900">{t('sections.customer')}</h2>
+          <div className="rounded-xl border bg-[var(--brand-surface)] p-5">
+            <h2 className="mb-4 text-sm font-semibold text-[var(--brand-text)]">
+              {t('sections.customer')}
+            </h2>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   {t('fields.customerName')} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -135,12 +140,12 @@ export default function NewInstallationPage() {
                   value={form.customer_name}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                  className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.phone')}
                   </label>
                   <input
@@ -148,11 +153,11 @@ export default function NewInstallationPage() {
                     name="customer_phone"
                     value={form.customer_phone}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.email')}
                   </label>
                   <input
@@ -160,12 +165,12 @@ export default function NewInstallationPage() {
                     name="customer_email"
                     value={form.customer_email}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   {t('fields.address')} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -174,19 +179,21 @@ export default function NewInstallationPage() {
                   value={form.address}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                  className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                 />
               </div>
             </div>
           </div>
 
           {/* System Info */}
-          <div className="rounded-xl border bg-white p-5">
-            <h2 className="mb-4 text-sm font-semibold text-gray-900">{t('sections.system')}</h2>
+          <div className="rounded-xl border bg-[var(--brand-surface)] p-5">
+            <h2 className="mb-4 text-sm font-semibold text-[var(--brand-text)]">
+              {t('sections.system')}
+            </h2>
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.systemSize')} <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -197,11 +204,11 @@ export default function NewInstallationPage() {
                     required
                     step="any"
                     min="0.1"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.panelCount')}
                   </label>
                   <input
@@ -210,13 +217,13 @@ export default function NewInstallationPage() {
                     value={form.panel_count}
                     onChange={handleChange}
                     min="1"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.panelBrand')} <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -224,7 +231,7 @@ export default function NewInstallationPage() {
                     value={form.panel_brand}
                     onChange={handleChange}
                     required
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   >
                     <option value="">{t('fields.selectBrand')}</option>
                     {PANEL_BRANDS.map((b) => (
@@ -235,7 +242,7 @@ export default function NewInstallationPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.panelModel')}
                   </label>
                   <input
@@ -243,13 +250,13 @@ export default function NewInstallationPage() {
                     name="panel_model"
                     value={form.panel_model}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.inverterBrand')} <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -257,7 +264,7 @@ export default function NewInstallationPage() {
                     value={form.inverter_brand}
                     onChange={handleChange}
                     required
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   >
                     <option value="">{t('fields.selectBrand')}</option>
                     {INVERTER_BRANDS.map((b) => (
@@ -268,7 +275,7 @@ export default function NewInstallationPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.inverterModel')}
                   </label>
                   <input
@@ -276,7 +283,7 @@ export default function NewInstallationPage() {
                     name="inverter_model"
                     value={form.inverter_model}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
               </div>
@@ -284,14 +291,14 @@ export default function NewInstallationPage() {
           </div>
 
           {/* Installation Info */}
-          <div className="rounded-xl border bg-white p-5">
-            <h2 className="mb-4 text-sm font-semibold text-gray-900">
+          <div className="rounded-xl border bg-[var(--brand-surface)] p-5">
+            <h2 className="mb-4 text-sm font-semibold text-[var(--brand-text)]">
               {t('sections.installation')}
             </h2>
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.installationDate')} <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -300,18 +307,18 @@ export default function NewInstallationPage() {
                     value={form.installation_date}
                     onChange={handleChange}
                     required
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('fields.warrantyYears')}
                   </label>
                   <select
                     name="warranty_years"
                     value={form.warranty_years}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   >
                     {[5, 10, 15, 20, 25].map((y) => (
                       <option key={y} value={y}>
@@ -322,7 +329,7 @@ export default function NewInstallationPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   {t('fields.notes')}
                 </label>
                 <textarea
@@ -330,7 +337,7 @@ export default function NewInstallationPage() {
                   value={form.notes}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500 resize-none"
+                  className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500 resize-none"
                 />
               </div>
             </div>
@@ -340,7 +347,7 @@ export default function NewInstallationPage() {
           <div className="flex gap-3">
             <Link
               href="/maintenance"
-              className="rounded-lg border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] px-6 py-2.5 text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-background)]"
             >
               {t('cancel')}
             </Link>

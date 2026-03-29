@@ -20,20 +20,24 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="border-b border-gray-200 dark:border-gray-700 last:border-0">
+    <div className="border-b border-[var(--brand-border)] dark:border-gray-700 last:border-0">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between py-4 text-left"
       >
-        <span className="text-sm font-semibold text-gray-900 dark:text-white pr-4">{q}</span>
+        <span className="text-sm font-semibold text-[var(--brand-text)] dark:text-white pr-4">
+          {q}
+        </span>
         {isOpen ? (
           <ChevronUp className="h-4 w-4 shrink-0 text-primary-500" />
         ) : (
-          <ChevronDown className="h-4 w-4 shrink-0 text-gray-400" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-[var(--brand-text-secondary)]" />
         )}
       </button>
       {isOpen && (
-        <div className="pb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{a}</div>
+        <div className="pb-4 text-sm leading-relaxed text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+          {a}
+        </div>
       )}
     </div>
   )
@@ -61,11 +65,13 @@ export default function CheckoutCancelPage() {
         </div>
 
         {/* Heading */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--brand-text)] dark:text-white mb-3">
           {t('title')}
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">{t('subtitle')}</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+        <p className="text-lg text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-2">
+          {t('subtitle')}
+        </p>
+        <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-8">
           คุณสามารถลองใหม่ได้ตลอดเวลา หรือเลือกแพ็กเกจอื่นที่เหมาะสม
         </p>
 
@@ -80,7 +86,7 @@ export default function CheckoutCancelPage() {
           </Link>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 px-6 py-4 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-[var(--brand-border)] dark:border-gray-700 px-6 py-4 text-sm font-semibold text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-primary-light)] dark:hover:bg-gray-800 transition-colors"
           >
             <MessageCircle className="h-4 w-4" />
             {t('contactUs')}
@@ -88,12 +94,14 @@ export default function CheckoutCancelPage() {
         </div>
 
         {/* FAQ Section */}
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 text-left shadow-sm">
+        <div className="rounded-2xl border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-surface)] dark:bg-gray-800 p-6 text-left shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <HelpCircle className="h-5 w-5 text-primary-500" />
-            <h2 className="text-base font-bold text-gray-900 dark:text-white">{t('faqTitle')}</h2>
+            <h2 className="text-base font-bold text-[var(--brand-text)] dark:text-white">
+              {t('faqTitle')}
+            </h2>
           </div>
-          <div className="divide-y divide-gray-200 dark:divide-gray-700 border-t border-gray-200 dark:border-gray-700">
+          <div className="divide-y divide-[var(--brand-border)] dark:divide-gray-700 border-t border-[var(--brand-border)] dark:border-gray-700">
             {faqs.map((faq) => (
               <FAQItem key={faq.q} q={faq.q} a={faq.a} />
             ))}
@@ -103,7 +111,7 @@ export default function CheckoutCancelPage() {
         {/* Back link */}
         <Link
           href="/pricing-plans"
-          className="inline-flex items-center gap-2 mt-8 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary-600 transition-colors"
+          className="inline-flex items-center gap-2 mt-8 text-sm font-medium text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:text-primary-600 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('backToPlans')}

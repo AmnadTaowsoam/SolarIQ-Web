@@ -167,8 +167,8 @@ export default function ServiceAreaPage() {
     <AppLayout user={user}>
       <div className="max-w-3xl space-y-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
+          <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+          <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Mode selector */}
@@ -188,7 +188,7 @@ export default function ServiceAreaPage() {
                   className={`flex items-center gap-2 flex-1 p-3 rounded-xl border-2 cursor-pointer transition-colors ${
                     settings.mode === opt.value
                       ? 'border-orange-500 bg-orange-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      : 'border-[var(--brand-border)] hover:border-[var(--brand-border)]'
                   } ${opt.enterprise ? 'opacity-60' : ''}`}
                 >
                   <input
@@ -200,7 +200,7 @@ export default function ServiceAreaPage() {
                     disabled={opt.enterprise}
                     className="h-4 w-4 text-orange-500"
                   />
-                  <span className="text-sm font-medium text-gray-900">{opt.label}</span>
+                  <span className="text-sm font-medium text-[var(--brand-text)]">{opt.label}</span>
                   {opt.enterprise && (
                     <span className="ml-auto text-[10px] font-semibold px-1.5 py-0.5 bg-purple-50 text-purple-600 rounded-full">
                       Enterprise
@@ -232,10 +232,10 @@ export default function ServiceAreaPage() {
                   }}
                   onFocus={() => setShowProvinceDropdown(true)}
                   onBlur={() => setTimeout(() => setShowProvinceDropdown(false), 150)}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full rounded-lg border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
                 {showProvinceDropdown && filteredProvinces.length > 0 && (
-                  <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                  <div className="absolute z-20 mt-1 w-full bg-[var(--brand-surface)] border border-[var(--brand-border)] rounded-xl shadow-lg max-h-48 overflow-y-auto">
                     {filteredProvinces.slice(0, 20).map((province) => (
                       <button
                         key={province}
@@ -283,7 +283,7 @@ export default function ServiceAreaPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-400 italic">
+                <p className="text-sm text-[var(--brand-text-secondary)] italic">
                   {t('provinceSelection.noneSelected')}
                 </p>
               )}
@@ -298,7 +298,7 @@ export default function ServiceAreaPage() {
             <CardBody className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('radiusMode.centerProvince')}
                   </label>
                   <select
@@ -306,7 +306,7 @@ export default function ServiceAreaPage() {
                     onChange={(e) =>
                       setSettings((prev) => ({ ...prev, radius_center_province: e.target.value }))
                     }
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     {THAI_PROVINCES.map((p) => (
                       <option key={p} value={p}>
@@ -316,7 +316,7 @@ export default function ServiceAreaPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                     {t('radiusMode.radius')}
                   </label>
                   <input
@@ -330,7 +330,7 @@ export default function ServiceAreaPage() {
                     }
                     className="w-full accent-orange-500"
                   />
-                  <div className="flex justify-between text-xs text-gray-400 mt-1">
+                  <div className="flex justify-between text-xs text-[var(--brand-text-secondary)] mt-1">
                     <span>10 {t('radiusUnit')}</span>
                     <span className="font-semibold text-orange-600">
                       {settings.radius_km} {t('radiusUnit')}
@@ -340,7 +340,7 @@ export default function ServiceAreaPage() {
                 </div>
               </div>
               {/* Static map placeholder */}
-              <div className="h-40 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center text-gray-400">
+              <div className="h-40 bg-[var(--brand-background)] border-2 border-dashed border-[var(--brand-border)] rounded-xl flex items-center justify-center text-[var(--brand-text-secondary)]">
                 <div className="text-center">
                   <svg
                     className="w-10 h-10 mx-auto mb-2 opacity-40"
@@ -373,7 +373,7 @@ export default function ServiceAreaPage() {
           <CardBody className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   {t('leadReception.maxPerDay')}
                 </label>
                 <input
@@ -384,11 +384,11 @@ export default function ServiceAreaPage() {
                   onChange={(e) =>
                     setSettings((prev) => ({ ...prev, max_leads_per_day: Number(e.target.value) }))
                   }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full rounded-lg border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   {t('leadReception.activeHours')}
                 </label>
                 <div className="flex items-center gap-2">
@@ -398,26 +398,30 @@ export default function ServiceAreaPage() {
                     onChange={(e) =>
                       setSettings((prev) => ({ ...prev, active_from: e.target.value }))
                     }
-                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="flex-1 rounded-lg border border-[var(--brand-border)] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
-                  <span className="text-gray-500 text-sm">{t('leadReception.to')}</span>
+                  <span className="text-[var(--brand-text-secondary)] text-sm">
+                    {t('leadReception.to')}
+                  </span>
                   <input
                     type="time"
                     value={settings.active_to}
                     onChange={(e) =>
                       setSettings((prev) => ({ ...prev, active_to: e.target.value }))
                     }
-                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="flex-1 rounded-lg border border-[var(--brand-border)] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               </div>
             </div>
 
             {/* Pause toggle */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+            <div className="flex items-center justify-between p-4 bg-[var(--brand-background)] rounded-xl">
               <div>
-                <p className="text-sm font-medium text-gray-900">{t('leadReception.pauseTitle')}</p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-sm font-medium text-[var(--brand-text)]">
+                  {t('leadReception.pauseTitle')}
+                </p>
+                <p className="text-xs text-[var(--brand-text-secondary)] mt-0.5">
                   {t('leadReception.pauseDescription')}
                 </p>
               </div>
@@ -427,11 +431,11 @@ export default function ServiceAreaPage() {
                 aria-checked={settings.paused}
                 onClick={() => setSettings((prev) => ({ ...prev, paused: !prev.paused }))}
                 className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  settings.paused ? 'bg-red-500' : 'bg-gray-200'
+                  settings.paused ? 'bg-red-500/100' : 'bg-[var(--brand-border)]'
                 }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-[var(--brand-surface)] shadow ring-0 transition duration-200 ease-in-out ${
                     settings.paused ? 'translate-x-5' : 'translate-x-0'
                   }`}
                 />
@@ -439,7 +443,7 @@ export default function ServiceAreaPage() {
             </div>
 
             {settings.paused && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-700">
                 {t('leadReception.pausedWarning')}
               </div>
             )}

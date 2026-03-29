@@ -71,7 +71,7 @@ function MessageBubble({ message, showAvatar = true, onReply: _onReply }: Messag
   if (isSystem) {
     return (
       <div className="flex justify-center my-4">
-        <div className="bg-gray-100 rounded-full px-4 py-2 text-sm text-gray-600">
+        <div className="bg-[var(--brand-background)] rounded-full px-4 py-2 text-sm text-[var(--brand-text-secondary)]">
           {message.content}
         </div>
       </div>
@@ -91,7 +91,7 @@ function MessageBubble({ message, showAvatar = true, onReply: _onReply }: Messag
       <div
         className={cn(
           'max-w-[70%] rounded-lg px-3 py-2',
-          isOwn ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-900'
+          isOwn ? 'bg-blue-500 text-white' : 'bg-[var(--brand-background)] text-[var(--brand-text)]'
         )}
       >
         {/* Reply indicator */}
@@ -101,7 +101,7 @@ function MessageBubble({ message, showAvatar = true, onReply: _onReply }: Messag
               'text-xs mb-1 px-2 py-1 rounded border-l-2',
               isOwn
                 ? 'bg-blue-600 border-blue-300 text-blue-100'
-                : 'bg-gray-200 border-gray-400 text-gray-600'
+                : 'bg-[var(--brand-border)] border-gray-400 text-[var(--brand-text-secondary)]'
             )}
           >
             <p className="truncate">{message.replyTo.content}</p>
@@ -124,7 +124,7 @@ function MessageBubble({ message, showAvatar = true, onReply: _onReply }: Messag
         <div
           className={cn(
             'flex items-center gap-1 mt-1 text-xs',
-            isOwn ? 'text-blue-100' : 'text-gray-500'
+            isOwn ? 'text-blue-100' : 'text-[var(--brand-text-secondary)]'
           )}
         >
           <span>{formatMessageTime(message.createdAt)}</span>
@@ -160,7 +160,7 @@ function renderMessageContent(message: ChatMessage, isOwn: boolean) {
 
     case ContentType.LOCATION:
       return (
-        <div className={cn('rounded p-3', isOwn ? 'bg-blue-600' : 'bg-gray-200')}>
+        <div className={cn('rounded p-3', isOwn ? 'bg-blue-600' : 'bg-[var(--brand-border)]')}>
           <div className="flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -196,7 +196,9 @@ function renderMessageContent(message: ChatMessage, isOwn: boolean) {
         <div
           className={cn(
             'rounded p-3 border',
-            isOwn ? 'bg-blue-600 border-blue-400' : 'bg-white border-gray-200'
+            isOwn
+              ? 'bg-blue-600 border-blue-400'
+              : 'bg-[var(--brand-surface)] border-[var(--brand-border)]'
           )}
         >
           <div className="flex items-center gap-2 mb-2">
@@ -215,7 +217,12 @@ function renderMessageContent(message: ChatMessage, isOwn: boolean) {
               <p className="text-lg font-bold">{message.quoteData.systemSize} kW</p>
               <p className="text-sm">฿{message.quoteData.totalPrice.toLocaleString()}</p>
               {message.quoteData.validUntil && (
-                <p className={cn('text-xs mt-1', isOwn ? 'text-blue-200' : 'text-gray-500')}>
+                <p
+                  className={cn(
+                    'text-xs mt-1',
+                    isOwn ? 'text-blue-200' : 'text-[var(--brand-text-secondary)]'
+                  )}
+                >
                   {format(new Date(message.quoteData.validUntil), 'd MMM yyyy', {
                     locale: th,
                   })}
@@ -228,7 +235,7 @@ function renderMessageContent(message: ChatMessage, isOwn: boolean) {
 
     case ContentType.DOCUMENT:
       return (
-        <div className={cn('rounded p-3', isOwn ? 'bg-blue-600' : 'bg-gray-200')}>
+        <div className={cn('rounded p-3', isOwn ? 'bg-blue-600' : 'bg-[var(--brand-border)]')}>
           <div className="flex items-center gap-2">
             <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -280,7 +287,10 @@ function MessageAttachment({ attachment, isOwn }: MessageAttachmentProps) {
       href={attachment.url}
       target="_blank"
       rel="noopener noreferrer"
-      className={cn('flex items-center gap-2 p-2 rounded', isOwn ? 'bg-blue-600' : 'bg-gray-200')}
+      className={cn(
+        'flex items-center gap-2 p-2 rounded',
+        isOwn ? 'bg-blue-600' : 'bg-[var(--brand-border)]'
+      )}
     >
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -323,7 +333,7 @@ function TypingIndicator({
           style={{ animationDelay: '300ms' }}
         />
       </div>
-      <span className="text-sm text-gray-500">{t('typing')}</span>
+      <span className="text-sm text-[var(--brand-text-secondary)]">{t('typing')}</span>
     </div>
   )
 }
@@ -335,7 +345,9 @@ interface DateSeparatorProps {
 function DateSeparator({ date }: DateSeparatorProps) {
   return (
     <div className="flex items-center justify-center my-4">
-      <div className="bg-gray-100 rounded-full px-4 py-1 text-xs text-gray-500">{date}</div>
+      <div className="bg-[var(--brand-background)] rounded-full px-4 py-1 text-xs text-[var(--brand-text-secondary)]">
+        {date}
+      </div>
     </div>
   )
 }
@@ -392,10 +404,10 @@ function MessageInput({
   }
 
   return (
-    <div className="flex items-center gap-2 p-4 border-t border-gray-200 bg-white">
+    <div className="flex items-center gap-2 p-4 border-t border-[var(--brand-border)] bg-[var(--brand-surface)]">
       {/* Attachment button */}
       <button
-        className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full"
+        className="p-2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] hover:bg-[var(--brand-background)] rounded-full"
         title={t('attachFile')}
       >
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -416,7 +428,7 @@ function MessageInput({
         onKeyPress={handleKeyPress}
         placeholder={placeholder ?? t('typeMessage')}
         disabled={disabled}
-        className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+        className="flex-1 px-4 py-2 border border-[var(--brand-border)] rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-[var(--brand-background)]"
       />
 
       {/* Send button */}
@@ -494,16 +506,16 @@ export function ChatArea({
   const groupedMessages = groupMessagesByDate(messages)
 
   return (
-    <div className={cn('flex flex-col h-full bg-gray-50', className)}>
+    <div className={cn('flex flex-col h-full bg-[var(--brand-background)]', className)}>
       {/* Thread header */}
       {thread && (
-        <div className="px-4 py-3 border-b border-gray-200 bg-white">
+        <div className="px-4 py-3 border-b border-[var(--brand-border)] bg-[var(--brand-surface)]">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-gray-900">
+              <h3 className="font-semibold text-[var(--brand-text)]">
                 {thread.metadata?.customerName || t('customer')}
               </h3>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-[var(--brand-text-secondary)]">
                 {thread.metadata?.propertyType}
                 {thread.metadata?.systemSize && ` • ${thread.metadata.systemSize} kW`}
               </p>
@@ -512,10 +524,10 @@ export function ChatArea({
               <Badge
                 className={cn(
                   thread.status === 'active'
-                    ? 'bg-green-100 text-green-800'
+                    ? 'bg-green-500/10 text-green-800'
                     : thread.status === 'archived'
-                      ? 'bg-gray-100 text-gray-800'
-                      : 'bg-red-100 text-red-800'
+                      ? 'bg-[var(--brand-background)] text-[var(--brand-text)]'
+                      : 'bg-red-100 text-red-400'
                 )}
               >
                 {thread.status === 'active'
@@ -553,9 +565,9 @@ export function ChatArea({
 
         {/* Empty state */}
         {!isLoading && messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-gray-500">
+          <div className="flex flex-col items-center justify-center h-full text-[var(--brand-text-secondary)]">
             <svg
-              className="w-16 h-16 mb-4 text-gray-300"
+              className="w-16 h-16 mb-4 text-[var(--brand-text-secondary)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

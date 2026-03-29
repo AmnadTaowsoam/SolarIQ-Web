@@ -195,7 +195,9 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
         <Card className="p-6">
           <div
             className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-              isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400'
+              isDragging
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-[var(--brand-border)] hover:border-blue-400'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -212,26 +214,28 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
             {isUploading ? (
               <div className="flex flex-col items-center gap-4">
                 <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-                <p className="text-gray-600">Analyzing bill with AI...</p>
-                <p className="text-sm text-gray-500">This may take a few seconds</p>
+                <p className="text-[var(--brand-text-secondary)]">Analyzing bill with AI...</p>
+                <p className="text-sm text-[var(--brand-text-secondary)]">
+                  This may take a few seconds
+                </p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-4">
-                <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center">
+                <div className="h-16 w-16 rounded-full bg-blue-500/10 flex items-center justify-center">
                   <Upload className="h-8 w-8 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-[var(--brand-text)] mb-2">
                     Upload Electricity Bill
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-[var(--brand-text-secondary)] mb-4">
                     Drag and drop your PEA/MEA bill image here, or click to browse
                   </p>
                   <Button onClick={() => fileInputRef.current?.click()} variant="primary">
                     Select File
                   </Button>
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-[var(--brand-text-secondary)]">
                   <p>Supported formats: JPEG, PNG, WEBP</p>
                   <p>Maximum file size: 10MB</p>
                 </div>
@@ -240,7 +244,7 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
           </div>
 
           {extractionResult && !extractionResult.success && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-semibold text-red-900 mb-1">Extraction Failed</h4>
@@ -255,8 +259,10 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
       ) : (
         <Card className="p-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Confirm Bill Information</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="text-lg font-semibold text-[var(--brand-text)] mb-2">
+              Confirm Bill Information
+            </h3>
+            <p className="text-sm text-[var(--brand-text-secondary)]">
               Please review the extracted information below and make any necessary corrections.
             </p>
           </div>
@@ -264,9 +270,11 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
           {editedData && (
             <div className="space-y-4">
               {/* Confidence Score */}
-              <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="p-4 bg-[var(--brand-background)] rounded-lg">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">Extraction Confidence</span>
+                  <span className="text-sm font-medium text-[var(--brand-text)]">
+                    Extraction Confidence
+                  </span>
                   <span
                     className={`text-sm font-semibold ${getConfidenceColor(editedData.confidence)}`}
                   >
@@ -278,7 +286,7 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
 
               {/* Provider */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   Electricity Provider
                 </label>
                 <select
@@ -289,7 +297,7 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
                       provider: e.target.value as 'PEA' | 'MEA' | 'UNKNOWN',
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="PEA">PEA (Provincial Electricity Authority)</option>
                   <option value="MEA">MEA (Metropolitan Electricity Authority)</option>
@@ -299,7 +307,7 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
 
               {/* Account Number */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   Account Number
                 </label>
                 <input
@@ -311,14 +319,14 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
                       account_number: e.target.value,
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., CA-12345678"
                 />
               </div>
 
               {/* Billing Period */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   Billing Period
                 </label>
                 <input
@@ -330,14 +338,14 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
                       billing_period: e.target.value,
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., 15 ก.พ. - 15 มี.ค. 2569"
                 />
               </div>
 
               {/* Total kWh */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   Total Consumption (kWh)
                 </label>
                 <input
@@ -349,14 +357,14 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
                       total_kwh: parseFloat(e.target.value) || undefined,
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., 450"
                 />
               </div>
 
               {/* Total Amount */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   Total Amount (THB)
                 </label>
                 <input
@@ -369,18 +377,18 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
                       total_amount_thb: parseFloat(e.target.value) || undefined,
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., 2150.75"
                 />
               </div>
 
               {/* TOU Data */}
               {(editedData.peak_kwh !== undefined || editedData.off_peak_kwh !== undefined) && (
-                <div className="p-4 bg-blue-50 rounded-lg">
+                <div className="p-4 bg-blue-500/10 rounded-lg">
                   <h4 className="font-semibold text-blue-900 mb-3">TOU (Time of Use) Data</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                         Peak kWh
                       </label>
                       <input
@@ -392,12 +400,12 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
                             peak_kwh: parseFloat(e.target.value) || undefined,
                           })
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="e.g., 200"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                         Off-Peak kWh
                       </label>
                       <input
@@ -409,7 +417,7 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
                             off_peak_kwh: parseFloat(e.target.value) || undefined,
                           })
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="e.g., 250"
                       />
                     </div>
@@ -418,7 +426,7 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-gray-200">
+              <div className="flex gap-3 pt-4 border-t border-[var(--brand-border)]">
                 <Button
                   onClick={handleConfirm}
                   variant="primary"

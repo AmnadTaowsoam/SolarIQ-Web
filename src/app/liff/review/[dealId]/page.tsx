@@ -159,12 +159,12 @@ function StarRating({
 
 function ReviewSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 animate-pulse">
+    <div className="min-h-screen bg-[var(--brand-background)] pb-24 animate-pulse">
       <div className="bg-orange-500 px-4 py-5 h-20" />
       <div className="px-4 py-6 space-y-4 max-w-lg mx-auto">
-        <div className="bg-white rounded-2xl p-4 h-24" />
-        <div className="bg-white rounded-2xl p-4 h-48" />
-        <div className="bg-white rounded-2xl p-4 h-32" />
+        <div className="bg-[var(--brand-surface)] rounded-2xl p-4 h-24" />
+        <div className="bg-[var(--brand-surface)] rounded-2xl p-4 h-48" />
+        <div className="bg-[var(--brand-surface)] rounded-2xl p-4 h-32" />
       </div>
     </div>
   )
@@ -193,9 +193,9 @@ function ExistingReviewView({ review, t }: { review: ExistingReview; t: (key: st
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl p-5 shadow-sm">
+      <div className="bg-[var(--brand-surface)] rounded-2xl p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <span className="font-semibold text-gray-800">
+          <span className="font-semibold text-[var(--brand-text)]">
             {t('states.alreadyReviewed.yourReview')}
           </span>
           <div className="flex items-center gap-2">
@@ -206,7 +206,7 @@ function ExistingReviewView({ review, t }: { review: ExistingReview; t: (key: st
         <div className="space-y-3">
           {DIMENSION_KEYS.map((key) => (
             <div key={key} className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-[var(--brand-text-secondary)]">
                 {t(`dimensions.${DIMENSION_LABELS[key]}`)}
               </span>
               <StarRating value={review.dimensions[key]} readonly size="sm" />
@@ -216,17 +216,19 @@ function ExistingReviewView({ review, t }: { review: ExistingReview; t: (key: st
       </div>
 
       {review.review_text && (
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <h3 className="font-semibold text-gray-800 mb-2 text-sm">
+        <div className="bg-[var(--brand-surface)] rounded-2xl p-5 shadow-sm">
+          <h3 className="font-semibold text-[var(--brand-text)] mb-2 text-sm">
             {t('states.alreadyReviewed.yourReview')}
           </h3>
-          <p className="text-gray-600 text-sm leading-relaxed">{review.review_text}</p>
+          <p className="text-[var(--brand-text-secondary)] text-sm leading-relaxed">
+            {review.review_text}
+          </p>
         </div>
       )}
 
       {review.photos && review.photos.length > 0 && (
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <h3 className="font-semibold text-gray-800 mb-3 text-sm">
+        <div className="bg-[var(--brand-surface)] rounded-2xl p-5 shadow-sm">
+          <h3 className="font-semibold text-[var(--brand-text)] mb-3 text-sm">
             {t('states.alreadyReviewed.attachedPhotos')}
           </h3>
           <div className="grid grid-cols-3 gap-2">
@@ -384,8 +386,8 @@ export default function ReviewPage() {
   // Error state
   if (pageState === 'error') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-sm p-8 text-center max-w-sm w-full">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
+        <div className="bg-[var(--brand-surface)] rounded-2xl shadow-sm p-8 text-center max-w-sm w-full">
           <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
               className="w-7 h-7 text-red-500"
@@ -401,8 +403,8 @@ export default function ReviewPage() {
               />
             </svg>
           </div>
-          <h2 className="font-bold text-gray-900 mb-2">{t('states.error.title')}</h2>
-          <p className="text-gray-500 text-sm">{loadError}</p>
+          <h2 className="font-bold text-[var(--brand-text)] mb-2">{t('states.error.title')}</h2>
+          <p className="text-[var(--brand-text-secondary)] text-sm">{loadError}</p>
         </div>
       </div>
     )
@@ -411,9 +413,9 @@ export default function ReviewPage() {
   // Success state
   if (pageState === 'success') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-sm p-8 text-center max-w-sm w-full">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5 animate-bounce">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
+        <div className="bg-[var(--brand-surface)] rounded-2xl shadow-sm p-8 text-center max-w-sm w-full">
+          <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-5 animate-bounce">
             <svg
               className="w-10 h-10 text-green-500"
               fill="none"
@@ -424,12 +426,18 @@ export default function ReviewPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">{t('states.success.title')}</h2>
-          <p className="text-gray-500 text-sm mb-5">{t('states.success.description')}</p>
+          <h2 className="text-xl font-bold text-[var(--brand-text)] mb-2">
+            {t('states.success.title')}
+          </h2>
+          <p className="text-[var(--brand-text-secondary)] text-sm mb-5">
+            {t('states.success.description')}
+          </p>
           <div className="flex justify-center mb-6">
             <StarRating value={overallRating()} readonly size="lg" />
           </div>
-          <p className="text-gray-400 text-xs">{t('states.success.closeNotice')}</p>
+          <p className="text-[var(--brand-text-secondary)] text-xs">
+            {t('states.success.closeNotice')}
+          </p>
         </div>
       </div>
     )
@@ -438,7 +446,7 @@ export default function ReviewPage() {
   // Already reviewed state
   if (pageState === 'already_reviewed' && reviewRequest?.existing_review) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-8">
+      <div className="min-h-screen bg-[var(--brand-background)] pb-8">
         <div className="bg-orange-500 text-white px-4 py-5">
           <div className="max-w-lg mx-auto">
             <h1 className="text-lg font-bold">{t('states.alreadyReviewed.title')}</h1>
@@ -446,7 +454,7 @@ export default function ReviewPage() {
         </div>
         <div className="px-4 py-6 max-w-lg mx-auto">
           {/* Contractor info */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm mb-5">
+          <div className="bg-[var(--brand-surface)] rounded-2xl p-4 shadow-sm mb-5">
             <div className="flex items-center gap-3">
               {reviewRequest.contractor_logo ? (
                 <Image
@@ -475,8 +483,12 @@ export default function ReviewPage() {
                 </div>
               )}
               <div>
-                <p className="font-semibold text-gray-900">{reviewRequest.contractor_name}</p>
-                <p className="text-xs text-gray-500">{reviewRequest.deal_summary}</p>
+                <p className="font-semibold text-[var(--brand-text)]">
+                  {reviewRequest.contractor_name}
+                </p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">
+                  {reviewRequest.deal_summary}
+                </p>
               </div>
             </div>
           </div>
@@ -489,13 +501,13 @@ export default function ReviewPage() {
   // Submitting overlay
   if (pageState === 'submitting') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-sm p-8 text-center max-w-sm w-full">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
+        <div className="bg-[var(--brand-surface)] rounded-2xl shadow-sm p-8 text-center max-w-sm w-full">
           <div className="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <div className="w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin" />
           </div>
-          <h2 className="font-bold text-gray-900 mb-2">{t('states.submitting')}</h2>
-          <p className="text-gray-500 text-sm">{t('states.pleaseWait')}</p>
+          <h2 className="font-bold text-[var(--brand-text)] mb-2">{t('states.submitting')}</h2>
+          <p className="text-[var(--brand-text-secondary)] text-sm">{t('states.pleaseWait')}</p>
         </div>
       </div>
     )
@@ -503,7 +515,7 @@ export default function ReviewPage() {
 
   // Form state
   return (
-    <div className="min-h-screen bg-gray-50 pb-28">
+    <div className="min-h-screen bg-[var(--brand-background)] pb-28">
       {/* Header */}
       <div className="bg-orange-500 text-white px-4 py-5">
         <div className="max-w-lg mx-auto">
@@ -515,7 +527,7 @@ export default function ReviewPage() {
       <div className="px-4 py-5 space-y-4 max-w-lg mx-auto">
         {/* Contractor info card */}
         {reviewRequest && (
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <div className="bg-[var(--brand-surface)] rounded-2xl p-4 shadow-sm">
             <div className="flex items-center gap-3 mb-3">
               {reviewRequest.contractor_logo ? (
                 <Image
@@ -544,8 +556,12 @@ export default function ReviewPage() {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-900">{reviewRequest.contractor_name}</p>
-                <p className="text-xs text-gray-500 truncate">{reviewRequest.deal_summary}</p>
+                <p className="font-semibold text-[var(--brand-text)]">
+                  {reviewRequest.contractor_name}
+                </p>
+                <p className="text-xs text-[var(--brand-text-secondary)] truncate">
+                  {reviewRequest.deal_summary}
+                </p>
               </div>
               <StarRating value={overallRating()} readonly size="sm" />
             </div>
@@ -553,12 +569,14 @@ export default function ReviewPage() {
         )}
 
         {/* Dimension ratings */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <h2 className="font-semibold text-gray-900 mb-4">{t('form.rateDimensions')}</h2>
+        <div className="bg-[var(--brand-surface)] rounded-2xl p-5 shadow-sm">
+          <h2 className="font-semibold text-[var(--brand-text)] mb-4">
+            {t('form.rateDimensions')}
+          </h2>
           <div className="space-y-4">
             {DIMENSION_KEYS.map((key) => (
               <div key={key} className="flex items-center justify-between gap-4">
-                <span className="text-sm text-gray-700 w-24 flex-shrink-0">
+                <span className="text-sm text-[var(--brand-text)] w-24 flex-shrink-0">
                   {t(`dimensions.${DIMENSION_LABELS[key]}`)}
                 </span>
                 <div className="flex-1 flex justify-end">
@@ -577,15 +595,19 @@ export default function ReviewPage() {
             ))}
           </div>
           {!allDimensionsRated && (
-            <p className="text-xs text-gray-400 mt-3">{t('form.allRequired')}</p>
+            <p className="text-xs text-[var(--brand-text-secondary)] mt-3">
+              {t('form.allRequired')}
+            </p>
           )}
         </div>
 
         {/* Review text */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <h2 className="font-semibold text-gray-900 mb-3">
+        <div className="bg-[var(--brand-surface)] rounded-2xl p-5 shadow-sm">
+          <h2 className="font-semibold text-[var(--brand-text)] mb-3">
             {t('form.yourReview')}{' '}
-            <span className="text-gray-400 font-normal text-sm">{t('form.minCharacters')}</span>
+            <span className="text-[var(--brand-text-secondary)] font-normal text-sm">
+              {t('form.minCharacters')}
+            </span>
           </h2>
           <textarea
             value={formData.review_text}
@@ -594,23 +616,29 @@ export default function ReviewPage() {
             }
             rows={4}
             placeholder={t('form.placeholder')}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
+            className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
           />
           <div className="flex justify-between mt-1">
             {formData.review_text.trim().length > 0 && formData.review_text.trim().length < 10 && (
               <p className="text-xs text-red-500">ต้องการอย่างน้อย 10 ตัวอักษร</p>
             )}
-            <p className="text-xs text-gray-400 ml-auto">{formData.review_text.length}/500</p>
+            <p className="text-xs text-[var(--brand-text-secondary)] ml-auto">
+              {formData.review_text.length}/500
+            </p>
           </div>
         </div>
 
         {/* Photo upload */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <h2 className="font-semibold text-gray-900 mb-1">
+        <div className="bg-[var(--brand-surface)] rounded-2xl p-5 shadow-sm">
+          <h2 className="font-semibold text-[var(--brand-text)] mb-1">
             แนบรูปภาพ{' '}
-            <span className="text-gray-400 font-normal text-sm">(ไม่บังคับ สูงสุด 3 รูป)</span>
+            <span className="text-[var(--brand-text-secondary)] font-normal text-sm">
+              (ไม่บังคับ สูงสุด 3 รูป)
+            </span>
           </h2>
-          <p className="text-xs text-gray-400 mb-3">รูปภาพงานติดตั้ง ระบบ หรือผลลัพธ์</p>
+          <p className="text-xs text-[var(--brand-text-secondary)] mb-3">
+            รูปภาพงานติดตั้ง ระบบ หรือผลลัพธ์
+          </p>
 
           <div className="flex gap-3 flex-wrap">
             {photoPreviews.map((preview, idx) => (
@@ -643,7 +671,7 @@ export default function ReviewPage() {
             {formData.photos.length < 3 && (
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center hover:border-orange-400 hover:bg-orange-50 transition-colors text-gray-400 hover:text-orange-500"
+                className="w-24 h-24 border-2 border-dashed border-[var(--brand-border)] rounded-xl flex flex-col items-center justify-center hover:border-orange-400 hover:bg-orange-50 transition-colors text-[var(--brand-text-secondary)] hover:text-orange-500"
               >
                 <svg className="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -670,14 +698,14 @@ export default function ReviewPage() {
 
         {/* Submit error */}
         {submitError && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700">
             {submitError}
           </div>
         )}
       </div>
 
       {/* Fixed bottom submit */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-[var(--brand-surface)] border-t border-[var(--brand-border)] px-4 py-4">
         <div className="max-w-lg mx-auto">
           <button
             onClick={handleSubmit}

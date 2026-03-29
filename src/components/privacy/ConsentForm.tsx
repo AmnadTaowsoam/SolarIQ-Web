@@ -80,15 +80,15 @@ export function ConsentForm({ onComplete, showRequiredOnly = false }: ConsentFor
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {consentError && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-700">
           {consentError}
         </div>
       )}
 
       {/* Required Consents */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">{t('necessary')}</h3>
-        <p className="text-sm text-gray-600">{t('necessaryDesc')}</p>
+        <h3 className="text-lg font-semibold text-[var(--brand-text)]">{t('necessary')}</h3>
+        <p className="text-sm text-[var(--brand-text-secondary)]">{t('necessaryDesc')}</p>
         {consentTypes.required.map((ct) => (
           <Card key={ct.type} className="p-4">
             <label className="flex items-start gap-3 cursor-pointer">
@@ -96,14 +96,14 @@ export function ConsentForm({ onComplete, showRequiredOnly = false }: ConsentFor
                 type="checkbox"
                 checked={consentValues[ct.type] || false}
                 onChange={() => handleToggle(ct.type, true)}
-                className="mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="mt-1 h-5 w-5 rounded border-[var(--brand-border)] text-blue-600 focus:ring-blue-500"
                 required
               />
               <div className="flex-1">
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-[var(--brand-text)]">
                   {CONSENT_DESCRIPTIONS[ct.type] || ct.description}
                 </p>
-                <p className="text-sm text-gray-500 mt-1">{t('accept')}</p>
+                <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('accept')}</p>
               </div>
             </label>
           </Card>
@@ -113,8 +113,8 @@ export function ConsentForm({ onComplete, showRequiredOnly = false }: ConsentFor
       {/* Optional Consents */}
       {!showRequiredOnly && consentTypes.optional.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">{t('analytics')}</h3>
-          <p className="text-sm text-gray-600">{t('analyticsDesc')}</p>
+          <h3 className="text-lg font-semibold text-[var(--brand-text)]">{t('analytics')}</h3>
+          <p className="text-sm text-[var(--brand-text-secondary)]">{t('analyticsDesc')}</p>
           {consentTypes.optional.map((ct) => (
             <Card key={ct.type} className="p-4">
               <label className="flex items-start gap-3 cursor-pointer">
@@ -122,13 +122,13 @@ export function ConsentForm({ onComplete, showRequiredOnly = false }: ConsentFor
                   type="checkbox"
                   checked={consentValues[ct.type] || false}
                   onChange={() => handleToggle(ct.type, false)}
-                  className="mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="mt-1 h-5 w-5 rounded border-[var(--brand-border)] text-blue-600 focus:ring-blue-500"
                 />
                 <div className="flex-1">
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-[var(--brand-text)]">
                     {CONSENT_DESCRIPTIONS[ct.type] || ct.description}
                   </p>
-                  <p className="text-sm text-gray-500 mt-1">{t('save')}</p>
+                  <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('save')}</p>
                 </div>
               </label>
             </Card>
@@ -176,7 +176,7 @@ export function ConsentForm({ onComplete, showRequiredOnly = false }: ConsentFor
       </div>
 
       {/* Privacy Policy Link */}
-      <div className="text-center text-sm text-gray-500">
+      <div className="text-center text-sm text-[var(--brand-text-secondary)]">
         <p>
           {t('title')}{' '}
           <a href="/privacy" className="text-blue-600 hover:underline">

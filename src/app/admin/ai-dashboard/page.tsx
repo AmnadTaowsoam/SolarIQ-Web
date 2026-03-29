@@ -84,12 +84,14 @@ function StatCard({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+    <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-5 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">{title}</span>
+        <span className="text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wide">
+          {title}
+        </span>
         <span className={colorClasses[color]}>{icon}</span>
       </div>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
+      <p className="text-2xl font-bold text-[var(--brand-text)]">{value}</p>
       {trend && (
         <p className={`text-xs mt-1 ${trend.value >= 0 ? 'text-green-600' : 'text-red-600'}`}>
           {trend.value >= 0 ? '↑' : '↓'} {Math.abs(trend.value)}% {trend.label}
@@ -124,19 +126,23 @@ function ProgressBar({
   return (
     <div className="w-full">
       <div className="flex justify-between text-xs mb-1">
-        <span className="text-gray-600">
+        <span className="text-[var(--brand-text-secondary)]">
           {used} {isUnlimited ? '' : `/ ${limit}`}
         </span>
         <span
           className={
-            isUnlimited ? 'text-green-600' : percentage >= 90 ? 'text-red-600' : 'text-gray-500'
+            isUnlimited
+              ? 'text-green-600'
+              : percentage >= 90
+                ? 'text-red-600'
+                : 'text-[var(--brand-text-secondary)]'
           }
         >
           {isUnlimited ? unlimitedLabel : `${percentage.toFixed(1)}%`}
         </span>
       </div>
       {!isUnlimited && (
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-[var(--brand-border)] rounded-full h-2">
           <div
             className={`${colorClasses[color]} h-2 rounded-full transition-all duration-300`}
             style={{ width: `${Math.min(percentage, 100)}%` }}
@@ -158,18 +164,22 @@ function UsageBarChart({
     <div className="space-y-2">
       {data.map((item, index) => (
         <div key={index} className="flex items-center gap-3">
-          <div className="w-20 text-xs text-gray-500 flex-shrink-0">
+          <div className="w-20 text-xs text-[var(--brand-text-secondary)] flex-shrink-0">
             {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
           </div>
           <div className="flex-1">
-            <div className="relative h-8 bg-gray-100 rounded overflow-hidden">
+            <div className="relative h-8 bg-[var(--brand-background)] rounded overflow-hidden">
               <div
                 className="absolute left-0 top-0 h-full bg-orange-400 transition-all duration-300"
                 style={{ width: `${(item.requests / maxRequests) * 100}%` }}
               />
               <div className="absolute inset-0 flex items-center px-3">
-                <span className="text-xs font-medium text-gray-700">{item.requests} req</span>
-                <span className="ml-auto text-xs text-gray-500">฿{item.cost_thb.toFixed(2)}</span>
+                <span className="text-xs font-medium text-[var(--brand-text)]">
+                  {item.requests} req
+                </span>
+                <span className="ml-auto text-xs text-[var(--brand-text-secondary)]">
+                  ฿{item.cost_thb.toFixed(2)}
+                </span>
               </div>
             </div>
           </div>
@@ -279,7 +289,7 @@ export default function AIDashboardPage() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center min-h-[50vh]">
-          <p className="text-gray-500">{t('unauthorized')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('unauthorized')}</p>
         </div>
       </AppLayout>
     )
@@ -289,8 +299,8 @@ export default function AIDashboardPage() {
     return (
       <AppLayout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-800">{error}</p>
+          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+            <p className="text-red-400">{error}</p>
             <button
               onClick={loadDashboardData}
               className="mt-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
@@ -308,12 +318,12 @@ export default function AIDashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-          <p className="mt-2 text-gray-600">{t('subtitle')}</p>
+          <h1 className="text-3xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+          <p className="mt-2 text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
+        <div className="border-b border-[var(--brand-border)] mb-6">
           <nav className="flex space-x-8">
             {[
               { id: 'overview', label: t('tabs.overview') },
@@ -329,7 +339,7 @@ export default function AIDashboardPage() {
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
                     ? 'border-orange-500 text-orange-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    : 'border-transparent text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
                 }`}
               >
                 {tab.label}
@@ -454,12 +464,14 @@ export default function AIDashboardPage() {
             </div>
 
             {/* Usage History */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('usageHistory')}</h2>
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-6">
+              <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
+                {t('usageHistory')}
+              </h2>
               {usageHistory.length > 0 ? (
                 <UsageBarChart data={usageHistory.slice(0, 14)} />
               ) : (
-                <p className="text-gray-500 text-sm">{t('noData')}</p>
+                <p className="text-[var(--brand-text-secondary)] text-sm">{t('noData')}</p>
               )}
             </div>
           </div>
@@ -469,14 +481,14 @@ export default function AIDashboardPage() {
         {activeTab === 'usage' && usageStats && planUsage && (
           <div className="space-y-6">
             {/* Plan Usage */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-6">
+              <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
                 {t('planUsage')} ({planUsage.plan_name})
               </h2>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-gray-700">{t('analyses')}</span>
+                    <span className="font-medium text-[var(--brand-text)]">{t('analyses')}</span>
                   </div>
                   <ProgressBar
                     used={planUsage.analyses_used}
@@ -488,7 +500,7 @@ export default function AIDashboardPage() {
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-gray-700">{t('billOcr')}</span>
+                    <span className="font-medium text-[var(--brand-text)]">{t('billOcr')}</span>
                   </div>
                   <ProgressBar
                     used={planUsage.ocr_used}
@@ -500,7 +512,9 @@ export default function AIDashboardPage() {
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-gray-700">{t('chatMessages')}</span>
+                    <span className="font-medium text-[var(--brand-text)]">
+                      {t('chatMessages')}
+                    </span>
                   </div>
                   <ProgressBar
                     used={planUsage.chat_used}
@@ -512,7 +526,7 @@ export default function AIDashboardPage() {
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-gray-700">{t('ragQueries')}</span>
+                    <span className="font-medium text-[var(--brand-text)]">{t('ragQueries')}</span>
                   </div>
                   <ProgressBar
                     used={planUsage.rag_used}
@@ -526,22 +540,26 @@ export default function AIDashboardPage() {
             </div>
 
             {/* Breakdown by Feature */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('usageByFeature')}</h2>
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-6">
+              <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
+                {t('usageByFeature')}
+              </h2>
               <div className="space-y-3">
                 {Object.entries(usageStats.breakdown_by_feature).map(([feature, data]) => (
                   <div
                     key={feature}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-3 bg-[var(--brand-background)] rounded-lg"
                   >
                     <div>
-                      <p className="font-medium text-gray-900 capitalize">{feature}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="font-medium text-[var(--brand-text)] capitalize">{feature}</p>
+                      <p className="text-sm text-[var(--brand-text-secondary)]">
                         {data.requests} {t('requests')}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900">฿{data.cost_thb.toFixed(2)}</p>
+                      <p className="font-semibold text-[var(--brand-text)]">
+                        ฿{data.cost_thb.toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -549,22 +567,26 @@ export default function AIDashboardPage() {
             </div>
 
             {/* Breakdown by Model */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('usageByModel')}</h2>
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-6">
+              <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
+                {t('usageByModel')}
+              </h2>
               <div className="space-y-3">
                 {Object.entries(usageStats.breakdown_by_model).map(([model, data]) => (
                   <div
                     key={model}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-3 bg-[var(--brand-background)] rounded-lg"
                   >
                     <div>
-                      <p className="font-medium text-gray-900">{model}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="font-medium text-[var(--brand-text)]">{model}</p>
+                      <p className="text-sm text-[var(--brand-text-secondary)]">
                         {data.requests} {t('requests')}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900">฿{data.cost_thb.toFixed(2)}</p>
+                      <p className="font-semibold text-[var(--brand-text)]">
+                        ฿{data.cost_thb.toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -575,52 +597,54 @@ export default function AIDashboardPage() {
 
         {/* Organizations Tab */}
         {activeTab === 'organizations' && (
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">{t('orgUsage')}</h2>
+          <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] overflow-hidden">
+            <div className="p-6 border-b border-[var(--brand-border)]">
+              <h2 className="text-lg font-semibold text-[var(--brand-text)]">{t('orgUsage')}</h2>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-[var(--brand-border)]">
+                <thead className="bg-[var(--brand-background)]">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider">
                       {t('columns.organization')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider">
                       {t('columns.plan')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider">
                       {t('columns.requests')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider">
                       {t('columns.costThb')}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider">
                       {t('columns.cacheHitRate')}
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-[var(--brand-surface)] divide-y divide-[var(--brand-border)]">
                   {orgUsage.map((org) => (
-                    <tr key={org.org_id} className="hover:bg-gray-50">
+                    <tr key={org.org_id} className="hover:bg-[var(--brand-primary-light)]">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-[var(--brand-text)]">
                           {org.org_name || t('unknown')}
                         </div>
-                        <div className="text-xs text-gray-500">{org.org_id}</div>
+                        <div className="text-xs text-[var(--brand-text-secondary)]">
+                          {org.org_id}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                        <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-500/10 text-blue-500">
                           {org.plan_name}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--brand-text)]">
                         {org.total_requests.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--brand-text)]">
                         ฿{org.total_cost_thb.toFixed(2)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--brand-text)]">
                         {org.cache_hit_rate.toFixed(1)}%
                       </td>
                     </tr>
@@ -682,9 +706,11 @@ export default function AIDashboardPage() {
               />
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">{t('cacheManagement')}</h2>
+                <h2 className="text-lg font-semibold text-[var(--brand-text)]">
+                  {t('cacheManagement')}
+                </h2>
                 <button
                   onClick={handleInvalidateCache}
                   className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 text-sm font-medium"
@@ -692,7 +718,9 @@ export default function AIDashboardPage() {
                   {t('cleanUpExpired')}
                 </button>
               </div>
-              <p className="text-sm text-gray-600">{t('cleanUpDescription')}</p>
+              <p className="text-sm text-[var(--brand-text-secondary)]">
+                {t('cleanUpDescription')}
+              </p>
             </div>
           </div>
         )}

@@ -13,7 +13,7 @@ export const Table = forwardRef<HTMLTableElement, TableProps>(
       <div className="overflow-x-auto">
         <table
           ref={ref}
-          className={clsx('min-w-full divide-y divide-gray-200', className)}
+          className={clsx('min-w-full divide-y divide-[var(--brand-border)]', className)}
           {...props}
         >
           {children}
@@ -32,7 +32,7 @@ export interface TableHeaderProps extends HTMLAttributes<HTMLTableSectionElement
 export const TableHeader = forwardRef<HTMLTableSectionElement, TableHeaderProps>(
   ({ className, children, ...props }, ref) => {
     return (
-      <thead ref={ref} className={clsx('bg-gray-50', className)} {...props}>
+      <thead ref={ref} className={clsx('bg-[var(--brand-background)]', className)} {...props}>
         {children}
       </thead>
     )
@@ -50,7 +50,10 @@ export const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
     return (
       <tbody
         ref={ref}
-        className={clsx('bg-white divide-y divide-gray-200', className)}
+        className={clsx(
+          'bg-[var(--brand-surface)] divide-y divide-[var(--brand-border)]',
+          className
+        )}
         {...props}
       >
         {children}
@@ -74,7 +77,7 @@ export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
         ref={ref}
         className={clsx(
           isSelected && 'bg-primary-50',
-          isClickable && 'cursor-pointer hover:bg-gray-50',
+          isClickable && 'cursor-pointer hover:bg-[var(--brand-primary-light)]',
           className
         )}
         {...props}
@@ -100,8 +103,8 @@ export const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
       <th
         ref={ref}
         className={clsx(
-          'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
-          sortable && 'cursor-pointer hover:bg-gray-100 select-none',
+          'px-6 py-3 text-left text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider',
+          sortable && 'cursor-pointer hover:bg-[var(--brand-primary-light)] select-none',
           className
         )}
         onClick={sortable ? onSort : undefined}
@@ -110,18 +113,38 @@ export const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
         <div className="flex items-center gap-2">
           {children}
           {sortable && (
-            <span className="text-gray-400">
+            <span className="text-[var(--brand-text-secondary)]">
               {sorted === 'asc' ? (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 15l7-7 7 7"
+                  />
                 </svg>
               ) : sorted === 'desc' ? (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               ) : (
-                <svg className="w-4 h-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                <svg
+                  className="w-4 h-4 opacity-50"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                  />
                 </svg>
               )}
             </span>
@@ -143,7 +166,7 @@ export const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
     return (
       <td
         ref={ref}
-        className={clsx('px-6 py-4 whitespace-nowrap text-sm text-gray-900', className)}
+        className={clsx('px-6 py-4 whitespace-nowrap text-sm text-[var(--brand-text)]', className)}
         {...props}
       >
         {children}
@@ -165,9 +188,11 @@ export interface EmptyStateProps {
 export function EmptyState({ title, description, icon, action }: EmptyStateProps) {
   return (
     <div className="text-center py-12">
-      {icon && <div className="mx-auto h-12 w-12 text-gray-400">{icon}</div>}
-      <h3 className="mt-2 text-sm font-medium text-gray-900">{title}</h3>
-      {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+      {icon && <div className="mx-auto h-12 w-12 text-[var(--brand-text-secondary)]">{icon}</div>}
+      <h3 className="mt-2 text-sm font-medium text-[var(--brand-text)]">{title}</h3>
+      {description && (
+        <p className="mt-1 text-sm text-[var(--brand-text-secondary)]">{description}</p>
+      )}
       {action && <div className="mt-6">{action}</div>}
     </div>
   )
@@ -177,11 +202,11 @@ export function EmptyState({ title, description, icon, action }: EmptyStateProps
 export function TableSkeleton({ rows = 5, columns = 4 }: { rows?: number; columns?: number }) {
   return (
     <div className="animate-pulse">
-      <div className="bg-gray-50 h-10 rounded-t-lg" />
+      <div className="bg-[var(--brand-background)] h-10 rounded-t-lg" />
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="border-b border-gray-200 py-4 px-6 flex gap-4">
+        <div key={i} className="border-b border-[var(--brand-border)] py-4 px-6 flex gap-4">
           {Array.from({ length: columns }).map((_, j) => (
-            <div key={j} className="h-4 bg-gray-200 rounded flex-1" />
+            <div key={j} className="h-4 bg-[var(--brand-border)] rounded flex-1" />
           ))}
         </div>
       ))}

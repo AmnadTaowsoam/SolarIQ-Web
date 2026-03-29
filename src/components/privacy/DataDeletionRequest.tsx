@@ -13,10 +13,10 @@ interface DataDeletionRequestProps {
 }
 
 const STATUS_COLORS: Record<DeletionRequestStatus, string> = {
-  [DeletionRequestStatus.PENDING]: 'bg-yellow-100 text-yellow-800',
-  [DeletionRequestStatus.PROCESSING]: 'bg-blue-100 text-blue-800',
-  [DeletionRequestStatus.COMPLETED]: 'bg-green-100 text-green-800',
-  [DeletionRequestStatus.REJECTED]: 'bg-red-100 text-red-800',
+  [DeletionRequestStatus.PENDING]: 'bg-yellow-500/10 text-yellow-600',
+  [DeletionRequestStatus.PROCESSING]: 'bg-blue-500/10 text-blue-800',
+  [DeletionRequestStatus.COMPLETED]: 'bg-green-500/10 text-green-800',
+  [DeletionRequestStatus.REJECTED]: 'bg-red-100 text-red-400',
 }
 
 export function DataDeletionRequest({ onRequestCreated }: DataDeletionRequestProps) {
@@ -93,8 +93,8 @@ export function DataDeletionRequest({ onRequestCreated }: DataDeletionRequestPro
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">{t('title')}</h2>
-          <p className="text-sm text-gray-600 mt-1">{t('subtitle')}</p>
+          <h2 className="text-xl font-semibold text-[var(--brand-text)]">{t('title')}</h2>
+          <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
         </div>
         <Button variant="outline" onClick={() => setShowModal(true)} disabled={hasPendingRequest}>
           {t('submit')}
@@ -102,13 +102,13 @@ export function DataDeletionRequest({ onRequestCreated }: DataDeletionRequestPro
       </div>
 
       {hasPendingRequest && (
-        <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-sm text-yellow-800">{t('warning')}</p>
+        <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+          <p className="text-sm text-yellow-600">{t('warning')}</p>
         </div>
       )}
 
       {deletionError && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-700">
           {deletionError}
         </div>
       )}
@@ -140,11 +140,11 @@ export function DataDeletionRequest({ onRequestCreated }: DataDeletionRequestPro
                             : t('submitting')}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-[var(--brand-text-secondary)]">
                     {t('timeline')}: {formatDate(request.requested_at)}
                   </p>
                   {request.notes && (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-[var(--brand-text-secondary)]">
                       {t('additionalInfo')}: {request.notes}
                     </p>
                   )}
@@ -176,21 +176,23 @@ export function DataDeletionRequest({ onRequestCreated }: DataDeletionRequestPro
         </div>
       ) : (
         <Card className="p-8 text-center">
-          <p className="text-gray-500">{t('errorDesc')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('errorDesc')}</p>
         </Card>
       )}
 
       {/* Create Request Modal */}
       <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={t('title')}>
         <div className="space-y-4">
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-800">
+          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+            <p className="text-sm text-red-400">
               <strong>{t('warning')}:</strong> {t('warningDesc')}
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t('reason')}</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
+              {t('reason')}
+            </label>
             <div className="space-y-2">
               <label className="flex items-center gap-2">
                 <input
@@ -218,14 +220,14 @@ export function DataDeletionRequest({ onRequestCreated }: DataDeletionRequestPro
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
               {t('additionalInfo')}
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              className="w-full rounded-md border border-[var(--brand-border)] p-2 text-sm"
               placeholder={t('additionalInfoPlaceholder')}
             />
           </div>

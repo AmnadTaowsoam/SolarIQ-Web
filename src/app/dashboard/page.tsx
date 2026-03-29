@@ -57,8 +57,12 @@ function StatCard({
       <CardBody className="p-5">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{title}</p>
-            <p className="text-2xl font-bold text-gray-900 mt-2 tracking-tight">{value}</p>
+            <p className="text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wider">
+              {title}
+            </p>
+            <p className="text-2xl font-bold text-[var(--brand-text)] mt-2 tracking-tight">
+              {value}
+            </p>
             {change && (
               <div className="flex items-center gap-1 mt-2">
                 {changeType === 'positive' && (
@@ -97,7 +101,7 @@ function StatCard({
                       ? 'text-emerald-600'
                       : changeType === 'negative'
                         ? 'text-red-600'
-                        : 'text-gray-500'
+                        : 'text-[var(--brand-text-secondary)]'
                   }`}
                 >
                   {change}
@@ -139,7 +143,7 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
         <CardBody>
           <div className="text-center py-10">
             <svg
-              className="w-12 h-12 text-gray-300 mx-auto mb-3"
+              className="w-12 h-12 text-[var(--brand-text-secondary)] mx-auto mb-3"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -151,8 +155,12 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
                 d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
               />
             </svg>
-            <p className="text-sm font-medium text-gray-500">{tDashboard('noLeads')}</p>
-            <p className="text-xs text-gray-400 mt-1">{tDashboard('noLeadsDesc')}</p>
+            <p className="text-sm font-medium text-[var(--brand-text-secondary)]">
+              {tDashboard('noLeads')}
+            </p>
+            <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
+              {tDashboard('noLeadsDesc')}
+            </p>
           </div>
         </CardBody>
       </Card>
@@ -176,38 +184,42 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+              <tr className="border-b border-[var(--brand-border)]">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                   {tLeads('name')}
                 </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                   {tLeads('status')}
                 </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                   {tLeads('monthlyBill')}
                 </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                   {tLeads('createdAt')}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-[var(--brand-border)]">
               {leads.map((lead) => (
                 <tr
                   key={lead.id}
-                  className="hover:bg-gray-50/50 cursor-pointer transition-colors"
+                  className="hover:bg-[var(--brand-primary-light)] cursor-pointer transition-colors"
                   onClick={() => router.push(`${ROUTES.LEADS}/${lead.id}`)}
                 >
                   <td className="px-6 py-3.5 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs font-semibold text-gray-500">
+                      <div className="w-8 h-8 bg-[var(--brand-background)] rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs font-semibold text-[var(--brand-text-secondary)]">
                           {lead.name?.charAt(0).toUpperCase() || '?'}
                         </span>
                       </div>
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{lead.name}</div>
-                        <div className="text-xs text-gray-400">{lead.phone}</div>
+                        <div className="text-sm font-medium text-[var(--brand-text)]">
+                          {lead.name}
+                        </div>
+                        <div className="text-xs text-[var(--brand-text-secondary)]">
+                          {lead.phone}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -216,10 +228,10 @@ function RecentLeadsTable({ leads }: { leads: Lead[] }) {
                       {tStatus(lead.status as LeadStatus)}
                     </Badge>
                   </td>
-                  <td className="px-6 py-3.5 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-6 py-3.5 whitespace-nowrap text-sm font-medium text-[var(--brand-text)]">
                     {formatCurrency(lead.monthlyBill)}
                   </td>
-                  <td className="px-6 py-3.5 whitespace-nowrap text-xs text-gray-500">
+                  <td className="px-6 py-3.5 whitespace-nowrap text-xs text-[var(--brand-text-secondary)]">
                     {formatDate(lead.createdAt)}
                   </td>
                 </tr>
@@ -307,7 +319,7 @@ function TopLocationsChart({ data }: { data: { location: string; count: number }
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <svg
-                  className="w-10 h-10 text-gray-300 mx-auto mb-2"
+                  className="w-10 h-10 text-[var(--brand-text-secondary)] mx-auto mb-2"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -325,7 +337,7 @@ function TopLocationsChart({ data }: { data: { location: string; count: number }
                     d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
                   />
                 </svg>
-                <p className="text-xs text-gray-400">No location data yet</p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">No location data yet</p>
               </div>
             </div>
           ) : (
@@ -386,10 +398,10 @@ export default function DashboardPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-3 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
-          <p className="text-sm text-gray-400">{tCommon('loading')}</p>
+          <p className="text-sm text-[var(--brand-text-secondary)]">{tCommon('loading')}</p>
         </div>
       </div>
     )
@@ -415,15 +427,15 @@ export default function DashboardPage() {
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900 tracking-tight">
+            <h1 className="text-xl font-bold text-[var(--brand-text)] tracking-tight">
               {tDashboard('title')}
             </h1>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-0.5">
               {tDashboard('welcomeBack', { name: user.displayName || 'User' })}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-[var(--brand-text-secondary)]">
               {format.dateTime(new Date(), {
                 weekday: 'long',
                 day: '2-digit',

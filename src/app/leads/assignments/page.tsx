@@ -88,7 +88,7 @@ function AssignmentCard({
 
   if (done === 'accepted') {
     return (
-      <div className="rounded-2xl border border-green-200 bg-green-50 p-5 text-center">
+      <div className="rounded-2xl border border-green-200 bg-green-500/10 p-5 text-center">
         <p className="text-green-700 font-semibold">{t('assigned')}</p>
         <p className="text-sm text-green-600 mt-1">
           {t('lead')}: {assignment.lead.district}, {assignment.lead.province}
@@ -99,18 +99,18 @@ function AssignmentCard({
 
   if (done === 'declined') {
     return (
-      <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 text-center">
-        <p className="text-gray-500 font-medium">{t('unassigned')}</p>
+      <div className="rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-background)] p-5 text-center">
+        <p className="text-[var(--brand-text-secondary)] font-medium">{t('unassigned')}</p>
       </div>
     )
   }
 
   return (
-    <div className="rounded-2xl border-2 border-orange-200 bg-white shadow-sm overflow-hidden">
+    <div className="rounded-2xl border-2 border-orange-200 bg-[var(--brand-surface)] shadow-sm overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-orange-500 to-orange-400 px-5 py-3 flex items-center justify-between">
         <p className="text-white font-semibold text-sm">{t('assignLead')}</p>
-        <div className="flex items-center gap-1.5 bg-white/20 rounded-full px-3 py-1">
+        <div className="flex items-center gap-1.5 bg-[var(--brand-surface)]/20 rounded-full px-3 py-1">
           <svg
             className="w-3.5 h-3.5 text-white"
             fill="none"
@@ -132,19 +132,19 @@ function AssignmentCard({
 
       {/* Body */}
       <div className="p-5 space-y-3">
-        <div className="flex items-center gap-2 text-gray-700">
+        <div className="flex items-center gap-2 text-[var(--brand-text)]">
           <span className="text-lg">📍</span>
           <span className="text-sm font-medium">
             {assignment.lead.district}, {assignment.lead.province}
           </span>
         </div>
-        <div className="flex items-center gap-2 text-gray-700">
+        <div className="flex items-center gap-2 text-[var(--brand-text)]">
           <span className="text-lg">⚡</span>
           <span className="text-sm">
             {t('workload')}: <strong>{assignment.lead.recommended_size_kw.toFixed(2)} kW</strong>
           </span>
         </div>
-        <div className="flex items-center gap-2 text-gray-700">
+        <div className="flex items-center gap-2 text-[var(--brand-text)]">
           <span className="text-lg">💰</span>
           <span className="text-sm">
             {t('leads')}:{' '}
@@ -161,7 +161,7 @@ function AssignmentCard({
           type="button"
           onClick={handleDecline}
           disabled={isActing}
-          className="flex-1 py-2.5 rounded-xl border-2 border-gray-300 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors disabled:opacity-50"
+          className="flex-1 py-2.5 rounded-xl border-2 border-[var(--brand-border)] text-[var(--brand-text-secondary)] font-semibold text-sm hover:bg-[var(--brand-primary-light)] transition-colors disabled:opacity-50"
         >
           ❌ {t('unassign')}
         </button>
@@ -201,15 +201,15 @@ export default function LeadAssignmentsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
               {assignments.length > 0 ? `${assignments.length} ${t('leads')}` : t('noAssignments')}
             </p>
           </div>
           <button
             type="button"
             onClick={refetch}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-primary-light)] rounded-lg transition-colors"
             title={t('note')}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -232,7 +232,7 @@ export default function LeadAssignmentsPage() {
 
         {/* Error */}
         {error && !isLoading && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-700">
             {error}
           </div>
         )}
@@ -255,9 +255,9 @@ export default function LeadAssignmentsPage() {
         {/* Empty state */}
         {!isLoading && !error && assignments.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-[var(--brand-background)] rounded-full flex items-center justify-center mb-4">
               <svg
-                className="w-8 h-8 text-gray-400"
+                className="w-8 h-8 text-[var(--brand-text-secondary)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -270,13 +270,15 @@ export default function LeadAssignmentsPage() {
                 />
               </svg>
             </div>
-            <p className="text-gray-500 font-medium">{t('noAssignments')}</p>
-            <p className="text-sm text-gray-400 mt-1">{t('noAssignmentsDesc')}</p>
+            <p className="text-[var(--brand-text-secondary)] font-medium">{t('noAssignments')}</p>
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
+              {t('noAssignmentsDesc')}
+            </p>
           </div>
         )}
 
         {/* Info box */}
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-700">
+        <div className="p-4 bg-blue-500/10 border border-blue-200 rounded-xl text-sm text-blue-700">
           <p className="font-medium mb-1">{t('note')}</p>
           <ul className="space-y-1 text-blue-600 list-disc list-inside">
             <li>{t('date')}</li>

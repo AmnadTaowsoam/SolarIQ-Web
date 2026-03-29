@@ -9,12 +9,12 @@ import { useCommissions, useCommissionSummary } from '@/hooks/useCommissions'
 import { useAuth } from '@/context'
 
 const statusColors: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  invoiced: 'bg-blue-100 text-blue-800',
-  paid: 'bg-green-100 text-green-800',
-  disputed: 'bg-red-100 text-red-800',
-  voided: 'bg-gray-100 text-gray-600',
-  adjusted: 'bg-purple-100 text-purple-800',
+  pending: 'bg-yellow-500/10 text-yellow-600',
+  invoiced: 'bg-blue-500/10 text-blue-800',
+  paid: 'bg-green-500/10 text-green-800',
+  disputed: 'bg-red-100 text-red-400',
+  voided: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
+  adjusted: 'bg-purple-500/10 text-purple-800',
 }
 
 function formatThb(value: number) {
@@ -45,8 +45,8 @@ export default function CommissionsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
           </div>
           <Link
             href="/invoices"
@@ -59,35 +59,39 @@ export default function CommissionsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">{t('currentMonth')}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">
+              <p className="text-xs text-[var(--brand-text-secondary)] uppercase">
+                {t('currentMonth')}
+              </p>
+              <p className="text-2xl font-bold text-[var(--brand-text)] mt-2">
                 {formatThb(totals?.current || 0)}
               </p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
                 {summary?.currentMonth.count || 0} {t('deals')}
               </p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">{t('previousMonth')}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">
+              <p className="text-xs text-[var(--brand-text-secondary)] uppercase">
+                {t('previousMonth')}
+              </p>
+              <p className="text-2xl font-bold text-[var(--brand-text)] mt-2">
                 {formatThb(totals?.previous || 0)}
               </p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
                 {summary?.previousMonth.count || 0} {t('deals')}
               </p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">{t('change')}</p>
+              <p className="text-xs text-[var(--brand-text-secondary)] uppercase">{t('change')}</p>
               <p
                 className={`text-2xl font-bold mt-2 ${totals && totals.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}
               >
                 {totals ? `${totals.change.toFixed(1)}%` : '0%'}
               </p>
-              <p className="text-xs text-gray-400 mt-1">{t('vsLastMonth')}</p>
+              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">{t('vsLastMonth')}</p>
             </CardBody>
           </Card>
         </div>
@@ -98,7 +102,7 @@ export default function CommissionsPage() {
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs text-gray-500">
+                  <tr className="border-b border-[var(--brand-border)] text-left text-xs text-[var(--brand-text-secondary)]">
                     <th className="px-6 py-3">{t('table.deal')}</th>
                     <th className="px-6 py-3">{t('table.dealValue')}</th>
                     <th className="px-6 py-3">{t('table.rate')}</th>
@@ -107,29 +111,34 @@ export default function CommissionsPage() {
                     <th className="px-6 py-3">{t('table.date')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[var(--brand-border)]">
                   {rows.map((row) => (
-                    <tr key={row.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-3 text-sm font-medium text-gray-900">
+                    <tr key={row.id} className="hover:bg-[var(--brand-background)]">
+                      <td className="px-6 py-3 text-sm font-medium text-[var(--brand-text)]">
                         <Link href={`/commissions/${row.id}`} className="hover:text-orange-600">
                           {row.dealId || row.id}
                         </Link>
                       </td>
-                      <td className="px-6 py-3 text-sm text-gray-700">
+                      <td className="px-6 py-3 text-sm text-[var(--brand-text)]">
                         {formatThb(row.dealValue)}
                       </td>
-                      <td className="px-6 py-3 text-sm text-gray-700">
+                      <td className="px-6 py-3 text-sm text-[var(--brand-text)]">
                         {row.commissionRate ? `${(row.commissionRate * 100).toFixed(1)}%` : '-'}
                       </td>
-                      <td className="px-6 py-3 text-sm font-semibold text-gray-900">
+                      <td className="px-6 py-3 text-sm font-semibold text-[var(--brand-text)]">
                         {formatThb(row.commissionAmount)}
                       </td>
                       <td className="px-6 py-3">
-                        <Badge className={statusColors[row.status] || 'bg-gray-100 text-gray-600'}>
+                        <Badge
+                          className={
+                            statusColors[row.status] ||
+                            'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
+                          }
+                        >
                           {row.status}
                         </Badge>
                       </td>
-                      <td className="px-6 py-3 text-xs text-gray-500">
+                      <td className="px-6 py-3 text-xs text-[var(--brand-text-secondary)]">
                         {new Date(row.dealCompletedAt).toLocaleDateString('en-GB')}
                       </td>
                     </tr>
@@ -138,7 +147,9 @@ export default function CommissionsPage() {
               </table>
             </div>
             {rows.length === 0 && !isLoading && (
-              <div className="text-center py-10 text-sm text-gray-500">{t('empty')}</div>
+              <div className="text-center py-10 text-sm text-[var(--brand-text-secondary)]">
+                {t('empty')}
+              </div>
             )}
           </CardBody>
         </Card>

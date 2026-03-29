@@ -11,10 +11,12 @@ import { useApiKeys, useApiUsage } from '@/hooks/useDeveloperApi'
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-sm transition-shadow">
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{label}</p>
-      <p className="text-2xl font-bold text-gray-900 mt-2">{value}</p>
-      {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
+    <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-5 hover:shadow-sm transition-shadow">
+      <p className="text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
+        {label}
+      </p>
+      <p className="text-2xl font-bold text-[var(--brand-text)] mt-2">{value}</p>
+      {sub && <p className="text-xs text-[var(--brand-text-secondary)] mt-1">{sub}</p>}
     </div>
   )
 }
@@ -35,7 +37,7 @@ function StepCard({
   return (
     <Link
       href={href}
-      className="flex items-start gap-4 p-4 bg-white rounded-xl border border-gray-100 hover:border-orange-200 hover:shadow-sm transition-all group"
+      className="flex items-start gap-4 p-4 bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] hover:border-orange-200 hover:shadow-sm transition-all group"
     >
       <div
         className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
@@ -58,10 +60,10 @@ function StepCard({
         )}
       </div>
       <div>
-        <p className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+        <p className="text-sm font-semibold text-[var(--brand-text)] group-hover:text-orange-600 transition-colors">
           {title}
         </p>
-        <p className="text-xs text-gray-500 mt-0.5">{description}</p>
+        <p className="text-xs text-[var(--brand-text-secondary)] mt-0.5">{description}</p>
       </div>
     </Link>
   )
@@ -81,13 +83,15 @@ function QuickLinkCard({
   return (
     <Link
       href={href}
-      className="flex flex-col items-center text-center p-5 bg-white rounded-xl border border-gray-100 hover:border-orange-200 hover:shadow-sm transition-all group"
+      className="flex flex-col items-center text-center p-5 bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] hover:border-orange-200 hover:shadow-sm transition-all group"
     >
-      <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center mb-3 group-hover:bg-orange-50 transition-colors">
-        <span className="text-gray-600 group-hover:text-orange-600 transition-colors">{icon}</span>
+      <div className="w-12 h-12 bg-[var(--brand-background)] rounded-xl flex items-center justify-center mb-3 group-hover:bg-orange-50 transition-colors">
+        <span className="text-[var(--brand-text-secondary)] group-hover:text-orange-600 transition-colors">
+          {icon}
+        </span>
       </div>
-      <p className="text-sm font-semibold text-gray-900">{label}</p>
-      <p className="text-xs text-gray-500 mt-1">{description}</p>
+      <p className="text-sm font-semibold text-[var(--brand-text)]">{label}</p>
+      <p className="text-xs text-[var(--brand-text-secondary)] mt-1">{description}</p>
     </Link>
   )
 }
@@ -105,13 +109,15 @@ export default function DevelopersOverviewPage() {
       <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-gray-400 text-sm">{t('title')}</p>
+            <p className="text-[var(--brand-text-secondary)] text-sm">{t('title')}</p>
             <h2 className="text-2xl font-bold mt-1">{t('welcomeTitle')}</h2>
-            <p className="text-gray-400 text-sm mt-2">{t('welcomeSubtitle')}</p>
+            <p className="text-[var(--brand-text-secondary)] text-sm mt-2">
+              {t('welcomeSubtitle')}
+            </p>
           </div>
           <div className="hidden md:block">
             <svg
-              className="w-16 h-16 text-gray-600"
+              className="w-16 h-16 text-[var(--brand-text-secondary)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -129,7 +135,7 @@ export default function DevelopersOverviewPage() {
 
       {/* Quick stats */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">{t('todayUsage')}</h3>
+        <h3 className="text-sm font-semibold text-[var(--brand-text)] mb-3">{t('todayUsage')}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <StatCard
             label={t('stats.apiCallsToday')}
@@ -151,7 +157,9 @@ export default function DevelopersOverviewPage() {
 
       {/* Getting started */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">{t('gettingStarted')}</h3>
+        <h3 className="text-sm font-semibold text-[var(--brand-text)] mb-3">
+          {t('gettingStarted')}
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <StepCard
             step={1}
@@ -179,7 +187,7 @@ export default function DevelopersOverviewPage() {
 
       {/* Quick links */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">{t('quickLinks')}</h3>
+        <h3 className="text-sm font-semibold text-[var(--brand-text)] mb-3">{t('quickLinks')}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <QuickLinkCard
             href="/developers/keys"

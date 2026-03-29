@@ -188,7 +188,7 @@ function StepIndicator({
       {/* Progress bar */}
       <div className="h-1.5 bg-orange-200 rounded-full overflow-hidden mb-3">
         <div
-          className="h-full bg-white rounded-full transition-all duration-500"
+          className="h-full bg-[var(--brand-surface)] rounded-full transition-all duration-500"
           style={{ width: `${(currentStep / totalSteps) * 100}%` }}
         />
       </div>
@@ -203,9 +203,9 @@ function StepIndicator({
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                   isCompleted
-                    ? 'bg-white text-orange-600'
+                    ? 'bg-[var(--brand-surface)] text-orange-600'
                     : isCurrent
-                      ? 'bg-white text-orange-600 ring-2 ring-white ring-offset-2 ring-offset-orange-500'
+                      ? 'bg-[var(--brand-surface)] text-orange-600 ring-2 ring-white ring-offset-2 ring-offset-orange-500'
                       : 'bg-orange-400 text-orange-100'
                 }`}
               >
@@ -272,15 +272,15 @@ function Step1Company({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">{t('step1.title')}</h2>
-        <p className="text-gray-500 text-sm">{t('step1.subtitle')}</p>
+        <h2 className="text-xl font-bold text-[var(--brand-text)] mb-1">{t('step1.title')}</h2>
+        <p className="text-[var(--brand-text-secondary)] text-sm">{t('step1.subtitle')}</p>
       </div>
 
       {/* Logo upload */}
       <div className="flex items-center gap-4">
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="w-20 h-20 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-orange-400 transition-colors overflow-hidden bg-gray-50 flex-shrink-0"
+          className="w-20 h-20 rounded-2xl border-2 border-dashed border-[var(--brand-border)] flex items-center justify-center cursor-pointer hover:border-orange-400 transition-colors overflow-hidden bg-[var(--brand-background)] flex-shrink-0"
         >
           {data.logoPreview ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -288,7 +288,7 @@ function Step1Company({
           ) : (
             <div className="text-center">
               <svg
-                className="w-6 h-6 text-gray-400 mx-auto mb-1"
+                className="w-6 h-6 text-[var(--brand-text-secondary)] mx-auto mb-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -300,7 +300,9 @@ function Step1Company({
                   d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                 />
               </svg>
-              <span className="text-[10px] text-gray-400">{t('step1.logo')}</span>
+              <span className="text-[10px] text-[var(--brand-text-secondary)]">
+                {t('step1.logo')}
+              </span>
             </div>
           )}
         </div>
@@ -311,8 +313,8 @@ function Step1Company({
           className="hidden"
           onChange={handleLogoChange}
         />
-        <div className="text-sm text-gray-500">
-          <p className="font-medium text-gray-700 mb-0.5">{t('step1.uploadLogo')}</p>
+        <div className="text-sm text-[var(--brand-text-secondary)]">
+          <p className="font-medium text-[var(--brand-text)] mb-0.5">{t('step1.uploadLogo')}</p>
           <p>{t('step1.logoHint')}</p>
           {data.logoFile && <p className="text-orange-600 text-xs mt-1">{data.logoFile.name}</p>}
         </div>
@@ -320,7 +322,7 @@ function Step1Company({
 
       {/* Company name */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step1.companyName')} <span className="text-red-500">*</span>
         </label>
         <input
@@ -328,15 +330,17 @@ function Step1Company({
           value={data.name}
           onChange={(e) => onChange({ name: e.target.value })}
           placeholder="บริษัท โซลาร์ไอคิว จำกัด"
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+          className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
         />
       </div>
 
       {/* Tax ID */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step1.taxId')}
-          <span className="text-gray-400 font-normal ml-1">{t('step1.taxIdOptional')}</span>
+          <span className="text-[var(--brand-text-secondary)] font-normal ml-1">
+            {t('step1.taxIdOptional')}
+          </span>
         </label>
         <input
           type="text"
@@ -344,7 +348,7 @@ function Step1Company({
           onChange={(e) => onChange({ taxId: formatTaxId(e.target.value) })}
           placeholder="X-XXXXXXX-XX-X"
           className={`w-full rounded-xl border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent ${
-            taxIdError ? 'border-red-300' : 'border-gray-300'
+            taxIdError ? 'border-red-300' : 'border-[var(--brand-border)]'
           }`}
         />
         {taxIdError && <p className="mt-1 text-xs text-red-600">{taxIdError}</p>}
@@ -355,25 +359,27 @@ function Step1Company({
 
       {/* Address */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{t('step1.address')}</label>
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+          {t('step1.address')}
+        </label>
         <textarea
           value={data.address}
           onChange={(e) => onChange({ address: e.target.value })}
           placeholder={t('step1.addressPlaceholder')}
           rows={2}
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
+          className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
         />
       </div>
 
       {/* Province */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step1.province')}
         </label>
         <select
           value={data.province}
           onChange={(e) => onChange({ province: e.target.value })}
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white"
+          className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-[var(--brand-surface)]"
         >
           <option value="">{t('step1.selectProvince')}</option>
           {THAI_PROVINCES.map((p) => (
@@ -386,18 +392,20 @@ function Step1Company({
 
       {/* Phone */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{t('step1.phone')}</label>
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+          {t('step1.phone')}
+        </label>
         <input
           type="tel"
           value={data.phone}
           onChange={(e) => onChange({ phone: e.target.value })}
           placeholder="085-662-1113"
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+          className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700">
           {error}
         </div>
       )}
@@ -468,13 +476,13 @@ function Step2Line({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">{t('step2.title')}</h2>
-        <p className="text-gray-500 text-sm">{t('step2.subtitle')}</p>
+        <h2 className="text-xl font-bold text-[var(--brand-text)] mb-1">{t('step2.title')}</h2>
+        <p className="text-[var(--brand-text-secondary)] text-sm">{t('step2.subtitle')}</p>
       </div>
 
       {/* Channel ID */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step2.channelId')}
         </label>
         <input
@@ -482,13 +490,13 @@ function Step2Line({
           value={data.channelId}
           onChange={(e) => onChange({ channelId: e.target.value })}
           placeholder="1234567890"
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+          className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
       </div>
 
       {/* Channel Secret */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step2.channelSecret')}
         </label>
         <div className="relative">
@@ -497,12 +505,12 @@ function Step2Line({
             value={data.channelSecret}
             onChange={(e) => onChange({ channelSecret: e.target.value })}
             placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-            className="w-full rounded-xl border border-gray-300 px-4 py-2.5 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
           <button
             type="button"
             onClick={() => setShowSecret((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)]"
           >
             {showSecret ? (
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -535,20 +543,22 @@ function Step2Line({
 
       {/* Webhook URL */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step2.webhookUrl')}
-          <span className="text-gray-400 font-normal ml-1">({t('step2.webhookHint')})</span>
+          <span className="text-[var(--brand-text-secondary)] font-normal ml-1">
+            ({t('step2.webhookHint')})
+          </span>
         </label>
         <div className="flex gap-2">
           <input
             type="text"
             readOnly
             value={webhookUrl}
-            className="flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-sm bg-gray-50 text-gray-600 select-all"
+            className="flex-1 rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm bg-[var(--brand-background)] text-[var(--brand-text-secondary)] select-all"
           />
           <button
             onClick={handleCopy}
-            className="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-medium text-gray-700 transition-colors flex-shrink-0 flex items-center gap-1.5"
+            className="px-4 py-2.5 bg-[var(--brand-background)] hover:bg-[var(--brand-border)] rounded-xl text-sm font-medium text-[var(--brand-text)] transition-colors flex-shrink-0 flex items-center gap-1.5"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -608,7 +618,7 @@ function Step2Line({
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700">
           {error}
         </div>
       )}
@@ -629,7 +639,7 @@ function Step2Line({
       </button>
       <button
         onClick={onSkip}
-        className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+        className="w-full py-2 text-sm text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] transition-colors"
       >
         {t('step2.skip')}
       </button>
@@ -678,14 +688,14 @@ function Step3Team({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">{t('step3.title')}</h2>
-        <p className="text-gray-500 text-sm">{t('step3.subtitle')}</p>
+        <h2 className="text-xl font-bold text-[var(--brand-text)] mb-1">{t('step3.title')}</h2>
+        <p className="text-[var(--brand-text-secondary)] text-sm">{t('step3.subtitle')}</p>
       </div>
 
       {data.members.length === 0 ? (
-        <div className="bg-gray-50 rounded-2xl p-6 text-center">
+        <div className="bg-[var(--brand-background)] rounded-2xl p-6 text-center">
           <svg
-            className="w-10 h-10 text-gray-300 mx-auto mb-3"
+            className="w-10 h-10 text-[var(--brand-text-secondary)] mx-auto mb-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -697,19 +707,19 @@ function Step3Team({
               d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
             />
           </svg>
-          <p className="text-gray-400 text-sm">{t('step3.noMembers')}</p>
+          <p className="text-[var(--brand-text-secondary)] text-sm">{t('step3.noMembers')}</p>
         </div>
       ) : (
         <div className="space-y-3">
           {data.members.map((member, idx) => (
-            <div key={idx} className="bg-gray-50 rounded-2xl p-4 space-y-3">
+            <div key={idx} className="bg-[var(--brand-background)] rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-[var(--brand-text)]">
                   {t('step3.memberNumber', { number: idx + 1 })}
                 </span>
                 <button
                   onClick={() => removeMember(idx)}
-                  className="text-gray-400 hover:text-red-500 transition-colors"
+                  className="text-[var(--brand-text-secondary)] hover:text-red-500 transition-colors"
                 >
                   <svg
                     className="w-4 h-4"
@@ -727,7 +737,7 @@ function Step3Team({
                 value={member.email}
                 onChange={(e) => updateMember(idx, { email: e.target.value })}
                 placeholder="email@example.com"
-                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
               <div className="flex gap-2">
                 {(['member', 'admin'] as const).map((role) => (
@@ -737,7 +747,7 @@ function Step3Team({
                     className={`flex-1 py-2 rounded-xl border-2 text-sm font-medium transition-all ${
                       member.role === role
                         ? 'border-orange-500 bg-orange-50 text-orange-700'
-                        : 'border-gray-200 text-gray-600 hover:border-orange-200'
+                        : 'border-[var(--brand-border)] text-[var(--brand-text-secondary)] hover:border-orange-200'
                     }`}
                   >
                     {role === 'member' ? t('step3.roleMember') : t('step3.roleAdmin')}
@@ -752,7 +762,7 @@ function Step3Team({
       {data.members.length < 5 && (
         <button
           onClick={addMember}
-          className="w-full py-3 border-2 border-dashed border-gray-300 rounded-2xl text-sm text-gray-500 hover:border-orange-400 hover:text-orange-600 transition-colors flex items-center justify-center gap-2"
+          className="w-full py-3 border-2 border-dashed border-[var(--brand-border)] rounded-2xl text-sm text-[var(--brand-text-secondary)] hover:border-orange-400 hover:text-orange-600 transition-colors flex items-center justify-center gap-2"
         >
           <svg
             className="w-4 h-4"
@@ -768,7 +778,7 @@ function Step3Team({
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700">
           {error}
         </div>
       )}
@@ -791,7 +801,7 @@ function Step3Team({
       )}
       <button
         onClick={onSkip}
-        className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+        className="w-full py-2 text-sm text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] transition-colors"
       >
         {t('step3.skip')}
       </button>
@@ -824,8 +834,8 @@ function Step4Lead({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-1">{t('step4.title')}</h2>
-        <p className="text-gray-500 text-sm">{t('step4.subtitle')}</p>
+        <h2 className="text-xl font-bold text-[var(--brand-text)] mb-1">{t('step4.title')}</h2>
+        <p className="text-[var(--brand-text-secondary)] text-sm">{t('step4.subtitle')}</p>
       </div>
 
       <div className="bg-orange-50 rounded-2xl p-4 border border-orange-100">
@@ -848,7 +858,7 @@ function Step4Lead({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step4.customerName')} <span className="text-red-500">*</span>
         </label>
         <input
@@ -856,12 +866,12 @@ function Step4Lead({
           value={data.name}
           onChange={(e) => onChange({ name: e.target.value })}
           placeholder="นายสมชาย ใจดี"
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+          className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step4.phone')} <span className="text-red-500">*</span>
         </label>
         <input
@@ -869,12 +879,12 @@ function Step4Lead({
           value={data.phone}
           onChange={(e) => onChange({ phone: e.target.value })}
           placeholder="08X-XXX-XXXX"
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+          className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step4.monthlyBill')} <span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -884,22 +894,22 @@ function Step4Lead({
             onChange={(e) => onChange({ monthlyBill: e.target.value })}
             placeholder="3000"
             min={0}
-            className="w-full rounded-xl border border-gray-300 px-4 py-2.5 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--brand-text-secondary)] text-sm">
             {t('step4.baht')}
           </span>
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
           {t('step4.province')}
         </label>
         <select
           value={data.province}
           onChange={(e) => onChange({ province: e.target.value })}
-          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white"
+          className="w-full rounded-xl border border-[var(--brand-border)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-[var(--brand-surface)]"
         >
           <option value="">{t('step4.selectProvince')}</option>
           {THAI_PROVINCES.map((p) => (
@@ -911,7 +921,7 @@ function Step4Lead({
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700">
           {error}
         </div>
       )}
@@ -932,7 +942,7 @@ function Step4Lead({
       </button>
       <button
         onClick={onSkip}
-        className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+        className="w-full py-2 text-sm text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] transition-colors"
       >
         {t('step3.skip')}
       </button>
@@ -958,7 +968,7 @@ function Step5Complete({
     <div className="space-y-6 text-center">
       {/* Success animation */}
       <div className="relative">
-        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto animate-bounce-slow">
+        <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto animate-bounce-slow">
           <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
             <svg
               className="w-8 h-8 text-white"
@@ -975,13 +985,15 @@ function Step5Complete({
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('step5.title')}</h2>
-        <p className="text-gray-500 text-sm">{t('step5.subtitle')}</p>
+        <h2 className="text-2xl font-bold text-[var(--brand-text)] mb-2">{t('step5.title')}</h2>
+        <p className="text-[var(--brand-text-secondary)] text-sm">{t('step5.subtitle')}</p>
       </div>
 
       {/* Summary */}
-      <div className="bg-gray-50 rounded-2xl p-5 text-left space-y-3">
-        <h3 className="font-semibold text-gray-800 text-sm mb-3">{t('step5.setupSummary')}</h3>
+      <div className="bg-[var(--brand-background)] rounded-2xl p-5 text-left space-y-3">
+        <h3 className="font-semibold text-[var(--brand-text)] text-sm mb-3">
+          {t('step5.setupSummary')}
+        </h3>
 
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -1000,7 +1012,7 @@ function Step5Complete({
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-800">
+            <p className="text-sm font-medium text-[var(--brand-text)]">
               {t('step5.company', { name: summary.companyName })}
             </p>
           </div>
@@ -1017,10 +1029,10 @@ function Step5Complete({
 
         <div className="flex items-center gap-3">
           <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.lineConnected ? 'bg-green-100' : 'bg-gray-100'}`}
+            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.lineConnected ? 'bg-green-100' : 'bg-[var(--brand-background)]'}`}
           >
             <svg
-              className={`w-4 h-4 ${summary.lineConnected ? 'text-green-600' : 'text-gray-400'}`}
+              className={`w-4 h-4 ${summary.lineConnected ? 'text-green-600' : 'text-[var(--brand-text-secondary)]'}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -1033,7 +1045,7 @@ function Step5Complete({
               />
             </svg>
           </div>
-          <p className="text-sm text-gray-700 flex-1">
+          <p className="text-sm text-[var(--brand-text)] flex-1">
             {t('step5.lineLabel', {
               status: summary.lineConnected
                 ? t('step5.lineConnected')
@@ -1051,16 +1063,16 @@ function Step5Complete({
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           ) : (
-            <span className="text-xs text-gray-400">{t('step5.skipped')}</span>
+            <span className="text-xs text-[var(--brand-text-secondary)]">{t('step5.skipped')}</span>
           )}
         </div>
 
         <div className="flex items-center gap-3">
           <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.teamInvited > 0 ? 'bg-blue-100' : 'bg-gray-100'}`}
+            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.teamInvited > 0 ? 'bg-blue-100' : 'bg-[var(--brand-background)]'}`}
           >
             <svg
-              className={`w-4 h-4 ${summary.teamInvited > 0 ? 'text-blue-600' : 'text-gray-400'}`}
+              className={`w-4 h-4 ${summary.teamInvited > 0 ? 'text-blue-600' : 'text-[var(--brand-text-secondary)]'}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -1073,7 +1085,7 @@ function Step5Complete({
               />
             </svg>
           </div>
-          <p className="text-sm text-gray-700 flex-1">
+          <p className="text-sm text-[var(--brand-text)] flex-1">
             {t('step5.teamLabel', {
               status:
                 summary.teamInvited > 0
@@ -1092,16 +1104,16 @@ function Step5Complete({
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           ) : (
-            <span className="text-xs text-gray-400">{t('step5.skipped')}</span>
+            <span className="text-xs text-[var(--brand-text-secondary)]">{t('step5.skipped')}</span>
           )}
         </div>
 
         <div className="flex items-center gap-3">
           <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.demoLeadCreated ? 'bg-purple-100' : 'bg-gray-100'}`}
+            className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${summary.demoLeadCreated ? 'bg-purple-100' : 'bg-[var(--brand-background)]'}`}
           >
             <svg
-              className={`w-4 h-4 ${summary.demoLeadCreated ? 'text-purple-600' : 'text-gray-400'}`}
+              className={`w-4 h-4 ${summary.demoLeadCreated ? 'text-purple-600' : 'text-[var(--brand-text-secondary)]'}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -1114,7 +1126,7 @@ function Step5Complete({
               />
             </svg>
           </div>
-          <p className="text-sm text-gray-700 flex-1">
+          <p className="text-sm text-[var(--brand-text)] flex-1">
             {t('step5.leadLabel', {
               status: summary.demoLeadCreated ? t('step5.leadCreated') : t('step5.leadNotCreated'),
             })}
@@ -1130,7 +1142,7 @@ function Step5Complete({
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           ) : (
-            <span className="text-xs text-gray-400">{t('step5.skipped')}</span>
+            <span className="text-xs text-[var(--brand-text-secondary)]">{t('step5.skipped')}</span>
           )}
         </div>
       </div>
@@ -1367,7 +1379,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-8">
+    <div className="min-h-screen bg-[var(--brand-background)] pb-8">
       {/* Header */}
       <div className="bg-orange-500 text-white px-4 pt-6 pb-8">
         <div className="max-w-lg mx-auto">
@@ -1403,7 +1415,7 @@ export default function OnboardingPage() {
 
       {/* Card offset from header */}
       <div className="max-w-lg mx-auto px-4 -mt-4">
-        <div className="bg-white rounded-3xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-[var(--brand-surface)] rounded-3xl shadow-sm p-6 border border-[var(--brand-border)]">
           {step === 1 && (
             <Step1Company
               data={companyData}

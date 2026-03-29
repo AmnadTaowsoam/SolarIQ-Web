@@ -25,7 +25,7 @@ function StarDisplay({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}
-          className={`w-4 h-4 ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+          className={`w-4 h-4 ${star <= rating ? 'text-yellow-400' : 'text-[var(--brand-text-secondary)]'}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -55,16 +55,16 @@ export default function ReviewCard({
   const displayContent = shouldTruncate && !isExpanded ? `${content.slice(0, 200)}...` : content
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-[var(--brand-surface)] rounded-lg border border-[var(--brand-border)] p-4">
       <div className="flex items-start justify-between">
         <div>
           <StarDisplay rating={rating} />
-          {title && <h4 className="mt-1 font-medium text-gray-900">{title}</h4>}
+          {title && <h4 className="mt-1 font-medium text-[var(--brand-text)]">{title}</h4>}
         </div>
-        <span className="text-xs text-gray-500">{createdAt}</span>
+        <span className="text-xs text-[var(--brand-text-secondary)]">{createdAt}</span>
       </div>
 
-      <p className="mt-2 text-sm text-gray-700">{displayContent}</p>
+      <p className="mt-2 text-sm text-[var(--brand-text)]">{displayContent}</p>
       {shouldTruncate && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
@@ -91,12 +91,12 @@ export default function ReviewCard({
       )}
 
       <div className="mt-3 flex items-center justify-between">
-        <span className="text-xs text-gray-500">By {displayName}</span>
+        <span className="text-xs text-[var(--brand-text-secondary)]">By {displayName}</span>
         <div className="flex items-center gap-3">
           {onHelpful && (
             <button
               onClick={() => onHelpful(id)}
-              className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600"
+              className="flex items-center gap-1 text-xs text-[var(--brand-text-secondary)] hover:text-blue-600"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -112,7 +112,7 @@ export default function ReviewCard({
           {onReport && (
             <button
               onClick={() => onReport(id)}
-              className="text-xs text-gray-400 hover:text-red-500"
+              className="text-xs text-[var(--brand-text-secondary)] hover:text-red-500"
             >
               Report
             </button>

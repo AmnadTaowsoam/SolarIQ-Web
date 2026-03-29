@@ -44,7 +44,7 @@ export default function AdminRevenuePage() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center min-h-[50vh]">
-          <p className="text-gray-500">{t('unauthorized')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('unauthorized')}</p>
         </div>
       </AppLayout>
     )
@@ -65,8 +65,10 @@ export default function AdminRevenuePage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-sm text-gray-500 mt-1">{t('platformSubtitle')}</p>
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
+              {t('platformSubtitle')}
+            </p>
           </div>
           <Link
             href="/admin/revenue/forecast"
@@ -79,26 +81,34 @@ export default function AdminRevenuePage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">{t('totalRevenue')}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{formatThb(data?.total || 0)}</p>
+              <p className="text-xs text-[var(--brand-text-secondary)] uppercase">
+                {t('totalRevenue')}
+              </p>
+              <p className="text-2xl font-bold text-[var(--brand-text)] mt-2">
+                {formatThb(data?.total || 0)}
+              </p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">{t('mrr')}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{formatThb(data?.mrr || 0)}</p>
+              <p className="text-xs text-[var(--brand-text-secondary)] uppercase">{t('mrr')}</p>
+              <p className="text-2xl font-bold text-[var(--brand-text)] mt-2">
+                {formatThb(data?.mrr || 0)}
+              </p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">{t('arpu')}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{formatThb(data?.arpu || 0)}</p>
+              <p className="text-xs text-[var(--brand-text-secondary)] uppercase">{t('arpu')}</p>
+              <p className="text-2xl font-bold text-[var(--brand-text)] mt-2">
+                {formatThb(data?.arpu || 0)}
+              </p>
             </CardBody>
           </Card>
           <Card>
             <CardBody>
-              <p className="text-xs text-gray-500 uppercase">{t('churn')}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">
+              <p className="text-xs text-[var(--brand-text-secondary)] uppercase">{t('churn')}</p>
+              <p className="text-2xl font-bold text-[var(--brand-text)] mt-2">
                 {((data?.churnRate || 0) * 100).toFixed(1)}%
               </p>
             </CardBody>
@@ -128,20 +138,26 @@ export default function AdminRevenuePage() {
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
-                    <tr className="border-b border-gray-100 text-left text-xs text-gray-500">
+                    <tr className="border-b border-[var(--brand-border)] text-left text-xs text-[var(--brand-text-secondary)]">
                       <th className="px-6 py-3">{t('contractor')}</th>
                       <th className="px-6 py-3">{t('plan')}</th>
                       <th className="px-6 py-3">{t('deals')}</th>
                       <th className="px-6 py-3">{t('commission')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-[var(--brand-border)]">
                     {topContractors.map((row) => (
-                      <tr key={row.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-3 text-sm font-medium text-gray-900">{row.name}</td>
-                        <td className="px-6 py-3 text-sm text-gray-600 capitalize">{row.plan}</td>
-                        <td className="px-6 py-3 text-sm text-gray-600">{row.totalDeals}</td>
-                        <td className="px-6 py-3 text-sm font-semibold text-gray-900">
+                      <tr key={row.id} className="hover:bg-[var(--brand-background)]">
+                        <td className="px-6 py-3 text-sm font-medium text-[var(--brand-text)]">
+                          {row.name}
+                        </td>
+                        <td className="px-6 py-3 text-sm text-[var(--brand-text-secondary)] capitalize">
+                          {row.plan}
+                        </td>
+                        <td className="px-6 py-3 text-sm text-[var(--brand-text-secondary)]">
+                          {row.totalDeals}
+                        </td>
+                        <td className="px-6 py-3 text-sm font-semibold text-[var(--brand-text)]">
                           {formatThb(row.totalCommission)}
                         </td>
                       </tr>

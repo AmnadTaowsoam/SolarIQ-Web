@@ -275,12 +275,12 @@ function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean
       onClick={() => onChange(!enabled)}
       className={clsx(
         'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:ring-offset-2',
-        enabled ? 'bg-[var(--brand-primary)]' : 'bg-gray-200'
+        enabled ? 'bg-[var(--brand-primary)]' : 'bg-[var(--brand-border)]'
       )}
     >
       <span
         className={clsx(
-          'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+          'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-[var(--brand-surface)] shadow ring-0 transition duration-200 ease-in-out',
           enabled ? 'translate-x-4' : 'translate-x-0'
         )}
       />
@@ -323,14 +323,14 @@ function CompanyProfileSection() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
             {t('company.address')}
           </label>
           <textarea
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             rows={3}
-            className="block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+            className="block w-full rounded-lg border border-[var(--brand-border)] shadow-sm px-4 py-2.5 text-[var(--brand-text)] placeholder-[var(--brand-text-secondary)] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
             placeholder={t('company.addressPlaceholder')}
           />
         </div>
@@ -359,11 +359,11 @@ function CompanyProfileSection() {
             placeholder={t('company.websitePlaceholder')}
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('company.logo')}
             </label>
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center text-gray-400">
+              <div className="w-16 h-16 bg-[var(--brand-background)] border-2 border-dashed border-[var(--brand-border)] rounded-xl flex items-center justify-center text-[var(--brand-text-secondary)]">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
@@ -385,7 +385,9 @@ function CompanyProfileSection() {
                 >
                   {t('company.uploadLogo')}
                 </button>
-                <p className="text-xs text-gray-400 mt-0.5">{t('company.logoHint')}</p>
+                <p className="text-xs text-[var(--brand-text-secondary)] mt-0.5">
+                  {t('company.logoHint')}
+                </p>
               </div>
             </div>
           </div>
@@ -477,7 +479,9 @@ function TaxProfileSection() {
     return (
       <Card>
         <CardBody>
-          <div className="text-center py-10 text-gray-500">{tExtra('saving')}</div>
+          <div className="text-center py-10 text-[var(--brand-text-secondary)]">
+            {tExtra('saving')}
+          </div>
         </CardBody>
       </Card>
     )
@@ -487,7 +491,7 @@ function TaxProfileSection() {
     <Card>
       <CardHeader title={t('tax.title')} subtitle={t('tax.subtitle')} />
       <CardBody className="space-y-5">
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        <div className="bg-blue-500/10 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <p className="text-sm text-blue-900 dark:text-blue-100">
             <strong>ข้อมูลภาษี:</strong> ข้อมูลนี้จะถูกใช้ในการออกใบกำกับภาษีและใบเสร็จรับเงิน
             ตามมาตรฐานกรมสรรพากร กรุณาตรวจสอบข้อมูลให้ถูกต้อง
@@ -527,14 +531,14 @@ function TaxProfileSection() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
             {t('tax.taxAddress')}
           </label>
           <textarea
             value={taxAddress}
             onChange={(e) => setTaxAddress(e.target.value)}
             rows={3}
-            className="block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+            className="block w-full rounded-lg border border-[var(--brand-border)] shadow-sm px-4 py-2.5 text-[var(--brand-text)] placeholder-[var(--brand-text-secondary)] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
             placeholder="ที่อยู่สำนักงานใหญ่..."
           />
         </div>
@@ -695,7 +699,7 @@ function LineIntegrationSection() {
             <span
               className={clsx(
                 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium',
-                isConnected ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+                isConnected ? 'bg-green-500/10 text-green-700' : 'bg-red-500/10 text-red-700'
               )}
             >
               <span
@@ -729,7 +733,7 @@ function LineIntegrationSection() {
                 <button
                   type="button"
                   onClick={() => setShowSecret(!showSecret)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] transition-colors"
                 >
                   {showSecret ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -774,7 +778,7 @@ function LineIntegrationSection() {
                 <button
                   type="button"
                   onClick={() => setShowToken(!showToken)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  className="text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] transition-colors"
                 >
                   {showToken ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -814,15 +818,17 @@ function LineIntegrationSection() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Webhook URL</label>
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+            Webhook URL
+          </label>
           <div className="flex items-center gap-2">
-            <div className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 font-mono truncate">
+            <div className="flex-1 px-4 py-2.5 bg-[var(--brand-background)] border border-[var(--brand-border)] rounded-lg text-sm text-[var(--brand-text-secondary)] font-mono truncate">
               {webhookUrl}
             </div>
             <button
               type="button"
               onClick={handleCopyWebhook}
-              className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2.5 border border-[var(--brand-border)] rounded-lg text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-primary-light)] transition-colors"
             >
               {copied ? (
                 <>
@@ -865,8 +871,8 @@ function LineIntegrationSection() {
               className={clsx(
                 'px-4 py-2 rounded-lg text-sm',
                 statusMessage.type === 'success'
-                  ? 'bg-green-50 text-green-700 border border-green-200'
-                  : 'bg-red-50 text-red-700 border border-red-200'
+                  ? 'bg-green-500/10 text-green-700 border border-green-200'
+                  : 'bg-red-500/10 text-red-700 border border-red-500/20'
               )}
             >
               {statusMessage.text}
@@ -919,28 +925,28 @@ function NotificationPreferencesSection() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <tr className="border-b border-[var(--brand-border)]">
+                <th className="text-left py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                   {t('notifications.event')}
                 </th>
-                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
+                <th className="text-center py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider w-24">
                   LINE
                 </th>
-                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
+                <th className="text-center py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider w-24">
                   Email
                 </th>
-                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
+                <th className="text-center py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider w-24">
                   SMS
                 </th>
-                <th className="text-center py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">
+                <th className="text-center py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider w-24">
                   Web Push
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-[var(--brand-border)]">
               {preferences.map((pref, index) => (
-                <tr key={pref.key} className="hover:bg-gray-50/50">
-                  <td className="py-3.5 px-2 text-sm font-medium text-gray-900">
+                <tr key={pref.key} className="hover:bg-[var(--brand-primary-light)]/50">
+                  <td className="py-3.5 px-2 text-sm font-medium text-[var(--brand-text)]">
                     {t(`notifications.${pref.label}`)}
                   </td>
                   <td className="py-3.5 px-2 text-center">
@@ -1026,9 +1032,15 @@ function TeamMembersSection() {
   const [showInvite, setShowInvite] = useState(false)
 
   const statusLabel: Record<TeamMember['status'], { text: string; className: string }> = {
-    active: { text: t('team.memberStatus.active'), className: 'bg-green-50 text-green-700' },
-    pending: { text: t('team.memberStatus.pending'), className: 'bg-yellow-50 text-yellow-700' },
-    inactive: { text: t('team.memberStatus.inactive'), className: 'bg-gray-100 text-gray-600' },
+    active: { text: t('team.memberStatus.active'), className: 'bg-green-500/10 text-green-700' },
+    pending: {
+      text: t('team.memberStatus.pending'),
+      className: 'bg-yellow-500/10 text-yellow-700',
+    },
+    inactive: {
+      text: t('team.memberStatus.inactive'),
+      className: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
+    },
   }
 
   const roleLabel: Record<string, string> = {
@@ -1059,7 +1071,9 @@ function TeamMembersSection() {
         {/* Invite form */}
         {showInvite && (
           <div className="p-4 bg-orange-50/50 border border-orange-100 rounded-xl space-y-3">
-            <p className="text-sm font-semibold text-gray-900">{t('team.inviteNewMember')}</p>
+            <p className="text-sm font-semibold text-[var(--brand-text)]">
+              {t('team.inviteNewMember')}
+            </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
                 <Input
@@ -1072,7 +1086,7 @@ function TeamMembersSection() {
               <select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value as 'admin' | 'contractor')}
-                className="rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="rounded-lg border border-[var(--brand-border)] px-3 py-2.5 text-sm text-[var(--brand-text)] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               >
                 <option value="contractor">{t('team.roles.contractor')}</option>
                 <option value="admin">{t('team.roles.admin')}</option>
@@ -1088,27 +1102,27 @@ function TeamMembersSection() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <tr className="border-b border-[var(--brand-border)]">
+                <th className="text-left py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                   {t('team.name')}
                 </th>
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                <th className="text-left py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider hidden sm:table-cell">
                   {t('team.email')}
                 </th>
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                   {t('team.role')}
                 </th>
-                <th className="text-left py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                   {t('team.status')}
                 </th>
-                <th className="text-right py-3 px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider w-20">
+                <th className="text-right py-3 px-2 text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider w-20">
                   {t('team.manage')}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-[var(--brand-border)]">
               {members.map((member) => (
-                <tr key={member.id} className="hover:bg-gray-50/50">
+                <tr key={member.id} className="hover:bg-[var(--brand-primary-light)]/50">
                   <td className="py-3 px-2">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-gray-600 to-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -1117,15 +1131,21 @@ function TeamMembersSection() {
                         </span>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{member.name}</p>
-                        <p className="text-xs text-gray-400 sm:hidden">{member.email}</p>
+                        <p className="text-sm font-medium text-[var(--brand-text)]">
+                          {member.name}
+                        </p>
+                        <p className="text-xs text-[var(--brand-text-secondary)] sm:hidden">
+                          {member.email}
+                        </p>
                       </div>
                     </div>
                   </td>
-                  <td className="py-3 px-2 text-sm text-gray-600 hidden sm:table-cell">
+                  <td className="py-3 px-2 text-sm text-[var(--brand-text-secondary)] hidden sm:table-cell">
                     {member.email}
                   </td>
-                  <td className="py-3 px-2 text-sm text-gray-700">{roleLabel[member.role]}</td>
+                  <td className="py-3 px-2 text-sm text-[var(--brand-text)]">
+                    {roleLabel[member.role]}
+                  </td>
                   <td className="py-3 px-2">
                     <span
                       className={clsx(
@@ -1139,7 +1159,7 @@ function TeamMembersSection() {
                   <td className="py-3 px-2 text-right">
                     <button
                       type="button"
-                      className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-1.5 text-[var(--brand-text-secondary)] hover:text-red-600 hover:bg-red-500/10 rounded-lg transition-colors"
                       title={t('team.deleteMember')}
                     >
                       <svg
@@ -1190,15 +1210,17 @@ function ApiKeysSection() {
       <CardHeader title={t('api.title')} subtitle={t('api.subtitle')} />
       <CardBody className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">{t('api.apiKey')}</label>
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+            {t('api.apiKey')}
+          </label>
           <div className="flex items-center gap-2">
-            <div className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-mono text-gray-600 truncate">
+            <div className="flex-1 px-4 py-2.5 bg-[var(--brand-background)] border border-[var(--brand-border)] rounded-lg text-sm font-mono text-[var(--brand-text-secondary)] truncate">
               {showKey ? apiKey : maskedKey}
             </div>
             <button
               type="button"
               onClick={() => setShowKey(!showKey)}
-              className="flex-shrink-0 p-2.5 border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors"
+              className="flex-shrink-0 p-2.5 border border-[var(--brand-border)] rounded-lg text-[var(--brand-text-secondary)] hover:bg-[var(--brand-primary-light)] transition-colors"
               title={showKey ? t('api.hide') : t('api.show')}
             >
               {showKey ? (
@@ -1230,7 +1252,7 @@ function ApiKeysSection() {
             <button
               type="button"
               onClick={handleCopy}
-              className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2.5 border border-[var(--brand-border)] rounded-lg text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-primary-light)] transition-colors"
             >
               {copied ? (
                 <svg
@@ -1263,8 +1285,8 @@ function ApiKeysSection() {
         {/* Regenerate */}
         <div>
           {showConfirm ? (
-            <div className="p-4 bg-red-50 border border-red-100 rounded-xl space-y-3">
-              <p className="text-sm font-medium text-red-800">{t('api.regenerateConfirm')}</p>
+            <div className="p-4 bg-red-500/10 border border-red-100 rounded-xl space-y-3">
+              <p className="text-sm font-medium text-red-400">{t('api.regenerateConfirm')}</p>
               <div className="flex gap-2">
                 <Button variant="danger" size="sm" onClick={() => setShowConfirm(false)}>
                   {t('api.confirmRegenerate')}
@@ -1291,7 +1313,7 @@ function ApiKeysSection() {
 
         {/* Webhook endpoints */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
             {t('api.webhookEndpoints')}
           </label>
           <div className="space-y-2">
@@ -1314,16 +1336,20 @@ function ApiKeysSection() {
             ].map((endpoint) => (
               <div
                 key={endpoint.event}
-                className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg"
+                className="flex items-center justify-between p-3 bg-[var(--brand-background)] border border-[var(--brand-border)] rounded-lg"
               >
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-900">{endpoint.event}</p>
-                  <p className="text-xs text-gray-500 font-mono truncate">{endpoint.url}</p>
+                  <p className="text-sm font-medium text-[var(--brand-text)]">{endpoint.event}</p>
+                  <p className="text-xs text-[var(--brand-text-secondary)] font-mono truncate">
+                    {endpoint.url}
+                  </p>
                 </div>
                 <span
                   className={clsx(
                     'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ml-3',
-                    endpoint.active ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-500'
+                    endpoint.active
+                      ? 'bg-green-500/10 text-green-700'
+                      : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
                   )}
                 >
                   <span
@@ -1340,24 +1366,24 @@ function ApiKeysSection() {
         </div>
 
         {/* Usage stats */}
-        <div className="p-4 bg-gray-50 rounded-xl">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+        <div className="p-4 bg-[var(--brand-background)] rounded-xl">
+          <p className="text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider mb-3">
             {t('api.usageThisMonth')}
           </p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-2xl font-bold text-gray-900">1,247</p>
-              <p className="text-xs text-gray-500">{t('api.requestsUsed')}</p>
+              <p className="text-2xl font-bold text-[var(--brand-text)]">1,247</p>
+              <p className="text-xs text-[var(--brand-text-secondary)]">{t('api.requestsUsed')}</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">10,000</p>
-              <p className="text-xs text-gray-500">{t('api.monthlyLimit')}</p>
+              <p className="text-2xl font-bold text-[var(--brand-text)]">10,000</p>
+              <p className="text-xs text-[var(--brand-text-secondary)]">{t('api.monthlyLimit')}</p>
             </div>
           </div>
-          <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
+          <div className="mt-3 w-full bg-[var(--brand-border)] rounded-full h-2">
             <div className="bg-orange-500 h-2 rounded-full" style={{ width: '12.47%' }} />
           </div>
-          <p className="text-xs text-gray-400 mt-1.5">
+          <p className="text-xs text-[var(--brand-text-secondary)] mt-1.5">
             {t('api.usagePercent', { percent: '12.47' })}
           </p>
         </div>
@@ -1979,28 +2005,32 @@ function SecurityMFASection() {
       {/* MFA Status Card */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-gray-900">{t('security.title')}</h2>
-          <p className="text-sm text-gray-500 mt-1">{t('security.subtitle')}</p>
+          <h2 className="text-lg font-semibold text-[var(--brand-text)]">{t('security.title')}</h2>
+          <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
+            {t('security.subtitle')}
+          </p>
         </CardHeader>
         <CardBody>
           {error && (
-            <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+            <div className="mb-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-700">
               {error}
             </div>
           )}
 
           {/* Current status */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4">
+          <div className="flex items-center justify-between p-4 bg-[var(--brand-background)] rounded-lg mb-4">
             <div className="flex items-center gap-3">
               <div
                 className={clsx(
                   'w-3 h-3 rounded-full',
-                  mfaStatus === 'enrolled' ? 'bg-green-500' : 'bg-gray-300'
+                  mfaStatus === 'enrolled' ? 'bg-green-500' : 'bg-[var(--brand-border)]'
                 )}
               />
               <div>
-                <p className="text-sm font-medium text-gray-900">{t('security.mfaStatus')}</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-sm font-medium text-[var(--brand-text)]">
+                  {t('security.mfaStatus')}
+                </p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">
                   {mfaStatus === 'enrolled'
                     ? t('security.statusEnabled')
                     : t('security.statusDisabled')}
@@ -2008,7 +2038,7 @@ function SecurityMFASection() {
               </div>
             </div>
             {mfaStatus === 'enrolled' && (
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-[var(--brand-text-secondary)]">
                 {t('security.backupCodesRemaining', { count: backupCodesRemaining })}
               </span>
             )}
@@ -2023,8 +2053,10 @@ function SecurityMFASection() {
 
           {enrollStep === 'qr' && (
             <div className="space-y-4">
-              <div className="p-4 bg-white border border-gray-200 rounded-lg">
-                <p className="text-sm font-medium text-gray-900 mb-3">{t('security.scanQr')}</p>
+              <div className="p-4 bg-[var(--brand-surface)] border border-[var(--brand-border)] rounded-lg">
+                <p className="text-sm font-medium text-[var(--brand-text)] mb-3">
+                  {t('security.scanQr')}
+                </p>
                 <div className="flex justify-center mb-3">
                   <Image
                     src={qrCodeUrl}
@@ -2035,15 +2067,17 @@ function SecurityMFASection() {
                   />
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-500 mb-1">{t('security.manualEntry')}</p>
-                  <code className="text-xs bg-gray-100 px-2 py-1 rounded select-all break-all">
+                  <p className="text-xs text-[var(--brand-text-secondary)] mb-1">
+                    {t('security.manualEntry')}
+                  </p>
+                  <code className="text-xs bg-[var(--brand-background)] px-2 py-1 rounded select-all break-all">
                     {secret}
                   </code>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                   {t('security.enterCode')}
                 </label>
                 <div className="flex gap-2">
@@ -2063,8 +2097,8 @@ function SecurityMFASection() {
 
           {/* Backup codes display */}
           {showBackupCodes && backupCodes.length > 0 && (
-            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-sm font-medium text-yellow-800 mb-2">
+            <div className="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+              <p className="text-sm font-medium text-yellow-600 mb-2">
                 {t('security.backupCodesTitle')}
               </p>
               <p className="text-xs text-yellow-700 mb-3">{t('security.backupCodesWarning')}</p>
@@ -2153,14 +2187,14 @@ function PrivacySection() {
   return (
     <div className="space-y-6">
       {/* Privacy Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-[var(--brand-border)]">
         <nav className="flex gap-8" aria-label="Privacy tabs">
           <button
             onClick={() => setActivePrivacyTab('consent')}
             className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
               activePrivacyTab === 'consent'
                 ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
             }`}
           >
             {t('privacy.tabs.consent')}
@@ -2170,7 +2204,7 @@ function PrivacySection() {
             className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
               activePrivacyTab === 'data'
                 ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
             }`}
           >
             {t('privacy.tabs.data')}
@@ -2180,7 +2214,7 @@ function PrivacySection() {
             className={`pb-4 text-sm font-medium border-b-2 transition-colors ${
               activePrivacyTab === 'cookie'
                 ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
             }`}
           >
             {t('privacy.tabs.cookie')}
@@ -2193,59 +2227,59 @@ function PrivacySection() {
         <Card>
           <CardHeader title={t('privacy.consent.title')} subtitle={t('privacy.consent.subtitle')} />
           <CardBody className="space-y-4">
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="bg-blue-500/10 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm text-blue-900 dark:text-blue-100">
                 {t('privacy.consent.notice')}
               </p>
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-[var(--brand-border)] dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-medium text-[var(--brand-text)] dark:text-white">
                     {t('privacy.consent.storage')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('privacy.consent.storageDesc')}
                   </p>
                 </div>
-                <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
+                <div className="px-3 py-1 text-xs font-medium bg-green-500/10 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
                   {t('privacy.consent.given')}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-[var(--brand-border)] dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-medium text-[var(--brand-text)] dark:text-white">
                     {t('privacy.consent.analysis')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('privacy.consent.analysisDesc')}
                   </p>
                 </div>
-                <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
+                <div className="px-3 py-1 text-xs font-medium bg-green-500/10 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
                   {t('privacy.consent.given')}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-[var(--brand-border)] dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-medium text-[var(--brand-text)] dark:text-white">
                     {t('privacy.consent.marketing')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('privacy.consent.marketingDesc')}
                   </p>
                 </div>
                 <Toggle enabled={true} onChange={() => {}} />
               </div>
 
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-[var(--brand-border)] dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-medium text-[var(--brand-text)] dark:text-white">
                     {t('privacy.consent.sharing')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('privacy.consent.sharingDesc')}
                   </p>
                 </div>
@@ -2262,40 +2296,52 @@ function PrivacySection() {
           <CardHeader title={t('privacy.data.title')} subtitle={t('privacy.data.subtitle')} />
           <CardBody className="space-y-6">
             {/* User Info */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-              <h3 className="font-medium text-gray-900 dark:text-white mb-3">
+            <div className="bg-[var(--brand-background)] dark:bg-gray-800 rounded-lg p-4">
+              <h3 className="font-medium text-[var(--brand-text)] dark:text-white mb-3">
                 {t('privacy.data.accountInfo')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400">{t('privacy.data.name')}</p>
-                  <p className="text-gray-900 dark:text-white font-medium">
+                  <p className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    {t('privacy.data.name')}
+                  </p>
+                  <p className="text-[var(--brand-text)] dark:text-white font-medium">
                     {user?.displayName || '-'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400">{t('privacy.data.email')}</p>
-                  <p className="text-gray-900 dark:text-white font-medium">{user?.email || '-'}</p>
+                  <p className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    {t('privacy.data.email')}
+                  </p>
+                  <p className="text-[var(--brand-text)] dark:text-white font-medium">
+                    {user?.email || '-'}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400">{t('privacy.data.phone')}</p>
-                  <p className="text-gray-900 dark:text-white font-medium">
+                  <p className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    {t('privacy.data.phone')}
+                  </p>
+                  <p className="text-[var(--brand-text)] dark:text-white font-medium">
                     {user?.phoneNumber || '-'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400">{t('privacy.data.role')}</p>
-                  <p className="text-gray-900 dark:text-white font-medium">{user?.role || '-'}</p>
+                  <p className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    {t('privacy.data.role')}
+                  </p>
+                  <p className="text-[var(--brand-text)] dark:text-white font-medium">
+                    {user?.role || '-'}
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* Data Export */}
             <div>
-              <h3 className="font-medium text-gray-900 dark:text-white mb-3">
+              <h3 className="font-medium text-[var(--brand-text)] dark:text-white mb-3">
                 {t('privacy.data.export')}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-3">
                 {t('privacy.data.exportDesc')}
               </p>
               <Button variant="outline" onClick={handleExportData} disabled={isExporting}>
@@ -2304,7 +2350,7 @@ function PrivacySection() {
             </div>
 
             {/* Delete Account */}
-            <div className="border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="border border-red-500/20 dark:border-red-800 rounded-lg p-4">
               <h3 className="font-medium text-red-900 dark:text-red-100 mb-2">
                 {t('privacy.data.delete')}
               </h3>
@@ -2313,7 +2359,7 @@ function PrivacySection() {
               </p>
               <Button
                 variant="outline"
-                className="border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="border-red-500 text-red-600 hover:bg-red-500/10 dark:hover:bg-red-900/20"
                 onClick={() => setShowDeleteModal(true)}
               >
                 {t('privacy.data.deleteButton')}
@@ -2328,45 +2374,45 @@ function PrivacySection() {
         <Card>
           <CardHeader title={t('privacy.cookie.title')} subtitle={t('privacy.cookie.subtitle')} />
           <CardBody className="space-y-4">
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="bg-blue-500/10 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm text-blue-900 dark:text-blue-100">
                 {t('privacy.cookie.notice')}
               </p>
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-[var(--brand-border)] dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-medium text-[var(--brand-text)] dark:text-white">
                     {t('privacy.cookie.essential')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('privacy.cookie.essentialDesc')}
                   </p>
                 </div>
-                <div className="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
+                <div className="px-3 py-1 text-xs font-medium bg-green-500/10 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full">
                   {t('privacy.cookie.enabled')}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-[var(--brand-border)] dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-medium text-[var(--brand-text)] dark:text-white">
                     {t('privacy.cookie.analytics')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('privacy.cookie.analyticsDesc')}
                   </p>
                 </div>
                 <Toggle enabled={true} onChange={() => {}} />
               </div>
 
-              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-[var(--brand-border)] dark:border-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-medium text-[var(--brand-text)] dark:text-white">
                     {t('privacy.cookie.marketing')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('privacy.cookie.marketingDesc')}
                   </p>
                 </div>
@@ -2374,7 +2420,7 @@ function PrivacySection() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="pt-4 border-t border-[var(--brand-border)] dark:border-gray-700">
               <a
                 href="/pdpa"
                 className="text-sm text-orange-600 dark:text-orange-400 hover:underline"
@@ -2437,12 +2483,12 @@ export default function SettingsPage() {
       <div className="max-w-5xl space-y-6">
         {/* Page header */}
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
+          <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+          <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 overflow-x-auto scrollbar-thin">
+        <div className="border-b border-[var(--brand-border)] overflow-x-auto scrollbar-thin">
           <nav className="flex gap-1 min-w-max" aria-label="Settings tabs">
             {visibleTabs.map((tab) => (
               <button
@@ -2452,10 +2498,14 @@ export default function SettingsPage() {
                   'inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap',
                   activeTab === tab.key
                     ? 'border-orange-500 text-orange-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] hover:border-[var(--brand-border)]'
                 )}
               >
-                <span className={clsx(activeTab === tab.key ? 'text-orange-500' : 'text-gray-400')}>
+                <span
+                  className={clsx(
+                    activeTab === tab.key ? 'text-orange-500' : 'text-[var(--brand-text-secondary)]'
+                  )}
+                >
                   {tab.icon}
                 </span>
                 {t(tab.labelKey)}

@@ -207,10 +207,10 @@ export default function ContactPage(): React.ReactElement {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-[var(--brand-text-secondary)]">{t('loading')}</p>
         </div>
       </div>
     )
@@ -218,9 +218,9 @@ export default function ContactPage(): React.ReactElement {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center">
         <div className="text-center p-6">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
             <svg
               className="w-8 h-8 text-green-600"
               fill="none"
@@ -235,15 +235,17 @@ export default function ContactPage(): React.ReactElement {
               />
             </svg>
           </div>
-          <h2 className="mt-4 text-xl font-semibold text-gray-900">{t('success.title')}</h2>
-          <p className="mt-2 text-gray-600">{t('success.redirecting')}</p>
+          <h2 className="mt-4 text-xl font-semibold text-[var(--brand-text)]">
+            {t('success.title')}
+          </h2>
+          <p className="mt-2 text-[var(--brand-text-secondary)]">{t('success.redirecting')}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--brand-background)]">
       <header className="bg-green-600 text-white p-4 shadow-md">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">{t('title')}</h1>
@@ -251,18 +253,18 @@ export default function ContactPage(): React.ReactElement {
       </header>
 
       <main className="p-4 max-w-lg mx-auto">
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
-          <p className="text-gray-600 mb-6">{t('description')}</p>
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-6 mb-4">
+          <p className="text-[var(--brand-text-secondary)] mb-6">{t('description')}</p>
 
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
               <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('form.name')} <span className="text-red-500">*</span>
               </label>
               <input
@@ -271,7 +273,7 @@ export default function ContactPage(): React.ReactElement {
                 value={formData.display_name}
                 onChange={handleInputChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                  formErrors.display_name ? 'border-red-500' : 'border-gray-300'
+                  formErrors.display_name ? 'border-red-500' : 'border-[var(--brand-border)]'
                 }`}
                 placeholder={t('form.name')}
               />
@@ -281,7 +283,7 @@ export default function ContactPage(): React.ReactElement {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('form.phone')} <span className="text-red-500">*</span>
               </label>
               <input
@@ -291,7 +293,7 @@ export default function ContactPage(): React.ReactElement {
                 onChange={handlePhoneChange}
                 maxLength={12}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                  formErrors.phone ? 'border-red-500' : 'border-gray-300'
+                  formErrors.phone ? 'border-red-500' : 'border-[var(--brand-border)]'
                 }`}
                 placeholder="0xx-xxx-xxxx"
               />
@@ -299,7 +301,7 @@ export default function ContactPage(): React.ReactElement {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('form.email')}
               </label>
               <input
@@ -308,7 +310,7 @@ export default function ContactPage(): React.ReactElement {
                 value={formData.email}
                 onChange={handleInputChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                  formErrors.email ? 'border-red-500' : 'border-gray-300'
+                  formErrors.email ? 'border-red-500' : 'border-[var(--brand-border)]'
                 }`}
                 placeholder="email@example.com"
               />
@@ -316,7 +318,7 @@ export default function ContactPage(): React.ReactElement {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('form.address')}
               </label>
               <input
@@ -324,20 +326,20 @@ export default function ContactPage(): React.ReactElement {
                 name="address"
                 value={formData.address}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder={t('form.addressPlaceholder')}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('form.province')}
               </label>
               <select
                 name="province"
                 value={formData.province}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
                 <option value="">{t('form.selectProvince')}</option>
                 {THAI_PROVINCES.map((province) => (
@@ -349,7 +351,7 @@ export default function ContactPage(): React.ReactElement {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('form.district')}
               </label>
               <input
@@ -357,7 +359,7 @@ export default function ContactPage(): React.ReactElement {
                 name="district"
                 value={formData.district}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder={t('form.districtPlaceholder')}
               />
             </div>
@@ -400,7 +402,7 @@ export default function ContactPage(): React.ReactElement {
           </form>
         </div>
 
-        <p className="text-xs text-gray-500 text-center">{t('pdpaNotice')}</p>
+        <p className="text-xs text-[var(--brand-text-secondary)] text-center">{t('pdpaNotice')}</p>
       </main>
     </div>
   )

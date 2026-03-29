@@ -2,12 +2,12 @@ import { CardSkeleton, ChartSkeleton, TableSkeleton } from '@/components/ui/Skel
 
 export default function DashboardLoading() {
   return (
-    <div className="min-h-screen bg-gray-50/50 flex">
+    <div className="min-h-screen bg-[var(--brand-background)] flex">
       {/* Sidebar placeholder */}
-      <div className="hidden lg:block w-[260px] border-r border-gray-200 bg-white" />
+      <div className="hidden lg:block w-[260px] border-r border-[var(--brand-border)] bg-[var(--brand-surface)]" />
       <div className="flex-1 p-6 lg:p-8">
         <div className="space-y-6 max-w-7xl">
-          <div className="h-6 w-32 bg-gray-200 rounded animate-pulse" />
+          <div className="h-6 w-32 bg-[var(--brand-border)] rounded animate-pulse" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <CardSkeleton />
             <CardSkeleton />

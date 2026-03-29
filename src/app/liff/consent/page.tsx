@@ -164,10 +164,10 @@ export default function ConsentPage(): React.ReactElement {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-[var(--brand-text-secondary)]">{t('loading')}</p>
         </div>
       </div>
     )
@@ -175,9 +175,9 @@ export default function ConsentPage(): React.ReactElement {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center">
         <div className="text-center p-6">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
             <svg
               className="w-8 h-8 text-green-600"
               fill="none"
@@ -192,8 +192,10 @@ export default function ConsentPage(): React.ReactElement {
               />
             </svg>
           </div>
-          <h2 className="mt-4 text-xl font-semibold text-gray-900">{t('success.title')}</h2>
-          <p className="mt-2 text-gray-600">{t('success.redirecting')}</p>
+          <h2 className="mt-4 text-xl font-semibold text-[var(--brand-text)]">
+            {t('success.title')}
+          </h2>
+          <p className="mt-2 text-[var(--brand-text-secondary)]">{t('success.redirecting')}</p>
         </div>
       </div>
     )
@@ -202,7 +204,7 @@ export default function ConsentPage(): React.ReactElement {
   const grantedCount = consentTypes.filter((c) => c.granted).length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--brand-background)]">
       <header className="bg-green-600 text-white p-4 shadow-md">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">{t('title')}</h1>
@@ -210,14 +212,16 @@ export default function ConsentPage(): React.ReactElement {
       </header>
 
       <main className="p-4 max-w-lg mx-auto">
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-6 mb-4">
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">{t('description')}</h2>
-            <p className="text-sm text-gray-600">{t('rights.description')}</p>
+            <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-2">
+              {t('description')}
+            </h2>
+            <p className="text-sm text-[var(--brand-text-secondary)]">{t('rights.description')}</p>
           </div>
 
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
               <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
@@ -231,7 +235,7 @@ export default function ConsentPage(): React.ReactElement {
                   className={`p-4 rounded-lg border-2 transition-colors cursor-pointer ${
                     consent.granted
                       ? 'border-green-500 bg-green-50'
-                      : 'border-gray-200 bg-white hover:border-gray-300'
+                      : 'border-[var(--brand-border)] bg-[var(--brand-surface)] hover:border-[var(--brand-border)]'
                   }`}
                   onClick={() => handleConsentToggle(consent.type)}
                 >
@@ -239,23 +243,25 @@ export default function ConsentPage(): React.ReactElement {
                     <span className="text-2xl">{definition?.icon}</span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
-                        <h3 className="font-medium text-gray-900">{consent.label}</h3>
+                        <h3 className="font-medium text-[var(--brand-text)]">{consent.label}</h3>
                         <div
                           className={`w-12 h-7 rounded-full transition-colors ${
-                            consent.granted ? 'bg-green-500' : 'bg-gray-300'
+                            consent.granted ? 'bg-green-500' : 'bg-[var(--brand-border)]'
                           }`}
                         >
                           <div
-                            className={`w-5 h-5 bg-white rounded-full shadow transform transition-transform mt-1 ${
+                            className={`w-5 h-5 bg-[var(--brand-surface)] rounded-full shadow transform transition-transform mt-1 ${
                               consent.granted ? 'translate-x-6 ml-1' : 'translate-x-1'
                             }`}
                           />
                         </div>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">{consent.description}</p>
+                    <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
+                      {consent.description}
+                    </p>
                     {consent.granted_at && (
-                      <p className="text-xs text-gray-400 mt-2">
+                      <p className="text-xs text-[var(--brand-text-secondary)] mt-2">
                         {t('consents.grantedAt')}{' '}
                         {new Date(consent.granted_at).toLocaleDateString('th-TH')}
                       </p>
@@ -266,7 +272,7 @@ export default function ConsentPage(): React.ReactElement {
             })}
           </div>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+          <div className="mt-6 p-4 bg-blue-500/10 rounded-lg">
             <div className="flex items-start gap-2">
               <svg
                 className="w-5 h-5 text-blue-600 mt-0.5"
@@ -326,17 +332,17 @@ export default function ConsentPage(): React.ReactElement {
             <button
               onClick={handleSkip}
               disabled={isSubmitting}
-              className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+              className="w-full py-3 px-4 bg-[var(--brand-background)] hover:bg-[var(--brand-border)] text-[var(--brand-text)] font-medium rounded-lg transition-colors"
             >
               {t('actions.skip')}
             </button>
           </div>
         </div>
 
-        <p className="text-xs text-gray-500 text-center">{t('pdpaNotice')}</p>
+        <p className="text-xs text-[var(--brand-text-secondary)] text-center">{t('pdpaNotice')}</p>
 
         {/* WK-021: PDPA data rights link & DPO contact */}
-        <div className="mt-4 bg-white rounded-xl shadow-sm p-4 space-y-3">
+        <div className="mt-4 bg-[var(--brand-surface)] rounded-xl shadow-sm p-4 space-y-3">
           <a
             href="/liff/data-rights"
             className="flex items-center justify-between text-sm font-medium text-green-700 hover:text-green-800 transition-colors"
@@ -346,8 +352,10 @@ export default function ConsentPage(): React.ReactElement {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </a>
-          <div className="border-t border-gray-100 pt-3 text-xs text-gray-500 space-y-0.5">
-            <p className="font-medium text-gray-600">{t('dpoContact.title')}</p>
+          <div className="border-t border-[var(--brand-border)] pt-3 text-xs text-[var(--brand-text-secondary)] space-y-0.5">
+            <p className="font-medium text-[var(--brand-text-secondary)]">
+              {t('dpoContact.title')}
+            </p>
             <p>
               {t('dpoContact.email')}:{' '}
               <a href="mailto:dpo@solariq.app" className="text-green-600 hover:underline">

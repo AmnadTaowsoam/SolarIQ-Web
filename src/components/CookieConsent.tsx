@@ -205,7 +205,7 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-[var(--brand-surface)] dark:bg-gray-900 border-t border-[var(--brand-border)] dark:border-gray-700 shadow-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Simple View */}
         {!showDetails ? (
@@ -216,22 +216,24 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                   <Cookie className="h-8 w-8 text-primary-600" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white mb-2">
                     {t('title')}
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('description')}</p>
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    {t('description')}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
                 <button
                   onClick={handleManageSettings}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   {t('customize')}
                 </button>
                 <button
                   onClick={handleRejectAll}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] border border-[var(--brand-border)] dark:border-gray-600 rounded-lg hover:bg-[var(--brand-background)] dark:hover:bg-gray-800 transition-colors"
                 >
                   {t('rejectAll')}
                 </button>
@@ -253,10 +255,10 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                   <Cookie className="h-8 w-8 text-primary-600" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white mb-2">
                     {t('title')}
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-4">
                     {t('description')}
                   </p>
                   <Link
@@ -269,7 +271,7 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
               </div>
               <button
                 onClick={() => setIsVisible(false)}
-                className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                className="flex-shrink-0 p-2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] dark:hover:text-gray-200 transition-colors"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
@@ -281,21 +283,21 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
               {COOKIE_CATEGORIES.map((category) => (
                 <div
                   key={category.key}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                  className="border border-[var(--brand-border)] dark:border-gray-700 rounded-lg p-4"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-medium text-gray-900 dark:text-white">
+                        <h4 className="font-medium text-[var(--brand-text)] dark:text-white">
                           {t(category.nameKey)}
                         </h4>
                         {category.required && (
-                          <span className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded">
+                          <span className="text-xs bg-[var(--brand-background)] dark:bg-gray-800 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] px-2 py-0.5 rounded">
                             {t('necessary')}
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                         {t(category.descriptionKey)}
                       </p>
                     </div>
@@ -305,7 +307,7 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                         checked={preferences[category.key]}
                         onChange={(e) => handleToggle(category.key, e.target.checked)}
                         disabled={category.required}
-                        className="h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="h-5 w-5 rounded border-[var(--brand-border)] text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </label>
                   </div>
@@ -317,7 +319,7 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
             <div className="flex flex-col sm:flex-row gap-3 justify-end">
               <button
                 onClick={handleRejectAll}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] border border-[var(--brand-border)] dark:border-gray-600 rounded-lg hover:bg-[var(--brand-background)] dark:hover:bg-gray-800 transition-colors"
               >
                 {t('rejectAll')}
               </button>

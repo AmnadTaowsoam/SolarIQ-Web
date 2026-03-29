@@ -105,12 +105,12 @@ export default function GettingStartedCard() {
     <div className="mb-6 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-6">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">{t('title')}</h2>
-          <p className="text-sm text-gray-600">{t('subtitle')}</p>
+          <h2 className="text-lg font-semibold text-[var(--brand-text)]">{t('title')}</h2>
+          <p className="text-sm text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
         </div>
         <button
           onClick={dismiss}
-          className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-white/60 hover:text-gray-700"
+          className="rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--brand-text-secondary)] hover:bg-[var(--brand-surface)]/60 hover:text-[var(--brand-text)]"
         >
           {t('dismiss')}
         </button>
@@ -118,11 +118,11 @@ export default function GettingStartedCard() {
 
       {/* Progress bar */}
       <div className="mb-4">
-        <div className="mb-1 flex items-center justify-between text-xs text-gray-500">
+        <div className="mb-1 flex items-center justify-between text-xs text-[var(--brand-text-secondary)]">
           <span>{t('progress')}</span>
           <span>{progress}%</span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-white/80">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--brand-surface)]/80">
           <div
             className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-500"
             style={{ width: `${progress}%` }}
@@ -140,7 +140,7 @@ export default function GettingStartedCard() {
               className={`flex items-center gap-3 rounded-lg border p-3 transition-all ${
                 done
                   ? 'border-green-200 bg-green-50/50'
-                  : 'border-white/60 bg-white/40 hover:bg-white/70'
+                  : 'border-white/60 bg-[var(--brand-surface)]/40 hover:bg-[var(--brand-surface)]/70'
               }`}
             >
               <button
@@ -148,7 +148,7 @@ export default function GettingStartedCard() {
                 className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 transition-all ${
                   done
                     ? 'border-green-500 bg-green-500 text-white'
-                    : 'border-gray-300 hover:border-amber-400'
+                    : 'border-[var(--brand-border)] hover:border-amber-400'
                 }`}
               >
                 {done && (
@@ -174,12 +174,14 @@ export default function GettingStartedCard() {
                 <Link
                   href={step.href}
                   className={`text-sm font-medium ${
-                    done ? 'text-gray-400 line-through' : 'text-gray-900 hover:text-amber-600'
+                    done
+                      ? 'text-[var(--brand-text-secondary)] line-through'
+                      : 'text-[var(--brand-text)] hover:text-amber-600'
                   }`}
                 >
                   {step.title}
                 </Link>
-                <p className="text-xs text-gray-500">{step.description}</p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">{step.description}</p>
               </div>
 
               {!done && (
@@ -196,7 +198,7 @@ export default function GettingStartedCard() {
       </div>
 
       {completedSteps.length === STEPS.length && (
-        <div className="mt-4 rounded-lg bg-green-100 p-3 text-center text-sm font-medium text-green-800">
+        <div className="mt-4 rounded-lg bg-green-500/10 p-3 text-center text-sm font-medium text-green-800">
           {t('done')}
         </div>
       )}

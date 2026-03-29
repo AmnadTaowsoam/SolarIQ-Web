@@ -60,10 +60,10 @@ export function TrialCountdown({
     <div
       className={`rounded-xl border p-4 ${className} ${
         isTrialExpired
-          ? 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20'
+          ? 'border-red-500/20 bg-red-500/10 dark:border-red-800 dark:bg-red-900/20'
           : isTrialEndingSoon
             ? 'border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/20'
-            : 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20'
+            : 'border-blue-200 bg-blue-500/10 dark:border-blue-800 dark:bg-blue-900/20'
       }`}
     >
       <div className="flex items-start gap-3">
@@ -73,7 +73,7 @@ export function TrialCountdown({
               ? 'bg-red-100 dark:bg-red-900/30'
               : isTrialEndingSoon
                 ? 'bg-amber-100 dark:bg-amber-900/30'
-                : 'bg-blue-100 dark:bg-blue-900/30'
+                : 'bg-blue-500/10 dark:bg-blue-900/30'
           }`}
         >
           <Clock
@@ -90,12 +90,16 @@ export function TrialCountdown({
         <div className="flex-1">
           {isTrialExpired ? (
             <>
-              <p className="font-semibold text-gray-900 dark:text-white">{t('expired')}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('expiredDesc')}</p>
+              <p className="font-semibold text-[var(--brand-text)] dark:text-white">
+                {t('expired')}
+              </p>
+              <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                {t('expiredDesc')}
+              </p>
             </>
           ) : (
             <>
-              <p className="font-semibold text-gray-900 dark:text-white">
+              <p className="font-semibold text-[var(--brand-text)] dark:text-white">
                 {t('timeLeft', { days: daysLeft, hours: hoursLeft, minutes: minutesLeft })}
               </p>
               {isTrialEndingSoon && (
@@ -104,7 +108,7 @@ export function TrialCountdown({
                   <span>{t('endingSoon')}</span>
                 </p>
               )}
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                 {t('noCreditCard')} • {t('keepData')}
               </p>
             </>

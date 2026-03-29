@@ -23,13 +23,13 @@ import { extractLocaleFromPath } from '@/lib/locale'
 // ---------------------------------------------------------------------------
 
 const ACTION_BADGE_COLORS: Record<AuditAction, string> = {
-  CREATE: 'bg-green-100 text-green-800',
-  UPDATE: 'bg-blue-100 text-blue-800',
-  DELETE: 'bg-red-100 text-red-800',
-  VIEW: 'bg-gray-100 text-gray-700',
-  EXPORT: 'bg-purple-100 text-purple-800',
+  CREATE: 'bg-green-500/10 text-green-800',
+  UPDATE: 'bg-blue-500/10 text-blue-800',
+  DELETE: 'bg-red-100 text-red-400',
+  VIEW: 'bg-[var(--brand-background)] text-[var(--brand-text)]',
+  EXPORT: 'bg-purple-500/10 text-purple-800',
   LOGIN: 'bg-orange-100 text-orange-800',
-  LOGOUT: 'bg-yellow-100 text-yellow-800',
+  LOGOUT: 'bg-yellow-500/10 text-yellow-600',
 }
 
 const ACTION_TIMELINE_ICONS: Record<AuditAction, string> = {
@@ -87,12 +87,14 @@ function StatCard({
   icon: React.ReactNode
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+    <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-5 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">{title}</span>
+        <span className="text-xs font-medium text-[var(--brand-text-secondary)] uppercase tracking-wide">
+          {title}
+        </span>
         <span className="text-orange-500">{icon}</span>
       </div>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
+      <p className="text-2xl font-bold text-[var(--brand-text)]">{value}</p>
     </div>
   )
 }
@@ -124,12 +126,12 @@ function ExpandableRow({
         )}
         onClick={() => hasChanges && setExpanded(!expanded)}
       >
-        <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
+        <td className="px-4 py-3 text-sm text-[var(--brand-text-secondary)] whitespace-nowrap">
           {formatDateTime(entry.timestamp, locale)}
         </td>
         <td className="px-4 py-3">
-          <div className="text-sm font-medium text-gray-900">{entry.user_name}</div>
-          <div className="text-xs text-gray-500">{entry.user_email}</div>
+          <div className="text-sm font-medium text-[var(--brand-text)]">{entry.user_name}</div>
+          <div className="text-xs text-[var(--brand-text-secondary)]">{entry.user_email}</div>
         </td>
         <td className="px-4 py-3">
           <span
@@ -141,16 +143,20 @@ function ExpandableRow({
             {actionLabels[entry.action]}
           </span>
         </td>
-        <td className="px-4 py-3 text-sm text-gray-600">{resourceLabels[entry.resource_type]}</td>
-        <td className="px-4 py-3 text-sm text-gray-600 max-w-[200px] truncate">
+        <td className="px-4 py-3 text-sm text-[var(--brand-text-secondary)]">
+          {resourceLabels[entry.resource_type]}
+        </td>
+        <td className="px-4 py-3 text-sm text-[var(--brand-text-secondary)] max-w-[200px] truncate">
           {entry.description}
         </td>
-        <td className="px-4 py-3 text-sm text-gray-500 font-mono text-xs">{entry.ip_address}</td>
+        <td className="px-4 py-3 text-sm text-[var(--brand-text-secondary)] font-mono text-xs">
+          {entry.ip_address}
+        </td>
         <td className="px-4 py-3 text-center">
           {hasChanges && (
             <svg
               className={clsx(
-                'w-4 h-4 text-gray-400 transition-transform inline-block',
+                'w-4 h-4 text-[var(--brand-text-secondary)] transition-transform inline-block',
                 expanded && 'rotate-180'
               )}
               fill="none"
@@ -168,18 +174,18 @@ function ExpandableRow({
         </td>
       </tr>
       {expanded && hasChanges && entry.changes && (
-        <tr className="bg-gray-50">
+        <tr className="bg-[var(--brand-background)]">
           <td colSpan={7} className="px-4 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h4 className="text-xs font-semibold text-red-600 mb-2">{t('details.before')}</h4>
-                <pre className="text-xs bg-red-50 border border-red-200 rounded-lg p-3 overflow-x-auto">
+                <pre className="text-xs bg-red-500/10 border border-red-500/20 rounded-lg p-3 overflow-x-auto">
                   {JSON.stringify(entry.changes.before, null, 2)}
                 </pre>
               </div>
               <div>
                 <h4 className="text-xs font-semibold text-green-600 mb-2">{t('details.after')}</h4>
-                <pre className="text-xs bg-green-50 border border-green-200 rounded-lg p-3 overflow-x-auto">
+                <pre className="text-xs bg-green-500/10 border border-green-200 rounded-lg p-3 overflow-x-auto">
                   {JSON.stringify(entry.changes.after, null, 2)}
                 </pre>
               </div>
@@ -310,7 +316,7 @@ export default function AdminAuditLogsPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="w-10 h-10 border-2 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
       </div>
     )
@@ -320,7 +326,7 @@ export default function AdminAuditLogsPage() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center min-h-[50vh]">
-          <p className="text-gray-500">{t('unauthorized')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('unauthorized')}</p>
         </div>
       </AppLayout>
     )
@@ -332,8 +338,8 @@ export default function AdminAuditLogsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
           </div>
           <button
             onClick={handleExport}
@@ -352,38 +358,38 @@ export default function AdminAuditLogsPage() {
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-[var(--brand-text-secondary)] mb-1">
                 {t('filters.dateFrom')}
               </label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
+                className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-[var(--brand-text-secondary)] mb-1">
                 {t('filters.dateTo')}
               </label>
               <input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
+                className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-[var(--brand-text-secondary)] mb-1">
                 {t('filters.action')}
               </label>
               <select
                 value={action}
                 onChange={(e) => setAction(e.target.value as AuditAction | '')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-[var(--brand-surface)]"
               >
                 {actionOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -393,13 +399,13 @@ export default function AdminAuditLogsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-[var(--brand-text-secondary)] mb-1">
                 {t('filters.resourceType')}
               </label>
               <select
                 value={resourceType}
                 onChange={(e) => setResourceType(e.target.value as AuditResourceType | '')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none bg-[var(--brand-surface)]"
               >
                 {resourceOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -409,7 +415,7 @@ export default function AdminAuditLogsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-[var(--brand-text-secondary)] mb-1">
                 {t('filters.userSearch')}
               </label>
               <input
@@ -417,7 +423,7 @@ export default function AdminAuditLogsPage() {
                 value={userSearch}
                 onChange={(e) => setUserSearch(e.target.value)}
                 placeholder={t('filters.userSearchPlaceholder')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
+                className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none"
               />
             </div>
             <div className="flex items-end gap-2">
@@ -429,7 +435,7 @@ export default function AdminAuditLogsPage() {
               </button>
               <button
                 onClick={handleReset}
-                className="px-4 py-2 border border-gray-300 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-[var(--brand-border)] text-[var(--brand-text-secondary)] text-sm font-medium rounded-lg hover:bg-[var(--brand-background)] transition-colors"
               >
                 {t('filters.reset')}
               </button>
@@ -441,9 +447,12 @@ export default function AdminAuditLogsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {statsLoading ? (
             Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
-                <div className="h-3 w-24 bg-gray-200 rounded animate-pulse mb-3" />
-                <div className="h-8 w-16 bg-gray-200 rounded animate-pulse" />
+              <div
+                key={i}
+                className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-5"
+              >
+                <div className="h-3 w-24 bg-[var(--brand-border)] rounded animate-pulse mb-3" />
+                <div className="h-8 w-16 bg-[var(--brand-border)] rounded animate-pulse" />
               </div>
             ))
           ) : (
@@ -512,40 +521,40 @@ export default function AdminAuditLogsPage() {
         <div className="flex gap-6">
           {/* Table */}
           <div className="flex-1 min-w-0">
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-200 bg-gray-50/60">
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <tr className="border-b border-[var(--brand-border)] bg-[var(--brand-background)]/60">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                         {t('table.time')}
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                         {t('table.user')}
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                         {t('table.action')}
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                         {t('table.type')}
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                         {t('table.details')}
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider">
                         IP
                       </th>
                       <th className="px-4 py-3 w-8"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-[var(--brand-border)]">
                     {logsLoading ? (
                       Array.from({ length: 10 }).map((_, i) => (
                         <tr key={i}>
                           {Array.from({ length: 7 }).map((__, j) => (
                             <td key={j} className="px-4 py-3">
                               <div
-                                className="h-4 bg-gray-200 rounded animate-pulse"
+                                className="h-4 bg-[var(--brand-border)] rounded animate-pulse"
                                 style={{ width: `${50 + Math.random() * 50}%` }}
                               />
                             </td>
@@ -554,7 +563,10 @@ export default function AdminAuditLogsPage() {
                       ))
                     ) : logs.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="px-4 py-12 text-center text-gray-500">
+                        <td
+                          colSpan={7}
+                          className="px-4 py-12 text-center text-[var(--brand-text-secondary)]"
+                        >
                           {t('empty.logs')}
                         </td>
                       </tr>
@@ -576,8 +588,8 @@ export default function AdminAuditLogsPage() {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50/40">
-                  <p className="text-sm text-gray-600">
+                <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--brand-border)] bg-[var(--brand-background)]/40">
+                  <p className="text-sm text-[var(--brand-text-secondary)]">
                     {t('pagination.showing', {
                       start: (page - 1) * 50 + 1,
                       end: Math.min(page * 50, totalItems),
@@ -588,7 +600,7 @@ export default function AdminAuditLogsPage() {
                     <button
                       onClick={() => handlePageChange(page - 1)}
                       disabled={page <= 1}
-                      className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      className="px-3 py-1.5 text-sm border border-[var(--brand-border)] rounded-lg hover:bg-[var(--brand-background)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >
                       {t('pagination.previous')}
                     </button>
@@ -611,7 +623,7 @@ export default function AdminAuditLogsPage() {
                             'px-3 py-1.5 text-sm rounded-lg transition-colors',
                             pageNum === page
                               ? 'bg-orange-500 text-white'
-                              : 'border border-gray-300 hover:bg-gray-100'
+                              : 'border border-[var(--brand-border)] hover:bg-[var(--brand-primary-light)]'
                           )}
                         >
                           {pageNum}
@@ -621,7 +633,7 @@ export default function AdminAuditLogsPage() {
                     <button
                       onClick={() => handlePageChange(page + 1)}
                       disabled={page >= totalPages}
-                      className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      className="px-3 py-1.5 text-sm border border-[var(--brand-border)] rounded-lg hover:bg-[var(--brand-background)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >
                       {t('pagination.next')}
                     </button>
@@ -633,16 +645,18 @@ export default function AdminAuditLogsPage() {
 
           {/* Activity Timeline Sidebar */}
           <div className="hidden xl:block w-80 flex-shrink-0">
-            <div className="bg-white rounded-xl border border-gray-200 p-4 sticky top-4">
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">{t('timeline.title')}</h3>
+            <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-4 sticky top-4">
+              <h3 className="text-sm font-semibold text-[var(--brand-text)] mb-4">
+                {t('timeline.title')}
+              </h3>
               <div className="space-y-0">
                 {logsLoading
                   ? Array.from({ length: 5 }).map((_, i) => (
                       <div key={i} className="flex gap-3 py-2">
-                        <div className="w-2.5 h-2.5 rounded-full bg-gray-200 animate-pulse mt-1.5 flex-shrink-0" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[var(--brand-border)] animate-pulse mt-1.5 flex-shrink-0" />
                         <div className="flex-1 space-y-1">
-                          <div className="h-3 bg-gray-200 rounded animate-pulse w-3/4" />
-                          <div className="h-2.5 bg-gray-200 rounded animate-pulse w-1/2" />
+                          <div className="h-3 bg-[var(--brand-border)] rounded animate-pulse w-3/4" />
+                          <div className="h-2.5 bg-[var(--brand-border)] rounded animate-pulse w-1/2" />
                         </div>
                       </div>
                     ))
@@ -650,7 +664,7 @@ export default function AdminAuditLogsPage() {
                       <div key={entry.id} className="flex gap-3 relative">
                         {/* Vertical line */}
                         {idx < timelineEvents.length - 1 && (
-                          <div className="absolute left-[4.5px] top-5 bottom-0 w-px bg-gray-200" />
+                          <div className="absolute left-[4.5px] top-5 bottom-0 w-px bg-[var(--brand-border)]" />
                         )}
                         {/* Dot */}
                         <div
@@ -661,8 +675,10 @@ export default function AdminAuditLogsPage() {
                         />
                         {/* Content */}
                         <div className="flex-1 pb-4 min-w-0">
-                          <p className="text-xs text-gray-900 truncate">{entry.description}</p>
-                          <p className="text-[11px] text-gray-500 mt-0.5">
+                          <p className="text-xs text-[var(--brand-text)] truncate">
+                            {entry.description}
+                          </p>
+                          <p className="text-[11px] text-[var(--brand-text-secondary)] mt-0.5">
                             {entry.user_name} &middot; {formatTimeShort(entry.timestamp, locale)}
                           </p>
                         </div>

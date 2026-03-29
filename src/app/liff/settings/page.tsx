@@ -219,8 +219,8 @@ export default function SettingsPage(): React.ReactElement {
 
     const badges = {
       hot: { color: 'bg-red-100 text-red-700', label: 'Hot Lead' },
-      warm: { color: 'bg-yellow-100 text-yellow-700', label: 'Warm Lead' },
-      cold: { color: 'bg-blue-100 text-blue-700', label: 'Cold Lead' },
+      warm: { color: 'bg-yellow-500/10 text-yellow-700', label: 'Warm Lead' },
+      cold: { color: 'bg-blue-500/10 text-blue-700', label: 'Cold Lead' },
     }
 
     const badge = badges[tier as keyof typeof badges]
@@ -237,17 +237,17 @@ export default function SettingsPage(): React.ReactElement {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-[var(--brand-text-secondary)]">{t('loading')}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--brand-background)]">
       <header className="bg-green-600 text-white p-4 shadow-md">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">{t('title')}</h1>
@@ -266,50 +266,52 @@ export default function SettingsPage(): React.ReactElement {
 
       <main className="p-4 max-w-lg mx-auto pb-24">
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
             <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
 
         {successMessage && (
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-4 p-4 bg-green-500/10 border border-green-200 rounded-lg">
             <p className="text-green-600 text-sm">{successMessage}</p>
           </div>
         )}
 
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('account.title')}</h2>
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-6 mb-4">
+          <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
+            {t('account.title')}
+          </h2>
 
           {contact ? (
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">{t('account.name')}</span>
+                <span className="text-[var(--brand-text-secondary)]">{t('account.name')}</span>
                 <span className="font-medium">{contact.display_name || '-'}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">{t('account.phone')}</span>
+                <span className="text-[var(--brand-text-secondary)]">{t('account.phone')}</span>
                 <span className="font-medium">{contact.phone || '-'}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">{t('account.email')}</span>
+                <span className="text-[var(--brand-text-secondary)]">{t('account.email')}</span>
                 <span className="font-medium">{contact.email || '-'}</span>
               </div>
               {contact.quality_tier && (
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">{t('account.status')}</span>
+                  <span className="text-[var(--brand-text-secondary)]">{t('account.status')}</span>
                   {getQualityBadge(contact.quality_tier)}
                 </div>
               )}
               <button
                 onClick={handleEditContact}
-                className="w-full mt-4 py-2 px-4 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-green-50 transition-colors"
+                className="w-full mt-4 py-2 px-4 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-green-500/10 transition-colors"
               >
                 {t('account.edit')}
               </button>
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-gray-500 mb-4">{t('account.noContact')}</p>
+              <p className="text-[var(--brand-text-secondary)] mb-4">{t('account.noContact')}</p>
               <button
                 onClick={() => router.push('/liff/contact')}
                 className="py-2 px-4 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
@@ -320,8 +322,10 @@ export default function SettingsPage(): React.ReactElement {
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('consent.title')}</h2>
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-6 mb-4">
+          <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
+            {t('consent.title')}
+          </h2>
 
           <div className="space-y-3">
             {consents.map((consent) => {
@@ -331,24 +335,26 @@ export default function SettingsPage(): React.ReactElement {
               return (
                 <div
                   key={consent.type}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-[var(--brand-background)] rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-xl">{definition?.icon}</span>
                     <div>
-                      <p className="font-medium text-gray-900">{t(consent.label)}</p>
-                      <p className="text-xs text-gray-500">{t(consent.description)}</p>
+                      <p className="font-medium text-[var(--brand-text)]">{t(consent.label)}</p>
+                      <p className="text-xs text-[var(--brand-text-secondary)]">
+                        {t(consent.description)}
+                      </p>
                     </div>
                   </div>
                   <button
                     onClick={() => handleConsentToggle(consent.type, consent.granted)}
                     disabled={isBeingUpdated}
                     className={`relative w-12 h-7 rounded-full transition-colors ${
-                      consent.granted ? 'bg-green-500' : 'bg-gray-300'
+                      consent.granted ? 'bg-green-500' : 'bg-[var(--brand-border)]'
                     } ${isBeingUpdated ? 'opacity-50' : ''}`}
                   >
                     <div
-                      className={`absolute w-5 h-5 bg-white rounded-full shadow top-1 transition-transform ${
+                      className={`absolute w-5 h-5 bg-[var(--brand-surface)] rounded-full shadow top-1 transition-transform ${
                         consent.granted ? 'translate-x-6 right-1' : 'left-1'
                       }`}
                     />
@@ -359,20 +365,24 @@ export default function SettingsPage(): React.ReactElement {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('dataPrivacy.title')}</h2>
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-6 mb-4">
+          <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-4">
+            {t('dataPrivacy.title')}
+          </h2>
 
           <div className="space-y-3">
             <button
               onClick={() => router.push('/liff/history')}
-              className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="w-full flex items-center justify-between p-3 bg-[var(--brand-background)] rounded-lg hover:bg-[var(--brand-background)] transition-colors"
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">📜</span>
-                <span className="font-medium text-gray-900">{t('dataPrivacy.history')}</span>
+                <span className="font-medium text-[var(--brand-text)]">
+                  {t('dataPrivacy.history')}
+                </span>
               </div>
               <svg
-                className="w-5 h-5 text-gray-400"
+                className="w-5 h-5 text-[var(--brand-text-secondary)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -388,14 +398,16 @@ export default function SettingsPage(): React.ReactElement {
 
             <button
               onClick={() => router.push('/liff/proposal')}
-              className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="w-full flex items-center justify-between p-3 bg-[var(--brand-background)] rounded-lg hover:bg-[var(--brand-background)] transition-colors"
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">📋</span>
-                <span className="font-medium text-gray-900">{t('dataPrivacy.proposals')}</span>
+                <span className="font-medium text-[var(--brand-text)]">
+                  {t('dataPrivacy.proposals')}
+                </span>
               </div>
               <svg
-                className="w-5 h-5 text-gray-400"
+                className="w-5 h-5 text-[var(--brand-text-secondary)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -411,19 +423,21 @@ export default function SettingsPage(): React.ReactElement {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
+        <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-6 mb-4">
           <h2 className="text-lg font-semibold text-red-600 mb-4">{t('dangerZone.title')}</h2>
 
           <button
             onClick={handleDeleteData}
-            className="w-full py-3 px-4 border-2 border-red-500 text-red-500 font-medium rounded-lg hover:bg-red-50 transition-colors"
+            className="w-full py-3 px-4 border-2 border-red-500 text-red-500 font-medium rounded-lg hover:bg-red-500/10 transition-colors"
           >
             {t('dangerZone.deleteAll')}
           </button>
-          <p className="mt-2 text-xs text-gray-500 text-center">{t('dangerZone.deleteNotice')}</p>
+          <p className="mt-2 text-xs text-[var(--brand-text-secondary)] text-center">
+            {t('dangerZone.deleteNotice')}
+          </p>
         </div>
 
-        <div className="text-center text-xs text-gray-400 mt-8">
+        <div className="text-center text-xs text-[var(--brand-text-secondary)] mt-8">
           <p>{t('version')}</p>
           <p className="mt-1">{t('contact')}</p>
         </div>

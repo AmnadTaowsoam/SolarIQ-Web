@@ -40,13 +40,13 @@ export function PlanSelector({
       {/* Billing Cycle Toggle */}
       {showBillingCycle && (
         <div className="flex justify-center mb-8">
-          <div className="bg-gray-100 rounded-lg p-1 inline-flex">
+          <div className="bg-[var(--brand-background)] rounded-lg p-1 inline-flex">
             <button
               onClick={() => handleBillingCycleChange('monthly')}
               className={`px-6 py-2 rounded-md font-medium transition-colors ${
                 billingCycle === 'monthly'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-[var(--brand-surface)] text-[var(--brand-text)] shadow-sm'
+                  : 'text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
               }`}
             >
               Monthly
@@ -55,12 +55,12 @@ export function PlanSelector({
               onClick={() => handleBillingCycleChange('annual')}
               className={`px-6 py-2 rounded-md font-medium transition-colors ${
                 billingCycle === 'annual'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-[var(--brand-surface)] text-[var(--brand-text)] shadow-sm'
+                  : 'text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
               }`}
             >
               Annual
-              <span className="ml-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+              <span className="ml-1 text-xs bg-green-500/10 text-green-700 px-2 py-0.5 rounded-full">
                 Save 20%
               </span>
             </button>
@@ -83,7 +83,7 @@ export function PlanSelector({
 
       {/* Annual Billing Info */}
       {billingCycle === 'annual' && (
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
+        <div className="mt-6 bg-blue-500/10 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
           <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-medium text-blue-900">Annual Billing Benefits</p>
@@ -122,7 +122,7 @@ function PlanCard({ plan, isCurrentPlan, billingCycle, onSelect, isLoading }: Pl
           ? 'border-blue-600 shadow-lg'
           : isCurrentPlan
             ? 'border-green-600'
-            : 'border-gray-200'
+            : 'border-[var(--brand-border)]'
       }`}
     >
       {isPopular && (
@@ -142,10 +142,14 @@ function PlanCard({ plan, isCurrentPlan, billingCycle, onSelect, isLoading }: Pl
       )}
 
       <div className="text-center mb-6">
-        <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
+        <h3 className="text-xl font-bold text-[var(--brand-text)]">{plan.name}</h3>
         <div className="mt-4">
-          <span className="text-4xl font-bold text-gray-900">{formatPrice(displayPrice)}</span>
-          <span className="text-gray-500">{billingCycle === 'annual' ? '/year' : '/month'}</span>
+          <span className="text-4xl font-bold text-[var(--brand-text)]">
+            {formatPrice(displayPrice)}
+          </span>
+          <span className="text-[var(--brand-text-secondary)]">
+            {billingCycle === 'annual' ? '/year' : '/month'}
+          </span>
         </div>
         {billingCycle === 'annual' && (
           <p className="text-sm text-green-600 mt-1">
@@ -167,7 +171,7 @@ function PlanCard({ plan, isCurrentPlan, billingCycle, onSelect, isLoading }: Pl
         disabled={isLoading || isCurrentPlan}
         className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
           isCurrentPlan
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            ? 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] cursor-not-allowed'
             : isPopular
               ? 'bg-blue-600 text-white hover:bg-blue-700'
               : 'bg-gray-900 text-white hover:bg-gray-800'
@@ -189,12 +193,18 @@ function FeatureRow({ text, included }: FeatureRowProps) {
     <div className="flex items-center gap-3">
       <div
         className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
-          included ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
+          included
+            ? 'bg-green-500/10 text-green-600'
+            : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
         }`}
       >
         {included && <Check className="w-3 h-3" />}
       </div>
-      <span className={included ? 'text-gray-700' : 'text-gray-400'}>{text}</span>
+      <span
+        className={included ? 'text-[var(--brand-text)]' : 'text-[var(--brand-text-secondary)]'}
+      >
+        {text}
+      </span>
     </div>
   )
 }

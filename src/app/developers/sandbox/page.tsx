@@ -122,7 +122,7 @@ function TestCard({
   const [showPayload, setShowPayload] = useState(false)
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+    <div className="bg-[var(--brand-surface)] rounded-2xl border border-[var(--brand-border)] overflow-hidden">
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
@@ -130,9 +130,11 @@ function TestCard({
               {test.icon}
             </div>
             <div>
-              <h3 className="text-sm font-bold text-gray-900">{test.label}</h3>
-              <p className="text-xs text-gray-500 mt-0.5">{test.description}</p>
-              <code className="text-[11px] font-mono text-gray-400 mt-1 block">
+              <h3 className="text-sm font-bold text-[var(--brand-text)]">{test.label}</h3>
+              <p className="text-xs text-[var(--brand-text-secondary)] mt-0.5">
+                {test.description}
+              </p>
+              <code className="text-[11px] font-mono text-[var(--brand-text-secondary)] mt-1 block">
                 {test.endpoint}
               </code>
             </div>
@@ -140,7 +142,7 @@ function TestCard({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowPayload(!showPayload)}
-              className="text-xs font-medium text-gray-500 hover:text-gray-700 px-2.5 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+              className="text-xs font-medium text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] px-2.5 py-1.5 rounded-lg hover:bg-[var(--brand-background)] transition-colors"
             >
               {showPayload ? t('sandbox.hidePayload') : t('sandbox.showPayload')}
             </button>
@@ -150,13 +152,13 @@ function TestCard({
               className={cn(
                 'flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-xl transition-colors',
                 isRunning
-                  ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                  ? 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] cursor-not-allowed'
                   : 'bg-orange-500 text-white hover:bg-orange-600'
               )}
             >
               {isRunning ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-[var(--brand-border)] border-t-gray-600 rounded-full animate-spin" />
                   {t('sandbox.running')}
                 </>
               ) : (
@@ -176,11 +178,11 @@ function TestCard({
           </div>
         </div>
         {showPayload && (
-          <div className="mt-4 bg-gray-50 rounded-xl p-4">
-            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
+          <div className="mt-4 bg-[var(--brand-background)] rounded-xl p-4">
+            <p className="text-[11px] font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider mb-2">
               {t('sandbox.requestPayload')}
             </p>
-            <pre className="text-xs font-mono text-gray-800 overflow-x-auto">
+            <pre className="text-xs font-mono text-[var(--brand-text)] overflow-x-auto">
               {JSON.stringify(test.payload, null, 2)}
             </pre>
           </div>
@@ -190,7 +192,7 @@ function TestCard({
         <div
           className={cn(
             'border-t px-5 py-4',
-            result.error ? 'bg-red-50 border-red-100' : 'bg-green-50 border-green-100'
+            result.error ? 'bg-red-500/10 border-red-100' : 'bg-green-500/10 border-green-100'
           )}
         >
           <div className="flex items-center justify-between mb-2">
@@ -200,18 +202,20 @@ function TestCard({
                   'text-xs font-bold px-2 py-0.5 rounded-full',
                   result.status >= 200 && result.status < 300
                     ? 'bg-green-200 text-green-800'
-                    : 'bg-red-200 text-red-800'
+                    : 'bg-red-200 text-red-400'
                 )}
               >
                 {result.status}
               </span>
-              <span className="text-xs text-gray-500">{result.latencyMs}ms</span>
+              <span className="text-xs text-[var(--brand-text-secondary)]">
+                {result.latencyMs}ms
+              </span>
             </div>
             {result.error && (
               <span className="text-xs text-orange-600">{t('sandbox.demoSimulated')}</span>
             )}
           </div>
-          <pre className="text-xs font-mono text-gray-800 overflow-x-auto">
+          <pre className="text-xs font-mono text-[var(--brand-text)] overflow-x-auto">
             {JSON.stringify(result.data, null, 2)}
           </pre>
         </div>
@@ -269,13 +273,15 @@ export default function SandboxPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-gray-900">{t('sandbox.title')}</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{t('sandbox.subtitle')}</p>
+          <h2 className="text-lg font-bold text-[var(--brand-text)]">{t('sandbox.title')}</h2>
+          <p className="text-sm text-[var(--brand-text-secondary)] mt-0.5">
+            {t('sandbox.subtitle')}
+          </p>
         </div>
         <button
           onClick={handleReset}
           disabled={isResetting}
-          className="flex items-center gap-2 px-4 py-2.5 border border-gray-200 text-sm font-medium text-gray-700 rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2.5 border border-[var(--brand-border)] text-sm font-medium text-[var(--brand-text)] rounded-xl hover:bg-[var(--brand-background)] transition-colors disabled:opacity-50"
         >
           <svg
             className={cn('w-4 h-4', isResetting && 'animate-spin')}
@@ -295,7 +301,7 @@ export default function SandboxPage() {
       </div>
 
       {/* Sandbox key */}
-      <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
+      <div className="bg-blue-500/10 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
         <svg
           className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
           fill="none"
@@ -312,7 +318,7 @@ export default function SandboxPage() {
         <div className="flex-1">
           <p className="text-sm font-semibold text-blue-800">{t('sandbox.sandboxKey')}</p>
           <div className="flex items-center gap-2 mt-1">
-            <code className="text-xs font-mono text-blue-700 bg-blue-100 px-2 py-1 rounded-lg">
+            <code className="text-xs font-mono text-blue-700 bg-blue-500/10 px-2 py-1 rounded-lg">
               {SANDBOX_KEY}
             </code>
           </div>
@@ -322,7 +328,9 @@ export default function SandboxPage() {
 
       {/* Quick tests */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">{t('sandbox.quickTests')}</h3>
+        <h3 className="text-sm font-semibold text-[var(--brand-text)] mb-3">
+          {t('sandbox.quickTests')}
+        </h3>
         <div className="space-y-4">
           {QUICK_TESTS.map((test) => (
             <TestCard
@@ -338,9 +346,11 @@ export default function SandboxPage() {
       </div>
 
       {/* Notes */}
-      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-        <p className="text-xs font-semibold text-gray-600 mb-2">{t('sandbox.notes.title')}</p>
-        <ul className="text-xs text-gray-500 space-y-1 list-disc list-inside">
+      <div className="bg-[var(--brand-background)] border border-[var(--brand-border)] rounded-xl p-4">
+        <p className="text-xs font-semibold text-[var(--brand-text-secondary)] mb-2">
+          {t('sandbox.notes.title')}
+        </p>
+        <ul className="text-xs text-[var(--brand-text-secondary)] space-y-1 list-disc list-inside">
           <li>{t('sandbox.notes.autoReset')}</li>
           <li>{t('sandbox.notes.rateLimit')}</li>
           <li>{t('sandbox.notes.noRealNotifications')}</li>

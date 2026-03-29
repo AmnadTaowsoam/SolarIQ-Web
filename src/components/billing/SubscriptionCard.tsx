@@ -100,13 +100,15 @@ export function SubscriptionCard({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Plan Name */}
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="flex-shrink-0 w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
               <CreditCard className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">{t('planName')}</p>
-              <p className="text-base font-semibold text-gray-900">{subscription.plan.name}</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-[var(--brand-text-secondary)]">{t('planName')}</p>
+              <p className="text-base font-semibold text-[var(--brand-text)]">
+                {subscription.plan.name}
+              </p>
+              <p className="text-sm text-[var(--brand-text-secondary)]">
                 {formatPrice(subscription.plan.price_thb)}/{t('perMonth')}
               </p>
             </div>
@@ -114,15 +116,15 @@ export function SubscriptionCard({
 
           {/* Current Period */}
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+            <div className="flex-shrink-0 w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
               <CalendarDays className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">{t('currentPeriod')}</p>
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm text-[var(--brand-text-secondary)]">{t('currentPeriod')}</p>
+              <p className="text-sm font-medium text-[var(--brand-text)]">
                 {formatDateThai(subscription.current_period_start)}
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-[var(--brand-text-secondary)]">
                 {t('to')} {formatDateThai(subscription.current_period_end)}
               </p>
             </div>
@@ -130,19 +132,19 @@ export function SubscriptionCard({
 
           {/* Next Renewal */}
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+            <div className="flex-shrink-0 w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
               <RefreshCw className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">{t('renewsOn')}</p>
+              <p className="text-sm text-[var(--brand-text-secondary)]">{t('renewsOn')}</p>
               {subscription.cancel_at_period_end ? (
                 <p className="text-sm font-medium text-red-600">{t('endsAtPeriod')}</p>
               ) : (
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-[var(--brand-text)]">
                   {formatDateThai(subscription.current_period_end)}
                 </p>
               )}
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-[var(--brand-text-secondary)]">
                 {t('daysLeft', { days: subscription.days_until_period_end })}
               </p>
             </div>
@@ -151,12 +153,12 @@ export function SubscriptionCard({
           {/* Trial End (if applicable) */}
           {isTrialing && subscription.trial_end && (
             <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <div className="flex-shrink-0 w-10 h-10 bg-yellow-500/10 rounded-lg flex items-center justify-center">
                 <CalendarDays className="w-5 h-5 text-yellow-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">{t('trialEndsOn')}</p>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm text-[var(--brand-text-secondary)]">{t('trialEndsOn')}</p>
+                <p className="text-sm font-medium text-[var(--brand-text)]">
                   {formatDateThai(subscription.trial_end)}
                 </p>
               </div>
@@ -166,8 +168,8 @@ export function SubscriptionCard({
 
         {/* Cancel warning banner */}
         {subscription.cancel_at_period_end && (
-          <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-sm text-yellow-800">
+          <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+            <p className="text-sm text-yellow-600">
               {t('cancelledWarning', { date: formatDateThai(subscription.current_period_end) })}
             </p>
           </div>
@@ -204,7 +206,7 @@ export function SubscriptionCard({
           <button
             onClick={onManagePayment}
             disabled={disabled}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--brand-surface)] text-[var(--brand-text)] text-sm font-medium rounded-lg border border-[var(--brand-border)] hover:bg-[var(--brand-primary-light)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <CreditCard className="w-4 h-4" />
             {t('manage')}
@@ -215,7 +217,7 @@ export function SubscriptionCard({
             <button
               onClick={onCancel}
               disabled={disabled}
-              className="inline-flex items-center gap-2 px-4 py-2 text-red-600 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-4 py-2 text-red-600 text-sm font-medium rounded-lg border border-red-500/20 hover:bg-red-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <XCircle className="w-4 h-4" />
               {t('cancel')}

@@ -31,7 +31,7 @@ function ExpiryCountdown({ expiresAt, t }: { expiresAt: string; t: (key: string)
 
 function SystemSizeLabel({ sizeKw, t }: { sizeKw?: number; t: (key: string) => string }) {
   if (!sizeKw) {
-    return <span className="text-gray-400">{t('noRequests')}</span>
+    return <span className="text-[var(--brand-text-secondary)]">{t('noRequests')}</span>
   }
   let label = ''
   if (sizeKw <= 5) {
@@ -43,8 +43,8 @@ function SystemSizeLabel({ sizeKw, t }: { sizeKw?: number; t: (key: string) => s
   }
   return (
     <div>
-      <span className="font-semibold text-gray-900">{sizeKw} kW</span>
-      <span className="ml-2 text-xs text-gray-500">({label})</span>
+      <span className="font-semibold text-[var(--brand-text)]">{sizeKw} kW</span>
+      <span className="ml-2 text-xs text-[var(--brand-text-secondary)]">({label})</span>
     </div>
   )
 }
@@ -64,7 +64,7 @@ export default function QuoteRequestsPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500" />
       </div>
     )
@@ -90,8 +90,8 @@ export default function QuoteRequestsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-gray-500 mt-1">{t('noRequestsDesc')}</p>
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-[var(--brand-text-secondary)] mt-1">{t('noRequestsDesc')}</p>
           </div>
           <Button variant="outline" onClick={refetch} className="flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +125,7 @@ export default function QuoteRequestsPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filter === tab.key
                   ? 'bg-orange-500 text-white'
-                  : 'bg-white text-gray-600 border border-gray-200 hover:border-orange-300'
+                  : 'bg-[var(--brand-surface)] text-[var(--brand-text-secondary)] border border-[var(--brand-border)] hover:border-orange-300'
               }`}
             >
               {tab.label}
@@ -139,14 +139,14 @@ export default function QuoteRequestsPage() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 animate-pulse"
+                className="bg-[var(--brand-surface)] rounded-xl shadow-sm border border-[var(--brand-border)] p-5 animate-pulse"
               >
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-3" />
-                <div className="h-3 bg-gray-200 rounded w-1/2 mb-6" />
+                <div className="h-4 bg-[var(--brand-border)] rounded w-3/4 mb-3" />
+                <div className="h-3 bg-[var(--brand-border)] rounded w-1/2 mb-6" />
                 <div className="space-y-2">
-                  <div className="h-3 bg-gray-200 rounded" />
-                  <div className="h-3 bg-gray-200 rounded" />
-                  <div className="h-3 bg-gray-200 rounded w-2/3" />
+                  <div className="h-3 bg-[var(--brand-border)] rounded" />
+                  <div className="h-3 bg-[var(--brand-border)] rounded" />
+                  <div className="h-3 bg-[var(--brand-border)] rounded w-2/3" />
                 </div>
                 <div className="mt-4 h-9 bg-orange-100 rounded-lg" />
               </div>
@@ -156,7 +156,7 @@ export default function QuoteRequestsPage() {
           <Card>
             <CardBody className="py-16 text-center">
               <svg
-                className="w-16 h-16 mx-auto text-gray-300 mb-4"
+                className="w-16 h-16 mx-auto text-[var(--brand-text-secondary)] mb-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -168,8 +168,10 @@ export default function QuoteRequestsPage() {
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
-              <h3 className="text-lg font-semibold text-gray-700 mb-1">{t('noRequests')}</h3>
-              <p className="text-gray-500 text-sm">{t('noRequestsDesc')}</p>
+              <h3 className="text-lg font-semibold text-[var(--brand-text)] mb-1">
+                {t('noRequests')}
+              </h3>
+              <p className="text-[var(--brand-text-secondary)] text-sm">{t('noRequestsDesc')}</p>
             </CardBody>
           </Card>
         ) : (
@@ -192,7 +194,7 @@ export default function QuoteRequestsPage() {
                   <CardBody className="p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
+                        <div className="flex items-center gap-2 text-[var(--brand-text-secondary)] text-sm mb-1">
                           <svg
                             className="w-4 h-4"
                             fill="none"
@@ -220,20 +222,20 @@ export default function QuoteRequestsPage() {
 
                     <div className="space-y-2 text-sm mb-4">
                       <div className="flex justify-between">
-                        <span className="text-gray-500">{t('budget')}</span>
-                        <span className="font-medium text-gray-800">
+                        <span className="text-[var(--brand-text-secondary)]">{t('budget')}</span>
+                        <span className="font-medium text-[var(--brand-text)]">
                           {BUDGET_RANGE_LABELS[req.preferences.budgetRange as BudgetRange]}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">{t('date')}</span>
-                        <span className="font-medium text-gray-800">
+                        <span className="text-[var(--brand-text-secondary)]">{t('date')}</span>
+                        <span className="font-medium text-[var(--brand-text)]">
                           {TIMELINE_LABELS[req.preferences.preferredTimeline as Timeline]}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">{t('status')}</span>
-                        <span className="font-medium text-gray-800">
+                        <span className="text-[var(--brand-text-secondary)]">{t('status')}</span>
+                        <span className="font-medium text-[var(--brand-text)]">
                           {req.quotesReceived}/{req.maxQuotes}
                           {quotesLeft > 0 && (
                             <span className="ml-1 text-green-600 text-xs">({quotesLeft})</span>
@@ -245,7 +247,7 @@ export default function QuoteRequestsPage() {
                     <div className="flex items-center justify-between mb-4">
                       <ExpiryCountdown expiresAt={req.expiresAt} t={t} />
                       {req.preferences.financingPreference !== 'undecided' && (
-                        <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                        <span className="text-xs text-blue-600 bg-blue-500/10 px-2 py-0.5 rounded-full">
                           {req.preferences.financingPreference === 'cash'
                             ? t('approved')
                             : req.preferences.financingPreference === 'installment'

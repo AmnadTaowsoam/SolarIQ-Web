@@ -9,13 +9,13 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles = {
-  default: 'bg-gray-100 text-gray-800',
+  default: 'bg-[var(--brand-background)] text-[var(--brand-text)]',
   primary: 'bg-primary-100 text-primary-800',
   secondary: 'bg-secondary-100 text-secondary-800',
-  success: 'bg-green-100 text-green-800',
-  warning: 'bg-yellow-100 text-yellow-800',
-  danger: 'bg-red-100 text-red-800',
-  info: 'bg-blue-100 text-blue-800',
+  success: 'bg-green-500/10 text-green-800',
+  warning: 'bg-yellow-500/10 text-yellow-600',
+  danger: 'bg-red-100 text-red-400',
+  info: 'bg-blue-500/10 text-blue-800',
 }
 
 const sizeStyles = {

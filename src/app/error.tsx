@@ -25,10 +25,15 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
   }, [error])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)] px-4">
       <div className="max-w-md w-full text-center">
         <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
-          <svg className="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg
+            className="h-8 w-8 text-red-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -37,12 +42,16 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
             />
           </svg>
         </div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Something went wrong</h2>
-        <p className="text-gray-600 mb-6">
+        <h2 className="text-xl font-semibold text-[var(--brand-text)] mb-2">
+          Something went wrong
+        </h2>
+        <p className="text-[var(--brand-text-secondary)] mb-6">
           An unexpected error occurred. Please try again.
         </p>
         {error.digest && (
-          <p className="text-xs text-gray-400 mb-4">Error ID: {error.digest}</p>
+          <p className="text-xs text-[var(--brand-text-secondary)] mb-4">
+            Error ID: {error.digest}
+          </p>
         )}
         <div className="flex gap-3 justify-center">
           <button
@@ -53,7 +62,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
           </button>
           <a
             href={dashboardPath}
-            className="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-[var(--brand-border)] text-[var(--brand-text)] rounded-lg hover:bg-[var(--brand-border)] transition-colors"
           >
             Go to Dashboard
           </a>

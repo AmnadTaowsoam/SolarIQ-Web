@@ -10,7 +10,10 @@ export default function ScorecardPage() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader title="Performance Scorecard" subtitle={`Grade ${data.grade} · Score ${data.overallScore}`} />
+        <CardHeader
+          title="Performance Scorecard"
+          subtitle={`Grade ${data.grade} · Score ${data.overallScore}`}
+        />
         <CardBody>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {[
@@ -20,9 +23,12 @@ export default function ScorecardPage() {
               { label: 'Cycle Time', value: data.cycleTimeScore },
               { label: 'Activity', value: data.activityScore },
             ].map((item) => (
-              <div key={item.label} className="p-3 border border-gray-100 rounded-lg text-center">
-                <p className="text-xs text-gray-500">{item.label}</p>
-                <p className="text-lg font-semibold text-gray-900">{item.value}</p>
+              <div
+                key={item.label}
+                className="p-3 border border-[var(--brand-border)] rounded-lg text-center"
+              >
+                <p className="text-xs text-[var(--brand-text-secondary)]">{item.label}</p>
+                <p className="text-lg font-semibold text-[var(--brand-text)]">{item.value}</p>
               </div>
             ))}
           </div>
@@ -34,10 +40,17 @@ export default function ScorecardPage() {
         <CardBody>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
             {historyData.history.map((item) => (
-              <div key={`${item.periodYear}-${item.periodMonth}`} className="p-3 border border-gray-100 rounded-lg text-center">
-                <p className="text-xs text-gray-500">{item.periodMonth}/{item.periodYear}</p>
-                <p className="text-lg font-semibold text-gray-900">{item.overallScore}</p>
-                <p className="text-xs text-gray-400">Grade {item.grade}</p>
+              <div
+                key={`${item.periodYear}-${item.periodMonth}`}
+                className="p-3 border border-[var(--brand-border)] rounded-lg text-center"
+              >
+                <p className="text-xs text-[var(--brand-text-secondary)]">
+                  {item.periodMonth}/{item.periodYear}
+                </p>
+                <p className="text-lg font-semibold text-[var(--brand-text)]">
+                  {item.overallScore}
+                </p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">Grade {item.grade}</p>
               </div>
             ))}
           </div>

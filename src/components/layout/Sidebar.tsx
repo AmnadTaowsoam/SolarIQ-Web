@@ -469,7 +469,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
       >
         <div className="flex items-center justify-between h-16 px-5 border-b border-[var(--brand-border)] flex-shrink-0">
           <Link href={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm overflow-hidden bg-white">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm overflow-hidden bg-[var(--brand-surface)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={brandLogo || defaultLogo}
@@ -488,7 +488,7 @@ export function Sidebar({ user, isOpen, onClose }: SidebarProps) {
           </Link>
           <button
             onClick={onClose}
-            className="lg:hidden p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="lg:hidden p-1.5 text-[var(--brand-sidebar-text)] opacity-60 hover:opacity-100 hover:bg-[var(--brand-surface)]/10 rounded-lg transition-colors"
             aria-label="Close sidebar"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

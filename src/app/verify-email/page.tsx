@@ -36,7 +36,9 @@ export default function VerifyEmailPage() {
 
   // Handle direct verification with token in URL
   useEffect(() => {
-    if (!token) return
+    if (!token) {
+      return
+    }
     const doVerify = async () => {
       setStatus('verifying')
       setError(null)
@@ -61,17 +63,22 @@ export default function VerifyEmailPage() {
       }
     }
     doVerify()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dashboardPath, onboardingPath, router, token])
 
   // Resend cooldown timer
   useEffect(() => {
-    if (resendCooldown <= 0) return
+    if (resendCooldown <= 0) {
+      return
+    }
     const t = setInterval(() => setResendCooldown((v) => Math.max(0, v - 1)), 1000)
     return () => clearInterval(t)
   }, [resendCooldown])
 
   const handleResend = async () => {
-    if (!email || resendCooldown > 0) return
+    if (!email || resendCooldown > 0) {
+      return
+    }
     setError(null)
     setResendSuccess(false)
     try {
@@ -90,13 +97,13 @@ export default function VerifyEmailPage() {
   // Verifying state
   if (status === 'verifying') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-sm p-8 text-center">
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-[var(--brand-surface)] rounded-2xl shadow-sm p-8 text-center">
           <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <div className="w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin" />
           </div>
-          <h2 className="text-lg font-bold text-gray-900">{t('verifyingTitle')}</h2>
-          <p className="text-gray-500 text-sm mt-2">{t('pleaseWait')}</p>
+          <h2 className="text-lg font-bold text-[var(--brand-text)]">{t('verifyingTitle')}</h2>
+          <p className="text-[var(--brand-text-secondary)] text-sm mt-2">{t('pleaseWait')}</p>
         </div>
       </div>
     )
@@ -105,15 +112,21 @@ export default function VerifyEmailPage() {
   // Success state
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-sm p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-[var(--brand-surface)] rounded-2xl shadow-sm p-8 text-center">
+          <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg
+              className="w-8 h-8 text-green-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">{t('successTitle')}</h2>
-          <p className="text-gray-500 text-sm">{t('successRedirect')}</p>
+          <h2 className="text-xl font-bold text-[var(--brand-text)] mb-2">{t('successTitle')}</h2>
+          <p className="text-[var(--brand-text-secondary)] text-sm">{t('successRedirect')}</p>
         </div>
       </div>
     )
@@ -121,7 +134,7 @@ export default function VerifyEmailPage() {
 
   // Main pending/error state
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-6">
@@ -130,10 +143,15 @@ export default function VerifyEmailPage() {
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
+        <div className="bg-[var(--brand-surface)] rounded-2xl shadow-sm p-8 text-center">
           {/* Envelope icon */}
           <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-5">
-            <svg className="w-10 h-10 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              className="w-10 h-10 text-orange-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -143,35 +161,27 @@ export default function VerifyEmailPage() {
             </svg>
           </div>
 
-          <h1 className="text-xl font-bold text-gray-900 mb-2">{t('title')}</h1>
+          <h1 className="text-xl font-bold text-[var(--brand-text)] mb-2">{t('title')}</h1>
 
           {email ? (
-            <p className="text-gray-600 text-sm mb-1">
-              {t('sentTo')}
-            </p>
+            <p className="text-[var(--brand-text-secondary)] text-sm mb-1">{t('sentTo')}</p>
           ) : (
-            <p className="text-gray-600 text-sm mb-4">
-              {t('sentGeneric')}
-            </p>
+            <p className="text-[var(--brand-text-secondary)] text-sm mb-4">{t('sentGeneric')}</p>
           )}
-          {email && (
-            <p className="text-orange-600 font-semibold text-sm mb-4 break-all">{email}</p>
-          )}
+          {email && <p className="text-orange-600 font-semibold text-sm mb-4 break-all">{email}</p>}
 
-          <p className="text-gray-500 text-xs mb-6">
-            {t('instructions')}
-          </p>
+          <p className="text-[var(--brand-text-secondary)] text-xs mb-6">{t('instructions')}</p>
 
           {/* Error */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700 mb-4">
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700 mb-4">
               {error}
             </div>
           )}
 
           {/* Resend success */}
           {resendSuccess && !error && (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-sm text-green-700 mb-4">
+            <div className="bg-green-500/10 border border-green-200 rounded-xl p-3 text-sm text-green-700 mb-4">
               {t('resendSuccess')}
             </div>
           )}
@@ -185,7 +195,12 @@ export default function VerifyEmailPage() {
             {resendCooldown > 0 ? (
               <span className="flex items-center justify-center gap-2">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 {t('resendCountdown', { seconds: resendCooldown })}
               </span>
@@ -197,13 +212,13 @@ export default function VerifyEmailPage() {
           {/* Logout button */}
           <button
             onClick={handleLogout}
-            className="w-full py-3 border border-gray-300 text-gray-600 rounded-2xl font-semibold text-sm transition-colors hover:bg-gray-50"
+            className="w-full py-3 border border-[var(--brand-border)] text-[var(--brand-text-secondary)] rounded-2xl font-semibold text-sm transition-colors hover:bg-[var(--brand-background)]"
           >
             {t('logout')}
           </button>
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-6">
+        <p className="text-center text-xs text-[var(--brand-text-secondary)] mt-6">
           {t('needHelp')}{' '}
           <a href="mailto:support@solariq.th" className="text-orange-500 hover:underline">
             support@solariq.th

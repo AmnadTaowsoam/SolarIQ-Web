@@ -100,7 +100,7 @@ export default function LeadsPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     )
@@ -120,8 +120,8 @@ export default function LeadsPage() {
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-gray-500 mt-1">{t('subtitle')}</p>
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
           </div>
           <Button onClick={() => router.push(ROUTES.ANALYZE)}>
             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -207,7 +207,9 @@ export default function LeadsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">{lead.phone || '-'}</div>
-                        <div className="text-sm text-gray-500">{lead.email || ''}</div>
+                        <div className="text-sm text-[var(--brand-text-secondary)]">
+                          {lead.email || ''}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <div className="text-sm max-w-xs truncate">{lead.address || '-'}</div>
@@ -252,7 +254,9 @@ export default function LeadsPage() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">{t('pagination.rowsPerPage')}</span>
+              <span className="text-sm text-[var(--brand-text-secondary)]">
+                {t('pagination.rowsPerPage')}
+              </span>
               <Select
                 options={PAGE_SIZE_OPTIONS.map((size) => ({
                   value: String(size),
@@ -267,7 +271,7 @@ export default function LeadsPage() {
               />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-[var(--brand-text-secondary)]">
                 {t('pagination.pageInfo', { page, totalPages, total })}
               </span>
               <div className="flex gap-1">
@@ -300,7 +304,7 @@ export default function LeadsPage() {
           size="sm"
         >
           <div className="space-y-4">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-[var(--brand-text-secondary)]">
               {t('updateStatusModal.description', { name: selectedLead?.name || '' })}
             </p>
             <Select

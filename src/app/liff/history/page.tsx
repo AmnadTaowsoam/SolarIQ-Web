@@ -95,10 +95,10 @@ export default function HistoryPage(): React.ReactElement {
   // Loading state
   if (liffLoading || !isInitialized || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-surface)]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('loading')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('loading')}</p>
         </div>
       </div>
     )
@@ -107,7 +107,7 @@ export default function HistoryPage(): React.ReactElement {
   // LIFF error
   if (liffError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-red-500/10 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">&#9888;&#65039;</div>
           <h1 className="text-xl font-bold text-red-600 mb-2">{t('error')}</h1>
@@ -120,7 +120,7 @@ export default function HistoryPage(): React.ReactElement {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-red-500/10 p-4">
         <div className="text-center">
           <div className="text-4xl mb-4">&#9888;&#65039;</div>
           <h1 className="text-xl font-bold text-red-600 mb-2">{t('error')}</h1>
@@ -137,7 +137,7 @@ export default function HistoryPage(): React.ReactElement {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--brand-background)]">
       {/* Header */}
       <header className="bg-green-600 text-white p-4 shadow-md">
         <h1 className="text-xl font-bold text-center">{t('title')}</h1>
@@ -149,8 +149,10 @@ export default function HistoryPage(): React.ReactElement {
         {history.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="text-6xl mb-4">&#9728;&#65039;</div>
-            <h2 className="text-xl font-bold text-gray-700 mb-2">{t('empty.title')}</h2>
-            <p className="text-gray-500 mb-6 text-center">{t('empty.description')}</p>
+            <h2 className="text-xl font-bold text-[var(--brand-text)] mb-2">{t('empty.title')}</h2>
+            <p className="text-[var(--brand-text-secondary)] mb-6 text-center">
+              {t('empty.description')}
+            </p>
             <a
               href="/liff/map-picker"
               className="inline-block bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors"
@@ -167,28 +169,30 @@ export default function HistoryPage(): React.ReactElement {
                 <button
                   key={item.id}
                   onClick={() => handleViewResult(item.id)}
-                  className="w-full bg-white rounded-2xl shadow-sm p-4 text-left hover:shadow-md transition-shadow active:scale-[0.98]"
+                  className="w-full bg-[var(--brand-surface)] rounded-2xl shadow-sm p-4 text-left hover:shadow-md transition-shadow active:scale-[0.98]"
                 >
                   {/* Date */}
                   <div className="flex justify-between items-start mb-2">
-                    <p className="text-xs text-gray-400">{formatDate(item.createdAt)}</p>
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                    <p className="text-xs text-[var(--brand-text-secondary)]">
+                      {formatDate(item.createdAt)}
+                    </p>
+                    <span className="text-xs bg-green-500/10 text-green-700 px-2 py-0.5 rounded-full font-medium">
                       {panelConfig.capacityKw.toFixed(1)} kW
                     </span>
                   </div>
 
                   {/* Address */}
-                  <p className="text-sm font-medium text-gray-800 mb-2 line-clamp-2">
+                  <p className="text-sm font-medium text-[var(--brand-text)] mb-2 line-clamp-2">
                     {address || t('item.addressNotSpecified')}
                   </p>
 
                   {/* Summary Row */}
                   <div className="flex justify-between items-center text-sm">
                     <div className="flex gap-4">
-                      <span className="text-gray-500">
+                      <span className="text-[var(--brand-text-secondary)]">
                         {panelConfig.panelsCount} {t('item.panels')}
                       </span>
-                      <span className="text-gray-500">
+                      <span className="text-[var(--brand-text-secondary)]">
                         {t('item.payback')} {financialAnalysis.paybackYears.toFixed(1)}{' '}
                         {t('item.years')}
                       </span>
@@ -201,7 +205,7 @@ export default function HistoryPage(): React.ReactElement {
                   {/* Arrow indicator */}
                   <div className="flex justify-end mt-2">
                     <svg
-                      className="w-5 h-5 text-gray-300"
+                      className="w-5 h-5 text-[var(--brand-text-secondary)]"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -223,7 +227,7 @@ export default function HistoryPage(): React.ReactElement {
 
       {/* User badge */}
       {user && (
-        <div className="fixed top-16 right-2 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow text-xs text-gray-600">
+        <div className="fixed top-16 right-2 bg-[var(--brand-surface)]/90 backdrop-blur-sm rounded-full px-3 py-1 shadow text-xs text-[var(--brand-text-secondary)]">
           {user.displayName}
         </div>
       )}

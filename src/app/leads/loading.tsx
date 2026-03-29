@@ -2,11 +2,11 @@ import { TableSkeleton } from '@/components/ui/Skeleton'
 
 export default function LeadsLoading() {
   return (
-    <div className="min-h-screen bg-gray-50/50 flex">
-      <div className="hidden lg:block w-[260px] border-r border-gray-200 bg-white" />
+    <div className="min-h-screen bg-[var(--brand-background)] flex">
+      <div className="hidden lg:block w-[260px] border-r border-[var(--brand-border)] bg-[var(--brand-surface)]" />
       <div className="flex-1 p-6 lg:p-8">
         <div className="space-y-6 max-w-7xl">
-          <div className="h-6 w-40 bg-gray-200 rounded animate-pulse" />
+          <div className="h-6 w-40 bg-[var(--brand-border)] rounded animate-pulse" />
           <TableSkeleton rows={8} />
         </div>
       </div>

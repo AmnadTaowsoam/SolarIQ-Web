@@ -8,13 +8,16 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Skeleton({ className, ...props }: SkeletonProps) {
   return (
-    <div className={clsx('animate-pulse rounded-lg bg-gray-200', className)} {...props} />
+    <div
+      className={clsx('animate-pulse rounded-lg bg-[var(--brand-border)]', className)}
+      {...props}
+    />
   )
 }
 
 export function CardSkeleton() {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
+    <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-5">
       <Skeleton className="h-3 w-24 mb-3" />
       <Skeleton className="h-8 w-16 mb-2" />
       <Skeleton className="h-3 w-32" />
@@ -24,7 +27,7 @@ export function CardSkeleton() {
 
 export function ChartSkeleton() {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
+    <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-6">
       <Skeleton className="h-5 w-40 mb-1" />
       <Skeleton className="h-3 w-24 mb-6" />
       <div className="flex items-end gap-2 h-48">
@@ -42,11 +45,11 @@ export function ChartSkeleton() {
 
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200">
-      <div className="px-6 py-4 border-b border-gray-200">
+    <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)]">
+      <div className="px-6 py-4 border-b border-[var(--brand-border)]">
         <Skeleton className="h-5 w-32" />
       </div>
-      <div className="divide-y divide-gray-50">
+      <div className="divide-y divide-[var(--brand-border)]">
         {Array.from({ length: rows }).map((_, i) => (
           <div key={i} className="flex items-center gap-4 px-6 py-3.5">
             <Skeleton className="h-8 w-8 rounded-lg" />

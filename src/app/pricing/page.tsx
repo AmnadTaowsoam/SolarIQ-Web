@@ -47,7 +47,7 @@ function Tabs({
   onTabChange: (id: string) => void
 }) {
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-[var(--brand-border)]">
       <nav className="-mb-px flex space-x-8" aria-label="Tabs">
         {tabs.map((tab) => (
           <button
@@ -58,7 +58,7 @@ function Tabs({
               ${
                 activeTab === tab.id
                   ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] hover:border-[var(--brand-border)]'
               }
             `}
           >
@@ -251,7 +251,7 @@ function ElectricityRatesTab() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('providerLabel')}
             </label>
             <div className="flex gap-4">
@@ -329,7 +329,7 @@ export default function PricingPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     )
@@ -349,8 +349,8 @@ export default function PricingPage() {
       <div className="space-y-6">
         {/* Page header */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-          <p className="text-gray-500 mt-1">{t('subtitle')}</p>
+          <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+          <p className="text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Tabs */}

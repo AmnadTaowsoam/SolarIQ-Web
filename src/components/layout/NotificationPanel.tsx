@@ -90,7 +90,7 @@ const DEMO_NOTIFICATIONS: Notification[] = [
 
 const TYPE_CONFIG: Record<Notification['type'], { bg: string; icon: React.ReactNode }> = {
   lead: {
-    bg: 'bg-blue-50 text-blue-600',
+    bg: 'bg-blue-500/10 text-blue-600',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -116,7 +116,7 @@ const TYPE_CONFIG: Record<Notification['type'], { bg: string; icon: React.ReactN
     ),
   },
   payment: {
-    bg: 'bg-green-50 text-green-600',
+    bg: 'bg-green-500/10 text-green-600',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -142,7 +142,7 @@ const TYPE_CONFIG: Record<Notification['type'], { bg: string; icon: React.ReactN
     ),
   },
   system: {
-    bg: 'bg-gray-100 text-gray-600',
+    bg: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -204,13 +204,15 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
 
       {/* Dropdown panel — positioned from navbar */}
       <div
-        className="absolute right-0 top-full mt-2 z-50 bg-white rounded-xl shadow-2xl border border-gray-200"
+        className="absolute right-0 top-full mt-2 z-50 bg-[var(--brand-surface)] rounded-xl shadow-2xl border border-[var(--brand-border)]"
         style={{ width: '400px', maxHeight: '80vh', overflow: 'hidden' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 h-16 border-b border-gray-100 flex-shrink-0">
+        <div className="flex items-center justify-between px-5 h-16 border-b border-[var(--brand-border)] flex-shrink-0">
           <div className="flex items-center gap-3">
-            <h2 className="text-base font-bold text-gray-900">{tNotifications('title')}</h2>
+            <h2 className="text-base font-bold text-[var(--brand-text)]">
+              {tNotifications('title')}
+            </h2>
             {unreadCount > 0 && (
               <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-bold text-white bg-[var(--brand-primary)] rounded-full">
                 {unreadCount}
@@ -228,7 +230,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
             )}
             <button
               onClick={onClose}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-1.5 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-background)] rounded-lg transition-colors"
               aria-label="Close notifications"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -247,9 +249,9 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
         <div className="overflow-y-auto scrollbar-thin" style={{ maxHeight: 'calc(80vh - 64px)' }}>
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-center px-6">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-[var(--brand-background)] rounded-full flex items-center justify-center mb-4">
                 <svg
-                  className="w-8 h-8 text-gray-300"
+                  className="w-8 h-8 text-[var(--brand-text-secondary)]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -262,13 +264,15 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
                   />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-gray-500">
+              <p className="text-sm font-medium text-[var(--brand-text-secondary)]">
                 {tNotifications('noNotifications')}
               </p>
-              <p className="text-xs text-gray-400 mt-1">{tNotifications('noNotificationsDesc')}</p>
+              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
+                {tNotifications('noNotificationsDesc')}
+              </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-[var(--brand-border)]">
               {notifications.map((notification) => {
                 const config = TYPE_CONFIG[notification.type]
                 return (
@@ -276,7 +280,7 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
                     key={notification.id}
                     onClick={() => markAsRead(notification.id)}
                     className={clsx(
-                      'w-full flex items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-gray-50/80',
+                      'w-full flex items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-[var(--brand-primary-light)]/80',
                       !notification.read && 'bg-[var(--brand-primary-light)]'
                     )}
                   >
@@ -296,7 +300,9 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
                         <p
                           className={clsx(
                             'text-sm leading-snug',
-                            notification.read ? 'text-gray-700' : 'text-gray-900 font-semibold'
+                            notification.read
+                              ? 'text-[var(--brand-text)]'
+                              : 'text-[var(--brand-text)] font-semibold'
                           )}
                         >
                           {tNotifications(notification.titleKey)}
@@ -305,10 +311,10 @@ export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
                           <span className="w-2 h-2 bg-[var(--brand-primary)] rounded-full flex-shrink-0 mt-1.5" />
                         )}
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-[var(--brand-text-secondary)] mt-0.5 line-clamp-2 leading-relaxed">
                         {tNotifications(notification.descriptionKey)}
                       </p>
-                      <p className="text-[11px] text-gray-400 mt-1.5">
+                      <p className="text-[11px] text-[var(--brand-text-secondary)] mt-1.5">
                         {tNotifications(notification.timestampKey, notification.timestampParams)}
                       </p>
                     </div>

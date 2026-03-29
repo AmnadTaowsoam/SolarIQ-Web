@@ -39,18 +39,18 @@ interface QuickReplyFormData {
 function getCategoryColor(category: QuickReplyCategory): string {
   switch (category) {
     case QuickReplyCategory.GREETING:
-      return 'bg-green-100 text-green-800'
+      return 'bg-green-500/10 text-green-800'
     case QuickReplyCategory.PRICING:
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-blue-500/10 text-blue-800'
     case QuickReplyCategory.SCHEDULING:
-      return 'bg-purple-100 text-purple-800'
+      return 'bg-purple-500/10 text-purple-800'
     case QuickReplyCategory.FOLLOW_UP:
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-yellow-500/10 text-yellow-600'
     case QuickReplyCategory.CLOSING:
-      return 'bg-red-100 text-red-800'
+      return 'bg-red-100 text-red-400'
     case QuickReplyCategory.CUSTOM:
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-[var(--brand-background)] text-[var(--brand-text)]'
   }
 }
 
@@ -111,7 +111,7 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete, t }: QuickReplyItem
 
   return (
     <div
-      className="relative p-3 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-colors"
+      className="relative p-3 border border-[var(--brand-border)] rounded-lg hover:border-blue-300 hover:bg-blue-500/10 cursor-pointer transition-colors"
       onClick={onSelect}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
@@ -119,14 +119,14 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete, t }: QuickReplyItem
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-gray-900 truncate">{reply.name}</span>
+            <span className="font-medium text-[var(--brand-text)] truncate">{reply.name}</span>
             <Badge className={getCategoryColor(reply.category)}>
               {getCategoryLabel(reply.category, t)}
             </Badge>
           </div>
-          <p className="text-sm text-gray-600 line-clamp-2">{reply.content}</p>
+          <p className="text-sm text-[var(--brand-text-secondary)] line-clamp-2">{reply.content}</p>
           {reply.usageCount > 0 && (
-            <p className="text-xs text-gray-400 mt-1">{reply.usageCount}x</p>
+            <p className="text-xs text-[var(--brand-text-secondary)] mt-1">{reply.usageCount}x</p>
           )}
         </div>
 
@@ -139,7 +139,7 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete, t }: QuickReplyItem
                   e.stopPropagation()
                   onEdit()
                 }}
-                className="p-1 text-gray-400 hover:text-blue-500"
+                className="p-1 text-[var(--brand-text-secondary)] hover:text-blue-500"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -157,7 +157,7 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete, t }: QuickReplyItem
                   e.stopPropagation()
                   onDelete()
                 }}
-                className="p-1 text-gray-400 hover:text-red-500"
+                className="p-1 text-[var(--brand-text-secondary)] hover:text-red-500"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -222,17 +222,21 @@ function QuickReplyFormModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">{t('name')}</label>
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+            {t('name')}
+          </label>
           <Input value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">{t('category')}</label>
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+            {t('category')}
+          </label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value as QuickReplyCategory)}
-            className="w-full border border-gray-200 rounded-md px-3 py-2"
+            className="w-full border border-[var(--brand-border)] rounded-md px-3 py-2"
           >
             {Object.values(QuickReplyCategory).map((cat) => (
               <option key={cat} value={cat}>
@@ -244,13 +248,15 @@ function QuickReplyFormModal({
 
         {/* Content */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">{t('message')}</label>
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+            {t('message')}
+          </label>
           <textarea
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
             placeholder={t('insertVariable')}
             rows={4}
-            className="w-full border border-gray-200 rounded-md px-3 py-2 resize-none"
+            className="w-full border border-[var(--brand-border)] rounded-md px-3 py-2 resize-none"
             required
           />
         </div>
@@ -258,12 +264,12 @@ function QuickReplyFormModal({
         {/* Detected variables */}
         {detectedVariables.length > 0 && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('insertVariable')}
             </label>
             <div className="flex flex-wrap gap-2">
               {detectedVariables.map((variable) => (
-                <Badge key={variable} className="bg-blue-100 text-blue-800">
+                <Badge key={variable} className="bg-blue-500/10 text-blue-800">
                   {variable}
                 </Badge>
               ))}
@@ -318,7 +324,9 @@ function VariableInputModal({ isOpen, onClose, onSubmit, reply, t }: VariableInp
       <form onSubmit={handleSubmit} className="space-y-4">
         {reply.variables?.map((variable) => (
           <div key={variable}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{variable}</label>
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+              {variable}
+            </label>
             <Input
               value={values[variable] || ''}
               onChange={(e) =>
@@ -334,8 +342,10 @@ function VariableInputModal({ isOpen, onClose, onSubmit, reply, t }: VariableInp
 
         {/* Preview */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">{t('preview')}</label>
-          <div className="bg-gray-50 rounded-md p-3 text-sm text-gray-700">
+          <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
+            {t('preview')}
+          </label>
+          <div className="bg-[var(--brand-background)] rounded-md p-3 text-sm text-[var(--brand-text)]">
             {replaceVariables(reply.content, values)}
           </div>
         </div>
@@ -422,11 +432,11 @@ export function QuickReplyPanel({
   }
 
   return (
-    <div className={cn('flex flex-col h-full bg-white', className)}>
+    <div className={cn('flex flex-col h-full bg-[var(--brand-surface)]', className)}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-[var(--brand-border)]">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-gray-900">{t('title')}</h3>
+          <h3 className="font-semibold text-[var(--brand-text)]">{t('title')}</h3>
           {onCreate && (
             <Button
               size="sm"
@@ -465,7 +475,7 @@ export function QuickReplyPanel({
               'px-3 py-1 text-xs rounded-full whitespace-nowrap',
               categoryFilter === 'all'
                 ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]'
             )}
           >
             {t('selectCategory')}
@@ -478,7 +488,7 @@ export function QuickReplyPanel({
                 'px-3 py-1 text-xs rounded-full whitespace-nowrap',
                 categoryFilter === cat
                   ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]'
               )}
             >
               {getCategoryLabel(cat)}
@@ -493,15 +503,15 @@ export function QuickReplyPanel({
           <div className="space-y-2">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                <div className="h-3 bg-gray-200 rounded w-1/2" />
+                <div className="h-4 bg-[var(--brand-border)] rounded w-3/4 mb-2" />
+                <div className="h-3 bg-[var(--brand-border)] rounded w-1/2" />
               </div>
             ))}
           </div>
         ) : filteredReplies.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-[var(--brand-text-secondary)]">
             <svg
-              className="w-12 h-12 mx-auto mb-3 text-gray-300"
+              className="w-12 h-12 mx-auto mb-3 text-[var(--brand-text-secondary)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

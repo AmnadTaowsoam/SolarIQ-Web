@@ -22,8 +22,8 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
   return (
     <div className="flex items-center gap-1">
       <span className="text-yellow-400 text-sm">★</span>
-      <span className="text-sm font-semibold text-gray-800">{rating.toFixed(1)}</span>
-      <span className="text-xs text-gray-400">({count})</span>
+      <span className="text-sm font-semibold text-[var(--brand-text)]">{rating.toFixed(1)}</span>
+      <span className="text-xs text-[var(--brand-text-secondary)]">({count})</span>
     </div>
   )
 }
@@ -66,13 +66,13 @@ export function QuoteComparisonTable({
   const getBadges = (item: QuoteComparisonItem): Array<{ label: string; color: string }> => {
     const badges: Array<{ label: string; color: string }> = []
     if (data.analysis?.cheapest === item.quoteId) {
-      badges.push({ label: t('best'), color: 'bg-green-100 text-green-800' })
+      badges.push({ label: t('best'), color: 'bg-green-500/10 text-green-800' })
     }
     if (data.analysis?.highestRated === item.quoteId) {
-      badges.push({ label: t('premium'), color: 'bg-yellow-100 text-yellow-800' })
+      badges.push({ label: t('premium'), color: 'bg-yellow-500/10 text-yellow-600' })
     }
     if (data.analysis?.fastest === item.quoteId) {
-      badges.push({ label: t('basic'), color: 'bg-blue-100 text-blue-800' })
+      badges.push({ label: t('basic'), color: 'bg-blue-500/10 text-blue-800' })
     }
     return badges
   }
@@ -100,7 +100,7 @@ export function QuoteComparisonTable({
             className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
               sortKey === tab.key
                 ? 'bg-orange-500 text-white shadow-sm'
-                : 'bg-white text-gray-600 border border-gray-200'
+                : 'bg-[var(--brand-surface)] text-[var(--brand-text-secondary)] border border-[var(--brand-border)]'
             }`}
           >
             {tab.label}
@@ -119,12 +119,12 @@ export function QuoteComparisonTable({
         return (
           <div
             key={item.quoteId}
-            className={`bg-white rounded-2xl border-2 shadow-sm overflow-hidden transition-all ${
+            className={`bg-[var(--brand-surface)] rounded-2xl border-2 shadow-sm overflow-hidden transition-all ${
               badges.some((b) => b.label === t('best'))
                 ? 'border-green-400'
                 : index === 0
                   ? 'border-orange-400'
-                  : 'border-gray-200'
+                  : 'border-[var(--brand-border)]'
             }`}
           >
             {/* Top banner for best options */}
@@ -145,7 +145,7 @@ export function QuoteComparisonTable({
                     </span>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm">
+                    <p className="font-semibold text-[var(--brand-text)] text-sm">
                       {item.contractor.companyName}
                     </p>
                     <StarRating
@@ -155,7 +155,7 @@ export function QuoteComparisonTable({
                   </div>
                 </div>
                 {item.contractor.verified && (
-                  <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium border border-blue-100">
+                  <span className="text-xs bg-blue-500/10 text-blue-700 px-2 py-0.5 rounded-full font-medium border border-blue-100">
                     ✓ {t('select')}
                   </span>
                 )}
@@ -173,9 +173,11 @@ export function QuoteComparisonTable({
               )}
 
               {/* Price */}
-              <div className="bg-gray-50 rounded-xl p-3">
+              <div className="bg-[var(--brand-background)] rounded-xl p-3">
                 <div className="flex items-baseline justify-between mb-1">
-                  <span className="text-gray-500 text-xs">{t('totalCost')}</span>
+                  <span className="text-[var(--brand-text-secondary)] text-xs">
+                    {t('totalCost')}
+                  </span>
                   {item.pricing.discountPct > 0 && (
                     <span className="text-xs text-green-600 font-medium">
                       {t('saving')} {item.pricing.discountPct.toFixed(1)}%
@@ -185,7 +187,9 @@ export function QuoteComparisonTable({
                 <p className="text-2xl font-bold text-orange-600">
                   {formatThb(item.pricing.totalPrice)}
                 </p>
-                <p className="text-xs text-gray-400">{formatThb(item.pricing.pricePerKw)}/kW</p>
+                <p className="text-xs text-[var(--brand-text-secondary)]">
+                  {formatThb(item.pricing.pricePerKw)}/kW
+                </p>
                 {item.pricing.hasFinancing && item.pricing.monthlyInstallment && (
                   <p className="text-xs text-blue-600 mt-1 font-medium">
                     {t('perMonth')}: {formatThb(item.pricing.monthlyInstallment)}
@@ -196,34 +200,36 @@ export function QuoteComparisonTable({
               {/* System specs comparison rows */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">{t('panelBrand')}</span>
-                  <span className="font-medium text-gray-800 text-right">
+                  <span className="text-[var(--brand-text-secondary)]">{t('panelBrand')}</span>
+                  <span className="font-medium text-[var(--brand-text)] text-right">
                     {item.system.panelBrand} {item.system.panelWattage}W × {item.system.panelCount}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">{t('systemSize')}</span>
-                  <span className="font-medium text-gray-800">
+                  <span className="text-[var(--brand-text-secondary)]">{t('systemSize')}</span>
+                  <span className="font-medium text-[var(--brand-text)]">
                     {item.system.totalKw.toFixed(2)} kW
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">{t('inverterBrand')}</span>
-                  <span className="font-medium text-gray-800">{item.system.inverterBrand}</span>
+                  <span className="text-[var(--brand-text-secondary)]">{t('inverterBrand')}</span>
+                  <span className="font-medium text-[var(--brand-text)]">
+                    {item.system.inverterBrand}
+                  </span>
                 </div>
                 {item.system.hasBattery && (
                   <div className="flex justify-between">
-                    <span className="text-gray-500">{t('equipment')}</span>
+                    <span className="text-[var(--brand-text-secondary)]">{t('equipment')}</span>
                     <span className="font-medium text-green-600">{t('equipment')}</span>
                   </div>
                 )}
               </div>
 
               {/* Timeline */}
-              <div className="flex items-center justify-between text-sm bg-blue-50 rounded-xl px-3 py-2">
+              <div className="flex items-center justify-between text-sm bg-blue-500/10 rounded-xl px-3 py-2">
                 <div>
-                  <p className="text-gray-500 text-xs">{t('installation')}</p>
-                  <p className="font-medium text-gray-800">
+                  <p className="text-[var(--brand-text-secondary)] text-xs">{t('installation')}</p>
+                  <p className="font-medium text-[var(--brand-text)]">
                     {new Date(item.timeline.installationEnd).toLocaleDateString('th-TH', {
                       day: 'numeric',
                       month: 'short',
@@ -231,13 +237,13 @@ export function QuoteComparisonTable({
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-gray-500 text-xs">{t('vs')}</p>
-                  <p className="font-medium text-gray-800">
+                  <p className="text-[var(--brand-text-secondary)] text-xs">{t('vs')}</p>
+                  <p className="font-medium text-[var(--brand-text)]">
                     {item.timeline.totalDays} {t('years')}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-gray-500 text-xs">{t('perMonth')}</p>
+                  <p className="text-[var(--brand-text-secondary)] text-xs">{t('perMonth')}</p>
                   <p className="font-medium text-green-700">
                     {formatThb(item.savings.monthlySavingsThb)}
                   </p>
@@ -246,21 +252,21 @@ export function QuoteComparisonTable({
 
               {/* Warranty quick view */}
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="bg-gray-50 rounded-lg py-2">
-                  <p className="text-gray-400">{t('feature')}</p>
-                  <p className="font-bold text-gray-700">
+                <div className="bg-[var(--brand-background)] rounded-lg py-2">
+                  <p className="text-[var(--brand-text-secondary)]">{t('feature')}</p>
+                  <p className="font-bold text-[var(--brand-text)]">
                     {item.warranty.panelYears} {t('years')}
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-lg py-2">
-                  <p className="text-gray-400">{t('inverterBrand')}</p>
-                  <p className="font-bold text-gray-700">
+                <div className="bg-[var(--brand-background)] rounded-lg py-2">
+                  <p className="text-[var(--brand-text-secondary)]">{t('inverterBrand')}</p>
+                  <p className="font-bold text-[var(--brand-text)]">
                     {item.warranty.inverterYears} {t('years')}
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-lg py-2">
-                  <p className="text-gray-400">{t('installation')}</p>
-                  <p className="font-bold text-gray-700">
+                <div className="bg-[var(--brand-background)] rounded-lg py-2">
+                  <p className="text-[var(--brand-text-secondary)]">{t('installation')}</p>
+                  <p className="font-bold text-[var(--brand-text)]">
                     {item.warranty.installationYears} {t('years')}
                   </p>
                 </div>
@@ -268,7 +274,7 @@ export function QuoteComparisonTable({
 
               {/* Payback */}
               <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-500">{t('payback')}</span>
+                <span className="text-[var(--brand-text-secondary)]">{t('payback')}</span>
                 <span className="font-bold text-orange-700">
                   {item.savings.paybackYears.toFixed(1)} {t('years')}
                 </span>
@@ -278,13 +284,13 @@ export function QuoteComparisonTable({
               <div className="flex gap-2 pt-1">
                 <button
                   onClick={() => onViewDetail(item.quoteId)}
-                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-2.5 border border-[var(--brand-border)] rounded-xl text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-background)] transition-colors"
                 >
                   {t('compare')}
                 </button>
                 <button
                   onClick={() => setShowDeclineModal(item.quoteId)}
-                  className="py-2.5 px-3 border border-red-200 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors"
+                  className="py-2.5 px-3 border border-red-500/20 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors"
                 >
                   {t('close')}
                 </button>
@@ -308,20 +314,20 @@ export function QuoteComparisonTable({
       {/* Decline modal */}
       {showDeclineModal && (
         <div className="fixed inset-0 bg-black/40 flex items-end justify-center z-50">
-          <div className="bg-white rounded-t-2xl w-full max-w-lg p-5 space-y-4">
-            <h3 className="font-bold text-gray-900">{t('title')}</h3>
-            <p className="text-sm text-gray-500">{t('noQuotes')}</p>
+          <div className="bg-[var(--brand-surface)] rounded-t-2xl w-full max-w-lg p-5 space-y-4">
+            <h3 className="font-bold text-[var(--brand-text)]">{t('title')}</h3>
+            <p className="text-sm text-[var(--brand-text-secondary)]">{t('noQuotes')}</p>
             <textarea
               value={declineReason}
               onChange={(e) => setDeclineReason(e.target.value)}
               rows={3}
               placeholder="เช่น ราคาสูงเกินไป, ต้องการยี่ห้ออื่น..."
-              className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+              className="w-full border border-[var(--brand-border)] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
             />
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeclineModal(null)}
-                className="flex-1 py-3 border border-gray-200 rounded-xl text-sm font-medium text-gray-700"
+                className="flex-1 py-3 border border-[var(--brand-border)] rounded-xl text-sm font-medium text-[var(--brand-text)]"
               >
                 {t('close')}
               </button>

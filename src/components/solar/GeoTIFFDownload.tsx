@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardHeader, CardBody } from '@/components/ui'
-import { Download, Map, Layers, Sun, Cloud, Image } from 'lucide-react'
+import { Download, Map, Layers, Sun, Cloud, Image as ImageIcon } from 'lucide-react'
 import type { DataLayerUrls } from '@/types'
 
 interface GeoTIFFDownloadProps {
@@ -19,14 +19,15 @@ const LAYERS: LayerInfo[] = [
   {
     key: 'dsmUrl',
     label: 'Digital Surface Model (DSM)',
-    description: 'Elevation data showing roof geometry, building heights, and surrounding structures in meters above ground.',
+    description:
+      'Elevation data showing roof geometry, building heights, and surrounding structures in meters above ground.',
     icon: <Map className="w-5 h-5 text-blue-500" />,
   },
   {
     key: 'rgbUrl',
     label: 'RGB Satellite Imagery',
     description: 'High-resolution satellite/aerial imagery of the building and its surroundings.',
-    icon: <Image className="w-5 h-5 text-green-500" />,
+    icon: <ImageIcon className="w-5 h-5 text-green-500" aria-hidden="true" />,
   },
   {
     key: 'maskUrl',
@@ -37,13 +38,15 @@ const LAYERS: LayerInfo[] = [
   {
     key: 'annualFluxUrl',
     label: 'Annual Solar Flux Map',
-    description: 'Annual solar energy received per pixel in kWh/m2/year, accounting for shade and orientation.',
+    description:
+      'Annual solar energy received per pixel in kWh/m2/year, accounting for shade and orientation.',
     icon: <Sun className="w-5 h-5 text-[var(--brand-primary)]" />,
   },
   {
     key: 'monthlyFluxUrl',
     label: 'Monthly Flux Maps',
-    description: 'Monthly breakdown of solar flux showing seasonal variation across the roof surface.',
+    description:
+      'Monthly breakdown of solar flux showing seasonal variation across the roof surface.',
     icon: <Sun className="w-5 h-5 text-amber-500" />,
   },
 ]
@@ -108,7 +111,7 @@ export function GeoTIFFDownload({ dataLayers }: GeoTIFFDownloadProps) {
           {shadeLayerCount > 0 && (
             <div className="flex items-start gap-4 p-4 rounded-lg border border-[var(--brand-border)] hover:border-[var(--brand-primary)]/50 transition-colors">
               <div className="p-2 rounded-lg bg-[var(--brand-surface)] border border-[var(--brand-border)]">
-                <Cloud className="w-5 h-5 text-gray-500" />
+                <Cloud className="w-5 h-5 text-[var(--brand-text-secondary)]" />
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="font-medium text-[var(--brand-text)] text-sm">

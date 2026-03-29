@@ -398,10 +398,10 @@ export function PanelLayoutMap({
               onCloseClick={() => setSelectedPanel(null)}
             >
               <div className="p-2 min-w-[220px]">
-                <h4 className="font-semibold text-sm text-gray-900 mb-2">
+                <h4 className="font-semibold text-sm text-[var(--brand-text)] mb-2">
                   {t('panels')} {selectedPanel.index + 1}
                 </h4>
-                <div className="space-y-1.5 text-xs text-gray-600">
+                <div className="space-y-1.5 text-xs text-[var(--brand-text-secondary)]">
                   <div className="flex justify-between">
                     <span>{t('orientation')}:</span>
                     <span className="font-medium">

@@ -77,7 +77,7 @@ export function InstallBanner() {
         <div
           className={clsx(
             'flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center',
-            isMobile ? 'bg-amber-500' : 'bg-white/20'
+            isMobile ? 'bg-amber-500' : 'bg-[var(--brand-surface)]/20'
           )}
         >
           <Smartphone className="w-5 h-5 text-white" />
@@ -103,7 +103,7 @@ export function InstallBanner() {
               'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-sm transition-colors',
               isMobile
                 ? 'bg-amber-500 text-white hover:bg-amber-600'
-                : 'bg-white text-amber-600 hover:bg-amber-50'
+                : 'bg-[var(--brand-surface)] text-amber-600 hover:bg-amber-50'
             )}
           >
             <Download className="w-4 h-4" />
@@ -115,7 +115,7 @@ export function InstallBanner() {
               'p-1.5 rounded-lg transition-colors',
               isMobile
                 ? 'text-slate-400 hover:text-white hover:bg-slate-800'
-                : 'text-white/80 hover:text-white hover:bg-white/20'
+                : 'text-white/80 hover:text-white hover:bg-[var(--brand-surface)]/20'
             )}
             aria-label="Dismiss"
           >

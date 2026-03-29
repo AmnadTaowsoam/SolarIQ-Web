@@ -28,9 +28,7 @@ export default function LIFFLayout({ children }: LIFFLayoutProps): React.ReactEl
 
   return (
     <LIFFProvider liffId={LIFF_ID}>
-      <div className="liff-app min-h-screen bg-gray-50">
-        {children}
-      </div>
+      <div className="liff-app min-h-screen bg-[var(--brand-background)]">{children}</div>
     </LIFFProvider>
   )
 }

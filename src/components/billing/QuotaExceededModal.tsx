@@ -1,17 +1,17 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
-import { QuotaExceededError } from '@/lib/api';
-import { PlanType, PLANS } from '@/types/billing';
+import React from 'react'
+import { Modal } from '@/components/ui/Modal'
+import { Button } from '@/components/ui/Button'
+import { QuotaExceededError } from '@/lib/api'
+import { PlanType, PLANS } from '@/types/billing'
 
 interface QuotaExceededModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  error: QuotaExceededError | null;
-  onUpgrade: (planId: PlanType) => void;
-  isUpgrading?: boolean;
+  isOpen: boolean
+  onClose: () => void
+  error: QuotaExceededError | null
+  onUpgrade: (planId: PlanType) => void
+  isUpgrading?: boolean
 }
 
 // Feature display names
@@ -20,7 +20,7 @@ const FEATURE_NAMES: Record<string, string> = {
   ai_analysis: 'AI Analyses',
   pdf_download: 'PDF Downloads',
   api_call: 'API Calls',
-};
+}
 
 /**
  * QuotaExceededModal Component (WK-020)
@@ -33,23 +33,25 @@ export function QuotaExceededModal({
   onUpgrade,
   isUpgrading = false,
 }: QuotaExceededModalProps) {
-  if (!error) return null;
+  if (!error) {
+    return null
+  }
 
-  const featureName = FEATURE_NAMES[error.featureKey] || error.featureKey;
-  const recommendedPlan = error.recommendedPlan as PlanType | undefined;
-  const recommendedPlanData = recommendedPlan ? PLANS[recommendedPlan] : null;
+  const featureName = FEATURE_NAMES[error.featureKey] || error.featureKey
+  const recommendedPlan = error.recommendedPlan as PlanType | undefined
+  const recommendedPlanData = recommendedPlan ? PLANS[recommendedPlan] : null
 
   // Get all plans sorted by price for upgrade options
   const upgradeOptions = Object.entries(PLANS)
     .filter(([id]) => id !== error.planId)
-    .sort(([, a], [, b]) => a.price_thb - b.price_thb);
+    .sort(([, a], [, b]) => a.price_thb - b.price_thb)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6 max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4">
             <svg
               className="w-8 h-8 text-red-600"
               fill="none"
@@ -64,28 +66,28 @@ export function QuotaExceededModal({
               />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900">Usage Limit Reached</h2>
-          <p className="text-gray-600 mt-2">
+          <h2 className="text-xl font-bold text-[var(--brand-text)]">Usage Limit Reached</h2>
+          <p className="text-[var(--brand-text-secondary)] mt-2">
             You've used all your {featureName} for this billing period.
           </p>
         </div>
 
         {/* Current usage info */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+        <div className="bg-[var(--brand-background)] rounded-lg p-4 mb-6">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">Current Usage</span>
-            <span className="font-semibold text-gray-900">
+            <span className="text-sm text-[var(--brand-text-secondary)]">Current Usage</span>
+            <span className="font-semibold text-[var(--brand-text)]">
               {error.current} / {error.limit}
             </span>
           </div>
-          <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+          <div className="mt-2 w-full bg-[var(--brand-border)] rounded-full h-2">
             <div className="bg-red-500 h-2 rounded-full" style={{ width: '100%' }} />
           </div>
         </div>
 
         {/* Recommended plan */}
         {recommendedPlanData && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div className="bg-blue-500/10 border border-blue-200 rounded-lg p-4 mb-6">
             <div className="flex items-center space-x-2 mb-2">
               <svg
                 className="w-5 h-5 text-blue-600"
@@ -104,8 +106,8 @@ export function QuotaExceededModal({
             </div>
             <div className="flex justify-between items-center">
               <div>
-                <p className="font-semibold text-gray-900">{recommendedPlanData.name}</p>
-                <p className="text-sm text-gray-600">
+                <p className="font-semibold text-[var(--brand-text)]">{recommendedPlanData.name}</p>
+                <p className="text-sm text-[var(--brand-text-secondary)]">
                   ฿{recommendedPlanData.price_thb.toLocaleString()}/month
                 </p>
               </div>
@@ -123,15 +125,15 @@ export function QuotaExceededModal({
         {/* Other upgrade options */}
         {upgradeOptions.length > 0 && !recommendedPlanData && (
           <div className="space-y-3 mb-6">
-            <p className="text-sm font-medium text-gray-700">Available Plans:</p>
+            <p className="text-sm font-medium text-[var(--brand-text)]">Available Plans:</p>
             {upgradeOptions.map(([planId, plan]) => (
               <div
                 key={planId}
-                className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+                className="flex justify-between items-center p-3 bg-[var(--brand-background)] rounded-lg"
               >
                 <div>
-                  <p className="font-medium text-gray-900">{plan.name}</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="font-medium text-[var(--brand-text)]">{plan.name}</p>
+                  <p className="text-sm text-[var(--brand-text-secondary)]">
                     ฿{plan.price_thb.toLocaleString()}/month
                   </p>
                 </div>
@@ -156,7 +158,7 @@ export function QuotaExceededModal({
         </div>
 
         {/* Help text */}
-        <p className="text-xs text-gray-500 text-center mt-4">
+        <p className="text-xs text-[var(--brand-text-secondary)] text-center mt-4">
           Need help?{' '}
           <a href="/support" className="text-blue-600 hover:underline">
             Contact support
@@ -164,7 +166,7 @@ export function QuotaExceededModal({
         </p>
       </div>
     </Modal>
-  );
+  )
 }
 
-export default QuotaExceededModal;
+export default QuotaExceededModal

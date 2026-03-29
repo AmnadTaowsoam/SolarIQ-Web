@@ -264,12 +264,12 @@ export default function CheckoutPage() {
   const Icon = plan.icon
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-[calc(100vh-4rem)]">
+    <div className="bg-[var(--brand-background)] dark:bg-gray-950 min-h-[calc(100vh-4rem)]">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
         {/* Back link */}
         <Link
           href="/pricing-plans"
-          className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:text-primary-600 transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('back')}
@@ -280,8 +280,8 @@ export default function CheckoutPage() {
           {/*  Left: Order Summary                                      */}
           {/* -------------------------------------------------------- */}
           <div className="lg:col-span-2 order-2 lg:order-1">
-            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 lg:p-8 shadow-sm sticky top-24">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6">
+            <div className="rounded-2xl border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-surface)] dark:bg-gray-800 p-6 lg:p-8 shadow-sm sticky top-24">
+              <h2 className="text-lg font-bold text-[var(--brand-text)] dark:text-white mb-6">
                 {t('summary')}
               </h2>
 
@@ -291,8 +291,12 @@ export default function CheckoutPage() {
                   <Icon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{plan.name}</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{plan.subtitle}</p>
+                  <h3 className="font-semibold text-[var(--brand-text)] dark:text-white">
+                    {plan.name}
+                  </h3>
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    {plan.subtitle}
+                  </p>
                 </div>
               </div>
 
@@ -301,7 +305,7 @@ export default function CheckoutPage() {
                 {plan.features.map((feature, i) => (
                   <li
                     key={i}
-                    className="flex items-start gap-2.5 text-sm text-gray-700 dark:text-gray-300"
+                    className="flex items-start gap-2.5 text-sm text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)]"
                   >
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-500" />
                     {feature}
@@ -309,15 +313,15 @@ export default function CheckoutPage() {
                 ))}
               </ul>
 
-              <hr className="border-gray-200 dark:border-gray-700 my-6" />
+              <hr className="border-[var(--brand-border)] dark:border-gray-700 my-6" />
 
               {/* Pricing breakdown */}
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('summary')} {plan.name} ({billing === 'annual' ? t('annual') : t('monthly')})
                   </span>
-                  <span className="font-medium text-gray-900 dark:text-white">
+                  <span className="font-medium text-[var(--brand-text)] dark:text-white">
                     ฿{price.toLocaleString('th-TH')}
                   </span>
                 </div>
@@ -340,17 +344,17 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
-                <hr className="border-gray-200 dark:border-gray-700" />
+                <hr className="border-[var(--brand-border)] dark:border-gray-700" />
 
                 <div className="flex justify-between text-base font-bold">
-                  <span className="text-gray-900 dark:text-white">{t('total')}</span>
-                  <span className="text-gray-900 dark:text-white">
+                  <span className="text-[var(--brand-text)] dark:text-white">{t('total')}</span>
+                  <span className="text-[var(--brand-text)] dark:text-white">
                     {t('pricePerMonth', { price: price.toLocaleString('th-TH') })}
                   </span>
                 </div>
 
                 {billing === 'annual' && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                     {t('billedAnnually', { amount: (price * 12).toLocaleString('th-TH') })}
                   </p>
                 )}
@@ -362,22 +366,26 @@ export default function CheckoutPage() {
           {/*  Right: Checkout Form                                     */}
           {/* -------------------------------------------------------- */}
           <div className="lg:col-span-3 order-1 lg:order-2">
-            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 lg:p-8 shadow-sm">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('pay')}</h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">{t('paySubtitle')}</p>
+            <div className="rounded-2xl border border-[var(--brand-border)] dark:border-gray-700 bg-[var(--brand-surface)] dark:bg-gray-800 p-6 lg:p-8 shadow-sm">
+              <h1 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white mb-2">
+                {t('pay')}
+              </h1>
+              <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-8">
+                {t('paySubtitle')}
+              </p>
 
               {/* Billing toggle */}
               <div className="mb-8">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
+                <label className="text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-3 block">
                   {t('billingCycle')}
                 </label>
-                <div className="inline-flex rounded-xl bg-gray-100 dark:bg-gray-700 p-1">
+                <div className="inline-flex rounded-xl bg-[var(--brand-background)] dark:bg-gray-700 p-1">
                   <button
                     onClick={() => setBilling('monthly')}
                     className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
                       billing === 'monthly'
-                        ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                        ? 'bg-[var(--brand-surface)] dark:bg-gray-600 text-[var(--brand-text)] dark:text-white shadow-sm'
+                        : 'text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
                     }`}
                   >
                     {t('monthly')}
@@ -386,8 +394,8 @@ export default function CheckoutPage() {
                     onClick={() => setBilling('annual')}
                     className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
                       billing === 'annual'
-                        ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700'
+                        ? 'bg-[var(--brand-surface)] dark:bg-gray-600 text-[var(--brand-text)] dark:text-white shadow-sm'
+                        : 'text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]'
                     }`}
                   >
                     {t('annual')}
@@ -400,12 +408,12 @@ export default function CheckoutPage() {
 
               {/* Promo code */}
               <div className="mb-8">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
+                <label className="text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-3 block">
                   {t('promoCodeLabel')}
                 </label>
                 <div className="flex gap-3">
                   <div className="relative flex-1">
-                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--brand-text-secondary)]" />
                     <input
                       type="text"
                       value={promoCode}
@@ -415,13 +423,13 @@ export default function CheckoutPage() {
                         setPromoError('')
                       }}
                       placeholder={t('promoCodePlaceholder')}
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2.5 pl-10 pr-4 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
+                      className="w-full rounded-lg border border-[var(--brand-border)] dark:border-gray-600 bg-[var(--brand-surface)] dark:bg-gray-700 py-2.5 pl-10 pr-4 text-sm text-[var(--brand-text)] dark:text-white placeholder-[var(--brand-text-secondary)] focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
                     />
                   </div>
                   <button
                     onClick={handleApplyPromo}
                     disabled={!promoCode.trim() || promoApplied}
-                    className="rounded-lg border border-gray-300 dark:border-gray-600 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="rounded-lg border border-[var(--brand-border)] dark:border-gray-600 px-5 py-2.5 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-primary-light)] dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {promoApplied ? t('promoApplied') : t('applyCode')}
                   </button>
@@ -432,7 +440,7 @@ export default function CheckoutPage() {
 
               {/* Payment method selector */}
               <div className="mb-8">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
+                <label className="text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] mb-3 block">
                   {t('paymentMethod')}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -446,7 +454,7 @@ export default function CheckoutPage() {
                         className={`flex items-center gap-2.5 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
                           paymentMethod === method.id
                             ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
-                            : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                            : 'border-[var(--brand-border)] dark:border-gray-600 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:border-[var(--brand-border)] hover:bg-[var(--brand-primary-light)] dark:hover:bg-gray-700'
                         }`}
                       >
                         <MethodIcon className="h-4 w-4 shrink-0" />
@@ -459,16 +467,16 @@ export default function CheckoutPage() {
 
               {/* Error message */}
               {error && (
-                <div className="mb-6 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800 p-4 text-sm text-red-600 dark:text-red-400">
+                <div className="mb-6 rounded-lg border border-red-500/20 bg-red-500/10 dark:bg-red-900/20 dark:border-red-800 p-4 text-sm text-red-600 dark:text-red-400">
                   {error}
                 </div>
               )}
 
               {/* PromptPay QR Code Display */}
               {qrCodeUri && (
-                <div className="mb-6 rounded-2xl border-2 border-primary-200 dark:border-primary-700 bg-white dark:bg-gray-800 p-6 text-center shadow-md">
+                <div className="mb-6 rounded-2xl border-2 border-primary-200 dark:border-primary-700 bg-[var(--brand-surface)] dark:bg-gray-800 p-6 text-center shadow-md">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-[var(--brand-text)] dark:text-white flex items-center gap-2">
                       <QrCode className="h-5 w-5 text-primary-500" />
                       {t('promptpay')}
                     </h3>
@@ -477,13 +485,13 @@ export default function CheckoutPage() {
                         setQrCodeUri(null)
                         setChargeId(null)
                       }}
-                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                      className="text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] dark:hover:text-[var(--brand-text-secondary)]"
                     >
                       <X className="h-5 w-5" />
                     </button>
                   </div>
 
-                  <div className="mx-auto mb-4 inline-block rounded-xl bg-white p-4 shadow-inner">
+                  <div className="mx-auto mb-4 inline-block rounded-xl bg-[var(--brand-surface)] p-4 shadow-inner">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={qrCodeUri}
@@ -492,7 +500,7 @@ export default function CheckoutPage() {
                     />
                   </div>
 
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-4">
                     {t('scanQrPromptpay')}
                   </p>
 
@@ -526,34 +534,40 @@ export default function CheckoutPage() {
                 )}
               </button>
 
-              <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-4 text-center text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                 {t('securePayment')}
               </p>
 
               {/* Trust badges */}
               <div className="mt-8 grid grid-cols-3 gap-4">
                 <div className="flex flex-col items-center gap-2 text-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 dark:bg-green-900/20">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10 dark:bg-green-900/20">
                     <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">SSL Secure</span>
+                  <span className="text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    SSL Secure
+                  </span>
                 </div>
                 <div className="flex flex-col items-center gap-2 text-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10 dark:bg-blue-900/20">
                     <Lock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">Secure Payment</span>
+                  <span className="text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    Secure Payment
+                  </span>
                 </div>
                 <div className="flex flex-col items-center gap-2 text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-50 dark:bg-purple-900/20">
                     <CreditCard className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">Opn Payments</span>
+                  <span className="text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                    Opn Payments
+                  </span>
                 </div>
               </div>
 
               {/* Payment method logos */}
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-gray-400">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-[var(--brand-text-secondary)]">
                 <span className="text-xs font-medium">{t('supportedMethods')}</span>
                 <span className="text-xs">Visa</span>
                 <span className="text-xs">Mastercard</span>
@@ -565,7 +579,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Policy info */}
-              <div className="mt-8 rounded-lg bg-gray-50 dark:bg-gray-700/50 p-4 text-xs text-gray-500 dark:text-gray-400 space-y-1">
+              <div className="mt-8 rounded-lg bg-[var(--brand-background)] dark:bg-gray-700/50 p-4 text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] space-y-1">
                 <p>{t('cancelPolicy')}</p>
                 <p>{t('cancelKeepAccess')}</p>
                 <p>{t('receiptEmail')}</p>

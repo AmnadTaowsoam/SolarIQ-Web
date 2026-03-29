@@ -142,7 +142,7 @@ function StatusBadge({ status }: { status: ServiceStatus }) {
   const config = {
     operational: {
       icon: CheckCircle2,
-      className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+      className: 'bg-green-500/10 text-green-800 dark:bg-green-900/30 dark:text-green-400',
       label: 'Operational',
     },
     degraded: {
@@ -152,12 +152,12 @@ function StatusBadge({ status }: { status: ServiceStatus }) {
     },
     outage: {
       icon: XCircle,
-      className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+      className: 'bg-red-100 text-red-400 dark:bg-red-900/30 dark:text-red-400',
       label: 'Outage',
     },
     maintenance: {
       icon: Clock,
-      className: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+      className: 'bg-blue-500/10 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
       label: 'Maintenance',
     },
   }
@@ -187,23 +187,29 @@ function ServiceIcon({ name }: { name: string }) {
   }
 
   const Icon = iconMap[name] || Server
-  return <Icon className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+  return (
+    <Icon className="h-5 w-5 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]" />
+  )
 }
 
 function ServiceCard({ service }: { service: Service }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
+    <div className="rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] p-4 dark:border-gray-800 dark:bg-gray-900">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3">
           <ServiceIcon name={service.name} />
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white">{service.name}</h3>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{service.description}</p>
+            <h3 className="font-semibold text-[var(--brand-text)] dark:text-white">
+              {service.name}
+            </h3>
+            <p className="mt-1 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+              {service.description}
+            </p>
           </div>
         </div>
         <StatusBadge status={service.status} />
       </div>
-      <div className="mt-4 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+      <div className="mt-4 flex items-center justify-between text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
         <span>Uptime: {service.uptime.toFixed(1)}%</span>
         <span>Last checked: {new Date(service.lastChecked).toLocaleTimeString('th-TH')}</span>
       </div>
@@ -213,16 +219,16 @@ function ServiceCard({ service }: { service: Service }) {
 
 function IncidentCard({ incident }: { incident: Incident }) {
   const severityConfig = {
-    critical: 'border-red-500 bg-red-50 dark:bg-red-900/10',
+    critical: 'border-red-500 bg-red-500/10 dark:bg-red-900/10',
     major: 'border-amber-500 bg-amber-50 dark:bg-amber-900/10',
-    minor: 'border-blue-500 bg-blue-50 dark:bg-blue-900/10',
+    minor: 'border-blue-500 bg-blue-500/10 dark:bg-blue-900/10',
   }
 
   const statusConfig = {
     investigating: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
     identified: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-    monitoring: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    resolved: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+    monitoring: 'bg-blue-500/10 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+    resolved: 'bg-green-500/10 text-green-800 dark:bg-green-900/30 dark:text-green-400',
   }
 
   return (
@@ -239,19 +245,23 @@ function IncidentCard({ incident }: { incident: Incident }) {
               {incident.status}
             </span>
           </div>
-          <h3 className="mt-2 font-semibold text-gray-900 dark:text-white">{incident.title}</h3>
+          <h3 className="mt-2 font-semibold text-[var(--brand-text)] dark:text-white">
+            {incident.title}
+          </h3>
         </div>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
+        <span className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
           {new Date(incident.startedAt).toLocaleString('th-TH')}
         </span>
       </div>
       <div className="mt-4 space-y-3">
         {incident.updates.map((update, idx) => (
           <div key={idx} className="flex gap-3 text-sm">
-            <span className="text-gray-500 dark:text-gray-400">
+            <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
               {new Date(update.time).toLocaleString('th-TH')}
             </span>
-            <span className="text-gray-700 dark:text-gray-300">{update.message}</span>
+            <span className="text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)]">
+              {update.message}
+            </span>
           </div>
         ))}
       </div>
@@ -265,14 +275,16 @@ function IncidentCard({ incident }: { incident: Incident }) {
 
 export default function StatusPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-[var(--brand-background)] dark:bg-gray-950">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+      <div className="border-b border-[var(--brand-border)] bg-[var(--brand-surface)] dark:border-gray-800 dark:bg-gray-900">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">System Status</h1>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              <h1 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white">
+                System Status
+              </h1>
+              <p className="mt-1 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
                 Real-time status of SolarIQ services
               </p>
             </div>
@@ -286,7 +298,7 @@ export default function StatusPage() {
         {/* Active Incidents */}
         {incidents.length > 0 && (
           <section className="mb-8">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="mb-4 text-lg font-semibold text-[var(--brand-text)] dark:text-white">
               Active Incidents
             </h2>
             <div className="space-y-4">
@@ -299,7 +311,9 @@ export default function StatusPage() {
 
         {/* Services Status */}
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Services</h2>
+          <h2 className="mb-4 text-lg font-semibold text-[var(--brand-text)] dark:text-white">
+            Services
+          </h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {services.map((service) => (
               <ServiceCard key={service.name} service={service} />
@@ -309,10 +323,10 @@ export default function StatusPage() {
 
         {/* Uptime History */}
         <section className="mt-8">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+          <h2 className="mb-4 text-lg font-semibold text-[var(--brand-text)] dark:text-white">
             Uptime History (Last 90 Days)
           </h2>
-          <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+          <div className="rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 dark:border-gray-800 dark:bg-gray-900">
             <div className="flex gap-1">
               {Array.from({ length: 90 }).map((_, i) => {
                 // In production, this would be real uptime data
@@ -326,7 +340,7 @@ export default function StatusPage() {
                 )
               })}
             </div>
-            <div className="mt-4 flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+            <div className="mt-4 flex items-center justify-between text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
               <span>90 days ago</span>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
@@ -344,7 +358,7 @@ export default function StatusPage() {
         </section>
 
         {/* Footer */}
-        <footer className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400">
+        <footer className="mt-12 border-t border-[var(--brand-border)] pt-8 text-center text-sm text-[var(--brand-text-secondary)] dark:border-gray-800 dark:text-[var(--brand-text-secondary)]">
           <p>Status page updated every 1 minute</p>
           <p className="mt-1">
             Need help?{' '}

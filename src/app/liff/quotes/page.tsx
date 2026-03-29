@@ -84,7 +84,7 @@ export default function QuoteRequestPage() {
   const totalSteps = 4
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-[var(--brand-background)] pb-20">
       {/* Header */}
       <div className="bg-orange-500 text-white px-4 py-5 safe-top">
         <div className="flex items-center gap-3 mb-3">
@@ -113,7 +113,7 @@ export default function QuoteRequestPage() {
         {/* Progress bar */}
         <div className="h-1.5 bg-orange-400 rounded-full overflow-hidden">
           <div
-            className="h-full bg-white rounded-full transition-all duration-300"
+            className="h-full bg-[var(--brand-surface)] rounded-full transition-all duration-300"
             style={{ width: `${(step / totalSteps) * 100}%` }}
           />
         </div>
@@ -124,8 +124,12 @@ export default function QuoteRequestPage() {
         {step === 1 && (
           <>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">{t('budget.title')}</h2>
-              <p className="text-gray-500 text-sm">{t('budget.description')}</p>
+              <h2 className="text-xl font-bold text-[var(--brand-text)] mb-1">
+                {t('budget.title')}
+              </h2>
+              <p className="text-[var(--brand-text-secondary)] text-sm">
+                {t('budget.description')}
+              </p>
             </div>
             <div className="space-y-3">
               {BUDGET_OPTIONS.map((opt) => (
@@ -135,12 +139,12 @@ export default function QuoteRequestPage() {
                   className={`w-full p-4 rounded-2xl border-2 text-left transition-all ${
                     formData.budgetRange === opt
                       ? 'border-orange-500 bg-orange-50'
-                      : 'border-gray-200 bg-white hover:border-orange-200'
+                      : 'border-[var(--brand-border)] bg-[var(--brand-surface)] hover:border-orange-200'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span
-                      className={`font-medium ${formData.budgetRange === opt ? 'text-orange-700' : 'text-gray-800'}`}
+                      className={`font-medium ${formData.budgetRange === opt ? 'text-orange-700' : 'text-[var(--brand-text)]'}`}
                     >
                       {BUDGET_RANGE_LABELS[opt]}
                     </span>
@@ -148,11 +152,11 @@ export default function QuoteRequestPage() {
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                         formData.budgetRange === opt
                           ? 'border-orange-500 bg-orange-500'
-                          : 'border-gray-300'
+                          : 'border-[var(--brand-border)]'
                       }`}
                     >
                       {formData.budgetRange === opt && (
-                        <div className="w-2 h-2 bg-white rounded-full" />
+                        <div className="w-2 h-2 bg-[var(--brand-surface)] rounded-full" />
                       )}
                     </div>
                   </div>
@@ -166,8 +170,12 @@ export default function QuoteRequestPage() {
         {step === 2 && (
           <>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">{t('timeline.title')}</h2>
-              <p className="text-gray-500 text-sm">{t('timeline.description')}</p>
+              <h2 className="text-xl font-bold text-[var(--brand-text)] mb-1">
+                {t('timeline.title')}
+              </h2>
+              <p className="text-[var(--brand-text-secondary)] text-sm">
+                {t('timeline.description')}
+              </p>
             </div>
             <div className="space-y-3">
               {TIMELINE_OPTIONS.map((opt) => (
@@ -177,18 +185,18 @@ export default function QuoteRequestPage() {
                   className={`w-full p-4 rounded-2xl border-2 text-left transition-all ${
                     formData.preferredTimeline === opt
                       ? 'border-orange-500 bg-orange-50'
-                      : 'border-gray-200 bg-white hover:border-orange-200'
+                      : 'border-[var(--brand-border)] bg-[var(--brand-surface)] hover:border-orange-200'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <span
-                        className={`font-medium block ${formData.preferredTimeline === opt ? 'text-orange-700' : 'text-gray-800'}`}
+                        className={`font-medium block ${formData.preferredTimeline === opt ? 'text-orange-700' : 'text-[var(--brand-text)]'}`}
                       >
                         {TIMELINE_LABELS[opt].split('(')[0].trim()}
                       </span>
                       {TIMELINE_LABELS[opt].includes('(') && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-[var(--brand-text-secondary)]">
                           {TIMELINE_LABELS[opt].match(/\(([^)]+)\)/)?.[1]}
                         </span>
                       )}
@@ -197,11 +205,11 @@ export default function QuoteRequestPage() {
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                         formData.preferredTimeline === opt
                           ? 'border-orange-500 bg-orange-500'
-                          : 'border-gray-300'
+                          : 'border-[var(--brand-border)]'
                       }`}
                     >
                       {formData.preferredTimeline === opt && (
-                        <div className="w-2 h-2 bg-white rounded-full" />
+                        <div className="w-2 h-2 bg-[var(--brand-surface)] rounded-full" />
                       )}
                     </div>
                   </div>
@@ -215,8 +223,12 @@ export default function QuoteRequestPage() {
         {step === 3 && (
           <>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">{t('financing.title')}</h2>
-              <p className="text-gray-500 text-sm">{t('financing.description')}</p>
+              <h2 className="text-xl font-bold text-[var(--brand-text)] mb-1">
+                {t('financing.title')}
+              </h2>
+              <p className="text-[var(--brand-text-secondary)] text-sm">
+                {t('financing.description')}
+              </p>
             </div>
             <div className="space-y-3">
               {FINANCING_OPTIONS.map((opt) => (
@@ -226,12 +238,12 @@ export default function QuoteRequestPage() {
                   className={`w-full p-4 rounded-2xl border-2 text-left transition-all ${
                     formData.financingPreference === opt
                       ? 'border-orange-500 bg-orange-50'
-                      : 'border-gray-200 bg-white hover:border-orange-200'
+                      : 'border-[var(--brand-border)] bg-[var(--brand-surface)] hover:border-orange-200'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span
-                      className={`font-medium ${formData.financingPreference === opt ? 'text-orange-700' : 'text-gray-800'}`}
+                      className={`font-medium ${formData.financingPreference === opt ? 'text-orange-700' : 'text-[var(--brand-text)]'}`}
                     >
                       {FINANCING_LABELS[opt]}
                     </span>
@@ -239,11 +251,11 @@ export default function QuoteRequestPage() {
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                         formData.financingPreference === opt
                           ? 'border-orange-500 bg-orange-500'
-                          : 'border-gray-300'
+                          : 'border-[var(--brand-border)]'
                       }`}
                     >
                       {formData.financingPreference === opt && (
-                        <div className="w-2 h-2 bg-white rounded-full" />
+                        <div className="w-2 h-2 bg-[var(--brand-surface)] rounded-full" />
                       )}
                     </div>
                   </div>
@@ -257,13 +269,17 @@ export default function QuoteRequestPage() {
         {step === 4 && (
           <>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">{t('additional.title')}</h2>
-              <p className="text-gray-500 text-sm">{t('additional.description')}</p>
+              <h2 className="text-xl font-bold text-[var(--brand-text)] mb-1">
+                {t('additional.title')}
+              </h2>
+              <p className="text-[var(--brand-text-secondary)] text-sm">
+                {t('additional.description')}
+              </p>
             </div>
 
             {/* Max quotes slider */}
-            <div className="bg-white rounded-2xl p-4 border border-gray-200">
-              <label className="block font-medium text-gray-800 mb-3">
+            <div className="bg-[var(--brand-surface)] rounded-2xl p-4 border border-[var(--brand-border)]">
+              <label className="block font-medium text-[var(--brand-text)] mb-3">
                 {t('additional.maxQuotesLabel')}{' '}
                 <span className="text-orange-600">
                   {formData.maxQuotes} {t('additional.vendorsUnit')}
@@ -278,7 +294,7 @@ export default function QuoteRequestPage() {
                 onChange={(e) => update('maxQuotes', parseInt(e.target.value))}
                 className="w-full accent-orange-500"
               />
-              <div className="flex justify-between text-xs text-gray-400 mt-1">
+              <div className="flex justify-between text-xs text-[var(--brand-text-secondary)] mt-1">
                 <span>3 {t('additional.vendorsUnit')}</span>
                 <span>4 {t('additional.vendorsUnit')}</span>
                 <span>5 {t('additional.vendorsUnit')}</span>
@@ -286,8 +302,8 @@ export default function QuoteRequestPage() {
             </div>
 
             {/* Contact preference */}
-            <div className="bg-white rounded-2xl p-4 border border-gray-200">
-              <label className="block font-medium text-gray-800 mb-3">
+            <div className="bg-[var(--brand-surface)] rounded-2xl p-4 border border-[var(--brand-border)]">
+              <label className="block font-medium text-[var(--brand-text)] mb-3">
                 {t('additional.contactPreferenceLabel')}
               </label>
               <div className="flex gap-3">
@@ -302,7 +318,7 @@ export default function QuoteRequestPage() {
                     className={`flex-1 py-2 rounded-xl border-2 text-sm font-medium transition-all ${
                       formData.contactPreference === opt.value
                         ? 'border-orange-500 bg-orange-50 text-orange-700'
-                        : 'border-gray-200 text-gray-600'
+                        : 'border-[var(--brand-border)] text-[var(--brand-text-secondary)]'
                     }`}
                   >
                     {opt.label}
@@ -312,10 +328,10 @@ export default function QuoteRequestPage() {
             </div>
 
             {/* Additional requirements */}
-            <div className="bg-white rounded-2xl p-4 border border-gray-200">
-              <label className="block font-medium text-gray-800 mb-2">
+            <div className="bg-[var(--brand-surface)] rounded-2xl p-4 border border-[var(--brand-border)]">
+              <label className="block font-medium text-[var(--brand-text)] mb-2">
                 {t('additional.specialRequirements')}{' '}
-                <span className="text-gray-400 font-normal text-sm">
+                <span className="text-[var(--brand-text-secondary)] font-normal text-sm">
                   ({t('additional.optional')})
                 </span>
               </label>
@@ -324,15 +340,15 @@ export default function QuoteRequestPage() {
                 onChange={(e) => update('additionalRequirements', e.target.value.slice(0, 500))}
                 rows={4}
                 placeholder={t('additional.requirementsPlaceholder')}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
+                className="w-full border border-[var(--brand-border)] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
               />
-              <p className="text-xs text-gray-400 text-right mt-1">
+              <p className="text-xs text-[var(--brand-text-secondary)] text-right mt-1">
                 {formData.additionalRequirements?.length || 0}/500
               </p>
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700">
                 {error}
               </div>
             )}
@@ -341,7 +357,7 @@ export default function QuoteRequestPage() {
       </div>
 
       {/* Fixed bottom button */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-4 safe-bottom">
+      <div className="fixed bottom-0 left-0 right-0 bg-[var(--brand-surface)] border-t border-[var(--brand-border)] px-4 py-4 safe-bottom">
         <div className="max-w-lg mx-auto">
           {step < totalSteps ? (
             <button

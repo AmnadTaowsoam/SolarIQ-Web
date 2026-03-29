@@ -55,7 +55,7 @@ export function DealProgressTimeline({
                     ? 'bg-green-500 text-white'
                     : isCurrent
                       ? 'bg-orange-500 text-white ring-4 ring-orange-100'
-                      : 'bg-gray-200 text-gray-400'
+                      : 'bg-[var(--brand-border)] text-[var(--brand-text-secondary)]'
                 }`}
               >
                 {isCompleted ? (
@@ -84,7 +84,7 @@ export function DealProgressTimeline({
               {index < DEAL_STAGE_ORDER.length - 1 && (
                 <div
                   className={`w-0.5 flex-1 min-h-[1.5rem] transition-colors ${
-                    isCompleted ? 'bg-green-300' : 'bg-gray-200'
+                    isCompleted ? 'bg-green-300' : 'bg-[var(--brand-border)]'
                   }`}
                 />
               )}
@@ -100,7 +100,7 @@ export function DealProgressTimeline({
                         ? 'text-green-700'
                         : isCurrent
                           ? 'text-orange-700'
-                          : 'text-gray-400'
+                          : 'text-[var(--brand-text-secondary)]'
                     }`}
                   >
                     {DEAL_STAGE_LABELS[stage]}
@@ -108,7 +108,7 @@ export function DealProgressTimeline({
 
                   {/* Dates */}
                   {isCompleted && milestone?.completedAt && (
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-[var(--brand-text-secondary)] mt-0.5">
                       {t('completedOn')}: {formatDate(milestone.completedAt)}
                     </p>
                   )}
@@ -118,14 +118,14 @@ export function DealProgressTimeline({
                     </p>
                   )}
                   {isPending && milestone?.plannedDate && (
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-[var(--brand-text-secondary)] mt-0.5">
                       {formatDate(milestone.plannedDate)}
                     </p>
                   )}
 
                   {/* Notes */}
                   {isCompleted && milestone?.notes && (
-                    <p className="text-xs text-gray-600 mt-1 bg-gray-50 rounded px-2 py-1">
+                    <p className="text-xs text-[var(--brand-text-secondary)] mt-1 bg-[var(--brand-background)] rounded px-2 py-1">
                       {milestone.notes}
                     </p>
                   )}
@@ -139,7 +139,7 @@ export function DealProgressTimeline({
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded"
+                          className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 bg-blue-500/10 px-2 py-1 rounded"
                         >
                           <svg
                             className="w-3 h-3"

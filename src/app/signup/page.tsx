@@ -71,7 +71,7 @@ function getPasswordStrengthColor(strength: number): string {
     case 4:
       return 'bg-green-500'
     default:
-      return 'bg-gray-300'
+      return 'bg-[var(--brand-border)]'
   }
 }
 
@@ -366,9 +366,9 @@ export default function SignupPage() {
           <Link href={homePath} className="inline-block">
             <h1 className="text-3xl font-bold text-blue-600">SolarIQ</h1>
           </Link>
-          <p className="mt-2 text-gray-600">{t('subtitle')}</p>
+          <p className="mt-2 text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
           {isTrial && (
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2">
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-green-500/10 border border-green-200 px-4 py-2">
               <span className="flex h-2 w-2 rounded-full bg-green-500" />
               <span className="text-sm font-semibold text-green-700">{t('trialBadge')}</span>
             </div>
@@ -408,16 +408,18 @@ export default function SignupPage() {
           {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
+              <div className="w-full border-t border-[var(--brand-border)]" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">{t('or')}</span>
+              <span className="px-2 bg-[var(--brand-surface)] text-[var(--brand-text-secondary)]">
+                {t('or')}
+              </span>
             </div>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-600 text-sm">
               {error}
             </div>
           )}
@@ -426,7 +428,10 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-[var(--brand-text)] mb-1"
+              >
                 {t('emailLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
@@ -443,7 +448,10 @@ export default function SignupPage() {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-[var(--brand-text)] mb-1"
+              >
                 {t('passwordLabel')} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -459,7 +467,7 @@ export default function SignupPage() {
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -499,12 +507,12 @@ export default function SignupPage() {
                         className={`h-1 flex-1 rounded ${
                           i < passwordStrength
                             ? getPasswordStrengthColor(passwordStrength)
-                            : 'bg-gray-200'
+                            : 'bg-[var(--brand-border)]'
                         }`}
                       />
                     ))}
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-[var(--brand-text-secondary)]">
                     {t('strength.label')}{' '}
                     <span
                       className={`font-medium ${
@@ -528,7 +536,7 @@ export default function SignupPage() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-[var(--brand-text)] mb-1"
               >
                 {t('confirmPasswordLabel')} <span className="text-red-500">*</span>
               </label>
@@ -545,7 +553,7 @@ export default function SignupPage() {
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
@@ -579,7 +587,10 @@ export default function SignupPage() {
 
             {/* Company Name */}
             <div>
-              <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="companyName"
+                className="block text-sm font-medium text-[var(--brand-text)] mb-1"
+              >
                 {t('companyLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
@@ -596,7 +607,10 @@ export default function SignupPage() {
 
             {/* Province */}
             <div>
-              <label htmlFor="province" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="province"
+                className="block text-sm font-medium text-[var(--brand-text)] mb-1"
+              >
                 {t('provinceLabel')} <span className="text-red-500">*</span>
               </label>
               <select
@@ -606,7 +620,9 @@ export default function SignupPage() {
                 onBlur={() => handleBlur('province')}
                 disabled={isLoading || googleLoading}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  touched.province && formErrors.province ? 'border-red-500' : 'border-gray-300'
+                  touched.province && formErrors.province
+                    ? 'border-red-500'
+                    : 'border-[var(--brand-border)]'
                 }`}
               >
                 <option value="">{t('provincePlaceholder')}</option>
@@ -623,7 +639,10 @@ export default function SignupPage() {
 
             {/* Phone */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-[var(--brand-text)] mb-1"
+              >
                 {t('phoneLabel')} <span className="text-red-500">*</span>
               </label>
               <Input
@@ -646,9 +665,9 @@ export default function SignupPage() {
                   checked={formData.acceptTerms}
                   onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
                   disabled={isLoading || googleLoading}
-                  className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="mt-1 h-4 w-4 text-blue-600 border-[var(--brand-border)] rounded focus:ring-blue-500"
                 />
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-[var(--brand-text-secondary)]">
                   {t('acceptPrefix')}{' '}
                   <Link href="/terms" className="text-blue-600 hover:underline" target="_blank">
                     {t('termsLink')}
@@ -666,9 +685,9 @@ export default function SignupPage() {
                   checked={formData.acceptPdpa}
                   onChange={(e) => handleInputChange('acceptPdpa', e.target.checked)}
                   disabled={isLoading || googleLoading}
-                  className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="mt-1 h-4 w-4 text-blue-600 border-[var(--brand-border)] rounded focus:ring-blue-500"
                 />
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-[var(--brand-text-secondary)]">
                   {t('acceptPrefix')}{' '}
                   <Link
                     href={privacyPath}
@@ -692,7 +711,7 @@ export default function SignupPage() {
           </form>
 
           {/* Login Link */}
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-center text-sm text-[var(--brand-text-secondary)]">
             {t('haveAccount')}{' '}
             <Link href={loginPath} className="text-blue-600 hover:underline">
               {t('loginLink')}
@@ -701,15 +720,15 @@ export default function SignupPage() {
         </Card>
 
         {/* Trial Info */}
-        <div className="mt-6 text-center text-sm text-gray-500">
+        <div className="mt-6 text-center text-sm text-[var(--brand-text-secondary)]">
           {isTrial ? (
             <>
               <p className="font-medium text-green-700">{t('trialFreeLabel')}</p>
               <p className="mt-1">{t('trialNoCard')}</p>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-[var(--brand-text-secondary)]">
                 <strong>{t('trialAfterLabel')}</strong> {t('trialAfterDetail')}
               </p>
-              <p className="mt-1 text-xs text-gray-400">{t('trialNote')}</p>
+              <p className="mt-1 text-xs text-[var(--brand-text-secondary)]">{t('trialNote')}</p>
             </>
           ) : (
             <>

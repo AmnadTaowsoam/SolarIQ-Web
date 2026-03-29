@@ -28,15 +28,15 @@ function NumberInput({
   readOnly?: boolean
 }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+    <div className="flex items-center justify-between py-2 border-b border-[var(--brand-border)] last:border-0">
       <div>
-        <span className="text-sm text-gray-700">{label}</span>
-        {hint && <p className="text-xs text-gray-400">{hint}</p>}
+        <span className="text-sm text-[var(--brand-text)]">{label}</span>
+        {hint && <p className="text-xs text-[var(--brand-text-secondary)]">{hint}</p>}
       </div>
       <div className="flex items-center gap-1">
-        <span className="text-sm text-gray-500">฿</span>
+        <span className="text-sm text-[var(--brand-text-secondary)]">฿</span>
         {readOnly ? (
-          <span className="text-sm font-semibold text-gray-900 w-28 text-right">
+          <span className="text-sm font-semibold text-[var(--brand-text)] w-28 text-right">
             {value.toLocaleString('en-US')}
           </span>
         ) : (
@@ -44,7 +44,7 @@ function NumberInput({
             type="number"
             value={value || ''}
             onChange={(e) => onChange?.(parseFloat(e.target.value) || 0)}
-            className="w-28 text-right text-sm font-medium border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-28 text-right text-sm font-medium border border-[var(--brand-border)] rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-orange-500"
             min={0}
           />
         )}
@@ -118,8 +118,8 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
   return (
     <div className="space-y-4">
       {/* Equipment Costs */}
-      <div className="bg-gray-50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('equipment')}</h4>
+      <div className="bg-[var(--brand-background)] rounded-xl p-4">
+        <h4 className="text-sm font-semibold text-[var(--brand-text)] mb-2">{t('equipment')}</h4>
         <NumberInput
           label={t('equipment')}
           value={pricing.panelCost}
@@ -145,17 +145,19 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
           value={pricing.cableAndAccessories}
           onChange={update('cableAndAccessories')}
         />
-        <div className="flex justify-between pt-2 mt-1 border-t border-gray-200">
-          <span className="text-xs font-semibold text-gray-600">{t('equipment')}</span>
-          <span className="text-xs font-bold text-gray-800">
+        <div className="flex justify-between pt-2 mt-1 border-t border-[var(--brand-border)]">
+          <span className="text-xs font-semibold text-[var(--brand-text-secondary)]">
+            {t('equipment')}
+          </span>
+          <span className="text-xs font-bold text-[var(--brand-text)]">
             {formatThb(pricing.equipmentCost)}
           </span>
         </div>
       </div>
 
       {/* Installation Costs */}
-      <div className="bg-gray-50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('installation')}</h4>
+      <div className="bg-[var(--brand-background)] rounded-xl p-4">
+        <h4 className="text-sm font-semibold text-[var(--brand-text)] mb-2">{t('installation')}</h4>
         <NumberInput
           label={t('installation')}
           value={pricing.laborCost}
@@ -166,17 +168,19 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
           value={pricing.scaffoldingCost || 0}
           onChange={update('scaffoldingCost')}
         />
-        <div className="flex justify-between pt-2 mt-1 border-t border-gray-200">
-          <span className="text-xs font-semibold text-gray-600">{t('installation')}</span>
-          <span className="text-xs font-bold text-gray-800">
+        <div className="flex justify-between pt-2 mt-1 border-t border-[var(--brand-border)]">
+          <span className="text-xs font-semibold text-[var(--brand-text-secondary)]">
+            {t('installation')}
+          </span>
+          <span className="text-xs font-bold text-[var(--brand-text)]">
             {formatThb(pricing.installationCost)}
           </span>
         </div>
       </div>
 
       {/* Other Costs */}
-      <div className="bg-gray-50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('accessories')}</h4>
+      <div className="bg-[var(--brand-background)] rounded-xl p-4">
+        <h4 className="text-sm font-semibold text-[var(--brand-text)] mb-2">{t('accessories')}</h4>
         <NumberInput
           label={t('accessories')}
           value={pricing.permitCost}
@@ -190,8 +194,8 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
       </div>
 
       {/* Discount */}
-      <div className="bg-yellow-50 rounded-xl p-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">{t('breakdown')}</h4>
+      <div className="bg-yellow-500/10 rounded-xl p-4">
+        <h4 className="text-sm font-semibold text-[var(--brand-text)] mb-2">{t('breakdown')}</h4>
         <NumberInput
           label={t('breakdown')}
           value={pricing.discountAmount}
@@ -203,7 +207,7 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
             placeholder="เหตุผลส่วนลด (เช่น ส่วนลดพิเศษลูกค้าใหม่)"
             value={pricing.discountReason || ''}
             onChange={(e) => onChange({ ...pricing, discountReason: e.target.value })}
-            className="w-full text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full text-sm border border-[var(--brand-border)] rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
       </div>
@@ -212,11 +216,11 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
       <div className="bg-orange-50 rounded-xl p-4 border border-orange-200">
         <h4 className="text-sm font-semibold text-orange-800 mb-3">{t('total')}</h4>
         <div className="space-y-1.5 text-sm">
-          <div className="flex justify-between text-gray-700">
+          <div className="flex justify-between text-[var(--brand-text)]">
             <span>{t('estimatedCost')}</span>
             <span className="font-medium">{formatThb(pricing.subtotal)}</span>
           </div>
-          <div className="flex justify-between text-gray-500 text-xs">
+          <div className="flex justify-between text-[var(--brand-text-secondary)] text-xs">
             <span>
               {t('vat')} {pricing.vatRate}%
             </span>
@@ -227,7 +231,7 @@ export function PricingCalculator({ pricing, onChange, systemSizeKw }: PricingCa
             <span>{formatThb(pricing.totalPrice)}</span>
           </div>
           {pricing.pricePerKw > 0 && (
-            <div className="flex justify-between text-xs text-gray-500">
+            <div className="flex justify-between text-xs text-[var(--brand-text-secondary)]">
               <span>{t('kWp')}</span>
               <span>
                 {formatThb(pricing.pricePerKw)}/{t('kWp')}

@@ -11,7 +11,7 @@ import { apiClient } from '@/lib/api'
 
 const TYPE_COLORS: Record<string, string> = {
   maintenance: 'bg-blue-500',
-  service_request: 'bg-red-500',
+  service_request: 'bg-red-500/100',
   installation: 'bg-green-500',
 }
 
@@ -109,8 +109,8 @@ export default function CalendarPage() {
       <div className="max-w-7xl space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="mt-0.5 text-sm text-gray-500">{t('subtitle')}</p>
+            <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="mt-0.5 text-sm text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
           </div>
           <button
             onClick={() => setShowAddModal(true)}
@@ -133,10 +133,13 @@ export default function CalendarPage() {
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Calendar Grid */}
           <div className="lg:col-span-2">
-            <div className="rounded-xl border bg-white p-4">
+            <div className="rounded-xl border bg-[var(--brand-surface)] p-4">
               {/* Month Navigation */}
               <div className="mb-4 flex items-center justify-between">
-                <button onClick={prevMonth} className="rounded-lg p-2 hover:bg-gray-100">
+                <button
+                  onClick={prevMonth}
+                  className="rounded-lg p-2 hover:bg-[var(--brand-primary-light)]"
+                >
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
@@ -149,7 +152,10 @@ export default function CalendarPage() {
                 <h2 className="text-lg font-semibold">
                   {MONTHS[currentMonth]} {currentYear + 543}
                 </h2>
-                <button onClick={nextMonth} className="rounded-lg p-2 hover:bg-gray-100">
+                <button
+                  onClick={nextMonth}
+                  className="rounded-lg p-2 hover:bg-[var(--brand-primary-light)]"
+                >
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
@@ -162,7 +168,7 @@ export default function CalendarPage() {
               </div>
 
               {/* Day headers */}
-              <div className="mb-2 grid grid-cols-7 text-center text-xs font-medium text-gray-500">
+              <div className="mb-2 grid grid-cols-7 text-center text-xs font-medium text-[var(--brand-text-secondary)]">
                 {DAYS.map((d) => (
                   <div key={d}>{d}</div>
                 ))}
@@ -189,7 +195,7 @@ export default function CalendarPage() {
                           ? 'bg-amber-100 ring-2 ring-amber-400'
                           : isToday
                             ? 'bg-amber-50 font-bold text-amber-700'
-                            : 'hover:bg-gray-50'
+                            : 'hover:bg-[var(--brand-primary-light)]'
                       }`}
                     >
                       <span
@@ -215,8 +221,8 @@ export default function CalendarPage() {
           </div>
 
           {/* Event List */}
-          <div className="rounded-xl border bg-white p-4">
-            <h3 className="mb-3 font-semibold text-gray-900">
+          <div className="rounded-xl border bg-[var(--brand-surface)] p-4">
+            <h3 className="mb-3 font-semibold text-[var(--brand-text)]">
               {selectedDate
                 ? t('eventsForDate', { date: new Date(selectedDate).toLocaleDateString('th-TH') })
                 : t('selectDatePrompt')}
@@ -227,22 +233,26 @@ export default function CalendarPage() {
                   <Link
                     key={event.id}
                     href={event.href}
-                    className="block rounded-lg border p-3 transition-colors hover:bg-gray-50"
+                    className="block rounded-lg border p-3 transition-colors hover:bg-[var(--brand-primary-light)]"
                   >
                     <div className="flex items-start gap-2">
                       <span
                         className={`mt-1 h-2.5 w-2.5 flex-shrink-0 rounded-full ${TYPE_COLORS[event.type]}`}
                       />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{event.title}</p>
-                        <p className="text-xs text-gray-500">{event.customerName}</p>
+                        <p className="text-sm font-medium text-[var(--brand-text)]">
+                          {event.title}
+                        </p>
+                        <p className="text-xs text-[var(--brand-text-secondary)]">
+                          {event.customerName}
+                        </p>
                         <span
                           className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs ${
                             event.priority === 'urgent'
                               ? 'bg-red-100 text-red-700'
                               : event.priority === 'high'
                                 ? 'bg-orange-100 text-orange-700'
-                                : 'bg-gray-100 text-gray-600'
+                                : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
                           }`}
                         >
                           {event.status === 'overdue' ? t('overdue') : event.status}
@@ -253,21 +263,21 @@ export default function CalendarPage() {
                 ))}
               </div>
             ) : selectedDate ? (
-              <p className="text-sm text-gray-500">{t('noEventsToday')}</p>
+              <p className="text-sm text-[var(--brand-text-secondary)]">{t('noEventsToday')}</p>
             ) : (
               <div className="space-y-2">
-                <p className="text-sm text-gray-500">{t('upcomingEvents')}</p>
+                <p className="text-sm text-[var(--brand-text-secondary)]">{t('upcomingEvents')}</p>
                 {events.slice(0, 5).map((event) => (
                   <Link
                     key={event.id}
                     href={event.href}
-                    className="block rounded-lg border p-2 text-sm hover:bg-gray-50"
+                    className="block rounded-lg border p-2 text-sm hover:bg-[var(--brand-primary-light)]"
                   >
                     <div className="flex items-center gap-2">
                       <span className={`h-2 w-2 rounded-full ${TYPE_COLORS[event.type]}`} />
                       <span className="font-medium">{event.title}</span>
                     </div>
-                    <p className="ml-4 text-xs text-gray-500">
+                    <p className="ml-4 text-xs text-[var(--brand-text-secondary)]">
                       {event.customerName} • {new Date(event.date).toLocaleDateString('th-TH')}
                     </p>
                   </Link>
@@ -337,16 +347,16 @@ function AddActivityModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">{t('title')}</h2>
+      <div className="w-full max-w-md rounded-2xl bg-[var(--brand-surface)] p-6 shadow-xl">
+        <h2 className="text-lg font-bold text-[var(--brand-text)] mb-4">{t('title')}</h2>
         {error && (
-          <div className="mb-3 rounded-lg bg-red-50 border border-red-200 p-2 text-sm text-red-700">
+          <div className="mb-3 rounded-lg bg-red-500/10 border border-red-500/20 p-2 text-sm text-red-700">
             {error}
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('fields.activityName')} *
             </label>
             <input
@@ -355,18 +365,18 @@ function AddActivityModal({
               value={form.title}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+              className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('fields.type')}
             </label>
             <select
               name="type"
               value={form.type}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+              className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
             >
               {(['appointment', 'survey', 'installation', 'maintenance', 'followup'] as const).map(
                 (tp) => (
@@ -379,7 +389,7 @@ function AddActivityModal({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('fields.date')} *
               </label>
               <input
@@ -388,11 +398,11 @@ function AddActivityModal({
                 value={form.date}
                 onChange={handleChange}
                 required
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
                 {t('fields.time')}
               </label>
               <input
@@ -400,12 +410,12 @@ function AddActivityModal({
                 name="time"
                 value={form.time}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+                className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('fields.customerName')}
             </label>
             <input
@@ -413,11 +423,11 @@ function AddActivityModal({
               name="customer_name"
               value={form.customer_name}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
+              className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {t('fields.notes')}
             </label>
             <textarea
@@ -425,14 +435,14 @@ function AddActivityModal({
               value={form.notes}
               onChange={handleChange}
               rows={2}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500 resize-none"
+              className="w-full rounded-lg border border-[var(--brand-border)] px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500 resize-none"
             />
           </div>
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-gray-300 bg-white py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="flex-1 rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] py-2.5 text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-primary-light)]"
             >
               {t('cancel')}
             </button>

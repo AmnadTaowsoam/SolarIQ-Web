@@ -135,9 +135,9 @@ export function CriticalCSS() {
           .font-bold { font-weight: 700; }
           .font-semibold { font-weight: 600; }
           .font-medium { font-weight: 500; }
-          .text-gray-900 { color: #111827; }
-          .text-gray-600 { color: #4b5563; }
-          .text-gray-500 { color: #6b7280; }
+          .text-[var(--brand-text)] { color: #111827; }
+          .text-[var(--brand-text-secondary)] { color: #4b5563; }
+          .text-[var(--brand-text-secondary)] { color: #6b7280; }
           .text-white { color: white; }
           
           /* Critical width utilities */
@@ -179,9 +179,9 @@ export function CriticalCSS() {
             color: #f8fafc;
           }
           
-          .dark .text-gray-900 { color: #f8fafc; }
-          .dark .text-gray-600 { color: #94a3b8; }
-          .dark .text-gray-500 { color: #64748b; }
+          .dark .text-[var(--brand-text)] { color: #f8fafc; }
+          .dark .text-[var(--brand-text-secondary)] { color: #94a3b8; }
+          .dark .text-[var(--brand-text-secondary)] { color: #64748b; }
         `,
       }}
     />

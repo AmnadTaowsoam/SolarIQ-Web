@@ -6,9 +6,21 @@ import { api } from '@/lib/api'
 import { API_ENDPOINTS } from '@/lib/constants'
 
 const CATEGORIES = [
-  { value: 'accuracy', label: '\u0E04\u0E27\u0E32\u0E21\u0E41\u0E21\u0E48\u0E19\u0E22\u0E33\u0E02\u0E2D\u0E07\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25' },
-  { value: 'cost', label: '\u0E04\u0E48\u0E32\u0E43\u0E0A\u0E49\u0E08\u0E48\u0E32\u0E22\u0E44\u0E21\u0E48\u0E15\u0E23\u0E07' },
-  { value: 'roof', label: '\u0E1E\u0E37\u0E49\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32\u0E1C\u0E34\u0E14' },
+  {
+    value: 'accuracy',
+    label:
+      '\u0E04\u0E27\u0E32\u0E21\u0E41\u0E21\u0E48\u0E19\u0E22\u0E33\u0E02\u0E2D\u0E07\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25',
+  },
+  {
+    value: 'cost',
+    label:
+      '\u0E04\u0E48\u0E32\u0E43\u0E0A\u0E49\u0E08\u0E48\u0E32\u0E22\u0E44\u0E21\u0E48\u0E15\u0E23\u0E07',
+  },
+  {
+    value: 'roof',
+    label:
+      '\u0E1E\u0E37\u0E49\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E25\u0E31\u0E07\u0E04\u0E32\u0E1C\u0E34\u0E14',
+  },
   { value: 'other', label: '\u0E2D\u0E37\u0E48\u0E19\u0E46' },
 ]
 
@@ -22,7 +34,9 @@ export function FeedbackButton() {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleSubmit = async () => {
-    if (rating === 0) return
+    if (rating === 0) {
+      return
+    }
 
     setIsSubmitting(true)
     try {
@@ -69,7 +83,9 @@ export function FeedbackButton() {
                 {'\u0E02\u0E2D\u0E1A\u0E04\u0E38\u0E13!'}
               </div>
               <div className="text-sm text-[var(--brand-text-secondary)] mt-1">
-                {'\u0E02\u0E49\u0E2D\u0E40\u0E2A\u0E19\u0E2D\u0E41\u0E19\u0E30\u0E02\u0E2D\u0E07\u0E04\u0E38\u0E13\u0E21\u0E35\u0E04\u0E38\u0E13\u0E04\u0E48\u0E32\u0E21\u0E32\u0E01'}
+                {
+                  '\u0E02\u0E49\u0E2D\u0E40\u0E2A\u0E19\u0E2D\u0E41\u0E19\u0E30\u0E02\u0E2D\u0E07\u0E04\u0E38\u0E13\u0E21\u0E35\u0E04\u0E38\u0E13\u0E04\u0E48\u0E32\u0E21\u0E32\u0E01'
+                }
               </div>
             </div>
           ) : (
@@ -77,10 +93,14 @@ export function FeedbackButton() {
               {/* Header */}
               <div className="px-4 py-3 border-b border-[var(--brand-border)] bg-[var(--brand-primary)]/5">
                 <div className="font-bold text-[var(--brand-text)]">
-                  {'\u0E43\u0E2B\u0E49\u0E04\u0E30\u0E41\u0E19\u0E19\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C'}
+                  {
+                    '\u0E43\u0E2B\u0E49\u0E04\u0E30\u0E41\u0E19\u0E19\u0E01\u0E32\u0E23\u0E27\u0E34\u0E40\u0E04\u0E23\u0E32\u0E30\u0E2B\u0E4C'
+                  }
                 </div>
                 <div className="text-xs text-[var(--brand-text-secondary)]">
-                  {'\u0E0A\u0E48\u0E27\u0E22\u0E40\u0E23\u0E32\u0E1B\u0E23\u0E31\u0E1A\u0E1B\u0E23\u0E38\u0E07\u0E43\u0E2B\u0E49\u0E14\u0E35\u0E02\u0E36\u0E49\u0E19'}
+                  {
+                    '\u0E0A\u0E48\u0E27\u0E22\u0E40\u0E23\u0E32\u0E1B\u0E23\u0E31\u0E1A\u0E1B\u0E23\u0E38\u0E07\u0E43\u0E2B\u0E49\u0E14\u0E35\u0E02\u0E36\u0E49\u0E19'
+                  }
                 </div>
               </div>
 
@@ -104,7 +124,7 @@ export function FeedbackButton() {
                           className={`w-7 h-7 ${
                             star <= (hoverRating || rating)
                               ? 'text-yellow-400 fill-yellow-400'
-                              : 'text-gray-300'
+                              : 'text-[var(--brand-text-secondary)]'
                           } transition-colors`}
                         />
                       </button>
@@ -122,9 +142,15 @@ export function FeedbackButton() {
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full px-3 py-1.5 text-sm rounded-[var(--brand-radius)] border border-[var(--brand-border)] bg-[var(--brand-surface)] text-[var(--brand-text)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]"
                   >
-                    <option value="">{'\u0E40\u0E25\u0E37\u0E2D\u0E01\u0E2B\u0E21\u0E27\u0E14\u0E2B\u0E21\u0E39\u0E48'}</option>
+                    <option value="">
+                      {
+                        '\u0E40\u0E25\u0E37\u0E2D\u0E01\u0E2B\u0E21\u0E27\u0E14\u0E2B\u0E21\u0E39\u0E48'
+                      }
+                    </option>
                     {CATEGORIES.map((c) => (
-                      <option key={c.value} value={c.value}>{c.label}</option>
+                      <option key={c.value} value={c.value}>
+                        {c.label}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -132,13 +158,17 @@ export function FeedbackButton() {
                 {/* Comment */}
                 <div>
                   <label className="text-sm font-medium text-[var(--brand-text)] block mb-1">
-                    {'\u0E04\u0E27\u0E32\u0E21\u0E04\u0E34\u0E14\u0E40\u0E2B\u0E47\u0E19\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E40\u0E15\u0E34\u0E21'}
+                    {
+                      '\u0E04\u0E27\u0E32\u0E21\u0E04\u0E34\u0E14\u0E40\u0E2B\u0E47\u0E19\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E40\u0E15\u0E34\u0E21'
+                    }
                   </label>
                   <textarea
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     rows={3}
-                    placeholder={'\u0E1A\u0E2D\u0E01\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E17\u0E35\u0E48\u0E04\u0E38\u0E13\u0E2D\u0E22\u0E32\u0E01\u0E1B\u0E23\u0E31\u0E1A\u0E1B\u0E23\u0E38\u0E07...'}
+                    placeholder={
+                      '\u0E1A\u0E2D\u0E01\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E17\u0E35\u0E48\u0E04\u0E38\u0E13\u0E2D\u0E22\u0E32\u0E01\u0E1B\u0E23\u0E31\u0E1A\u0E1B\u0E23\u0E38\u0E07...'
+                    }
                     className="w-full px-3 py-1.5 text-sm rounded-[var(--brand-radius)] border border-[var(--brand-border)] bg-[var(--brand-surface)] text-[var(--brand-text)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] resize-none"
                   />
                 </div>
@@ -155,7 +185,9 @@ export function FeedbackButton() {
                   ) : (
                     <Send className="w-4 h-4" />
                   )}
-                  {'\u0E2A\u0E48\u0E07\u0E04\u0E27\u0E32\u0E21\u0E04\u0E34\u0E14\u0E40\u0E2B\u0E47\u0E19'}
+                  {
+                    '\u0E2A\u0E48\u0E07\u0E04\u0E27\u0E32\u0E21\u0E04\u0E34\u0E14\u0E40\u0E2B\u0E47\u0E19'
+                  }
                 </button>
               </div>
             </>

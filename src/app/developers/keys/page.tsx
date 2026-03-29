@@ -74,14 +74,14 @@ function CreateKeyModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h3 className="text-base font-bold text-gray-900">
+      <div className="bg-[var(--brand-surface)] rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-6 border-b border-[var(--brand-border)]">
+          <h3 className="text-base font-bold text-[var(--brand-text)]">
             {createdKey ? t('keys.createModal.created') : t('keys.createModal.title')}
           </h3>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text-secondary)] hover:bg-[var(--brand-background)] rounded-lg transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -97,7 +97,7 @@ function CreateKeyModal({
         <div className="p-6 space-y-5">
           {createdKey ? (
             <div className="space-y-4">
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+              <div className="bg-green-500/10 border border-green-200 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <svg
                     className="w-5 h-5 text-green-600"
@@ -119,9 +119,11 @@ function CreateKeyModal({
                 <p className="text-xs text-green-700">{t('keys.createModal.copyWarning')}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-600 mb-2">API Key</p>
-                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
-                  <code className="flex-1 text-xs font-mono text-gray-800 break-all">
+                <p className="text-xs font-semibold text-[var(--brand-text-secondary)] mb-2">
+                  API Key
+                </p>
+                <div className="flex items-center gap-2 bg-[var(--brand-background)] border border-[var(--brand-border)] rounded-xl px-4 py-3">
+                  <code className="flex-1 text-xs font-mono text-[var(--brand-text)] break-all">
                     {createdKey.fullKey}
                   </code>
                   <button
@@ -129,7 +131,7 @@ function CreateKeyModal({
                     className={cn(
                       'flex-shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors',
                       copied
-                        ? 'bg-green-100 text-green-700'
+                        ? 'bg-green-500/10 text-green-700'
                         : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                     )}
                   >
@@ -147,7 +149,7 @@ function CreateKeyModal({
           ) : (
             <>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)] mb-2">
                   {t('keys.createModal.keyName')}
                 </label>
                 <input
@@ -155,11 +157,11 @@ function CreateKeyModal({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t('keys.createModal.keyNamePlaceholder')}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  className="w-full px-4 py-2.5 border border-[var(--brand-border)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)] mb-2">
                   {t('keys.createModal.environment')}
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -172,8 +174,8 @@ function CreateKeyModal({
                         environment === env
                           ? env === 'live'
                             ? 'border-orange-500 bg-orange-50 text-orange-700'
-                            : 'border-blue-500 bg-blue-50 text-blue-700'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                            : 'border-blue-500 bg-blue-500/10 text-blue-700'
+                          : 'border-[var(--brand-border)] text-[var(--brand-text-secondary)] hover:border-[var(--brand-border)]'
                       )}
                     >
                       <div className="flex items-center gap-2 justify-center">
@@ -195,7 +197,7 @@ function CreateKeyModal({
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)] mb-2">
                   {t('keys.createModal.permissions')}
                 </label>
                 <div className="space-y-2">
@@ -206,7 +208,7 @@ function CreateKeyModal({
                           'w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors',
                           permissions.includes(perm.id)
                             ? 'bg-orange-500 border-orange-500'
-                            : 'border-gray-300 group-hover:border-orange-400'
+                            : 'border-[var(--brand-border)] group-hover:border-orange-400'
                         )}
                         onClick={() => togglePermission(perm.id)}
                       >
@@ -227,12 +229,14 @@ function CreateKeyModal({
                         )}
                       </div>
                       <span
-                        className="text-sm text-gray-700"
+                        className="text-sm text-[var(--brand-text)]"
                         onClick={() => togglePermission(perm.id)}
                       >
                         {perm.label}
                       </span>
-                      <code className="text-xs text-gray-400 font-mono ml-auto">{perm.id}</code>
+                      <code className="text-xs text-[var(--brand-text-secondary)] font-mono ml-auto">
+                        {perm.id}
+                      </code>
                     </label>
                   ))}
                 </div>
@@ -240,7 +244,7 @@ function CreateKeyModal({
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={onClose}
-                  className="flex-1 py-3 border border-gray-200 text-sm font-medium text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-3 border border-[var(--brand-border)] text-sm font-medium text-[var(--brand-text)] rounded-xl hover:bg-[var(--brand-background)] transition-colors"
                 >
                   {tc('cancel')}
                 </button>
@@ -276,7 +280,7 @@ function RevokeConfirmModal({
   const tc = useTranslations('common')
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+      <div className="bg-[var(--brand-surface)] rounded-2xl shadow-xl w-full max-w-sm p-6">
         <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <svg
             className="w-6 h-6 text-red-600"
@@ -292,16 +296,16 @@ function RevokeConfirmModal({
             />
           </svg>
         </div>
-        <h3 className="text-base font-bold text-gray-900 text-center mb-2">
+        <h3 className="text-base font-bold text-[var(--brand-text)] text-center mb-2">
           {t('keys.revokeModal.title')}
         </h3>
-        <p className="text-sm text-gray-600 text-center mb-6">
+        <p className="text-sm text-[var(--brand-text-secondary)] text-center mb-6">
           {t('keys.revokeModal.confirmMessage', { name: keyName })}
         </p>
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 py-2.5 border border-gray-200 text-sm font-medium text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+            className="flex-1 py-2.5 border border-[var(--brand-border)] text-sm font-medium text-[var(--brand-text)] rounded-xl hover:bg-[var(--brand-background)] transition-colors"
           >
             {tc('cancel')}
           </button>
@@ -345,8 +349,8 @@ export default function ApiKeysPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-gray-900">{t('keys.title')}</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{t('keys.subtitle')}</p>
+          <h2 className="text-lg font-bold text-[var(--brand-text)]">{t('keys.title')}</h2>
+          <p className="text-sm text-[var(--brand-text-secondary)] mt-0.5">{t('keys.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -384,17 +388,17 @@ export default function ApiKeysPage() {
       )}
 
       {/* Keys table */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-[var(--brand-surface)] rounded-2xl border border-[var(--brand-border)] overflow-hidden">
         {isLoading ? (
           <div className="p-8 space-y-4">
             {[...Array(2)].map((_, i) => (
-              <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />
+              <div key={i} className="h-16 bg-[var(--brand-background)] rounded-xl animate-pulse" />
             ))}
           </div>
         ) : keys.length === 0 ? (
           <div className="py-16 text-center">
             <svg
-              className="w-12 h-12 text-gray-300 mx-auto mb-3"
+              className="w-12 h-12 text-[var(--brand-text-secondary)] mx-auto mb-3"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -406,7 +410,7 @@ export default function ApiKeysPage() {
                 d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
               />
             </svg>
-            <p className="text-sm text-gray-500">{t('keys.empty')}</p>
+            <p className="text-sm text-[var(--brand-text-secondary)]">{t('keys.empty')}</p>
             <button
               onClick={() => setShowCreateModal(true)}
               className="mt-3 text-sm text-orange-600 font-medium hover:text-orange-700"
@@ -417,7 +421,7 @@ export default function ApiKeysPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full">
-              <thead className="border-b border-gray-100">
+              <thead className="border-b border-[var(--brand-border)]">
                 <tr>
                   {[
                     t('keys.table.name'),
@@ -430,25 +434,28 @@ export default function ApiKeysPage() {
                   ].map((h) => (
                     <th
                       key={h}
-                      className="px-5 py-3.5 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider"
+                      className="px-5 py-3.5 text-left text-[11px] font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wider"
                     >
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-[var(--brand-border)]">
                 {keys.map((key) => (
-                  <tr key={key.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr
+                    key={key.id}
+                    className="hover:bg-[var(--brand-primary-light)]/50 transition-colors"
+                  >
                     <td className="px-5 py-4">
                       <div>
-                        <p className="text-sm font-semibold text-gray-900">{key.name}</p>
+                        <p className="text-sm font-semibold text-[var(--brand-text)]">{key.name}</p>
                         <span
                           className={cn(
                             'inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mt-0.5',
                             key.environment === 'live'
                               ? 'bg-orange-100 text-orange-700'
-                              : 'bg-blue-100 text-blue-700'
+                              : 'bg-blue-500/10 text-blue-700'
                           )}
                         >
                           {key.environment === 'live' ? 'Live' : 'Test'}
@@ -457,7 +464,7 @@ export default function ApiKeysPage() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
-                        <code className="text-xs font-mono text-gray-600 bg-gray-50 px-2 py-1 rounded-lg">
+                        <code className="text-xs font-mono text-[var(--brand-text-secondary)] bg-[var(--brand-background)] px-2 py-1 rounded-lg">
                           {key.keyMasked}
                         </code>
                         <button
@@ -465,8 +472,8 @@ export default function ApiKeysPage() {
                           className={cn(
                             'p-1.5 rounded-lg text-xs transition-colors',
                             copiedId === key.id
-                              ? 'bg-green-100 text-green-600'
-                              : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                              ? 'bg-green-500/10 text-green-600'
+                              : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]'
                           )}
                           title={t('keys.createModal.copy')}
                         >
@@ -502,10 +509,10 @@ export default function ApiKeysPage() {
                         </button>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-xs text-gray-500 whitespace-nowrap">
+                    <td className="px-5 py-4 text-xs text-[var(--brand-text-secondary)] whitespace-nowrap">
                       {format(new Date(key.createdAt), 'd MMM', { locale: th })}
                     </td>
-                    <td className="px-5 py-4 text-xs text-gray-500 whitespace-nowrap">
+                    <td className="px-5 py-4 text-xs text-[var(--brand-text-secondary)] whitespace-nowrap">
                       {key.lastUsedAt
                         ? formatDistanceToNow(new Date(key.lastUsedAt), {
                             addSuffix: true,
@@ -513,7 +520,7 @@ export default function ApiKeysPage() {
                           })
                         : t('keys.table.neverUsed')}
                     </td>
-                    <td className="px-5 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                    <td className="px-5 py-4 text-sm font-medium text-[var(--brand-text)] whitespace-nowrap">
                       {key.callCount.toLocaleString()}
                     </td>
                     <td className="px-5 py-4">
@@ -521,7 +528,7 @@ export default function ApiKeysPage() {
                         className={cn(
                           'inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full',
                           key.status === 'active'
-                            ? 'bg-green-100 text-green-700'
+                            ? 'bg-green-500/10 text-green-700'
                             : 'bg-red-100 text-red-700'
                         )}
                       >
@@ -540,7 +547,7 @@ export default function ApiKeysPage() {
                       {key.status === 'active' && (
                         <button
                           onClick={() => setRevokeTarget(key)}
-                          className="text-xs font-medium text-red-600 hover:text-red-700 px-3 py-1.5 border border-red-200 hover:border-red-300 rounded-lg transition-colors"
+                          className="text-xs font-medium text-red-600 hover:text-red-700 px-3 py-1.5 border border-red-500/20 hover:border-red-300 rounded-lg transition-colors"
                         >
                           {t('keys.revokeModal.revoke')}
                         </button>
@@ -555,7 +562,7 @@ export default function ApiKeysPage() {
       </div>
 
       {/* Security note */}
-      <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
+      <div className="bg-blue-500/10 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
         <svg
           className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"
           fill="none"

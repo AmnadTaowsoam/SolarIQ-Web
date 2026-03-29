@@ -49,7 +49,7 @@ export default function RevenueForecastPage() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center min-h-[50vh]">
-          <p className="text-gray-500">{t('unauthorized')}</p>
+          <p className="text-[var(--brand-text-secondary)]">{t('unauthorized')}</p>
         </div>
       </AppLayout>
     )
@@ -68,8 +68,8 @@ export default function RevenueForecastPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-            <p className="text-sm text-gray-500 mt-1">{t('subtitle')}</p>
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
           </div>
           <Link
             href="/admin/revenue"
@@ -99,7 +99,7 @@ export default function RevenueForecastPage() {
         <Card>
           <CardHeader title={t('assumptions')} />
           <CardBody>
-            <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
+            <ul className="list-disc pl-5 text-sm text-[var(--brand-text-secondary)] space-y-1">
               {(data?.assumptions || []).map((item) => (
                 <li key={item}>{item}</li>
               ))}

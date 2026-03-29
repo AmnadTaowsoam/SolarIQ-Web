@@ -124,7 +124,7 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
                 </div>
                 <div className="w-full h-3 rounded-full bg-gradient-to-r from-green-500 via-yellow-500 via-orange-500 to-purple-500 relative">
                   <div
-                    className="absolute top-0 w-1 h-3 bg-white border border-gray-800 rounded"
+                    className="absolute top-0 w-1 h-3 bg-[var(--brand-surface)] border border-gray-800 rounded"
                     style={{ left: `${aqiPercent}%` }}
                   />
                 </div>

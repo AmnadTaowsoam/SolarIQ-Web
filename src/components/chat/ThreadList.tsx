@@ -33,13 +33,13 @@ type FilterType = 'all' | 'unread' | 'mine'
 function getStatusColor(status: ThreadStatus): string {
   switch (status) {
     case ThreadStatus.ACTIVE:
-      return 'bg-green-100 text-green-800'
+      return 'bg-green-500/10 text-green-800'
     case ThreadStatus.ARCHIVED:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-[var(--brand-background)] text-[var(--brand-text)]'
     case ThreadStatus.CLOSED:
-      return 'bg-red-100 text-red-800'
+      return 'bg-red-100 text-red-400'
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-[var(--brand-background)] text-[var(--brand-text)]'
   }
 }
 
@@ -98,15 +98,15 @@ function ThreadItem({ thread, isSelected, onClick, t }: ThreadItemProps) {
     <button
       onClick={onClick}
       className={cn(
-        'w-full p-4 text-left border-b border-gray-100 hover:bg-gray-50 transition-colors',
-        isSelected && 'bg-blue-50 border-l-4 border-l-blue-500'
+        'w-full p-4 text-left border-b border-[var(--brand-border)] hover:bg-[var(--brand-background)] transition-colors',
+        isSelected && 'bg-blue-500/10 border-l-4 border-l-blue-500'
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           {/* Header */}
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-gray-900 truncate">
+            <span className="font-medium text-[var(--brand-text)] truncate">
               {thread.metadata?.customerName || t('customer')}
             </span>
             {hasUnread && (
@@ -117,7 +117,7 @@ function ThreadItem({ thread, isSelected, onClick, t }: ThreadItemProps) {
           </div>
 
           {/* Last message preview */}
-          <p className="text-sm text-gray-600 truncate">
+          <p className="text-sm text-[var(--brand-text-secondary)] truncate">
             {thread.lastMessageSender && (
               <span className="font-medium">
                 {getLastMessageLabel(thread.lastMessageSender, t)}:{' '}
@@ -129,10 +129,14 @@ function ThreadItem({ thread, isSelected, onClick, t }: ThreadItemProps) {
           {/* Metadata */}
           <div className="flex items-center gap-2 mt-1">
             {thread.metadata?.propertyType && (
-              <span className="text-xs text-gray-500">{thread.metadata.propertyType}</span>
+              <span className="text-xs text-[var(--brand-text-secondary)]">
+                {thread.metadata.propertyType}
+              </span>
             )}
             {thread.metadata?.systemSize && (
-              <span className="text-xs text-gray-500">• {thread.metadata.systemSize} kW</span>
+              <span className="text-xs text-[var(--brand-text-secondary)]">
+                • {thread.metadata.systemSize} kW
+              </span>
             )}
           </div>
         </div>
@@ -142,7 +146,7 @@ function ThreadItem({ thread, isSelected, onClick, t }: ThreadItemProps) {
           <Badge className={getStatusColor(thread.status)}>
             {getStatusLabel(thread.status, t)}
           </Badge>
-          <span className="text-xs text-gray-400">{lastMessageTime}</span>
+          <span className="text-xs text-[var(--brand-text-secondary)]">{lastMessageTime}</span>
         </div>
       </div>
     </button>
@@ -195,10 +199,12 @@ export function ThreadList({
   }, [threads, searchQuery, statusFilter, assigneeFilter])
 
   return (
-    <div className={cn('flex flex-col h-full bg-white', className)}>
+    <div className={cn('flex flex-col h-full bg-[var(--brand-surface)]', className)}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('newConversation')}</h2>
+      <div className="p-4 border-b border-[var(--brand-border)]">
+        <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-3">
+          {t('newConversation')}
+        </h2>
 
         {/* Search */}
         <Input
@@ -214,7 +220,7 @@ export function ThreadList({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as ThreadStatus | 'all')}
-            className="flex-1 text-sm border border-gray-200 rounded-md px-2 py-1.5"
+            className="flex-1 text-sm border border-[var(--brand-border)] rounded-md px-2 py-1.5"
           >
             <option value="all">{t('all')}</option>
             <option value={ThreadStatus.ACTIVE}>{t('statusActive')}</option>
@@ -225,7 +231,7 @@ export function ThreadList({
           <select
             value={assigneeFilter}
             onChange={(e) => setAssigneeFilter(e.target.value as FilterType)}
-            className="flex-1 text-sm border border-gray-200 rounded-md px-2 py-1.5"
+            className="flex-1 text-sm border border-[var(--brand-border)] rounded-md px-2 py-1.5"
           >
             <option value="all">{t('all')}</option>
             <option value="mine">{t('assign')}</option>
@@ -240,15 +246,15 @@ export function ThreadList({
           <div className="p-4 space-y-4">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                <div className="h-3 bg-gray-200 rounded w-1/2" />
+                <div className="h-4 bg-[var(--brand-border)] rounded w-3/4 mb-2" />
+                <div className="h-3 bg-[var(--brand-border)] rounded w-1/2" />
               </div>
             ))}
           </div>
         ) : filteredThreads.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-[var(--brand-text-secondary)]">
             <svg
-              className="w-12 h-12 mx-auto mb-3 text-gray-300"
+              className="w-12 h-12 mx-auto mb-3 text-[var(--brand-text-secondary)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -277,7 +283,7 @@ export function ThreadList({
       </div>
 
       {/* Footer with stats */}
-      <div className="p-3 border-t border-gray-200 bg-gray-50 text-xs text-gray-500">
+      <div className="p-3 border-t border-[var(--brand-border)] bg-[var(--brand-background)] text-xs text-[var(--brand-text-secondary)]">
         {filteredThreads.length} {t('all').toLowerCase()}
         {threads.some((th) => th.unreadCount && th.unreadCount > 0) && (
           <span className="ml-2">

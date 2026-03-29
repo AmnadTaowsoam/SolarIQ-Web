@@ -31,11 +31,11 @@ const statusLabels: Record<string, string> = {
 }
 
 const statusColors: Record<string, string> = {
-  draft: 'bg-gray-100 text-gray-600',
-  issued: 'bg-blue-100 text-blue-800',
-  sent: 'bg-purple-100 text-purple-800',
-  paid: 'bg-green-100 text-green-800',
-  void: 'bg-gray-100 text-gray-600',
+  draft: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
+  issued: 'bg-blue-500/10 text-blue-800',
+  sent: 'bg-purple-500/10 text-purple-800',
+  paid: 'bg-green-500/10 text-green-800',
+  void: 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]',
 }
 
 export default function InvoiceDetailPage() {
@@ -58,7 +58,7 @@ export default function InvoiceDetailPage() {
   if (isLoading) {
     return (
       <AppLayout>
-        <div className="text-center py-20 text-gray-500">{t('title')}...</div>
+        <div className="text-center py-20 text-[var(--brand-text-secondary)]">{t('title')}...</div>
       </AppLayout>
     )
   }
@@ -66,7 +66,7 @@ export default function InvoiceDetailPage() {
   if (!invoice) {
     return (
       <AppLayout>
-        <div className="text-center py-20 text-gray-500">
+        <div className="text-center py-20 text-[var(--brand-text-secondary)]">
           <p className="mb-4">{t('title')}</p>
           <Link href="/invoices">
             <Button variant="outline">{t('back')}</Button>
@@ -148,10 +148,10 @@ export default function InvoiceDetailPage() {
             >
               &larr; {t('back')}
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-[var(--brand-text)]">
               {typeLabels[invoice.document_type]} {invoice.document_number}
             </h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
               {t('issueDate')}:{' '}
               {invoice.issued_at
                 ? new Date(invoice.issued_at).toLocaleDateString('th-TH', {
@@ -162,7 +162,12 @@ export default function InvoiceDetailPage() {
                 : '-'}
             </p>
           </div>
-          <Badge className={statusColors[invoice.status] || 'bg-gray-100 text-gray-600'}>
+          <Badge
+            className={
+              statusColors[invoice.status] ||
+              'bg-[var(--brand-background)] text-[var(--brand-text-secondary)]'
+            }
+          >
             {statusLabels[invoice.status] || invoice.status}
           </Badge>
         </div>
@@ -176,10 +181,16 @@ export default function InvoiceDetailPage() {
               <CardBody>
                 <div className="space-y-2 text-sm">
                   <p className="font-semibold">{invoice.seller_info.name_th}</p>
-                  <p className="text-gray-600">{invoice.seller_info.name_en}</p>
-                  <p className="text-gray-600">Tax ID: {invoice.seller_info.tax_id}</p>
-                  <p className="text-gray-600">{invoice.seller_info.address}</p>
-                  <p className="text-gray-600">
+                  <p className="text-[var(--brand-text-secondary)]">
+                    {invoice.seller_info.name_en}
+                  </p>
+                  <p className="text-[var(--brand-text-secondary)]">
+                    Tax ID: {invoice.seller_info.tax_id}
+                  </p>
+                  <p className="text-[var(--brand-text-secondary)]">
+                    {invoice.seller_info.address}
+                  </p>
+                  <p className="text-[var(--brand-text-secondary)]">
                     Tel: {invoice.seller_info.phone} | Email: {invoice.seller_info.email}
                   </p>
                 </div>
@@ -192,23 +203,31 @@ export default function InvoiceDetailPage() {
               <CardBody>
                 <div className="space-y-2 text-sm">
                   <p className="font-semibold">{invoice.buyer_info.name_th}</p>
-                  <p className="text-gray-600">{invoice.buyer_info.name_en}</p>
-                  <p className="text-gray-600">Tax ID: {invoice.buyer_info.tax_id}</p>
-                  <p className="text-gray-600">
+                  <p className="text-[var(--brand-text-secondary)]">{invoice.buyer_info.name_en}</p>
+                  <p className="text-[var(--brand-text-secondary)]">
+                    Tax ID: {invoice.buyer_info.tax_id}
+                  </p>
+                  <p className="text-[var(--brand-text-secondary)]">
                     Branch:{' '}
                     {invoice.buyer_info.branch_number === '00000'
                       ? 'Head Office'
                       : `Branch ${invoice.buyer_info.branch_number}`}
                   </p>
-                  <p className="text-gray-600">{invoice.buyer_info.address}</p>
+                  <p className="text-[var(--brand-text-secondary)]">{invoice.buyer_info.address}</p>
                   {invoice.buyer_info.contact_person && (
-                    <p className="text-gray-600">Contact: {invoice.buyer_info.contact_person}</p>
+                    <p className="text-[var(--brand-text-secondary)]">
+                      Contact: {invoice.buyer_info.contact_person}
+                    </p>
                   )}
                   {invoice.buyer_info.email && (
-                    <p className="text-gray-600">Email: {invoice.buyer_info.email}</p>
+                    <p className="text-[var(--brand-text-secondary)]">
+                      Email: {invoice.buyer_info.email}
+                    </p>
                   )}
                   {invoice.buyer_info.phone && (
-                    <p className="text-gray-600">Tel: {invoice.buyer_info.phone}</p>
+                    <p className="text-[var(--brand-text-secondary)]">
+                      Tel: {invoice.buyer_info.phone}
+                    </p>
                   )}
                 </div>
               </CardBody>
@@ -221,7 +240,7 @@ export default function InvoiceDetailPage() {
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
                     <thead>
-                      <tr className="border-b border-gray-100 text-left text-xs text-gray-500">
+                      <tr className="border-b border-[var(--brand-border)] text-left text-xs text-[var(--brand-text-secondary)]">
                         <th className="px-6 py-3">#</th>
                         <th className="px-6 py-3">{t('item')}</th>
                         <th className="px-6 py-3 text-center">{t('qty')}</th>
@@ -229,20 +248,22 @@ export default function InvoiceDetailPage() {
                         <th className="px-6 py-3 text-right">{t('amount')}</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-[var(--brand-border)]">
                       {invoice.line_items.map((item, index) => (
                         <tr key={index}>
-                          <td className="px-6 py-3 text-sm text-gray-600 text-center">
+                          <td className="px-6 py-3 text-sm text-[var(--brand-text-secondary)] text-center">
                             {index + 1}
                           </td>
-                          <td className="px-6 py-3 text-sm text-gray-900">{item.description}</td>
-                          <td className="px-6 py-3 text-sm text-gray-600 text-center">
+                          <td className="px-6 py-3 text-sm text-[var(--brand-text)]">
+                            {item.description}
+                          </td>
+                          <td className="px-6 py-3 text-sm text-[var(--brand-text-secondary)] text-center">
                             {item.quantity}
                           </td>
-                          <td className="px-6 py-3 text-sm text-gray-600 text-right">
+                          <td className="px-6 py-3 text-sm text-[var(--brand-text-secondary)] text-right">
                             {formatThb(item.unit_price)}
                           </td>
-                          <td className="px-6 py-3 text-sm font-medium text-gray-900 text-right">
+                          <td className="px-6 py-3 text-sm font-medium text-[var(--brand-text)] text-right">
                             {formatThb(item.subtotal)}
                           </td>
                         </tr>
@@ -257,21 +278,23 @@ export default function InvoiceDetailPage() {
             <Card>
               <CardBody className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">{t('subtotal')}</span>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
+                    {t('subtotal')}
+                  </span>
+                  <span className="text-sm font-semibold text-[var(--brand-text)]">
                     {formatThb(invoice.subtotal)} {invoice.currency}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-[var(--brand-text-secondary)]">
                     {t('vat')} ({(invoice.vat_rate * 100).toFixed(0)}%)
                   </span>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-semibold text-[var(--brand-text)]">
                     {formatThb(invoice.vat_amount)} {invoice.currency}
                   </span>
                 </div>
-                <div className="flex justify-between border-t border-gray-100 pt-4">
-                  <span className="text-base font-bold text-gray-900">{t('total')}</span>
+                <div className="flex justify-between border-t border-[var(--brand-border)] pt-4">
+                  <span className="text-base font-bold text-[var(--brand-text)]">{t('total')}</span>
                   <span className="text-lg font-bold text-orange-600">
                     {formatThb(invoice.total)} {invoice.currency}
                   </span>
@@ -284,7 +307,9 @@ export default function InvoiceDetailPage() {
               <Card>
                 <CardHeader title={t('notes')} />
                 <CardBody>
-                  <p className="text-sm text-gray-600 whitespace-pre-wrap">{invoice.notes}</p>
+                  <p className="text-sm text-[var(--brand-text-secondary)] whitespace-pre-wrap">
+                    {invoice.notes}
+                  </p>
                 </CardBody>
               </Card>
             )}
@@ -337,12 +362,12 @@ export default function InvoiceDetailPage() {
               <CardHeader title={t('status')} />
               <CardBody className="space-y-3 text-sm">
                 <div>
-                  <p className="text-gray-500">{t('status')}</p>
+                  <p className="text-[var(--brand-text-secondary)]">{t('status')}</p>
                   <p className="font-semibold mt-1">{statusLabels[invoice.status]}</p>
                 </div>
                 {invoice.issued_at && (
                   <div>
-                    <p className="text-gray-500">{t('issueDate')}</p>
+                    <p className="text-[var(--brand-text-secondary)]">{t('issueDate')}</p>
                     <p className="mt-1">
                       {new Date(invoice.issued_at).toLocaleDateString('th-TH', {
                         day: '2-digit',
@@ -354,7 +379,7 @@ export default function InvoiceDetailPage() {
                 )}
                 {invoice.due_date && (
                   <div>
-                    <p className="text-gray-500">{t('dueDate')}</p>
+                    <p className="text-[var(--brand-text-secondary)]">{t('dueDate')}</p>
                     <p className="mt-1">
                       {new Date(invoice.due_date).toLocaleDateString('th-TH', {
                         day: '2-digit',
@@ -366,7 +391,7 @@ export default function InvoiceDetailPage() {
                 )}
                 {invoice.paid_at && (
                   <div>
-                    <p className="text-gray-500">{t('paymentDate')}</p>
+                    <p className="text-[var(--brand-text-secondary)]">{t('paymentDate')}</p>
                     <p className="mt-1">
                       {new Date(invoice.paid_at).toLocaleDateString('th-TH', {
                         day: '2-digit',
@@ -378,7 +403,7 @@ export default function InvoiceDetailPage() {
                 )}
                 {invoice.sent_at && (
                   <div>
-                    <p className="text-gray-500">{t('sentAt')}</p>
+                    <p className="text-[var(--brand-text-secondary)]">{t('sentAt')}</p>
                     <p className="mt-1">
                       {new Date(invoice.sent_at).toLocaleDateString('th-TH', {
                         day: '2-digit',
@@ -386,7 +411,9 @@ export default function InvoiceDetailPage() {
                         year: 'numeric',
                       })}
                     </p>
-                    <p className="text-gray-500 mt-1">To: {invoice.email_sent_to}</p>
+                    <p className="text-[var(--brand-text-secondary)] mt-1">
+                      To: {invoice.email_sent_to}
+                    </p>
                   </div>
                 )}
               </CardBody>
@@ -400,15 +427,17 @@ export default function InvoiceDetailPage() {
             <Card className="w-full max-w-md">
               <CardHeader title={t('confirmVoid')} />
               <CardBody className="space-y-4">
-                <p className="text-sm text-gray-600">This action cannot be undone.</p>
+                <p className="text-sm text-[var(--brand-text-secondary)]">
+                  This action cannot be undone.
+                </p>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-[var(--brand-text)] mb-2">
                     {t('reference')} <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     value={voidReason}
                     onChange={(e) => setVoidReason(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-[var(--brand-border)] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                     rows={4}
                     placeholder="Enter reason..."
                   />
