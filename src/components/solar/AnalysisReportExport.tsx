@@ -21,6 +21,21 @@ const formatCurrency = (value: number): string =>
 const formatNumber = (value: number, decimals = 0): string =>
   new Intl.NumberFormat('th-TH', { maximumFractionDigits: decimals }).format(value)
 
+const MONTH_NAMES_TH = [
+  'ม.ค.',
+  'ก.พ.',
+  'มี.ค.',
+  'เม.ย.',
+  'พ.ค.',
+  'มิ.ย.',
+  'ก.ค.',
+  'ส.ค.',
+  'ก.ย.',
+  'ต.ค.',
+  'พ.ย.',
+  'ธ.ค.',
+]
+
 function generateTextSummary(result: SolarAnalysisAdvanced): string {
   const lines: string[] = [
     '=== SolarIQ Analysis Report ===',
@@ -81,6 +96,193 @@ function generateTextSummary(result: SolarAnalysisAdvanced): string {
   )
 
   return lines.join('\n')
+}
+
+function generateRoofSegmentsHtml(result: SolarAnalysisAdvanced): string {
+  if (!result.roofSegments || result.roofSegments.length === 0) {
+    return `
+    <div class="section">
+      <h2>Roof Analysis</h2>
+      <p class="note">No roof segment data available for this location.</p>
+    </div>`
+  }
+  const rows = result.roofSegments
+    .map(
+      (seg, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${seg.areaM2?.toFixed(1) ?? '-'} m&sup2;</td>
+        <td>${seg.pitchDegrees?.toFixed(1) ?? '-'}&deg;</td>
+        <td>${seg.azimuthDegrees?.toFixed(0) ?? '-'}&deg;</td>
+        <td>${seg.sunshineHours?.toFixed(0) ?? '-'} hrs</td>
+        <td>${seg.panelCount ?? '-'}</td>
+      </tr>`
+    )
+    .join('')
+
+  return `
+  <div class="section">
+    <h2>Roof Segment Analysis</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Segment</th><th>Area</th><th>Pitch</th><th>Azimuth</th><th>Sunshine</th><th>Panels</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`
+}
+
+function generateShadeAnalysisHtml(result: SolarAnalysisAdvanced): string {
+  if (!result.shadeAnalysis) {
+    return ''
+  }
+  const sa = result.shadeAnalysis
+  const bars = sa.monthlyShadePercent
+    .map(
+      (pct, i) =>
+        `<div class="bar-container">
+          <div class="bar" style="height: ${Math.max(pct * 2, 2)}px; background: ${pct < 10 ? '#16a34a' : pct < 20 ? '#f97316' : '#ef4444'}"></div>
+          <span class="bar-label">${MONTH_NAMES_TH[i]}</span>
+        </div>`
+    )
+    .join('')
+
+  return `
+  <div class="section">
+    <h2>Shade Analysis</h2>
+    <div class="grid">
+      <div class="item"><div class="label">Annual Average Shade</div><div class="value">${sa.annualAverageShadePercent.toFixed(1)}%</div></div>
+      <div class="item"><div class="label">Shade-Free Hours</div><div class="value">${sa.shadeFreeHoursPerDay.toFixed(1)} hrs/day</div></div>
+      <div class="item"><div class="label">Best Month</div><div class="value highlight">${sa.bestMonth}</div></div>
+      <div class="item"><div class="label">Worst Month</div><div class="value" style="color:#ef4444">${sa.worstMonth}</div></div>
+    </div>
+    <div class="chart-container" style="margin-top:12px">
+      <div class="bar-chart">${bars}</div>
+    </div>
+  </div>`
+}
+
+function generateMonthlyProductionHtml(result: SolarAnalysisAdvanced): string {
+  if (!result.monthlyProduction || result.monthlyProduction.length === 0) {
+    return ''
+  }
+  const maxProd = Math.max(...result.monthlyProduction.map((m) => m.productionKwh))
+  const totalAnnual = result.monthlyProduction.reduce((sum, m) => sum + m.productionKwh, 0)
+
+  const bars = result.monthlyProduction
+    .map(
+      (m) =>
+        `<div class="bar-container">
+          <div class="bar" style="height: ${Math.max((m.productionKwh / maxProd) * 100, 5)}px; background: ${m.efficiencyFactor >= 0.85 ? '#16a34a' : '#f97316'}"></div>
+          <span class="bar-label">${MONTH_NAMES_TH[m.month - 1] || m.monthName}</span>
+          <span class="bar-value">${formatNumber(m.productionKwh)}</span>
+        </div>`
+    )
+    .join('')
+
+  return `
+  <div class="section">
+    <h2>Monthly Solar Production</h2>
+    <div class="grid">
+      <div class="item"><div class="label">Total Annual</div><div class="value primary">${formatNumber(totalAnnual)} kWh</div></div>
+      <div class="item"><div class="label">Monthly Average</div><div class="value">${formatNumber(totalAnnual / 12)} kWh</div></div>
+    </div>
+    <div class="chart-container" style="margin-top:12px">
+      <div class="bar-chart">${bars}</div>
+    </div>
+  </div>`
+}
+
+function generateIncentivesHtml(result: SolarAnalysisAdvanced): string {
+  if (!result.incentives || result.incentives.length === 0) {
+    return ''
+  }
+  const cards = result.incentives
+    .map(
+      (inc) => `
+      <div class="incentive-card">
+        <div class="incentive-name">${inc.name}</div>
+        <div class="incentive-desc">${inc.description}</div>
+        ${inc.amountThb ? `<div class="incentive-amount">${formatCurrency(inc.amountThb)}</div>` : ''}
+        ${inc.percentage ? `<div class="incentive-amount">${inc.percentage}% discount</div>` : ''}
+        <div class="incentive-meta">Provider: ${inc.provider}${inc.validUntil ? ` | Valid until: ${inc.validUntil}` : ''}</div>
+      </div>`
+    )
+    .join('')
+
+  return `
+  <div class="section">
+    <h2>Available Incentives (${result.incentives.length})</h2>
+    <div class="incentives-grid">${cards}</div>
+  </div>`
+}
+
+function generateEquipmentHtml(result: SolarAnalysisAdvanced): string {
+  if (!result.panelSpecs || result.panelSpecs.length === 0) {
+    return ''
+  }
+  const rows = result.panelSpecs
+    .map(
+      (spec) => `
+      <tr>
+        <td><strong>${spec.brand}</strong><br/>${spec.model}</td>
+        <td>${spec.wattage}W</td>
+        <td>${spec.efficiencyPercent.toFixed(1)}%</td>
+        <td>${formatCurrency(spec.pricePerWattThb)}/W</td>
+        <td>${spec.warrantyYears} yrs</td>
+        <td>${spec.type}</td>
+      </tr>`
+    )
+    .join('')
+
+  return `
+  <div class="section">
+    <h2>Panel Comparison</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Panel</th><th>Wattage</th><th>Efficiency</th><th>Price</th><th>Warranty</th><th>Type</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`
+}
+
+function generateCashflowSummaryHtml(result: SolarAnalysisAdvanced): string {
+  if (!result.yearlyCashflow || result.yearlyCashflow.length === 0) {
+    return ''
+  }
+  const milestones = result.yearlyCashflow.filter(
+    (y) =>
+      y.year === 1 ||
+      y.year === 5 ||
+      y.year === 10 ||
+      y.year === 15 ||
+      y.year === 20 ||
+      y.year === 25
+  )
+  const rows = milestones
+    .map(
+      (y) => `
+      <tr>
+        <td>Year ${y.year}</td>
+        <td>${formatNumber(y.productionKwh)} kWh</td>
+        <td>${formatCurrency(y.savingThb)}</td>
+        <td>${formatCurrency(y.cumulativeSavingThb)}</td>
+        <td class="${y.netPositionThb >= 0 ? 'positive' : 'negative'}">${formatCurrency(y.netPositionThb)}</td>
+      </tr>`
+    )
+    .join('')
+
+  return `
+  <div class="section">
+    <h2>25-Year Investment Projection</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Period</th><th>Production</th><th>Annual Saving</th><th>Cumulative</th><th>Net Position</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`
 }
 
 function generatePrintHtml(result: SolarAnalysisAdvanced): string {
@@ -179,6 +381,95 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
       color: #666;
       margin-top: 4px;
     }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid #e2e8f0;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    .data-table th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: #475569;
+    }
+    .data-table .positive { color: #16a34a; font-weight: 600; }
+    .data-table .negative { color: #ef4444; font-weight: 600; }
+    .note {
+      color: #888;
+      font-style: italic;
+      font-size: 13px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 6px;
+    }
+    .chart-container {
+      padding: 8px 0;
+    }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 120px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 4px;
+    }
+    .bar-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .bar {
+      width: 100%;
+      border-radius: 3px 3px 0 0;
+      min-height: 2px;
+    }
+    .bar-label {
+      font-size: 9px;
+      color: #888;
+    }
+    .bar-value {
+      font-size: 8px;
+      color: #666;
+    }
+    .incentives-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .incentive-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      background: #f8fafc;
+    }
+    .incentive-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: #1a1a2e;
+    }
+    .incentive-desc {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .incentive-amount {
+      font-size: 14px;
+      font-weight: 700;
+      color: #16a34a;
+      margin-bottom: 4px;
+    }
+    .incentive-meta {
+      font-size: 11px;
+      color: #999;
+    }
+    .page-break { page-break-before: always; }
     .footer {
       margin-top: 40px;
       padding-top: 16px;
@@ -200,6 +491,7 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
     <p>Solar Potential Analysis &amp; Financial Projection</p>
   </div>
 
+  <!-- 1. Location Information -->
   <div class="section">
     <h2>Location Information</h2>
     <div class="grid">
@@ -222,6 +514,7 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
     </div>
   </div>
 
+  <!-- 2. System Recommendation -->
   <div class="section">
     <h2>System Recommendation</h2>
     <div class="grid-4">
@@ -244,6 +537,7 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
     </div>
   </div>
 
+  <!-- 3. Financial Summary -->
   <div class="section">
     <h2>Financial Summary</h2>
     <div class="grid">
@@ -309,6 +603,7 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
     </div>
   </div>
 
+  <!-- 4. Environmental Impact -->
   <div class="section">
     <h2>Environmental Impact</h2>
     <div class="grid-4">
@@ -334,8 +629,28 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
           : ''
       }
     </div>
+    ${
+      result.environmentalImpact
+        ? `
+    <div class="grid" style="margin-top: 12px;">
+      <div class="item">
+        <div class="label">Homes Powered</div>
+        <div class="value">${formatNumber(result.environmentalImpact.homesPowered, 1)}</div>
+      </div>
+      <div class="item">
+        <div class="label">Coal Avoided</div>
+        <div class="value">${formatNumber(result.environmentalImpact.coalAvoidedKg)} kg/yr</div>
+      </div>
+      <div class="item">
+        <div class="label">Water Saved</div>
+        <div class="value">${formatNumber(result.environmentalImpact.waterSavedLiters)} L/yr</div>
+      </div>
+    </div>`
+        : ''
+    }
   </div>
 
+  <!-- 5. Solar Potential -->
   <div class="section">
     <h2>Solar Potential</h2>
     <div class="grid">
@@ -363,9 +678,30 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
     </div>
   </div>
 
+  <!-- 6. Roof Segments (NEW) -->
+  ${generateRoofSegmentsHtml(result)}
+
+  <!-- 7. Shade Analysis (NEW) -->
+  ${generateShadeAnalysisHtml(result)}
+
+  <div class="page-break"></div>
+
+  <!-- 8. Monthly Production (NEW) -->
+  ${generateMonthlyProductionHtml(result)}
+
+  <!-- 9. 25-Year Investment Projection (NEW) -->
+  ${generateCashflowSummaryHtml(result)}
+
+  <!-- 10. Panel Comparison (NEW) -->
+  ${generateEquipmentHtml(result)}
+
+  <!-- 11. Available Incentives (NEW) -->
+  ${generateIncentivesHtml(result)}
+
   <div class="footer">
     <p>Generated by SolarIQ &mdash; ${new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-    <p>This report is for reference purposes only. Actual results may vary.</p>
+    <p>Data powered by Google Solar API, NASA POWER &amp; ECMWF</p>
+    <p>This report is for reference purposes only. Actual results may vary based on installation conditions.</p>
   </div>
 
   <script>

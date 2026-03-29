@@ -215,7 +215,7 @@ export function AirQualityImpact({ airQuality, dustSeason }: AirQualityImpactPro
               <div className="flex items-center gap-3 text-xs text-[var(--brand-text-secondary)]">
                 <AlertTriangle className="w-3.5 h-3.5 text-orange-500" />
                 <span>
-                  {t('trend')}: -{formatNumber(dustSeason.annualLossPercent)}%
+                  {t('trend')}: -{formatNumber(dustSeason.annualLossPercent ?? 0)}%
                 </span>
               </div>
             </div>

@@ -13,12 +13,12 @@ const SECURITY_HEADERS = {
   // Content Security Policy - Controls resources the browser is allowed to load
   'Content-Security-Policy': [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com https://maps.googleapis.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: https: blob:",
     "font-src 'self' data: https://fonts.gstatic.com",
     "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com https://www.google-analytics.com https://cloudflareinsights.com https://solariq-api-269682189177.asia-southeast1.run.app https://*.run.app",
-    "frame-src 'self' https://liff.line.me",
+    "frame-src 'self' https://liff.line.me https://www.google.com",
     "media-src 'self' https:",
     "object-src 'none'",
     "base-uri 'self'",

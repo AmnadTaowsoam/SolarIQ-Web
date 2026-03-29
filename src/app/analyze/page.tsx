@@ -935,6 +935,40 @@ export default function AnalyzePage() {
     setAddress('Bangkok, Thailand')
   }
 
+  const [isGeocoding, setIsGeocoding] = useState(false)
+
+  const geocodeAddress = async () => {
+    if (!address.trim()) {
+      addToast('error', t('messages.enterAddress') || 'กรุณากรอกที่อยู่')
+      return
+    }
+    setIsGeocoding(true)
+    try {
+      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+      if (!apiKey) {
+        addToast('error', 'Google Maps API key not configured')
+        return
+      }
+      const resp = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address.trim())}&key=${apiKey}&language=th&region=th`
+      )
+      const data = await resp.json()
+      if (data.status === 'OK' && data.results?.length > 0) {
+        const loc = data.results[0].geometry.location
+        setLatitude(loc.lat.toFixed(6))
+        setLongitude(loc.lng.toFixed(6))
+        setAddress(data.results[0].formatted_address || address)
+        addToast('success', t('messages.locationSuccess') || 'พบตำแหน่งแล้ว')
+      } else {
+        addToast('error', t('messages.geocodeFailed') || 'ไม่พบตำแหน่งจากที่อยู่นี้ กรุณาลองใหม่')
+      }
+    } catch {
+      addToast('error', t('messages.geocodeFailed') || 'ไม่สามารถค้นหาตำแหน่งได้')
+    } finally {
+      setIsGeocoding(false)
+    }
+  }
+
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--brand-surface)]">
@@ -1026,13 +1060,39 @@ export default function AnalyzePage() {
                 />
               </div>
 
-              {/* Address */}
-              <Input
-                label={t('inputForm.address')}
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder={t('inputForm.addressPlaceholder')}
-              />
+              {/* Address with Geocoding */}
+              <div>
+                <div className="flex gap-2 items-end">
+                  <div className="flex-1">
+                    <Input
+                      label={t('inputForm.address')}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder={t('inputForm.addressPlaceholder')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          geocodeAddress()
+                        }
+                      }}
+                    />
+                  </div>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={geocodeAddress}
+                    isLoading={isGeocoding}
+                    className="mb-[2px] whitespace-nowrap"
+                  >
+                    <MapPin className="w-4 h-4 mr-1" />
+                    {t('inputForm.searchLocation') || 'ค้นหาพิกัด'}
+                  </Button>
+                </div>
+                <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
+                  {t('inputForm.addressGeocodeHint') ||
+                    'พิมพ์ที่อยู่แล้วกด "ค้นหาพิกัด" เพื่อดึงพิกัดอัตโนมัติ'}
+                </p>
+              </div>
 
               {/* Monthly Bill */}
               <Input
