@@ -1444,7 +1444,9 @@
       "monthlyBillHint": "ค่าไฟฟ้าเฉลี่ยต่อเดือน (บาท)",
       "title": "ข้อมูลนำเข้า",
       "useCurrentLocation": "ใช้ตำแหน่งปัจจุบัน",
-      "useDefaultLocation": "ใช้ตำแหน่งเริ่มต้น"
+      "useDefaultLocation": "ใช้ตำแหน่งเริ่มต้น",
+      "searchLocation": "ค้นหาพิกัด",
+      "addressGeocodeHint": "พิมพ์ที่อยู่แล้วกด \"ค้นหาพิกัด\" เพื่อดึงพิกัดอัตโนมัติ"
     },
     "locationPreview": {
       "avgSolarPotential": "ศักยภาพพลังงานแสงอาทิตย์เฉลี่ย",
@@ -1473,7 +1475,9 @@
       "invalidLatitude": "กรุณากรอกละติจูดที่ถูกต้อง",
       "invalidLongitude": "กรุณากรอกลองจิจูดที่ถูกต้อง",
       "locationFailed": "ไม่สามารถรับตำแหน่งได้",
-      "locationSuccess": "ได้รับตำแหน่งสำเร็จ"
+      "locationSuccess": "ได้รับตำแหน่งสำเร็จ",
+      "geocodeFailed": "ไม่พบตำแหน่งจากที่อยู่นี้ กรุณาลองใหม่",
+      "enterAddress": "กรุณากรอกที่อยู่"
     },
     "results": {
       "title": "ผลการวิเคราะห์"

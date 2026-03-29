@@ -1444,7 +1444,9 @@
       "monthlyBillHint": "Average monthly electricity cost in Baht",
       "title": "Input Information",
       "useCurrentLocation": "Use Current Location",
-      "useDefaultLocation": "Use Default Location"
+      "useDefaultLocation": "Use Default Location",
+      "searchLocation": "Search Location",
+      "addressGeocodeHint": "Type an address and click \"Search Location\" to auto-fill coordinates"
     },
     "locationPreview": {
       "avgSolarPotential": "Average Solar Potential",
@@ -1473,7 +1475,9 @@
       "invalidLatitude": "Please enter a valid latitude",
       "invalidLongitude": "Please enter a valid longitude",
       "locationFailed": "Failed to get location",
-      "locationSuccess": "Location obtained successfully"
+      "locationSuccess": "Location obtained successfully",
+      "geocodeFailed": "Could not find location from this address. Please try again.",
+      "enterAddress": "Please enter an address"
     },
     "results": {
       "title": "Analysis Results"
