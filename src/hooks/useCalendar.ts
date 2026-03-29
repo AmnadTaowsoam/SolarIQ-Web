@@ -15,6 +15,26 @@ export interface CalendarEvent {
   customerName: string
 }
 
+/**
+ * Safely coerce API response data to an array.
+ * Handles: undefined, null, plain arrays, and {items:[]} paginated shapes.
+ */
+function toArray<T>(data: unknown): T[] {
+  if (!data) {
+    return []
+  }
+  if (Array.isArray(data)) {
+    return data
+  }
+  if (typeof data === 'object' && data !== null && 'items' in data) {
+    const items = (data as Record<string, unknown>).items
+    if (Array.isArray(items)) {
+      return items
+    }
+  }
+  return []
+}
+
 export function useCalendarEvents() {
   const { data: maintenance } = useUpcomingMaintenance(90)
   const { data: openRequests } = useServiceRequests('open')
@@ -23,35 +43,29 @@ export function useCalendarEvents() {
   const events = useMemo(() => {
     const items: CalendarEvent[] = []
 
-    // Maintenance events — handle both array and {items:[]} response shapes
-    const maintenanceList = Array.isArray(maintenance)
-      ? maintenance
-      : ((maintenance as Record<string, unknown>)?.items as typeof maintenance) || []
-    if (maintenanceList && maintenanceList.length > 0) {
-      for (const m of maintenanceList) {
-        if (m.schedule?.next_due_date) {
-          items.push({
-            id: `maint-${m.schedule.id || Math.random()}`,
-            title: `บำรุงรักษา: ${m.schedule.maintenance_type === 'cleaning' ? 'ล้างแผง' : m.schedule.maintenance_type === 'inverter_check' ? 'เช็คอินเวอร์เตอร์' : m.schedule.maintenance_type}`,
-            date: m.schedule.next_due_date,
-            type: 'maintenance',
-            priority: m.days_until_due <= 7 ? 'high' : 'medium',
-            status: m.days_until_due <= 0 ? 'overdue' : 'upcoming',
-            href: `/maintenance/${m.installation?.id || ''}`,
-            customerName: m.installation?.customer_name || '',
-          })
-        }
+    // Maintenance events — safely coerce to array
+    const maintenanceList = toArray<{
+      schedule?: { id?: string; next_due_date?: string; maintenance_type?: string }
+      days_until_due: number
+      installation?: { id?: string; customer_name?: string }
+    }>(maintenance)
+    for (const m of maintenanceList) {
+      if (m.schedule?.next_due_date) {
+        items.push({
+          id: `maint-${m.schedule.id || Math.random()}`,
+          title: `บำรุงรักษา: ${m.schedule.maintenance_type === 'cleaning' ? 'ล้างแผง' : m.schedule.maintenance_type === 'inverter_check' ? 'เช็คอินเวอร์เตอร์' : m.schedule.maintenance_type}`,
+          date: m.schedule.next_due_date,
+          type: 'maintenance',
+          priority: m.days_until_due <= 7 ? 'high' : 'medium',
+          status: m.days_until_due <= 0 ? 'overdue' : 'upcoming',
+          href: `/maintenance/${m.installation?.id || ''}`,
+          customerName: m.installation?.customer_name || '',
+        })
       }
     }
 
-    // Service request events — handle both array and {items:[]} response shapes
-    const openList = Array.isArray(openRequests)
-      ? openRequests
-      : ((openRequests as Record<string, unknown>)?.items as typeof openRequests) || []
-    const inProgressList = Array.isArray(inProgressRequests)
-      ? inProgressRequests
-      : ((inProgressRequests as Record<string, unknown>)?.items as typeof inProgressRequests) || []
-    const allRequests = [...(openList || []), ...(inProgressList || [])]
+    // Service request events — safely coerce to array
+    const allRequests = [...toArray(openRequests), ...toArray(inProgressRequests)]
     for (const req of allRequests) {
       items.push({
         id: `sr-${req.id}`,
