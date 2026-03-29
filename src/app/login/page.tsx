@@ -107,7 +107,13 @@ export default function LoginPage() {
       setFailedAttempts(0)
       setLockoutUntil(null)
       addToast('success', t('messages.success'))
-      // Redirect is handled by useEffect when isAuthenticated becomes true
+
+      // Use full page navigation for reliable redirect (same as dev login flow).
+      // Firebase auth is persisted in IndexedDB so AuthContext will pick it up on next load.
+      document.cookie = '__session=1; path=/; max-age=1800; SameSite=Lax'
+      document.cookie = `user-role=contractor; path=/; max-age=1800; SameSite=Lax`
+      window.location.assign(redirectAfterAuth)
+      return
     } catch (error: unknown) {
       let message = t('errors.failed')
       let isRateLimit = false

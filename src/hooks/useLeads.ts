@@ -11,6 +11,30 @@ interface UseLeadsOptions {
   filters?: LeadFilters
 }
 
+/**
+ * Transform a backend lead (snake_case) into the frontend Lead interface (camelCase).
+ * The backend LeadOut schema uses snake_case fields; the frontend expects camelCase.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function transformLead(raw: any): Lead {
+  return {
+    id: raw.id,
+    name: raw.name || raw.address || '',
+    phone: raw.phone || '',
+    email: raw.email || null,
+    address: raw.address || '',
+    latitude: raw.latitude ?? null,
+    longitude: raw.longitude ?? null,
+    monthlyBill: raw.monthlyBill ?? raw.monthly_bill_thb ?? 0,
+    status: raw.status || 'new',
+    assignedTo: raw.assignedTo ?? raw.assigned_contractor_id ?? null,
+    notes: raw.notes ?? null,
+    createdAt: raw.createdAt || raw.created_at || new Date().toISOString(),
+    updatedAt: raw.updatedAt || raw.updated_at || new Date().toISOString(),
+    solarAnalysis: raw.solarAnalysis ?? undefined,
+  }
+}
+
 export function useLeads(options: UseLeadsOptions = {}) {
   const { page = 1, pageSize = 10, filters = {} } = options
 
@@ -23,6 +47,7 @@ export function useLeads(options: UseLeadsOptions = {}) {
       const data = response?.data ?? response
       return {
         ...data,
+        items: (data.items || []).map(transformLead),
         totalPages: Math.ceil((data.total || 0) / pageSize),
       }
     },
