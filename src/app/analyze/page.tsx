@@ -887,6 +887,7 @@ export default function AnalyzePage() {
     try {
       const response = await analysisMutation.mutateAsync({
         latitude: lat,
+        longitude: lng,
         monthlyBill: bill,
         address: sanitizedAddress,
         selfConsumptionRate,
