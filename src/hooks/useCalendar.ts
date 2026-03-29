@@ -23,9 +23,12 @@ export function useCalendarEvents() {
   const events = useMemo(() => {
     const items: CalendarEvent[] = []
 
-    // Maintenance events
-    if (maintenance) {
-      for (const m of maintenance) {
+    // Maintenance events — handle both array and {items:[]} response shapes
+    const maintenanceList = Array.isArray(maintenance)
+      ? maintenance
+      : ((maintenance as Record<string, unknown>)?.items as typeof maintenance) || []
+    if (maintenanceList && maintenanceList.length > 0) {
+      for (const m of maintenanceList) {
         if (m.schedule?.next_due_date) {
           items.push({
             id: `maint-${m.schedule.id || Math.random()}`,
@@ -41,8 +44,14 @@ export function useCalendarEvents() {
       }
     }
 
-    // Service request events
-    const allRequests = [...(openRequests || []), ...(inProgressRequests || [])]
+    // Service request events — handle both array and {items:[]} response shapes
+    const openList = Array.isArray(openRequests)
+      ? openRequests
+      : ((openRequests as Record<string, unknown>)?.items as typeof openRequests) || []
+    const inProgressList = Array.isArray(inProgressRequests)
+      ? inProgressRequests
+      : ((inProgressRequests as Record<string, unknown>)?.items as typeof inProgressRequests) || []
+    const allRequests = [...(openList || []), ...(inProgressList || [])]
     for (const req of allRequests) {
       items.push({
         id: `sr-${req.id}`,
