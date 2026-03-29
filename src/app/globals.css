@@ -77,6 +77,14 @@
   * {
     border-color: var(--brand-border);
   }
+
+  /* Ensure all form elements adapt to dark mode */
+  input,
+  textarea,
+  select {
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
+  }
 }
 
 @layer components {
@@ -89,9 +97,10 @@
   .input {
     @apply block w-full rounded-lg border shadow-sm transition-colors;
     @apply focus:outline-none focus:ring-2 focus:ring-offset-0;
-    @apply px-4 py-2.5 placeholder-gray-400;
+    @apply px-4 py-2.5;
+    background-color: var(--brand-surface);
     color: var(--brand-text);
-    @apply disabled:opacity-60 disabled:cursor-not-allowed;
+    @apply placeholder-[var(--brand-text-secondary)] disabled:opacity-60 disabled:cursor-not-allowed;
   }
 }
 

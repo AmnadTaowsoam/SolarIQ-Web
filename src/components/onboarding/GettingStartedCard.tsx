@@ -102,7 +102,7 @@ export default function GettingStartedCard() {
   const progress = Math.round((completedSteps.length / STEPS.length) * 100)
 
   return (
-    <div className="mb-6 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-6">
+    <div className="mb-6 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 to-orange-500/10 p-6">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-[var(--brand-text)]">{t('title')}</h2>
@@ -139,8 +139,8 @@ export default function GettingStartedCard() {
               key={step.id}
               className={`flex items-center gap-3 rounded-lg border p-3 transition-all ${
                 done
-                  ? 'border-green-200 bg-green-50/50'
-                  : 'border-white/60 bg-[var(--brand-surface)]/40 hover:bg-[var(--brand-surface)]/70'
+                  ? 'border-green-500/30 bg-green-500/10'
+                  : 'border-[var(--brand-border)]/60 bg-[var(--brand-surface)]/40 hover:bg-[var(--brand-surface)]/70'
               }`}
             >
               <button
@@ -187,7 +187,7 @@ export default function GettingStartedCard() {
               {!done && (
                 <Link
                   href={step.href}
-                  className="flex-shrink-0 rounded-md bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700 hover:bg-amber-200"
+                  className="flex-shrink-0 rounded-md bg-amber-500/15 px-2.5 py-1 text-xs font-medium text-amber-500 hover:bg-amber-500/25"
                 >
                   {t('getStarted')}
                 </Link>
@@ -198,7 +198,7 @@ export default function GettingStartedCard() {
       </div>
 
       {completedSteps.length === STEPS.length && (
-        <div className="mt-4 rounded-lg bg-green-500/10 p-3 text-center text-sm font-medium text-green-800">
+        <div className="mt-4 rounded-lg bg-green-500/10 p-3 text-center text-sm font-medium text-green-500">
           {t('done')}
         </div>
       )}
