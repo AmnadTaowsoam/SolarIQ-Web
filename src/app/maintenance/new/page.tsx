@@ -195,7 +195,7 @@ export default function NewInstallationPage() {
                     value={form.system_size_kw}
                     onChange={handleChange}
                     required
-                    step="0.1"
+                    step="any"
                     min="0.1"
                     className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-amber-500 focus:ring-amber-500"
                   />
