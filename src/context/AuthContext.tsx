@@ -5,7 +5,6 @@ import { getIdToken, onIdTokenChanged, signOut, User as FirebaseUser } from 'fir
 import { auth } from '@/lib/firebase'
 import { User } from '@/types'
 import { api, setTokens, clearTokens } from '@/lib/api'
-import { useRouter } from 'next/navigation'
 import { clearAuthData } from '@/lib/security'
 
 interface AuthContextType {
@@ -59,7 +58,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const router = useRouter()
   const isDevLoginEnabled = process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true'
   const devLoginEmail = (process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || '').trim().toLowerCase()
   const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || ''
@@ -123,9 +121,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem(devAuthStorageKey)
       }
-      router.push('/login')
+      // Use full page navigation for reliable redirect (router.push can be unreliable during state teardown)
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
     }
-  }, [devAuthStorageKey, router])
+  }, [devAuthStorageKey])
 
   // Inactivity timeout (30 minutes)
   useEffect(() => {
@@ -203,8 +204,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setFirebaseUser(fbUser)
 
           if (fbUser) {
+            // Clear loading timeout immediately — Firebase has responded
+            clearTimeout(loadingTimeout)
+
+            // Set fallback user right away so isAuthenticated becomes true
+            // and login page can redirect without waiting for backend API
+            const fallbackUser: User = {
+              uid: fbUser.uid,
+              email: fbUser.email,
+              displayName: fbUser.displayName,
+              role: 'contractor',
+              createdAt: new Date().toISOString(),
+              lastLoginAt: new Date().toISOString(),
+            }
+            setUser(fallbackUser)
+            setSessionCookie(true, fallbackUser.role)
+            setIsLoading(false)
+
             try {
-              // Exchange Firebase token for JWT
+              // Exchange Firebase token for JWT (non-blocking for redirect)
               const firebaseToken = await getIdToken(fbUser, false)
               const loginRaw = await api.post('/auth/login', { firebase_id_token: firebaseToken })
               const loginData = loginRaw?.data ?? loginRaw
@@ -228,30 +246,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
               setUser(userData)
               setSessionCookie(true, userData?.role || 'contractor')
             } catch (authError) {
-              // Fallback: use Firebase user info directly
+              // Backend API failed — fallback user is already set, just log
               // eslint-disable-next-line no-console
-              console.error('[AuthContext] Auth flow failed, using fallback:', authError)
-              const fallbackUser: User = {
-                uid: fbUser.uid,
-                email: fbUser.email,
-                displayName: fbUser.displayName,
-                role: 'contractor',
-                createdAt: new Date().toISOString(),
-                lastLoginAt: new Date().toISOString(),
-              }
-              if (!isMounted) {
-                return
-              }
-              setUser(fallbackUser)
-              setSessionCookie(true, fallbackUser.role)
+              console.warn('[AuthContext] Backend sync failed, using Firebase fallback:', authError)
             }
           } else {
             setUser(null)
             setSessionCookie(false)
+            clearTimeout(loadingTimeout)
+            setIsLoading(false)
           }
-
-          clearTimeout(loadingTimeout)
-          setIsLoading(false)
         },
         () => {
           if (!isMounted) {

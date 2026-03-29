@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Deal, DealStage, DealMilestone, ContractorSummary, DEMO_QUOTES } from '@/hooks/useQuotes'
+import { DealStage, DEMO_QUOTES } from '@/hooks/useQuotes'
 import {
   Deal as DealType,
   DealMilestone as DealMilestoneType,
   DEAL_STAGE_ORDER,
-  InstallationTimeline,
 } from '@/types/quotes'
+import { getAccessToken } from '@/lib/api'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
 
@@ -22,37 +22,37 @@ function buildDemoMilestones(dealId: string): DealMilestoneType[] {
       index === 0
         ? '2026-03-21'
         : index === 1
-        ? '2026-03-28'
-        : index === 2
-        ? '2026-03-28'
-        : index === 3
-        ? '2026-03-30'
-        : index === 4
-        ? '2026-04-01'
-        : index === 5
-        ? '2026-04-05'
-        : index === 6
-        ? '2026-04-07'
-        : undefined,
+          ? '2026-03-28'
+          : index === 2
+            ? '2026-03-28'
+            : index === 3
+              ? '2026-03-30'
+              : index === 4
+                ? '2026-04-01'
+                : index === 5
+                  ? '2026-04-05'
+                  : index === 6
+                    ? '2026-04-07'
+                    : undefined,
     completedAt:
       index === 0
         ? '2026-03-21T10:30:00Z'
         : index === 1
-        ? '2026-03-26T09:00:00Z'
-        : index === 2
-        ? '2026-03-28T15:00:00Z'
-        : index === 3
-        ? '2026-03-30T11:00:00Z'
-        : index === 4
-        ? '2026-04-01T14:00:00Z'
-        : undefined,
+          ? '2026-03-26T09:00:00Z'
+          : index === 2
+            ? '2026-03-28T15:00:00Z'
+            : index === 3
+              ? '2026-03-30T11:00:00Z'
+              : index === 4
+                ? '2026-04-01T14:00:00Z'
+                : undefined,
     photos: index === 2 ? ['https://placehold.co/400x300?text=Survey+Photo'] : [],
     documents:
       index === 3
         ? ['https://placehold.co/400x300?text=Contract+PDF']
         : index === 4
-        ? ['https://placehold.co/400x300?text=Receipt']
-        : [],
+          ? ['https://placehold.co/400x300?text=Receipt']
+          : [],
     createdAt: '2026-03-21T10:00:00Z',
   }))
 }
@@ -131,20 +131,28 @@ export function useDeals() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/deals`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) throw new Error('API error')
+      const token = getAccessToken()
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+      const res = await window.fetch(`${API_BASE}/deals`, { headers })
+      if (!res.ok) {
+        throw new Error('API error')
+      }
       const json = await res.json()
       setData(json.items || json)
     } catch {
-      setData(DEMO_DEALS)
+      // Show empty state instead of demo data for proper data isolation
+      setData([])
     } finally {
       setIsLoading(false)
     }
   }, [])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return { data, isLoading, error, refetch: fetch }
 }
@@ -155,25 +163,33 @@ export function useDeal(dealId: string | null) {
   const [error, setError] = useState<string | null>(null)
 
   const fetch = useCallback(async () => {
-    if (!dealId) return
+    if (!dealId) {
+      return
+    }
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/deals/${dealId}`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) throw new Error('API error')
+      const token = getAccessToken()
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+      const res = await window.fetch(`${API_BASE}/deals/${dealId}`, { headers })
+      if (!res.ok) {
+        throw new Error('API error')
+      }
       const json = await res.json()
       setData(json)
     } catch {
-      const found = DEMO_DEALS.find((d) => d.id === dealId)
-      setData(found || null)
+      setData(null)
     } finally {
       setIsLoading(false)
     }
   }, [dealId])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return { data, isLoading, error, refetch: fetch }
 }
@@ -182,28 +198,34 @@ export function useUpdateDealStage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const updateStage = useCallback(async (
-    dealId: string,
-    stage: DealStage,
-    notes?: string
-  ): Promise<DealType> => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const res = await window.fetch(`${API_BASE}/deals/${dealId}/stage`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stage, notes }),
-      })
-      if (!res.ok) throw new Error('Failed to update stage')
-      return await res.json()
-    } catch {
-      const found = DEMO_DEALS.find((d) => d.id === dealId)
-      return { ...(found!), stage, updatedAt: new Date().toISOString() }
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+  const updateStage = useCallback(
+    async (dealId: string, stage: DealStage, notes?: string): Promise<DealType> => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const token = getAccessToken()
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`
+        }
+        const res = await window.fetch(`${API_BASE}/deals/${dealId}/stage`, {
+          method: 'PATCH',
+          headers,
+          body: JSON.stringify({ stage, notes }),
+        })
+        if (!res.ok) {
+          throw new Error('Failed to update stage')
+        }
+        return await res.json()
+      } catch (err) {
+        setError('Failed to update deal stage')
+        throw err
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    []
+  )
 
   return { updateStage, isLoading, error }
 }
@@ -212,29 +234,35 @@ export function useUploadMilestonePhoto() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const upload = useCallback(async (
-    dealId: string,
-    milestoneId: string,
-    file: File
-  ): Promise<string> => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-      const res = await window.fetch(
-        `${API_BASE}/deals/${dealId}/milestones/${milestoneId}/photos`,
-        { method: 'POST', body: formData }
-      )
-      if (!res.ok) throw new Error('Failed to upload photo')
-      const json = await res.json()
-      return json.url
-    } catch {
-      return URL.createObjectURL(file)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+  const upload = useCallback(
+    async (dealId: string, milestoneId: string, file: File): Promise<string> => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const token = getAccessToken()
+        const headers: Record<string, string> = {}
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`
+        }
+        const formData = new FormData()
+        formData.append('file', file)
+        const res = await window.fetch(
+          `${API_BASE}/deals/${dealId}/milestones/${milestoneId}/photos`,
+          { method: 'POST', headers, body: formData }
+        )
+        if (!res.ok) {
+          throw new Error('Failed to upload photo')
+        }
+        const json = await res.json()
+        return json.url
+      } catch {
+        return URL.createObjectURL(file)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    []
+  )
 
   return { upload, isLoading, error }
 }
@@ -243,40 +271,42 @@ export function useCompleteMilestone() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const complete = useCallback(async (
-    dealId: string,
-    milestoneId: string,
-    notes?: string,
-    photoUrls?: string[]
-  ): Promise<DealMilestoneType> => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const res = await window.fetch(
-        `${API_BASE}/deals/${dealId}/milestones/${milestoneId}/complete`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ notes, photos: photoUrls }),
+  const complete = useCallback(
+    async (
+      dealId: string,
+      milestoneId: string,
+      notes?: string,
+      photoUrls?: string[]
+    ): Promise<DealMilestoneType> => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const token = getAccessToken()
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`
         }
-      )
-      if (!res.ok) throw new Error('Failed to complete milestone')
-      return await res.json()
-    } catch {
-      return {
-        id: milestoneId,
-        dealId,
-        stage: 'accepted',
-        completedAt: new Date().toISOString(),
-        notes,
-        photos: photoUrls || [],
-        documents: [],
-        createdAt: new Date().toISOString(),
+        const res = await window.fetch(
+          `${API_BASE}/deals/${dealId}/milestones/${milestoneId}/complete`,
+          {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ notes, photos: photoUrls }),
+          }
+        )
+        if (!res.ok) {
+          throw new Error('Failed to complete milestone')
+        }
+        return await res.json()
+      } catch (err) {
+        setError('Failed to complete milestone')
+        throw err
+      } finally {
+        setIsLoading(false)
       }
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+    },
+    []
+  )
 
   return { complete, isLoading, error }
 }
