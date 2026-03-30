@@ -52,11 +52,11 @@
     "about": "เกี่ยวกับเรา",
     "contact": "ติดต่อเรา",
     "pricingPlans": "แพ็กเกจราคา",
-    "developerApi": "Developer API",
+    "developerApi": "API นักพัฒนา",
     "vatInvoices": "ใบกำกับภาษี",
     "permits": "ใบอนุญาต MEA/PEA",
     "billAnalysis": "วิเคราะห์บิลค่าไฟ",
-    "aiDashboard": "AI Dashboard",
+    "aiDashboard": "แดชบอร์ด AI",
     "helpCenter": "ศูนย์ช่วยเหลือ"
   },
   "navbar": {
@@ -709,7 +709,7 @@
     }
   },
   "dealsPage": {
-    "title": "Deals",
+    "title": "ดีล",
     "subtitle": "ติดตามงานติดตั้งทั้งหมดของคุณ",
     "stats": {
       "total": "งานทั้งหมด",
@@ -756,7 +756,7 @@
       "shareByChannel": "สัดส่วนตามช่องทาง"
     },
     "aiInsights": {
-      "title": "AI Insights",
+      "title": "ข้อมูลเชิงลึก AI",
       "subtitle": "ข้อมูลเชิงลึกล่าสุดจากระบบวิเคราะห์"
     }
   },
@@ -899,7 +899,7 @@
         "line": "LINE",
         "email": "อีเมล",
         "sms": "SMS",
-        "webPush": "Web Push"
+        "webPush": "การแจ้งเตือนเว็บ"
       },
       "resetDefaults": "รีเซ็ตค่าเริ่มต้น",
       "saveSettings": "บันทึกการตั้งค่า"
@@ -945,7 +945,7 @@
       "usagePercent": "ใช้ไป {percent}% ของ Limit"
     },
     "branding": {
-      "title": "White-Label Branding",
+      "title": "แบรนด์ White-Label",
       "subtitle": "ปรับแต่งแบรนด์สำหรับ Proposal และหน้าลูกค้า",
       "enterprise": "Enterprise",
       "orgOnly": "White-label branding ใช้งานได้เฉพาะบัญชีที่เป็นสมาชิกองค์กรเท่านั้น",
@@ -953,22 +953,22 @@
       "setDefault": "ตั้งเป็น Default",
       "brandName": "ชื่อแบรนด์",
       "displayCompanyName": "ชื่อบริษัทที่แสดง",
-      "logoLight": "Logo (Light URL)",
-      "logoDark": "Logo (Dark URL)",
+      "logoLight": "โลโก้ (URL สำหรับโหมดสว่าง)",
+      "logoDark": "โลโก้ (URL สำหรับโหมดมืด)",
       "uploading": "กำลังอัปโหลด...",
       "uploadLogo": "อัปโหลดโลโก้ (PNG/JPG/SVG)",
       "faviconUrl": "Favicon URL",
-      "borderRadius": "Border Radius",
-      "primaryColor": "Primary Color",
-      "secondaryColor": "Secondary Color",
-      "accentColor": "Accent Color",
-      "fontHeading": "Font Heading",
-      "fontBody": "Font Body (Live Preview)",
-      "customDomain": "Custom Domain",
+      "borderRadius": "ความโค้งขอบ",
+      "primaryColor": "สีหลัก",
+      "secondaryColor": "สีรอง",
+      "accentColor": "สีเน้น",
+      "fontHeading": "ฟอนต์หัวข้อ",
+      "fontBody": "ฟอนต์เนื้อหา (ตัวอย่างสด)",
+      "customDomain": "โดเมนกำหนดเอง",
       "customDomainHint": "ชี้ CNAME record มาที่ custom.solariq.app",
       "setupDomain": "ตั้งค่า Domain",
       "verifyDns": "ตรวจสอบ DNS",
-      "dnsRecords": "DNS Records",
+      "dnsRecords": "ระเบียน DNS",
       "preview": "ตัวอย่าง",
       "createNewBrand": "สร้างแบรนด์ใหม่",
       "newBrandName": "ชื่อแบรนด์ใหม่",
@@ -1551,16 +1551,16 @@
     }
   },
   "developersPage": {
-    "title": "Developer Portal",
+    "title": "พอร์ทัลนักพัฒนา",
     "welcomeTitle": "ยินดีต้อนรับนักพัฒนา!",
     "welcomeSubtitle": "เชื่อมต่อ SolarIQ กับระบบของคุณผ่าน REST API",
     "todayUsage": "สรุปการใช้งานวันนี้",
     "stats": {
       "apiCallsToday": "API Calls วันนี้",
       "fromDailyLimit": "จาก 10,000 req/วัน",
-      "successRate": "Success Rate",
+      "successRate": "อัตราสำเร็จ",
       "avg30Days": "เฉลี่ย 30 วันที่ผ่านมา",
-      "avgLatency": "Avg Latency",
+      "avgLatency": "เวลาตอบสนองเฉลี่ย",
       "avgResponseTime": "ค่าเฉลี่ยตอบสนอง"
     },
     "gettingStarted": "เริ่มต้นใช้งาน",
@@ -1590,7 +1590,7 @@
         "created": "API Key สร้างแล้ว",
         "keyName": "ชื่อ Key",
         "keyNamePlaceholder": "เช่น Production Key, Test Server",
-        "environment": "Environment",
+        "environment": "สภาพแวดล้อม",
         "liveData": "ข้อมูลจริง",
         "testData": "ข้อมูลทดสอบ",
         "permissions": "สิทธิ์การเข้าถึง",
@@ -1612,7 +1612,7 @@
         "key": "Key",
         "created": "สร้างเมื่อ",
         "lastUsed": "ใช้ล่าสุด",
-        "calls": "Calls",
+        "calls": "จำนวนเรียก",
         "status": "สถานะ",
         "manage": "จัดการ",
         "neverUsed": "ไม่เคยใช้"
@@ -1642,11 +1642,11 @@
     "sandbox": {
       "title": "Sandbox Environment",
       "subtitle": "ทดสอบ API ด้วยข้อมูลตัวอย่าง ไม่กระทบข้อมูลจริง",
-      "resetData": "Reset Sandbox Data",
+      "resetData": "รีเซ็ตข้อมูล Sandbox",
       "resetting": "กำลัง Reset...",
       "sandboxKey": "Sandbox Key",
       "sandboxKeyHint": "ใช้ key นี้สำหรับทดสอบเท่านั้น ไม่มีผลกับข้อมูล production",
-      "quickTests": "Quick Tests",
+      "quickTests": "ทดสอบด่วน",
       "tests": {
         "analyzeBill": "วิเคราะห์บิลค่าไฟ",
         "analyzeBillDesc": "ส่งข้อมูลบิลค่าไฟและรับการวิเคราะห์โซลาร์",
@@ -1657,10 +1657,10 @@
       },
       "showPayload": "ดู Payload",
       "hidePayload": "ซ่อน",
-      "requestPayload": "Request Payload",
+      "requestPayload": "ข้อมูลคำขอ",
       "run": "รัน",
       "running": "กำลังส่ง...",
-      "demoSimulated": "Demo mode — simulated response",
+      "demoSimulated": "โหมดสาธิต — การตอบสนองจำลอง",
       "notes": {
         "title": "หมายเหตุเกี่ยวกับ Sandbox",
         "autoReset": "ข้อมูลใน sandbox จะถูก reset ทุก 24 ชั่วโมงโดยอัตโนมัติ",
@@ -1920,7 +1920,7 @@
         "title": "5. รายชื่อ Subprocessor",
         "description": "เราใช้บริการจากผู้ให้บริการบุคคลที่สาม (Subprocessors) เพื่อรองรับการดำเนินงานของเรา ทุก Subprocessor ได้รับการคัดเลือกอย่างรอบคอบและมีข้อตกลงความลับ (NDA)",
         "table": {
-          "subprocessor": "Subprocessor",
+          "subprocessor": "ผู้ประมวลผลข้อมูลย่อย",
           "purpose": "วัตถุประสงค์",
           "location": "ตำแหน่ง"
         }
@@ -1953,7 +1953,7 @@
         "responseTimeValue": "ภายใน 30 วัน (ตามที่ PDPA กำหนด)"
       },
       "dsrPortal": {
-        "title": "10. Data Subject Request Portal",
+        "title": "10. พอร์ทัลคำขอสิทธิ์เจ้าของข้อมูล",
         "description": "คุณสามารถใช้ Data Subject Request (DSR) Portal เพื่อจัดการสิทธิของคุณ:",
         "submitRequest": "ส่งคำขอ DSR",
         "submitDescription": "ขอเข้าถึง แก้ไข ลบ หรือส่งออกข้อมูลของคุณ",
@@ -1974,7 +1974,7 @@
       }
     },
     "dsr": {
-      "title": "Data Subject Request Portal",
+      "title": "พอร์ทัลคำขอสิทธิ์เจ้าของข้อมูล",
       "subtitle": "จัดการสิทธิของคุณตาม PDPA",
       "back": "ย้อนกลับ",
       "important": "ข้อมูลสำคัญ:",
@@ -2084,10 +2084,10 @@
         },
         "pipeline": {
           "new": "New",
-          "qualified": "Qualified",
-          "analyzing": "Analyzing",
-          "proposal": "Proposal",
-          "negotiation": "Negotiation",
+          "qualified": "ผ่านคุณสมบัติ",
+          "analyzing": "กำลังวิเคราะห์",
+          "proposal": "ข้อเสนอ",
+          "negotiation": "เจรจาต่อรอง",
           "won": "Won"
         }
       },
@@ -2333,7 +2333,7 @@
       },
       "proposalPage": {
         "title": "ใบเสนอราคา",
-        "subtitle": "Solar Proposal",
+        "subtitle": "ข้อเสนอโซลาร์",
         "loading": "กำลังโหลดใบเสนอราคา...",
         "status": {
           "generating": "กำลังสร้างใบเสนอราคา",
@@ -2666,7 +2666,7 @@
     "annual": "รายปี",
     "annualDiscount": "ประหยัด 20%",
     "subtotal": "ราคาก่อน VAT",
-    "vat": "VAT (7%)",
+    "vat": "ภาษีมูลค่าเพิ่ม (7%)",
     "total": "ยอดรวม",
     "paymentMethod": "วิธีชำระเงิน",
     "creditCard": "บัตรเครดิต / เดบิต",
@@ -2684,8 +2684,8 @@
     "termsAgreement": "การดำเนินการนี้แสดงว่าคุณยอมรับ",
     "termsLink": "ข้อกำหนดการใช้งาน",
     "privacyLink": "นโยบายความเป็นส่วนตัว",
-    "planStarter": "Starter",
-    "planPro": "Professional",
+    "planStarter": "แพ็กเกจเริ่มต้น",
+    "planPro": "แพ็กเกจมืออาชีพ",
     "planEnterprise": "Enterprise",
     "perMonth": "/ เดือน",
     "perYear": "/ ปี",
@@ -2718,31 +2718,31 @@
     "trialFeature1": "วิเคราะห์โซลาร์: 5 ครั้ง",
     "trialFeature2": "ROI Calculator พื้นฐาน",
     "trialFeature3": "1 ผู้ใช้",
-    "trialFeature4": "Community Support",
+    "trialFeature4": "การสนับสนุนจากชุมชน",
     "starterFeature1": "วิเคราะห์โซลาร์: 20 ครั้ง/เดือน",
     "starterFeature2": "ROI Calculator พื้นฐาน",
     "starterFeature3": "PDF Proposal Generation",
-    "starterFeature4": "Basic Dashboard",
+    "starterFeature4": "แดชบอร์ดพื้นฐาน",
     "starterFeature5": "1 ผู้ใช้",
-    "starterFeature6": "Email Support",
+    "starterFeature6": "สนับสนุนทางอีเมล",
     "proFeature1": "วิเคราะห์โซลาร์: 100 ครั้ง/เดือน",
-    "proFeature2": "Climate Reliability Score",
-    "proFeature3": "Energy Independence Score",
+    "proFeature2": "คะแนนความน่าเชื่อถือสภาพอากาศ",
+    "proFeature3": "คะแนนความเป็นอิสระด้านพลังงาน",
     "proFeature4": "PM2.5 Impact Analysis",
     "proFeature5": "เปรียบเทียบการลงทุน (เงินสด/สินเชื่อ/เช่า)",
     "proFeature6": "Smart Alerts อัจฉริยะ",
-    "proFeature7": "Full Dashboard + CSV Export",
+    "proFeature7": "แดชบอร์ดเต็มรูปแบบ + ส่งออก CSV",
     "proFeature8": "API Access",
     "proFeature9": "5 ผู้ใช้",
-    "proFeature10": "Priority Support",
+    "proFeature10": "สนับสนุนแบบเร่งด่วน",
     "entFeature1": "วิเคราะห์โซลาร์: ไม่จำกัด",
     "entFeature2": "ทุกอย่างใน Professional +",
-    "entFeature3": "White-label Branding",
-    "entFeature4": "Custom API Integration",
+    "entFeature3": "แบรนด์ White-label",
+    "entFeature4": "การเชื่อมต่อ API แบบกำหนดเอง",
     "entFeature5": "ผู้ใช้ไม่จำกัด",
-    "entFeature6": "Dedicated Account Manager",
+    "entFeature6": "ผู้จัดการบัญชีเฉพาะ",
     "entFeature7": "SLA 99.9% Uptime",
-    "entFeature8": "Custom Report Templates"
+    "entFeature8": "เทมเพลตรายงานแบบกำหนดเอง"
   },
   "checkoutSuccess": {
     "title": "ชำระเงินสำเร็จ!",
@@ -3023,7 +3023,7 @@
     "unitPrice": "ราคาต่อหน่วย",
     "amount": "จำนวนเงิน",
     "subtotal": "ราคาก่อน VAT",
-    "vat": "VAT (7%)",
+    "vat": "ภาษีมูลค่าเพิ่ม (7%)",
     "total": "ยอดรวม",
     "notes": "หมายเหตุ",
     "downloadPdf": "ดาวน์โหลด PDF",
@@ -3182,7 +3182,7 @@
     "installation": "ค่าติดตั้ง",
     "accessories": "อุปกรณ์เสริม",
     "total": "รวม",
-    "vat": "VAT (7%)",
+    "vat": "ภาษีมูลค่าเพิ่ม (7%)",
     "subtotal": "ราคาก่อน VAT",
     "discount": "ส่วนลด",
     "netTotal": "ยอดสุทธิ",
@@ -4043,7 +4043,7 @@
     "days": "วัน",
     "edit": "แก้ไข",
     "labels": {
-      "battery": "Battery",
+      "battery": "แบตเตอรี่",
       "batteryCost": "ค่าแบตเตอรี่",
       "cableAndAccessories": "สายไฟและอุปกรณ์เสริม",
       "date": "วันที่",

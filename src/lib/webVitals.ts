@@ -5,8 +5,8 @@
  * This module provides Web Vitals performance tracking and reporting.
  */
 
-import * as Sentry from '@sentry/nextjs';
-import { onCLS, onFID, onLCP, onFCP, onTTFB, Metric } from 'web-vitals';
+import * as Sentry from '@sentry/nextjs'
+import { onCLS, onFID, onINP, onLCP, onFCP, onTTFB, Metric } from 'web-vitals'
 
 // Web Vitals thresholds (in milliseconds)
 const THRESHOLDS = {
@@ -15,48 +15,50 @@ const THRESHOLDS = {
   FID: { good: 100, needsImprovement: 300 }, // First Input Delay
   CLS: { good: 0.1, needsImprovement: 0.25 }, // Cumulative Layout Shift
 
+  INP: { good: 200, needsImprovement: 500 }, // Interaction to Next Paint
+
   // Other metrics
   FCP: { good: 1800, needsImprovement: 3000 }, // First Contentful Paint
   TTFB: { good: 800, needsImprovement: 1800 }, // Time to First Byte
-};
+}
 
 // Metric rating types
-type MetricRating = 'good' | 'needs-improvement' | 'poor';
+type MetricRating = 'good' | 'needs-improvement' | 'poor'
 
 /**
  * Get rating for a metric value
  */
 function getRating(metricName: string, value: number): MetricRating {
-  const threshold = THRESHOLDS[metricName as keyof typeof THRESHOLDS];
+  const threshold = THRESHOLDS[metricName as keyof typeof THRESHOLDS]
   if (!threshold) {
-    return 'good';
+    return 'good'
   }
 
   if (metricName === 'CLS') {
     // CLS is a unitless score, not milliseconds
     if (value <= threshold.good) {
-      return 'good';
+      return 'good'
     }
     if (value <= threshold.needsImprovement) {
-      return 'needs-improvement';
+      return 'needs-improvement'
     }
-    return 'poor';
+    return 'poor'
   }
 
   if (value <= threshold.good) {
-    return 'good';
+    return 'good'
   }
   if (value <= threshold.needsImprovement) {
-    return 'needs-improvement';
+    return 'needs-improvement'
   }
-  return 'poor';
+  return 'poor'
 }
 
 /**
  * Send metric to analytics endpoint
  */
 function sendToAnalytics(metric: Metric): void {
-  const rating = getRating(metric.name, metric.value);
+  const rating = getRating(metric.name, metric.value)
 
   // Log to console in development
   if (process.env.NODE_ENV === 'development') {
@@ -68,7 +70,7 @@ function sendToAnalytics(metric: Metric): void {
       id: metric.id,
       delta: metric.delta,
       navigationType: metric.navigationType,
-    });
+    })
   }
 
   // Send to Sentry as a transaction/span
@@ -85,7 +87,7 @@ function sendToAnalytics(metric: Metric): void {
         delta: metric.delta,
         navigationType: metric.navigationType,
       },
-    });
+    })
 
     // Track poor metrics as Sentry events
     if (rating === 'poor') {
@@ -101,13 +103,13 @@ function sendToAnalytics(metric: Metric): void {
           delta: metric.delta,
           navigationType: metric.navigationType,
         },
-      });
+      })
     }
   }
 
   // Send to analytics API endpoint
   if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-    const url = '/api/analytics/vitals';
+    const url = '/api/analytics/vitals'
     const body = JSON.stringify({
       name: metric.name,
       value: metric.value,
@@ -117,11 +119,11 @@ function sendToAnalytics(metric: Metric): void {
       navigationType: metric.navigationType,
       page: window.location.pathname,
       timestamp: new Date().toISOString(),
-    });
+    })
 
     // Use sendBeacon if available, otherwise fetch
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(url, body);
+      navigator.sendBeacon(url, body)
     } else {
       fetch(url, {
         method: 'POST',
@@ -130,7 +132,7 @@ function sendToAnalytics(metric: Metric): void {
         keepalive: true,
       }).catch(() => {
         // Silently fail - analytics should not break the app
-      });
+      })
     }
   }
 }
@@ -140,33 +142,34 @@ function sendToAnalytics(metric: Metric): void {
  */
 export function initWebVitals(): void {
   // Core Web Vitals
-  onCLS(sendToAnalytics);
-  onFID(sendToAnalytics);
-  onLCP(sendToAnalytics);
+  onCLS(sendToAnalytics)
+  onFID(sendToAnalytics)
+  onLCP(sendToAnalytics)
+  onINP(sendToAnalytics)
 
   // Additional metrics
-  onFCP(sendToAnalytics);
-  onTTFB(sendToAnalytics);
+  onFCP(sendToAnalytics)
+  onTTFB(sendToAnalytics)
 }
 
 /**
  * Get current page performance metrics
  */
 export function getPagePerformanceMetrics(): {
-  dns: number;
-  tcp: number;
-  request: number;
-  response: number;
-  domProcessing: number;
-  totalLoad: number;
+  dns: number
+  tcp: number
+  request: number
+  response: number
+  domProcessing: number
+  totalLoad: number
 } | null {
   if (typeof window === 'undefined' || !window.performance) {
-    return null;
+    return null
   }
 
-  const timing = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+  const timing = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
   if (!timing) {
-    return null;
+    return null
   }
 
   return {
@@ -176,7 +179,7 @@ export function getPagePerformanceMetrics(): {
     response: timing.responseEnd - timing.responseStart,
     domProcessing: timing.domComplete - timing.domInteractive,
     totalLoad: timing.loadEventEnd - timing.fetchStart,
-  };
+  }
 }
 
 /**
@@ -184,11 +187,11 @@ export function getPagePerformanceMetrics(): {
  */
 export function trackPerformanceMark(name: string, data?: Record<string, unknown>): void {
   if (typeof window === 'undefined' || !window.performance) {
-    return;
+    return
   }
 
-  const markName = `custom:${name}`;
-  performance.mark(markName);
+  const markName = `custom:${name}`
+  performance.mark(markName)
 
   if (data && process.env.NEXT_PUBLIC_SENTRY_DSN) {
     Sentry.addBreadcrumb({
@@ -196,7 +199,7 @@ export function trackPerformanceMark(name: string, data?: Record<string, unknown
       message: markName,
       level: 'info',
       data,
-    });
+    })
   }
 }
 
@@ -209,17 +212,17 @@ export function measurePerformance(
   endMark?: string
 ): PerformanceMeasure | null {
   if (typeof window === 'undefined' || !window.performance) {
-    return null;
+    return null
   }
 
   try {
-    const end = endMark || `${name}:end`;
+    const end = endMark || `${name}:end`
     if (!endMark) {
-      performance.mark(end);
+      performance.mark(end)
     }
-    return performance.measure(name, startMark, end);
+    return performance.measure(name, startMark, end)
   } catch {
-    return null;
+    return null
   }
 }
 
@@ -243,7 +246,7 @@ export function trackApiCall(
         status,
         success,
       },
-    });
+    })
 
     // Track slow API calls (> 3 seconds)
     if (duration > 3000) {
@@ -256,7 +259,7 @@ export function trackApiCall(
         extra: {
           duration,
         },
-      });
+      })
     }
   }
 }
@@ -279,9 +282,15 @@ export function trackInteraction(
         duration,
         ...metadata,
       },
-    });
+    })
   }
 }
 
+/**
+ * Report Web Vitals - convenience export for use from app entry points.
+ * Calls initWebVitals() to register all metric observers.
+ */
+export const reportWebVitals = initWebVitals
+
 // Export types
-export type { Metric };
+export type { Metric }

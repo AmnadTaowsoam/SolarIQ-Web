@@ -26,13 +26,16 @@ export function initSentry(): void {
     release: `solariq-web@${RELEASE}`,
 
     // Performance monitoring
-    tracesSampleRate: ENVIRONMENT === 'production' ? 0.1 : 1.0,
+    // Early launch phase: 0.3 for better visibility. Reduce to 0.1 after stable launch.
+    tracesSampleRate: ENVIRONMENT === 'production' ? 0.3 : 1.0,
 
     // Session replay (optional, for debugging)
     replaysSessionSampleRate: ENVIRONMENT === 'production' ? 0.1 : 0.5,
     replaysOnErrorSampleRate: ENVIRONMENT === 'production' ? 0.5 : 1.0,
 
     // Integrations
+    // Note: @sentry/nextjs automatically captures Web Vitals (LCP, FID/INP, CLS)
+    // via browserTracingIntegration — no extra setup required.
     integrations: [
       Sentry.browserTracingIntegration({
         enableInp: true,
