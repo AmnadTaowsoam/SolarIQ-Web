@@ -97,6 +97,8 @@ export interface UseProposalsReturn {
   trackProposalView: (proposalId: string, durationSeconds?: number) => Promise<void>
   getAnalytics: (startDate?: string, endDate?: string) => Promise<ProposalAnalytics>
   refreshProposals: () => Promise<void>
+  refreshPdfUrl: (proposalId: string) => Promise<string | null>
+  getPdfUrl: (proposal: Proposal) => Promise<string | null>
 }
 
 export function useProposals(): UseProposalsReturn {
@@ -371,6 +373,65 @@ export function useProposals(): UseProposalsReturn {
     []
   )
 
+  const refreshPdfUrl = useCallback(async (proposalId: string): Promise<string | null> => {
+    try {
+      setError(null)
+
+      const response = await fetch(`/api/v1/proposals/${proposalId}/refresh-url`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.detail || 'Failed to refresh PDF URL')
+      }
+
+      const data = await response.json()
+      if (data.success && data.data?.pdf_url) {
+        // Update the proposal in state with the new URL
+        setProposals((prev) =>
+          prev.map((p) =>
+            p.id === proposalId
+              ? { ...p, pdf_url: data.data.pdf_url, pdf_expires_at: data.data.pdf_expires_at }
+              : p
+          )
+        )
+        return data.data.pdf_url as string
+      }
+
+      return null
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to refresh PDF URL')
+      return null
+    }
+  }, [])
+
+  const getPdfUrl = useCallback(
+    async (proposal: Proposal): Promise<string | null> => {
+      if (!proposal.pdf_url) {
+        return null
+      }
+
+      // Check if the URL has expired or will expire within 1 hour
+      if (proposal.pdf_expires_at) {
+        const expiresAt = new Date(proposal.pdf_expires_at)
+        const oneHourFromNow = new Date(Date.now() + 60 * 60 * 1000)
+        if (expiresAt <= oneHourFromNow) {
+          // URL expired or about to expire, refresh it
+          const newUrl = await refreshPdfUrl(proposal.id)
+          return newUrl
+        }
+      }
+
+      return proposal.pdf_url
+    },
+    [refreshPdfUrl]
+  )
+
   const refreshProposals = useCallback(async () => {
     await fetchProposals()
   }, [fetchProposals])
@@ -396,5 +457,7 @@ export function useProposals(): UseProposalsReturn {
     trackProposalView,
     getAnalytics,
     refreshProposals,
+    refreshPdfUrl,
+    getPdfUrl,
   }
 }

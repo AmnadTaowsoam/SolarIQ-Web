@@ -10,6 +10,7 @@ interface ProposalPreviewProps {
   onSend?: (proposalId: string, request: SendProposalRequest) => Promise<void>
   onUpdateStatus?: (proposalId: string, request: UpdateStatusRequest) => Promise<void>
   onRegenerate?: (proposalId: string) => void
+  onGetPdfUrl?: (proposal: Proposal) => Promise<string | null>
 }
 
 export function ProposalPreview({
@@ -17,10 +18,12 @@ export function ProposalPreview({
   onSend,
   onUpdateStatus,
   onRegenerate,
+  onGetPdfUrl,
 }: ProposalPreviewProps) {
   const t = useTranslations('proposalPreview')
   const [showSendModal, setShowSendModal] = useState(false)
   const [showStatusModal, setShowStatusModal] = useState(false)
+  const [isLoadingPdf, setIsLoadingPdf] = useState(false)
   const [sendChannel, setSendChannel] = useState<'line' | 'email'>('line')
   const [sendRecipient, setSendRecipient] = useState('')
   const [sendMessage, setSendMessage] = useState('')
@@ -239,8 +242,26 @@ export function ProposalPreview({
         <div className="flex flex-wrap gap-2 justify-between">
           <div className="flex gap-2">
             {proposal.pdf_url && (
-              <Button variant="secondary" onClick={() => window.open(proposal.pdf_url, '_blank')}>
-                📄 {t('download')}
+              <Button
+                variant="secondary"
+                disabled={isLoadingPdf}
+                onClick={async () => {
+                  if (onGetPdfUrl) {
+                    setIsLoadingPdf(true)
+                    try {
+                      const url = await onGetPdfUrl(proposal)
+                      if (url) {
+                        window.open(url, '_blank')
+                      }
+                    } finally {
+                      setIsLoadingPdf(false)
+                    }
+                  } else {
+                    window.open(proposal.pdf_url, '_blank')
+                  }
+                }}
+              >
+                {isLoadingPdf ? '⏳' : '📄'} {t('download')}
               </Button>
             )}
             {onRegenerate && (

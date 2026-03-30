@@ -12,7 +12,7 @@ import { sendFlexMessage, closeWindow, getAccessToken, openWindow } from '../../
 import { SolarAnalysisResult } from '../../../types'
 import { useTranslations } from 'next-intl'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 interface ProposalData {
   id: string
