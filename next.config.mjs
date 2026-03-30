@@ -52,6 +52,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
 const nextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   eslint: {
