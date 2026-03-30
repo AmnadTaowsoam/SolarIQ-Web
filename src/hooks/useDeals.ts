@@ -120,6 +120,27 @@ export const DEMO_DEALS: DealType[] = [
   },
 ]
 
+// ── Transform helper ──────────────────────────────────────────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function transformDeal(raw: any): DealType {
+  return {
+    ...raw,
+    createdAt: raw.createdAt || raw.created_at || new Date().toISOString(),
+    updatedAt: raw.updatedAt || raw.updated_at || new Date().toISOString(),
+    signedAt: raw.signedAt || raw.signed_at || undefined,
+    startedAt: raw.startedAt || raw.started_at || undefined,
+    completedAt: raw.completedAt || raw.completed_at || undefined,
+    cancelledAt: raw.cancelledAt || raw.cancelled_at || undefined,
+    milestones: (raw.milestones || []).map((m: Record<string, unknown>) => ({
+      ...m,
+      createdAt: m.createdAt || m.created_at || new Date().toISOString(),
+      completedAt: m.completedAt || m.completed_at || undefined,
+      plannedDate: m.plannedDate || m.planned_date || undefined,
+    })),
+  }
+}
+
 // ── Hooks ─────────────────────────────────────────────────────────────────────
 
 export function useDeals() {
@@ -141,7 +162,8 @@ export function useDeals() {
         throw new Error('API error')
       }
       const json = await res.json()
-      setData(json.items || json)
+      const items = json.items || json
+      setData(Array.isArray(items) ? items.map(transformDeal) : [])
     } catch {
       // Show empty state instead of demo data for proper data isolation
       setData([])
@@ -179,7 +201,7 @@ export function useDeal(dealId: string | null) {
         throw new Error('API error')
       }
       const json = await res.json()
-      setData(json)
+      setData(transformDeal(json))
     } catch {
       setData(null)
     } finally {

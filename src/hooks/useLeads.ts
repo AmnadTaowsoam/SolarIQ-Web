@@ -57,7 +57,10 @@ export function useLeads(options: UseLeadsOptions = {}) {
 export function useLead(id: string) {
   return useQuery({
     queryKey: ['lead', id],
-    queryFn: () => api.get<Lead>(API_ENDPOINTS.LEADS.DETAIL(id)),
+    queryFn: async () => {
+      const raw = await api.get<Lead>(API_ENDPOINTS.LEADS.DETAIL(id))
+      return transformLead(raw)
+    },
     enabled: !!id,
   })
 }

@@ -159,6 +159,31 @@ export const DEMO_PERMIT_TEMPLATES: PermitTemplate[] = [
   },
 ]
 
+// ── Transform helper ────────────────────────────────────────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function transformPermit(raw: any): PermitPackage {
+  return {
+    ...raw,
+    dealId: raw.dealId || raw.deal_id || '',
+    orgId: raw.orgId || raw.org_id || '',
+    permitType: raw.permitType || raw.permit_type || '',
+    submittedAt: raw.submittedAt || raw.submitted_at || null,
+    approvedAt: raw.approvedAt || raw.approved_at || null,
+    rejectionReason: raw.rejectionReason || raw.rejection_reason || null,
+    submissionDeadline: raw.submissionDeadline || raw.submission_deadline || null,
+    createdAt: raw.createdAt || raw.created_at || new Date().toISOString(),
+    updatedAt: raw.updatedAt || raw.updated_at || new Date().toISOString(),
+    documents: (raw.documents || []).map((d: Record<string, unknown>) => ({
+      ...d,
+      packageId: d.packageId || d.package_id || '',
+      createdAt: d.createdAt || d.created_at || new Date().toISOString(),
+      updatedAt: d.updatedAt || d.updated_at || new Date().toISOString(),
+      reviewedAt: d.reviewedAt || d.reviewed_at || null,
+    })),
+  }
+}
+
 // ── API Hooks ───────────────────────────────────────────────────────────────
 
 export function usePermits(status?: string, page = 1, limit = 20) {
@@ -188,7 +213,7 @@ export function usePermits(status?: string, page = 1, limit = 20) {
       }
 
       const data = await response.json()
-      setPackages(data.items || [])
+      setPackages((data.items || []).map(transformPermit))
       setTotal(data.total || 0)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
@@ -225,7 +250,7 @@ export function usePermit(id: string) {
       }
 
       const data = await response.json()
-      setPermit(data)
+      setPermit(transformPermit(data))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
       // Use demo data as fallback
