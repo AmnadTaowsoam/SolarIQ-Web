@@ -943,7 +943,10 @@ export default function LeadDetailPage() {
                 try {
                   addToast('info', 'Generating proposal...')
                   const { apiClient } = await import('@/lib/api')
-                  const res = await apiClient.post(`/proposals/generate`, { lead_id: lead.id })
+                  const res = await apiClient.post(`/api/v1/proposals/generate`, {
+                    lead_id: lead.id,
+                    ai_summary: `Solar proposal for ${lead.customerName || 'customer'} - ${lead.systemSizeKwp || 'N/A'} kWp system`,
+                  })
                   if (res?.url) {
                     window.open(res.url, '_blank')
                     addToast('success', 'Proposal generated successfully!')
@@ -1284,7 +1287,10 @@ export default function LeadDetailPage() {
                     try {
                       addToast('info', 'Generating proposal...')
                       const { apiClient } = await import('@/lib/api')
-                      const res = await apiClient.post(`/proposals/generate`, { lead_id: lead.id })
+                      const res = await apiClient.post(`/api/v1/proposals/generate`, {
+                        lead_id: lead.id,
+                        ai_summary: `Solar proposal for ${lead.customerName || 'customer'} - ${lead.systemSizeKwp || 'N/A'} kWp system`,
+                      })
                       if (res?.url) {
                         window.open(res.url, '_blank')
                         addToast('success', 'Proposal generated!')
