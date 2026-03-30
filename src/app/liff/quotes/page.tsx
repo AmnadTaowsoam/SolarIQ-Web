@@ -193,11 +193,11 @@ export default function QuoteRequestPage() {
                       <span
                         className={`font-medium block ${formData.preferredTimeline === opt ? 'text-orange-700' : 'text-[var(--brand-text)]'}`}
                       >
-                        {TIMELINE_LABELS[opt].split('(')[0].trim()}
+                        {(TIMELINE_LABELS[opt] ?? '').split('(')[0]?.trim()}
                       </span>
-                      {TIMELINE_LABELS[opt].includes('(') && (
+                      {(TIMELINE_LABELS[opt] ?? '').includes('(') && (
                         <span className="text-xs text-[var(--brand-text-secondary)]">
-                          {TIMELINE_LABELS[opt].match(/\(([^)]+)\)/)?.[1]}
+                          {(TIMELINE_LABELS[opt] ?? '').match(/\(([^)]+)\)/)?.[1]}
                         </span>
                       )}
                     </div>

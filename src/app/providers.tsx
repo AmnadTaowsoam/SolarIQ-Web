@@ -1,6 +1,7 @@
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
+import { QuotaExceededError } from '@/lib/api'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from 'next-themes'
 import dynamic from 'next/dynamic'
@@ -74,11 +75,11 @@ export function Providers({ children }: ProvidersProps) {
           <BrandProvider>
             <ToastProvider>
               {children}
-              {quotaError && (
+              {quotaError !== null && (
                 <QuotaExceededModal
                   isOpen={!!quotaError}
                   onClose={() => setQuotaError(null)}
-                  error={quotaError}
+                  error={quotaError instanceof QuotaExceededError ? quotaError : null}
                   onUpgrade={() => {
                     setQuotaError(null)
                     window.location.href = '/billing'

@@ -75,7 +75,11 @@ const DEMO_INVOICES: CommissionInvoice[] = [
     withholdingTax: 0,
     grandTotal: 17013,
     lineItems: [],
-    contractorInfo: { name: 'Thai Sun Solar Co., Ltd.', address: 'Bangkok', tax_id: '0105560123456' },
+    contractorInfo: {
+      name: 'Thai Sun Solar Co., Ltd.',
+      address: 'Bangkok',
+      tax_id: '0105560123456',
+    },
     status: 'sent',
     pdfUrl: null,
     sentAt: '2026-03-01T00:00:00Z',
@@ -88,7 +92,8 @@ const DEMO_INVOICES: CommissionInvoice[] = [
   },
 ]
 
-function mapCommission(raw: any): Commission {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapCommission(raw: Record<string, any>): Commission {
   return {
     id: raw.id,
     dealId: raw.dealId ?? raw.deal_id ?? null,
@@ -113,7 +118,8 @@ function mapCommission(raw: any): Commission {
   }
 }
 
-function mapSummary(raw: any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapSummary(raw: Record<string, any>) {
   return {
     totalAmount: Number(raw.totalAmount ?? raw.total_amount ?? raw.total ?? 0),
     count: Number(raw.count ?? 0),
@@ -121,7 +127,8 @@ function mapSummary(raw: any) {
   }
 }
 
-function mapInvoice(raw: any): CommissionInvoice {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapInvoice(raw: Record<string, any>): CommissionInvoice {
   return {
     id: raw.id,
     invoiceNumber: raw.invoiceNumber ?? raw.invoice_number,
@@ -158,7 +165,8 @@ export function useCommissions() {
     setError(null)
     try {
       const response = await apiClient.get(`${API_BASE}/commissions`)
-      const payload = response.data as any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payload = response.data as Record<string, any>
       const commissions = (payload.commissions || []).map(mapCommission)
       const summary = mapSummary(payload.summary || {})
       setData({ commissions, total: payload.total ?? commissions.length, summary })
@@ -169,7 +177,9 @@ export function useCommissions() {
         summary: {
           totalAmount: DEMO_COMMISSIONS.reduce((sum, c) => sum + c.commissionAmount, 0),
           count: DEMO_COMMISSIONS.length,
-          avgPerDeal: DEMO_COMMISSIONS.reduce((sum, c) => sum + c.commissionAmount, 0) / DEMO_COMMISSIONS.length,
+          avgPerDeal:
+            DEMO_COMMISSIONS.reduce((sum, c) => sum + c.commissionAmount, 0) /
+            DEMO_COMMISSIONS.length,
         },
       })
       setError('Using demo data')
@@ -193,7 +203,8 @@ export function useCommissionSummary() {
     setIsLoading(true)
     try {
       const response = await apiClient.get(`${API_BASE}/commissions/summary`)
-      const payload = response.data as any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payload = response.data as Record<string, any>
       setData({
         currentMonth: mapSummary(payload.currentMonth || payload.current_month || {}),
         previousMonth: mapSummary(payload.previousMonth || payload.previous_month || {}),
@@ -225,7 +236,8 @@ export function useInvoices() {
     setIsLoading(true)
     try {
       const response = await apiClient.get(`${API_BASE}/commissions/invoices`)
-      const payload = response.data as any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payload = response.data as Record<string, any>
       const invoices = (payload.invoices || []).map(mapInvoice)
       setData({ invoices, total: payload.total ?? invoices.length })
     } catch {
@@ -247,13 +259,15 @@ export function useInvoice(invoiceId: string | null) {
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchInvoice = useCallback(async () => {
-    if (!invoiceId) return
+    if (!invoiceId) {
+      return
+    }
     setIsLoading(true)
     try {
       const response = await apiClient.get(`${API_BASE}/commissions/invoices/${invoiceId}`)
       setData(mapInvoice(response.data))
     } catch {
-      setData(DEMO_INVOICES[0])
+      setData(DEMO_INVOICES[0] ?? null)
     } finally {
       setIsLoading(false)
     }
@@ -274,7 +288,8 @@ export function useAdminRevenue() {
     setIsLoading(true)
     try {
       const response = await apiClient.get(`${API_BASE}/admin/revenue`)
-      const payload = response.data as any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payload = response.data as Record<string, any>
       setData({
         total: Number(payload.total ?? 0),
         breakdown: payload.breakdown || {
@@ -356,8 +371,10 @@ export function useTopContractors() {
     setIsLoading(true)
     try {
       const response = await apiClient.get(`${API_BASE}/admin/revenue/top-contractors`)
-      const payload = response.data as any
-      const contractors = (payload.contractors || []).map((row: any) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payload = response.data as Record<string, any>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const contractors = (payload.contractors || []).map((row: Record<string, any>) => ({
         id: row.id,
         name: row.name,
         plan: row.plan,
@@ -368,8 +385,22 @@ export function useTopContractors() {
       setData(contractors)
     } catch {
       setData([
-        { id: 'org-1', name: 'Thai Sun Solar', plan: 'pro', totalDeals: 12, totalCommission: 82000, trend: 'up' },
-        { id: 'org-2', name: 'Bangkok Solar Hub', plan: 'starter', totalDeals: 7, totalCommission: 43000, trend: 'up' },
+        {
+          id: 'org-1',
+          name: 'Thai Sun Solar',
+          plan: 'pro',
+          totalDeals: 12,
+          totalCommission: 82000,
+          trend: 'up',
+        },
+        {
+          id: 'org-2',
+          name: 'Bangkok Solar Hub',
+          plan: 'starter',
+          totalDeals: 7,
+          totalCommission: 43000,
+          trend: 'up',
+        },
       ])
     } finally {
       setIsLoading(false)

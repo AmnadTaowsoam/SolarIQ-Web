@@ -59,12 +59,17 @@ export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductio
     }
     const sorted = [...data].sort((a, b) => b.productionKwh - a.productionKwh)
     const total = data.reduce((sum, d) => sum + d.productionKwh, 0)
+    const best = sorted[0]
+    const worst = sorted[sorted.length - 1]
+    if (!best || !worst) {
+      return null
+    }
     return {
-      best: sorted[0],
-      worst: sorted[sorted.length - 1],
+      best,
+      worst,
       average: total / data.length,
       total,
-      maxProduction: sorted[0].productionKwh,
+      maxProduction: best.productionKwh,
     }
   }, [data])
 
@@ -208,7 +213,7 @@ export function MonthlyProductionChart({ data, systemSizeKwp }: MonthlyProductio
                   }>
                 ) => {
                   if (payload && payload.length > 0) {
-                    const item = payload[0].payload
+                    const item = payload[0]?.payload
                     return `${item?.monthName || _label} (${item?.season || ''}) - Efficiency: ${((item?.efficiencyFactor || 0) * 100).toFixed(1)}%`
                   }
                   return _label

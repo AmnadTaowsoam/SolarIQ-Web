@@ -9,7 +9,14 @@ import { apiClient } from '@/lib/api'
 // ---------------------------------------------------------------------------
 
 export type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'VIEW' | 'EXPORT' | 'LOGIN' | 'LOGOUT'
-export type AuditResourceType = 'lead' | 'deal' | 'quote' | 'user' | 'settings' | 'session' | 'api_key'
+export type AuditResourceType =
+  | 'lead'
+  | 'deal'
+  | 'quote'
+  | 'user'
+  | 'settings'
+  | 'session'
+  | 'api_key'
 
 export interface AuditLogEntry {
   id: string
@@ -66,17 +73,33 @@ const DEMO_USERS = [
   { id: 'u4', email: 'narong@solariq.co', name: 'ณรงค์ เจริญชัย' },
 ]
 
-const DEMO_ACTIONS: AuditAction[] = ['CREATE', 'UPDATE', 'DELETE', 'VIEW', 'EXPORT', 'LOGIN', 'LOGOUT']
-const DEMO_RESOURCES: AuditResourceType[] = ['lead', 'deal', 'quote', 'user', 'settings', 'session', 'api_key']
+const DEMO_ACTIONS: AuditAction[] = [
+  'CREATE',
+  'UPDATE',
+  'DELETE',
+  'VIEW',
+  'EXPORT',
+  'LOGIN',
+  'LOGOUT',
+]
+const DEMO_RESOURCES: AuditResourceType[] = [
+  'lead',
+  'deal',
+  'quote',
+  'user',
+  'settings',
+  'session',
+  'api_key',
+]
 const DEMO_IPS = ['203.150.33.12', '184.22.100.55', '171.97.42.88', '49.228.15.201', '110.168.0.44']
 
 function generateDemoLogs(count: number): AuditLogEntry[] {
   const logs: AuditLogEntry[] = []
   const now = Date.now()
   for (let i = 0; i < count; i++) {
-    const user = DEMO_USERS[i % DEMO_USERS.length]
-    const action = DEMO_ACTIONS[i % DEMO_ACTIONS.length]
-    const resource = DEMO_RESOURCES[i % DEMO_RESOURCES.length]
+    const user = DEMO_USERS[i % DEMO_USERS.length] as (typeof DEMO_USERS)[number]
+    const action = DEMO_ACTIONS[i % DEMO_ACTIONS.length] as AuditAction
+    const resource = DEMO_RESOURCES[i % DEMO_RESOURCES.length] as AuditResourceType
     const ts = new Date(now - i * 300_000).toISOString()
     const entry: AuditLogEntry = {
       id: `log-${i + 1}`,
@@ -88,7 +111,7 @@ function generateDemoLogs(count: number): AuditLogEntry[] {
       resource_type: resource,
       resource_id: `${resource}-${100 + i}`,
       description: descriptionForAction(action, resource),
-      ip_address: DEMO_IPS[i % DEMO_IPS.length],
+      ip_address: DEMO_IPS[i % DEMO_IPS.length] ?? '',
       user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
     }
     if (action === 'UPDATE') {
@@ -136,27 +159,45 @@ export function useAuditLogs(filters: AuditLogFilters = {}) {
     queryFn: async () => {
       try {
         const params: Record<string, string | number> = { page, page_size }
-        if (rest.date_from) params.date_from = rest.date_from
-        if (rest.date_to) params.date_to = rest.date_to
-        if (rest.action) params.action = rest.action
-        if (rest.resource_type) params.resource_type = rest.resource_type
-        if (rest.user_search) params.user_search = rest.user_search
+        if (rest.date_from) {
+          params.date_from = rest.date_from
+        }
+        if (rest.date_to) {
+          params.date_to = rest.date_to
+        }
+        if (rest.action) {
+          params.action = rest.action
+        }
+        if (rest.resource_type) {
+          params.resource_type = rest.resource_type
+        }
+        if (rest.user_search) {
+          params.user_search = rest.user_search
+        }
 
         const res = await apiClient.get('/audit-logs', { params })
         return res.data
       } catch {
         // Fallback to demo data
         let filtered = [...DEMO_LOGS]
-        if (rest.action) filtered = filtered.filter((l) => l.action === rest.action)
-        if (rest.resource_type) filtered = filtered.filter((l) => l.resource_type === rest.resource_type)
+        if (rest.action) {
+          filtered = filtered.filter((l) => l.action === rest.action)
+        }
+        if (rest.resource_type) {
+          filtered = filtered.filter((l) => l.resource_type === rest.resource_type)
+        }
         if (rest.user_search) {
           const q = rest.user_search.toLowerCase()
           filtered = filtered.filter(
             (l) => l.user_email.toLowerCase().includes(q) || l.user_name.toLowerCase().includes(q)
           )
         }
-        if (rest.date_from) filtered = filtered.filter((l) => l.timestamp >= rest.date_from!)
-        if (rest.date_to) filtered = filtered.filter((l) => l.timestamp <= rest.date_to! + 'T23:59:59')
+        if (rest.date_from) {
+          filtered = filtered.filter((l) => l.timestamp >= (rest.date_from ?? ''))
+        }
+        if (rest.date_to) {
+          filtered = filtered.filter((l) => l.timestamp <= `${rest.date_to ?? ''}T23:59:59`)
+        }
 
         const total = filtered.length
         const start = (page - 1) * page_size
@@ -192,11 +233,21 @@ export function useExportAuditLogs() {
   const exportLogs = useCallback(async (filters: Omit<AuditLogFilters, 'page' | 'page_size'>) => {
     try {
       const params: Record<string, string> = {}
-      if (filters.date_from) params.date_from = filters.date_from
-      if (filters.date_to) params.date_to = filters.date_to
-      if (filters.action) params.action = filters.action
-      if (filters.resource_type) params.resource_type = filters.resource_type
-      if (filters.user_search) params.user_search = filters.user_search
+      if (filters.date_from) {
+        params.date_from = filters.date_from
+      }
+      if (filters.date_to) {
+        params.date_to = filters.date_to
+      }
+      if (filters.action) {
+        params.action = filters.action
+      }
+      if (filters.resource_type) {
+        params.resource_type = filters.resource_type
+      }
+      if (filters.user_search) {
+        params.user_search = filters.user_search
+      }
 
       const res = await apiClient.get('/audit-logs/export', {
         params,
@@ -224,7 +275,7 @@ export function useExportAuditLogs() {
         l.ip_address,
       ])
       const csv = [headers, ...rows].map((r) => r.join(',')).join('\n')
-      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+      const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url

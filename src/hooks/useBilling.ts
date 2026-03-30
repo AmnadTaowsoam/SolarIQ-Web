@@ -17,6 +17,8 @@ import type {
   PaymentSetupResponse,
   PaymentPortalResponse,
   PlanType,
+  OpnSourceType,
+  CheckoutResponse,
 } from '@/types/billing'
 
 // ============== Query Keys ==============

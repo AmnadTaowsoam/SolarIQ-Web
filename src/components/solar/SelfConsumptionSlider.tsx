@@ -52,15 +52,6 @@ const PRESETS: Preset[] = [
   },
 ]
 
-const _formatNumber = (value: number): string =>
-  new Intl.NumberFormat('th-TH', { maximumFractionDigits: 1 }).format(value)
-
-const _formatCurrency = (value: number): string =>
-  new Intl.NumberFormat('th-TH', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value)
-
 export function SelfConsumptionSlider({
   value,
   onChange,

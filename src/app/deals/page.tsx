@@ -294,8 +294,8 @@ function CreateDealModal({ onClose }: { onClose: () => void }) {
         notes: form.notes || undefined,
       })
       onClose()
-      if (res?.id) {
-        router.push(`/deals/${res.id}`)
+      if (res?.data?.id) {
+        router.push(`/deals/${res.data.id}`)
       } else {
         router.refresh()
       }

@@ -235,7 +235,7 @@ export default function SandboxPage() {
     setRunningId(test.id)
     const start = Date.now()
     try {
-      const response = await apiClient.post(test.endpoint.split(' ')[1], test.payload, {
+      const response = await apiClient.post(test.endpoint.split(' ')[1] || '', test.payload, {
         headers: { Authorization: `Bearer ${SANDBOX_KEY}` },
       })
       setResults((prev) => ({

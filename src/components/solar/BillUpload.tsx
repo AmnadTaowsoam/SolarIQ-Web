@@ -69,15 +69,17 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
     setIsDragging(false)
 
     const files = Array.from(e.dataTransfer.files)
-    if (files.length > 0) {
-      await processFile(files[0])
+    const firstFile = files[0]
+    if (files.length > 0 && firstFile) {
+      await processFile(firstFile)
     }
   }
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (files && files.length > 0) {
-      await processFile(files[0])
+    const firstFile = files?.[0]
+    if (firstFile) {
+      await processFile(firstFile)
     }
   }
 
@@ -107,13 +109,15 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
         source: 'web',
       })
 
-      setExtractionResult(response)
+      const result = response.data
 
-      if (response.success && response.bill_data && response.cache_key) {
+      setExtractionResult(result)
+
+      if (result.success && result.bill_data && result.cache_key) {
         setShowConfirmation(true)
-        setEditedData(response.bill_data)
-      } else if (response.error_message) {
-        onError?.(response.error_message)
+        setEditedData(result.bill_data)
+      } else if (result.error_message) {
+        onError?.(result.error_message)
       }
     } catch {
       onError?.('Failed to extract bill data. Please try again.')
@@ -150,10 +154,6 @@ export default function BillUpload({ onDataExtracted, onError }: BillUploadProps
 
       onError?.('Failed to confirm bill data. Please try again.')
     }
-  }
-
-  const _handleEdit = () => {
-    // Keep the confirmation open for editing
   }
 
   const handleCancel = () => {

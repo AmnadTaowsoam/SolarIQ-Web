@@ -25,14 +25,17 @@ interface AreaChartProps {
   className?: string
 }
 
-const AreaChartComponent = dynamic(() => import('./AreaChart'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-full w-full bg-[var(--brand-background)] dark:bg-gray-800 animate-pulse">
-      <div className="h-4 w-4 bg-[var(--brand-border)] dark:bg-gray-600 rounded-full animate-bounce" />
-    </div>
-  ),
-}) as ComponentType<AreaChartProps>
+const AreaChartComponent = dynamic(
+  () => import('./AreaChart').then((mod) => ({ default: mod.AreaChart })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-full w-full bg-[var(--brand-background)] dark:bg-gray-800 animate-pulse">
+        <div className="h-4 w-4 bg-[var(--brand-border)] dark:bg-gray-600 rounded-full animate-bounce" />
+      </div>
+    ),
+  }
+) as ComponentType<AreaChartProps>
 
 export function LazyAreaChart(props: AreaChartProps) {
   return <AreaChartComponent {...props} />

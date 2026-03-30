@@ -84,7 +84,7 @@ export const DEMO_RECENT_LEADS: Lead[] = [
     status: 'won',
     monthlyBill: 32000,
     address: 'โซลาร์พลัส กรุ๊ป, บางแค, กรุงเทพฯ',
-    latitude: 13.7140,
+    latitude: 13.714,
     longitude: 100.4097,
     assignedTo: null,
     notes: 'ระบบ 20 kW — ปิดการขายสำเร็จ ติดตั้งแล้ว',
@@ -127,7 +127,7 @@ function generateLeadsOverTime(): LeadsOverTime[] {
     const variance = Math.floor(seededRandom() * 4)
     const count = isWeekend ? Math.max(1, baseCount - 2 + variance) : baseCount + variance
     data.push({
-      date: date.toISOString().split('T')[0],
+      date: date.toISOString().split('T')[0] || '',
       count,
     })
   }

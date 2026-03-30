@@ -2,8 +2,8 @@
 
 import React from 'react'
 import { UsageBar } from './UsageBar'
-import { useBilling } from '@/hooks/useBilling'
-import type { PlanType as _PlanType } from '@/types/billing'
+import { useBillingStatus } from '@/hooks/useBilling'
+import type { UsageSummary } from '@/types/billing'
 
 interface UsageMeterProps {
   className?: string
@@ -22,7 +22,6 @@ const FEATURE_CONFIG: Record<string, { displayName: string; icon: string }> = {
  * Displays current usage for all tracked features with visual progress bars
  */
 export function UsageMeter({ className = '' }: UsageMeterProps) {
-  const { useBillingStatus } = useBilling()
   const { data: billingStatus, isLoading, error } = useBillingStatus()
 
   if (isLoading) {
@@ -74,7 +73,7 @@ export function UsageMeter({ className = '' }: UsageMeterProps) {
       </div>
 
       <div className="space-y-4">
-        {usage.map((item, index) => {
+        {usage.map((item: UsageSummary, index: number) => {
           const config = FEATURE_CONFIG[item.resource_type] || {
             displayName: item.resource_type,
             icon: '📊',
@@ -97,7 +96,7 @@ export function UsageMeter({ className = '' }: UsageMeterProps) {
       </div>
 
       {/* Upgrade prompt for high usage */}
-      {usage.some((item) => (item.percentage_used || 0) >= 80) && (
+      {usage.some((item: UsageSummary) => (item.percentage_used || 0) >= 80) && (
         <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
           <p className="text-sm text-yellow-600">
             ⚠️ You're approaching your usage limit. Consider{' '}

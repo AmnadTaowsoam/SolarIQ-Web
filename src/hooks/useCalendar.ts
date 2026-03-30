@@ -65,12 +65,21 @@ export function useCalendarEvents() {
     }
 
     // Service request events — safely coerce to array
-    const allRequests = [...toArray(openRequests), ...toArray(inProgressRequests)]
+    interface SRItem {
+      id: string
+      request_type: string
+      subject: string
+      created_at: string
+      priority: string
+      status: string
+      customer_name: string
+    }
+    const allRequests = [...toArray<SRItem>(openRequests), ...toArray<SRItem>(inProgressRequests)]
     for (const req of allRequests) {
       items.push({
         id: `sr-${req.id}`,
         title: `${req.request_type === 'repair' ? 'Repair' : req.request_type === 'complaint' ? 'Complaint' : 'Request'}: ${req.subject}`,
-        date: req.created_at.split('T')[0],
+        date: req.created_at.split('T')[0] || '',
         type: 'service_request',
         priority: req.priority as CalendarEvent['priority'],
         status: req.status,

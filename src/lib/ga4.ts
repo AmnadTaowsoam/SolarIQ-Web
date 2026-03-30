@@ -22,7 +22,7 @@ export interface GA4Config {
 }
 
 export interface GA4EventParams {
-  [key: string]: string | number | boolean | undefined
+  [key: string]: string | number | boolean | GA4Item[] | undefined
 }
 
 export interface GA4Item {
@@ -459,9 +459,9 @@ export function getMarketingAttribution(): {
   return {
     source,
     medium,
-    campaign: utmParams.utm_campaign,
-    term: utmParams.utm_term,
-    content: utmParams.utm_content,
+    campaign: utmParams.utm_campaign || '',
+    term: utmParams.utm_term || '',
+    content: utmParams.utm_content || '',
     referrer,
   }
 }

@@ -76,7 +76,9 @@ export function useWebPushSubscription(): UseWebPushSubscriptionReturn {
 
   // Read existing subscription on mount
   useEffect(() => {
-    if (!isSupported) return
+    if (!isSupported) {
+      return
+    }
 
     let cancelled = false
 
@@ -85,10 +87,14 @@ export function useWebPushSubscription(): UseWebPushSubscriptionReturn {
         return registration.pushManager.getSubscription()
       })
       .then((existing) => {
-        if (!cancelled) setSubscription(existing)
+        if (!cancelled) {
+          setSubscription(existing)
+        }
       })
       .catch((err) => {
-        if (!cancelled) setError(String(err))
+        if (!cancelled) {
+          setError(String(err))
+        }
       })
 
     return () => {
@@ -117,7 +123,7 @@ export function useWebPushSubscription(): UseWebPushSubscriptionReturn {
 
       const pushSubscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey,
+        applicationServerKey: applicationServerKey as unknown as string,
       })
 
       setSubscription(pushSubscription)
@@ -132,14 +138,18 @@ export function useWebPushSubscription(): UseWebPushSubscriptionReturn {
   }, [isSupported])
 
   const unsubscribe = useCallback(async (): Promise<boolean> => {
-    if (!subscription) return false
+    if (!subscription) {
+      return false
+    }
 
     setIsLoading(true)
     setError(null)
 
     try {
       const success = await subscription.unsubscribe()
-      if (success) setSubscription(null)
+      if (success) {
+        setSubscription(null)
+      }
       return success
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
@@ -166,15 +176,17 @@ interface UsePushPermissionReturn {
 
 export function usePushPermission(): UsePushPermissionReturn {
   const [isSupported] = useState<boolean>(
-    () => typeof window !== 'undefined' && 'Notification' in window,
+    () => typeof window !== 'undefined' && 'Notification' in window
   )
   const [permission, setPermission] = useState<NotificationPermission | null>(
-    isSupported ? Notification.permission : null,
+    isSupported ? Notification.permission : null
   )
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const requestPermission = useCallback(async (): Promise<NotificationPermission> => {
-    if (!isSupported) return 'denied'
+    if (!isSupported) {
+      return 'denied'
+    }
 
     setIsLoading(true)
     try {
@@ -247,9 +259,7 @@ export function useNotificationPreferences(): UseNotificationPreferencesReturn {
 // Convenience re-export: usePushNotifications (combined)
 // ---------------------------------------------------------------------------
 
-interface UsePushNotificationsReturn
-  extends UseWebPushSubscriptionReturn,
-    UsePushPermissionReturn {
+interface UsePushNotificationsReturn extends UseWebPushSubscriptionReturn, UsePushPermissionReturn {
   preferences: NotificationPreferences
   updatePreferences: (updates: Partial<NotificationPreferences>) => void
 }

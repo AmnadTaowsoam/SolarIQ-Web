@@ -271,7 +271,7 @@ export default function SignupPage() {
         }
       )
 
-      if (response.success) {
+      if (response.data.success) {
         // Track sign up event
         trackSignUp({
           method: 'email',
@@ -329,7 +329,7 @@ export default function SignupPage() {
         utm_content: utmParams.utm_content,
       })
 
-      if (response.success) {
+      if (response.data.success) {
         // Track sign up event
         trackSignUp({
           method: 'google',
@@ -345,7 +345,7 @@ export default function SignupPage() {
           })
         }
 
-        if (response.requires_onboarding) {
+        if (response.data.requires_onboarding) {
           router.push(buildLocalizedPath('/onboarding', locale))
         } else {
           router.push(dashboardPath)

@@ -1242,7 +1242,7 @@ export default function AnalyzePage() {
 
                     // Track first proposal event
                     trackFirstProposal({
-                      proposal_id: leadResponse.id,
+                      proposal_id: leadResponse.data.id,
                       system_size_kw: result.panelConfig.capacityKw,
                       estimated_cost: result.financialAnalysis.installationCost,
                       format: 'email',

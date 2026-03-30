@@ -28,6 +28,26 @@ export interface VATInvoiceLineItem {
   subtotal: number
 }
 
+export interface VATSellerInfo {
+  name_th?: string
+  name_en?: string
+  tax_id?: string
+  address?: string
+  phone?: string
+  email?: string
+}
+
+export interface VATBuyerInfo {
+  name_th?: string
+  name_en?: string
+  tax_id?: string
+  branch_number?: string
+  address?: string
+  contact_person?: string
+  email?: string
+  phone?: string
+}
+
 export interface TaxProfile {
   company_name_th?: string
   company_name_en?: string
@@ -51,8 +71,8 @@ export interface VATInvoice {
   total: number
   currency: string
   line_items: VATInvoiceLineItem[]
-  seller_info: Record<string, unknown>
-  buyer_info: Record<string, unknown>
+  seller_info: VATSellerInfo
+  buyer_info: VATBuyerInfo
   status: VATDocumentStatus
   pdf_url?: string
   issued_at?: string

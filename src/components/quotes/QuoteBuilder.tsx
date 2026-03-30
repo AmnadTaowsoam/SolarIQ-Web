@@ -740,7 +740,10 @@ export function QuoteBuilder({
                   checked={svc.included}
                   onChange={(e) => {
                     const updated = [...additionalServices]
-                    updated[idx] = { ...updated[idx], included: e.target.checked }
+                    const current = updated[idx]
+                    if (current) {
+                      updated[idx] = { ...current, included: e.target.checked }
+                    }
                     setAdditionalServices(updated)
                   }}
                   className="mt-0.5 w-4 h-4 accent-orange-500"

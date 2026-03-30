@@ -67,7 +67,7 @@ async function compressImage(file: File, maxWidthPx = 1200, qualityJpeg = 0.8): 
   return new Promise((resolve) => {
     const reader = new FileReader()
     reader.onload = (e) => {
-      const img = new Image()
+      const img = new window.Image()
       img.onload = () => {
         const canvas = document.createElement('canvas')
         let { width, height } = img
@@ -281,9 +281,9 @@ export default function ReviewPage() {
     }
     const fetchData = async () => {
       try {
-        const data = await api.get<ReviewRequest>(`/api/v1/liff/reviews/request/${dealId}`)
-        setReviewRequest(data)
-        if (data.already_reviewed) {
+        const response = await api.get<ReviewRequest>(`/api/v1/liff/reviews/request/${dealId}`)
+        setReviewRequest(response.data)
+        if (response.data.already_reviewed) {
           setPageState('already_reviewed')
         } else {
           setPageState('form')

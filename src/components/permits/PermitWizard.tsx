@@ -3,14 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import {
-  DocumentType,
-  ApplicationFormData,
-  SLDData,
-  EquipmentSpecsData,
-  EngineerCertData,
-  PropertyProofData,
-} from '@/types/permit'
+import { DocumentType } from '@/types/permit'
 import {
   usePermit,
   usePermitChecklist,
@@ -60,7 +53,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
         templateId: template.templateId,
         documentType,
         title: template.name,
-        dataJson: data,
+        dataJson: data as Record<string, unknown>,
       })
 
       showToast('success', t('success'))
@@ -102,7 +95,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
           contractorEmail: 'info@solarplus.com',
           attachedDocuments: [],
           generationDate,
-        } as ApplicationFormData
+        } as Record<string, unknown>
 
       case 'sld':
         return {
@@ -136,7 +129,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
           warningSigns: 'Installed',
           grounding: 'Installed',
           generationDate,
-        } as SLDData
+        } as Record<string, unknown>
 
       case 'equipment_specs':
         return {
@@ -182,7 +175,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
           clampsType: 'Stainless Steel',
           junctionBoxType: 'IP65',
           generationDate,
-        } as EquipmentSpecsData
+        } as Record<string, unknown>
 
       case 'engineer_cert':
         return {
@@ -209,7 +202,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
           meterBrand: 'Schneider Electric',
           meterModel: 'PM8000',
           generationDate,
-        } as EngineerCertData
+        } as Record<string, unknown>
 
       case 'property_proof':
         return {
@@ -241,7 +234,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
           contractorEmail: 'info@solarplus.com',
           attachedDocuments: [],
           generationDate,
-        } as PropertyProofData
+        } as Record<string, unknown>
 
       default:
         return { generationDate }
@@ -478,7 +471,7 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => window.open(doc.pdfUrl, '_blank')}
+                      onClick={() => doc.pdfUrl && window.open(doc.pdfUrl ?? undefined, '_blank')}
                     >
                       {t('architecturalPlan')}
                     </Button>
@@ -543,7 +536,11 @@ export function PermitWizard({ permitId, dealId }: PermitWizardProps) {
       {toast && <Toast type={toast.type} message={toast.message} onClose={() => setToast(null)} />}
 
       {/* Modal */}
-      {showModal && <Modal onClose={() => setShowModal(false)}>{modalContent}</Modal>}
+      {showModal && (
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          {modalContent}
+        </Modal>
+      )}
     </div>
   )
 }

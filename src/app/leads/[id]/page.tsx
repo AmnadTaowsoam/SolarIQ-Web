@@ -282,24 +282,6 @@ function CheckCircleIcon({ className = 'w-5 h-5' }: { className?: string }) {
   )
 }
 
-function _ExclamationTriangleIcon({ className = 'w-5 h-5' }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-      />
-    </svg>
-  )
-}
-
 function LeafIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
     <svg
@@ -945,10 +927,10 @@ export default function LeadDetailPage() {
                   const { apiClient } = await import('@/lib/api')
                   const res = await apiClient.post(`/api/v1/proposals/generate`, {
                     lead_id: lead.id,
-                    ai_summary: `Solar proposal for ${lead.customerName || 'customer'} - ${lead.systemSizeKwp || 'N/A'} kWp system`,
+                    ai_summary: `Solar proposal for ${lead.name || 'customer'} - ${lead.solarAnalysis?.panelConfig?.capacityKw || 'N/A'} kWp system`,
                   })
-                  if (res?.url) {
-                    window.open(res.url, '_blank')
+                  if (res?.data?.url) {
+                    window.open(res.data.url, '_blank')
                     addToast('success', 'Proposal generated successfully!')
                   } else {
                     addToast('success', 'Proposal generated! Check the proposals section.')
@@ -1289,10 +1271,10 @@ export default function LeadDetailPage() {
                       const { apiClient } = await import('@/lib/api')
                       const res = await apiClient.post(`/api/v1/proposals/generate`, {
                         lead_id: lead.id,
-                        ai_summary: `Solar proposal for ${lead.customerName || 'customer'} - ${lead.systemSizeKwp || 'N/A'} kWp system`,
+                        ai_summary: `Solar proposal for ${lead.name || 'customer'} - ${lead.solarAnalysis?.panelConfig?.capacityKw || 'N/A'} kWp system`,
                       })
-                      if (res?.url) {
-                        window.open(res.url, '_blank')
+                      if (res?.data?.url) {
+                        window.open(res.data.url, '_blank')
                         addToast('success', 'Proposal generated!')
                       } else {
                         addToast('success', 'Proposal generated! Check proposals section.')

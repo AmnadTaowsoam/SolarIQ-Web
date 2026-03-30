@@ -79,7 +79,7 @@ export default function BillingPage() {
     if (confirm(t('actions.cancelConfirm'))) {
       setIsProcessing(true)
       try {
-        await cancelSubscriptionMutation.mutateAsync()
+        await cancelSubscriptionMutation.mutateAsync({})
       } catch (error) {
         void error // handled by mutation state
       } finally {

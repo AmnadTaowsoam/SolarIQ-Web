@@ -360,13 +360,13 @@ export default function FunnelDashboardPage() {
   const t = useTranslations('analytics.funnel')
   const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d'>('30d')
   const [isLoading, setIsLoading] = useState(false)
-  const [funnelData, setFunnelData] = useState<FunnelData>(DEMO_FUNNEL_DATA['30d'])
+  const [funnelData, setFunnelData] = useState<FunnelData>(DEMO_FUNNEL_DATA['30d'] as FunnelData)
 
   const handleRefresh = async () => {
     setIsLoading(true)
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000))
-    setFunnelData(DEMO_FUNNEL_DATA[selectedPeriod])
+    setFunnelData(DEMO_FUNNEL_DATA[selectedPeriod] as FunnelData)
     setIsLoading(false)
   }
 
@@ -511,7 +511,7 @@ export default function FunnelDashboardPage() {
             <div className="space-y-3">
               {funnelData.stages.map((stage, index) => {
                 const change = calculateChange(stage.count, stage.previousCount)
-                const maxCount = funnelData.stages[0].count
+                const maxCount = funnelData.stages[0]?.count ?? 1
                 const widthPercent = (stage.count / maxCount) * 100
 
                 return (

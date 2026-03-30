@@ -105,7 +105,7 @@ export function ChatInput({
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const items = e.clipboardData.items
     for (let i = 0; i < items.length; i++) {
-      if (items[i].type.startsWith('image/')) {
+      if (items[i]?.type.startsWith('image/')) {
         e.preventDefault()
         // Image paste detected — in production would upload and send
         // For now just indicate it was detected

@@ -13,7 +13,7 @@ import {
   InstallationTimeline,
   WarrantyTerms,
   FinancingOptions,
-  AdditionalService,
+  ContractorSummary,
 } from '@/types/quotes'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
@@ -318,14 +318,18 @@ export function useQuoteRequest(requestId: string | null) {
   const [error, setError] = useState<string | null>(null)
 
   const fetch = useCallback(async () => {
-    if (!requestId) return
+    if (!requestId) {
+      return
+    }
     setIsLoading(true)
     setError(null)
     try {
       const res = await window.fetch(`${API_BASE}/quotes/requests/${requestId}`, {
         headers: { 'Content-Type': 'application/json' },
       })
-      if (!res.ok) throw new Error('API error')
+      if (!res.ok) {
+        throw new Error('API error')
+      }
       const json = await res.json()
       setData(json)
     } catch {
@@ -336,7 +340,9 @@ export function useQuoteRequest(requestId: string | null) {
     }
   }, [requestId])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return { data, isLoading, error, refetch: fetch }
 }
@@ -353,7 +359,9 @@ export function useAvailableRequests() {
       const res = await window.fetch(`${API_BASE}/quotes/requests/available`, {
         headers: { 'Content-Type': 'application/json' },
       })
-      if (!res.ok) throw new Error('API error')
+      if (!res.ok) {
+        throw new Error('API error')
+      }
       const json = await res.json()
       setData(json.items || json)
     } catch {
@@ -363,7 +371,9 @@ export function useAvailableRequests() {
     }
   }, [])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return { data, isLoading, error, refetch: fetch }
 }
@@ -374,21 +384,25 @@ export function useQuoteComparison(requestId: string | null) {
   const [error, setError] = useState<string | null>(null)
 
   const fetch = useCallback(async () => {
-    if (!requestId) return
+    if (!requestId) {
+      return
+    }
     setIsLoading(true)
     setError(null)
     try {
       const res = await window.fetch(`${API_BASE}/quotes/requests/${requestId}/compare`, {
         headers: { 'Content-Type': 'application/json' },
       })
-      if (!res.ok) throw new Error('API error')
+      if (!res.ok) {
+        throw new Error('API error')
+      }
       const json = await res.json()
       setData(json)
     } catch {
       if (requestId === 'req-demo-1') {
         const items = DEMO_QUOTES.map((q) => ({
           quoteId: q.id,
-          contractor: q.contractor!,
+          contractor: q.contractor as ContractorSummary,
           system: {
             panelBrand: q.specifications.panelBrand,
             panelWattage: q.specifications.panelWattage,
@@ -400,9 +414,10 @@ export function useQuoteComparison(requestId: string | null) {
           pricing: {
             totalPrice: q.pricing.totalPrice,
             pricePerKw: q.pricing.pricePerKw,
-            discountPct: q.pricing.discountAmount > 0
-              ? (q.pricing.discountAmount / (q.pricing.subtotal + q.pricing.discountAmount)) * 100
-              : 0,
+            discountPct:
+              q.pricing.discountAmount > 0
+                ? (q.pricing.discountAmount / (q.pricing.subtotal + q.pricing.discountAmount)) * 100
+                : 0,
             hasFinancing: q.financing?.installmentAvailable || false,
             monthlyInstallment: q.financing?.installmentMonthlyAmount?.['36'],
           },
@@ -440,7 +455,9 @@ export function useQuoteComparison(requestId: string | null) {
     }
   }, [requestId])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return { data, isLoading, error, refetch: fetch }
 }
@@ -451,14 +468,18 @@ export function useQuoteDetail(quoteId: string | null) {
   const [error, setError] = useState<string | null>(null)
 
   const fetch = useCallback(async () => {
-    if (!quoteId) return
+    if (!quoteId) {
+      return
+    }
     setIsLoading(true)
     setError(null)
     try {
       const res = await window.fetch(`${API_BASE}/quotes/${quoteId}`, {
         headers: { 'Content-Type': 'application/json' },
       })
-      if (!res.ok) throw new Error('API error')
+      if (!res.ok) {
+        throw new Error('API error')
+      }
       const json = await res.json()
       setData(json)
     } catch {
@@ -469,7 +490,9 @@ export function useQuoteDetail(quoteId: string | null) {
     }
   }, [quoteId])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return { data, isLoading, error, refetch: fetch }
 }
@@ -486,7 +509,9 @@ export function useMyQuoteRequests() {
       const res = await window.fetch(`${API_BASE}/quotes/requests/my`, {
         headers: { 'Content-Type': 'application/json' },
       })
-      if (!res.ok) throw new Error('API error')
+      if (!res.ok) {
+        throw new Error('API error')
+      }
       const json = await res.json()
       setData(json.items || json)
     } catch {
@@ -496,7 +521,9 @@ export function useMyQuoteRequests() {
     }
   }, [])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return { data, isLoading, error, refetch: fetch }
 }
@@ -514,9 +541,11 @@ export function useSubmitQuoteRequest() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
-      if (!res.ok) throw new Error('Failed to submit quote request')
+      if (!res.ok) {
+        throw new Error('Failed to submit quote request')
+      }
       return await res.json()
-    } catch (err) {
+    } catch {
       // Demo fallback
       const newRequest: QuoteRequest = {
         id: `req-${Date.now()}`,
@@ -561,7 +590,9 @@ export function useSubmitQuote() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
-      if (!res.ok) throw new Error('Failed to submit quote')
+      if (!res.ok) {
+        throw new Error('Failed to submit quote')
+      }
       return await res.json()
     } catch {
       const mock: Quote = {
@@ -598,42 +629,48 @@ export function useSaveDraftQuote() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const saveDraft = useCallback(async (data: Partial<QuoteFormData> & { requestId: string }): Promise<Quote> => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const res = await window.fetch(`${API_BASE}/quotes/draft`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) throw new Error('Failed to save draft')
-      return await res.json()
-    } catch {
-      const mock: Quote = {
-        id: `draft-${Date.now()}`,
-        requestId: data.requestId,
-        contractorId: 'current-contractor',
-        version: 1,
-        quoteNumber: '',
-        specifications: (data.specifications as SystemSpecification) || {} as SystemSpecification,
-        pricing: (data.pricing as PricingBreakdown) || {} as PricingBreakdown,
-        timeline: (data.timeline as InstallationTimeline) || {} as InstallationTimeline,
-        warranty: (data.warranty as WarrantyTerms) || {} as WarrantyTerms,
-        additionalServices: [],
-        totalPrice: data.pricing?.totalPrice || 0,
-        pricePerKw: data.pricing?.pricePerKw || 0,
-        attachments: [],
-        validUntil: '',
-        status: 'draft' as QuoteStatus,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+  const saveDraft = useCallback(
+    async (data: Partial<QuoteFormData> & { requestId: string }): Promise<Quote> => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const res = await window.fetch(`${API_BASE}/quotes/draft`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!res.ok) {
+          throw new Error('Failed to save draft')
+        }
+        return await res.json()
+      } catch {
+        const mock: Quote = {
+          id: `draft-${Date.now()}`,
+          requestId: data.requestId,
+          contractorId: 'current-contractor',
+          version: 1,
+          quoteNumber: '',
+          specifications:
+            (data.specifications as SystemSpecification) || ({} as SystemSpecification),
+          pricing: (data.pricing as PricingBreakdown) || ({} as PricingBreakdown),
+          timeline: (data.timeline as InstallationTimeline) || ({} as InstallationTimeline),
+          warranty: (data.warranty as WarrantyTerms) || ({} as WarrantyTerms),
+          additionalServices: [],
+          totalPrice: data.pricing?.totalPrice || 0,
+          pricePerKw: data.pricing?.pricePerKw || 0,
+          attachments: [],
+          validUntil: '',
+          status: 'draft' as QuoteStatus,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        return mock
+      } finally {
+        setIsLoading(false)
       }
-      return mock
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+    },
+    []
+  )
 
   return { saveDraft, isLoading, error }
 }
@@ -650,7 +687,9 @@ export function useAcceptQuote() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       })
-      if (!res.ok) throw new Error('Failed to accept quote')
+      if (!res.ok) {
+        throw new Error('Failed to accept quote')
+      }
       return await res.json()
     } catch {
       return { dealId: `deal-${Date.now()}` }
@@ -675,7 +714,9 @@ export function useDeclineQuote() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason }),
       })
-      if (!res.ok) throw new Error('Failed to decline quote')
+      if (!res.ok) {
+        throw new Error('Failed to decline quote')
+      }
     } catch {
       // Demo: just resolve
     } finally {
@@ -690,26 +731,27 @@ export function useRequestRevision() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const requestRevision = useCallback(async (
-    quoteId: string,
-    message: string,
-    requestedChanges: string[]
-  ): Promise<void> => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const res = await window.fetch(`${API_BASE}/quotes/${quoteId}/revision`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, requestedChanges }),
-      })
-      if (!res.ok) throw new Error('Failed to request revision')
-    } catch {
-      // Demo: just resolve
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+  const requestRevision = useCallback(
+    async (quoteId: string, message: string, requestedChanges: string[]): Promise<void> => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const res = await window.fetch(`${API_BASE}/quotes/${quoteId}/revision`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, requestedChanges }),
+        })
+        if (!res.ok) {
+          throw new Error('Failed to request revision')
+        }
+      } catch {
+        // Demo: just resolve
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    []
+  )
 
   return { requestRevision, isLoading, error }
 }

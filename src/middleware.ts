@@ -13,7 +13,7 @@ const SECURITY_HEADERS = {
   // Content Security Policy - Controls resources the browser is allowed to load
   'Content-Security-Policy': [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com https://maps.googleapis.com",
+    "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com https://maps.googleapis.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: https: blob:",
     "font-src 'self' data: https://fonts.gstatic.com",
@@ -92,7 +92,7 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = cleanPath
     const redirectResponse = NextResponse.redirect(url)
-    redirectResponse.cookies.set('NEXT_LOCALE', detectedLocale, {
+    redirectResponse.cookies.set('NEXT_LOCALE', detectedLocale || '', {
       path: '/',
       maxAge: 60 * 60 * 24 * 365,
       sameSite: 'lax',

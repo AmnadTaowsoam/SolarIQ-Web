@@ -37,7 +37,7 @@ function formatDateTime(iso: string, locale: string): string {
 
 function timeAgo(
   iso: string,
-  locale: string,
+  _locale: string,
   t: (key: string, values?: Record<string, string | number>) => string
 ): string {
   const now = Date.now()

@@ -17,7 +17,7 @@ import {
 } from 'recharts'
 import { ComponentType, ReactNode } from 'react'
 
-interface LineChartProps {
+export interface LineChartProps {
   data: Record<string, unknown>[]
   lines: Array<{
     dataKey: string

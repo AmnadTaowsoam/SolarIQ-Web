@@ -24,14 +24,15 @@ export function useSolarHistory(page: number = 1, pageSize: number = 10) {
   return useQuery({
     queryKey: ['solar-history', page, pageSize],
     queryFn: () =>
-      api.get(API_ENDPOINTS.SOLAR.HISTORY, { page, pageSize }),
+      api.get(API_ENDPOINTS.SOLAR.HISTORY, { params: { page, pageSize } }).then((res) => res.data),
   })
 }
 
 export function useDashboardStats() {
   return useQuery<ApiResponse<DashboardStats>>({
     queryKey: ['dashboard-stats'],
-    queryFn: () => api.get<ApiResponse<DashboardStats>>(API_ENDPOINTS.DASHBOARD.STATS),
+    queryFn: () =>
+      api.get<ApiResponse<DashboardStats>>(API_ENDPOINTS.DASHBOARD.STATS).then((res) => res.data),
     refetchInterval: 60000, // Refresh every minute
   })
 }
@@ -40,7 +41,9 @@ export function useLeadsOverTime(days: number = 30) {
   return useQuery<LeadsOverTime[]>({
     queryKey: ['leads-over-time', days],
     queryFn: () =>
-      api.get<LeadsOverTime[]>(API_ENDPOINTS.DASHBOARD.LEADS_OVER_TIME, { days }),
+      api
+        .get<LeadsOverTime[]>(API_ENDPOINTS.DASHBOARD.LEADS_OVER_TIME, { params: { days } })
+        .then((res) => res.data),
   })
 }
 
@@ -48,7 +51,9 @@ export function useTopLocations(limit: number = 10) {
   return useQuery<TopLocation[]>({
     queryKey: ['top-locations', limit],
     queryFn: () =>
-      api.get<TopLocation[]>(API_ENDPOINTS.DASHBOARD.TOP_LOCATIONS, { limit }),
+      api
+        .get<TopLocation[]>(API_ENDPOINTS.DASHBOARD.TOP_LOCATIONS, { params: { limit } })
+        .then((res) => res.data),
   })
 }
 
@@ -56,6 +61,8 @@ export function useRecentLeads(limit: number = 5) {
   return useQuery<Lead[]>({
     queryKey: ['recent-leads', limit],
     queryFn: () =>
-      api.get<Lead[]>(API_ENDPOINTS.DASHBOARD.RECENT_LEADS, { limit }),
+      api
+        .get<Lead[]>(API_ENDPOINTS.DASHBOARD.RECENT_LEADS, { params: { limit } })
+        .then((res) => res.data),
   })
 }

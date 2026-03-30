@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Card, CardHeader, CardBody, Badge } from '@/components/ui'
+import { Card, CardBody, Badge } from '@/components/ui'
 import { Gift, Building2, CheckCircle, Clock, Calculator } from 'lucide-react'
 import type { LocalIncentive } from '@/types'
 
@@ -21,8 +21,12 @@ const formatCurrency = (value: number): string =>
 export function LocalIncentives({ incentives, installationCost }: LocalIncentivesProps) {
   const totalPotentialSavings = useMemo(() => {
     return incentives.reduce((sum, inc) => {
-      if (inc.amountThb) return sum + inc.amountThb
-      if (inc.percentage && installationCost) return sum + (installationCost * inc.percentage) / 100
+      if (inc.amountThb) {
+        return sum + inc.amountThb
+      }
+      if (inc.percentage && installationCost) {
+        return sum + (installationCost * inc.percentage) / 100
+      }
       return sum
     }, 0)
   }, [incentives, installationCost])
@@ -48,7 +52,9 @@ export function LocalIncentives({ incentives, installationCost }: LocalIncentive
                 <Calculator className="w-6 h-6 text-[var(--brand-primary)]" />
               </div>
               <div>
-                <div className="text-sm text-[var(--brand-text-secondary)]">Total Potential Savings</div>
+                <div className="text-sm text-[var(--brand-text-secondary)]">
+                  Total Potential Savings
+                </div>
                 <div className="text-2xl font-bold text-[var(--brand-text)]">
                   {formatCurrency(totalPotentialSavings)}
                 </div>
@@ -56,7 +62,9 @@ export function LocalIncentives({ incentives, installationCost }: LocalIncentive
             </div>
             <div className="text-right">
               <div className="text-sm text-[var(--brand-text-secondary)]">Available Incentives</div>
-              <div className="text-2xl font-bold text-[var(--brand-primary)]">{incentives.length}</div>
+              <div className="text-2xl font-bold text-[var(--brand-primary)]">
+                {incentives.length}
+              </div>
             </div>
           </div>
         </CardBody>
@@ -80,14 +88,10 @@ export function LocalIncentives({ incentives, installationCost }: LocalIncentive
                   {/* Amount */}
                   <div className="flex items-center gap-2 mb-3">
                     {incentive.amountThb && (
-                      <Badge variant="success">
-                        {formatCurrency(incentive.amountThb)}
-                      </Badge>
+                      <Badge variant="success">{formatCurrency(incentive.amountThb)}</Badge>
                     )}
                     {incentive.percentage && (
-                      <Badge variant="success">
-                        {incentive.percentage}% discount
-                      </Badge>
+                      <Badge variant="success">{incentive.percentage}% discount</Badge>
                     )}
                   </div>
 

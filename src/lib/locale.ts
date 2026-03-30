@@ -21,6 +21,6 @@ export function buildLocalizedPath(pathname: string, _locale: Locale): string {
 }
 
 export function normalizePathname(pathname: string): string {
-  const cleaned = pathname.split('?')[0]
+  const cleaned = pathname.split('?')[0] ?? pathname
   return cleaned.endsWith('/') && cleaned !== '/' ? cleaned.slice(0, -1) : cleaned
 }

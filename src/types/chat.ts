@@ -5,9 +5,6 @@
  * including threads, messages, quick replies, notes, reports, and presence.
  */
 
-import { Decimal } from 'decimal.js';
-import { UUID } from 'crypto';
-
 // ============== Enums ==============
 
 export enum ThreadStatus {
@@ -65,407 +62,407 @@ export enum PresenceStatus {
 
 export interface FileAttachment {
   /** File URL */
-  url: string;
+  url: string
   /** Thumbnail URL for images */
-  thumbnailUrl?: string;
+  thumbnailUrl?: string
   /** Original file name */
-  fileName: string;
+  fileName: string
   /** File size in bytes */
-  fileSize: number;
+  fileSize: number
   /** File MIME type */
-  mimeType: string;
+  mimeType: string
 }
 
 export interface LocationData {
   /** Latitude */
-  lat: number;
+  lat: number
   /** Longitude */
-  lng: number;
+  lng: number
   /** Human-readable address */
-  address?: string;
+  address?: string
 }
 
 export interface QuoteCardData {
   /** Quote ID */
-  quoteId: string;
+  quoteId: string
   /** System size in kW */
-  systemSize: number;
+  systemSize: number
   /** Total price in THB */
-  totalPrice: number;
+  totalPrice: number
   /** Quote validity date */
-  validUntil?: Date;
+  validUntil?: Date
 }
 
 // ============== Message Types ==============
 
 export interface MessageBase {
   /** Message content */
-  content: string;
+  content: string
   /** Content type */
-  contentType: ContentType;
+  contentType: ContentType
   /** File attachments */
-  attachments?: FileAttachment[];
+  attachments?: FileAttachment[]
   /** ID of message being replied to */
-  replyToId?: string;
+  replyToId?: string
   /** Location data for location messages */
-  location?: LocationData;
+  location?: LocationData
   /** Quote data for quote messages */
-  quoteData?: QuoteCardData;
+  quoteData?: QuoteCardData
   /** Client-generated ID for deduplication */
-  clientMessageId?: string;
+  clientMessageId?: string
 }
 
 export interface MessageCreate extends MessageBase {
   /** Thread ID */
-  threadId: string;
+  threadId: string
 }
 
 export interface MessageInDB extends MessageBase {
   /** Message ID */
-  id: string;
+  id: string
   /** Thread ID */
-  threadId: string;
+  threadId: string
   /** Sequence number for ordering */
-  sequenceNumber: number;
+  sequenceNumber: number
   /** Sender type */
-  senderType: SenderType;
+  senderType: SenderType
   /** Sender user ID */
-  senderId?: string;
+  senderId?: string
   /** Read timestamp */
-  readAt?: Date;
+  readAt?: Date
   /** Deletion timestamp */
-  deletedAt?: Date;
+  deletedAt?: Date
   /** Creation timestamp */
-  createdAt: Date;
+  createdAt: Date
 }
 
 export interface MessageResponse extends MessageInDB {
   /** Whether message is deleted */
-  isDeleted: boolean;
+  isDeleted: boolean
   /** Whether message is read */
-  isRead: boolean;
+  isRead: boolean
   /** Replied message */
-  replyTo?: MessageInDB;
+  replyTo?: MessageInDB
 }
 
 // ============== Thread Types ==============
 
 export interface ThreadMetadata {
   /** Customer name */
-  customerName?: string;
+  customerName?: string
   /** Property type */
-  propertyType?: string;
+  propertyType?: string
   /** System size */
-  systemSize?: number;
+  systemSize?: number
   /** Location */
-  location?: string;
+  location?: string
 }
 
 export interface ThreadBase {
   /** Lead ID */
-  leadId?: string;
+  leadId?: string
   /** Deal ID */
-  dealId?: string;
+  dealId?: string
   /** B2C user ID */
-  b2cUserId: string;
+  b2cUserId: string
   /** Contractor ID */
-  contractorId: string;
+  contractorId: string
   /** Organization ID */
-  orgId: string;
+  orgId: string
   /** Thread status */
-  status: ThreadStatus;
+  status: ThreadStatus
   /** Thread metadata */
-  metadata?: ThreadMetadata;
+  metadata?: ThreadMetadata
 }
 
-export interface ThreadCreate extends ThreadBase {}
+export type ThreadCreate = ThreadBase
 
 export interface ThreadUpdate {
   /** Thread status */
-  status?: ThreadStatus;
+  status?: ThreadStatus
   /** Assigned user ID */
-  assignedTo?: string;
+  assignedTo?: string
   /** Thread metadata */
-  metadata?: ThreadMetadata;
+  metadata?: ThreadMetadata
 }
 
 export interface ThreadInDB extends ThreadBase {
   /** Thread ID */
-  id: string;
+  id: string
   /** Last message timestamp */
-  lastMessageAt?: Date;
+  lastMessageAt?: Date
   /** Last message preview */
-  lastMessagePreview?: string;
+  lastMessagePreview?: string
   /** Last message sender type */
-  lastMessageSender?: SenderType;
+  lastMessageSender?: SenderType
   /** Unread count for B2C user */
-  unreadB2c: number;
+  unreadB2c: number
   /** Unread count for contractor */
-  unreadContractor: number;
+  unreadContractor: number
   /** Assigned user ID */
-  assignedTo?: string;
+  assignedTo?: string
   /** Assignment timestamp */
-  assignedAt?: Date;
+  assignedAt?: Date
   /** Creation timestamp */
-  createdAt: Date;
+  createdAt: Date
   /** Update timestamp */
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 export interface ThreadWithLastMessage extends ThreadInDB {
   /** Last message */
-  lastMessage?: MessageResponse;
+  lastMessage?: MessageResponse
 }
 
 export interface ThreadWithCustomer extends ThreadWithLastMessage {
   /** Customer name */
-  customerName?: string;
+  customerName?: string
   /** Customer phone */
-  customerPhone?: string;
+  customerPhone?: string
   /** Customer email */
-  customerEmail?: string;
+  customerEmail?: string
   /** Lead status */
-  leadStatus?: string;
+  leadStatus?: string
   /** Deal stage */
-  dealStage?: string;
+  dealStage?: string
   /** Property details */
-  propertyDetails?: Record<string, unknown>;
+  propertyDetails?: Record<string, unknown>
   /** Solar system details */
-  solarSystemDetails?: Record<string, unknown>;
+  solarSystemDetails?: Record<string, unknown>
 }
 
 export interface ThreadListResponse {
   /** List of threads */
-  threads: ThreadWithLastMessage[];
+  threads: ThreadWithLastMessage[]
   /** Total count */
-  total: number;
+  total: number
   /** Unread total */
-  unreadTotal: number;
+  unreadTotal: number
 }
 
 export interface ThreadDetailResponse extends ThreadWithCustomer {
   /** Messages */
-  messages: MessageResponse[];
+  messages: MessageResponse[]
   /** Has more messages */
-  hasMore: boolean;
+  hasMore: boolean
   /** Internal notes */
-  notes: NoteResponse[];
+  notes: NoteResponse[]
 }
 
 // ============== Quick Reply Types ==============
 
 export interface QuickReplyBase {
   /** Template title */
-  title: string;
+  title: string
   /** Template content */
-  content: string;
+  content: string
   /** Template category */
-  category: QuickReplyCategory;
+  category: QuickReplyCategory
 }
 
-export interface QuickReplyCreate extends QuickReplyBase {}
+export type QuickReplyCreate = QuickReplyBase
 
 export interface QuickReplyUpdate {
   /** Template title */
-  title?: string;
+  title?: string
   /** Template content */
-  content?: string;
+  content?: string
   /** Template category */
-  category?: QuickReplyCategory;
+  category?: QuickReplyCategory
   /** Active status */
-  active?: boolean;
+  active?: boolean
   /** Sort order */
-  sortOrder?: number;
+  sortOrder?: number
 }
 
 export interface QuickReplyInDB extends QuickReplyBase {
   /** Template ID */
-  id: string;
+  id: string
   /** Contractor ID */
-  contractorId?: string;
+  contractorId?: string
   /** Organization ID */
-  orgId: string;
+  orgId: string
   /** Usage count */
-  usageCount: number;
+  usageCount: number
   /** Last used timestamp */
-  lastUsedAt?: Date;
+  lastUsedAt?: Date
   /** Extracted variable names */
-  variables?: string[];
+  variables?: string[]
   /** Active status */
-  active: boolean;
+  active: boolean
   /** Sort order */
-  sortOrder: number;
+  sortOrder: number
   /** Creation timestamp */
-  createdAt: Date;
+  createdAt: Date
   /** Update timestamp */
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 export interface QuickReplyListResponse {
   /** List of templates */
-  templates: QuickReplyInDB[];
+  templates: QuickReplyInDB[]
   /** Total count */
-  total: number;
+  total: number
 }
 
 export interface QuickReplyUseRequest {
   /** Variable values */
-  variables: Record<string, string>;
+  variables: Record<string, string>
 }
 
 // ============== Note Types ==============
 
 export interface NoteBase {
   /** Note content */
-  content: string;
+  content: string
   /** Whether note is pinned */
-  pinned: boolean;
+  pinned: boolean
   /** Mentioned user IDs */
-  mentionedUsers?: string[];
+  mentionedUsers?: string[]
 }
 
-export interface NoteCreate extends NoteBase {}
+export type NoteCreate = NoteBase
 
 export interface NoteUpdate {
   /** Note content */
-  content?: string;
+  content?: string
   /** Whether note is pinned */
-  pinned?: boolean;
+  pinned?: boolean
   /** Mentioned user IDs */
-  mentionedUsers?: string[];
+  mentionedUsers?: string[]
 }
 
 export interface NoteInDB extends NoteBase {
   /** Note ID */
-  id: string;
+  id: string
   /** Thread ID */
-  threadId: string;
+  threadId: string
   /** Author ID */
-  authorId: string;
+  authorId: string
   /** Creation timestamp */
-  createdAt: Date;
+  createdAt: Date
   /** Update timestamp */
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 export interface NoteResponse extends NoteInDB {
   /** Author name */
-  authorName?: string;
+  authorName?: string
 }
 
 // ============== Report Types ==============
 
 export interface ReportBase {
   /** Report reason */
-  reason: ReportReason;
+  reason: ReportReason
   /** Report description */
-  description?: string;
+  description?: string
 }
 
 export interface ReportCreate extends ReportBase {
   /** Specific message ID being reported */
-  messageId?: string;
+  messageId?: string
 }
 
 export interface ReportInDB extends ReportBase {
   /** Report ID */
-  id: string;
+  id: string
   /** Thread ID */
-  threadId: string;
+  threadId: string
   /** Message ID */
-  messageId?: string;
+  messageId?: string
   /** Reporter ID */
-  reporterId: string;
+  reporterId: string
   /** Reporter type */
-  reporterType: SenderType;
+  reporterType: SenderType
   /** Report status */
-  status: ReportStatus;
+  status: ReportStatus
   /** Reviewer ID */
-  reviewedBy?: string;
+  reviewedBy?: string
   /** Action taken */
-  actionTaken?: string;
+  actionTaken?: string
   /** Resolution note */
-  resolutionNote?: string;
+  resolutionNote?: string
   /** Resolution timestamp */
-  resolvedAt?: Date;
+  resolvedAt?: Date
   /** Creation timestamp */
-  createdAt: Date;
+  createdAt: Date
 }
 
 export interface ReportResponse extends ReportInDB {
   /** Reviewer name */
-  reviewerName?: string;
+  reviewerName?: string
 }
 
 export interface ReportResolveRequest {
   /** New status */
-  status: ReportStatus;
+  status: ReportStatus
   /** Action taken */
-  actionTaken?: string;
+  actionTaken?: string
   /** Resolution note */
-  resolutionNote?: string;
+  resolutionNote?: string
 }
 
 // ============== Presence Types ==============
 
 export interface PresenceUpdate {
   /** Presence status */
-  status: PresenceStatus;
+  status: PresenceStatus
   /** Active thread ID */
-  activeThreadId?: string;
+  activeThreadId?: string
 }
 
 export interface PresenceResponse {
   /** User ID */
-  userId: string;
+  userId: string
   /** Presence status */
-  status: PresenceStatus;
+  status: PresenceStatus
   /** Last seen timestamp */
-  lastSeenAt: Date;
+  lastSeenAt: Date
   /** Active thread ID */
-  activeThreadId?: string;
+  activeThreadId?: string
 }
 
 // ============== Upload Types ==============
 
 export interface UploadRequest {
   /** File name */
-  fileName: string;
+  fileName: string
   /** File MIME type */
-  fileType: string;
+  fileType: string
   /** File size in bytes */
-  fileSize: number;
+  fileSize: number
 }
 
 export interface UploadResponse {
   /** Signed upload URL */
-  uploadUrl: string;
+  uploadUrl: string
   /** Public file URL after upload */
-  fileUrl: string;
+  fileUrl: string
   /** Thumbnail URL for images */
-  thumbnailUrl?: string;
+  thumbnailUrl?: string
   /** Upload URL expiry in seconds */
-  expiresIn: number;
+  expiresIn: number
 }
 
 // ============== Pagination Types ==============
 
 export interface ThreadFilter {
   /** Thread status filter */
-  status?: ThreadStatus;
+  status?: ThreadStatus
   /** Search term */
-  search?: string;
+  search?: string
   /** Assigned user filter */
-  assignedTo?: string;
+  assignedTo?: string
   /** Has unread filter */
-  hasUnread?: boolean;
+  hasUnread?: boolean
 }
 
 export interface MessagePagination {
   /** List of messages */
-  messages: MessageResponse[];
+  messages: MessageResponse[]
   /** Has more messages */
-  hasMore: boolean;
+  hasMore: boolean
 }
 
 // ============== WebSocket Event Types ==============
@@ -482,201 +479,212 @@ export type WSEventType =
   | 'thread:join'
   | 'thread:leave'
   | 'thread:updated'
-  | 'presence:changed';
+  | 'presence:changed'
 
 export interface WSEventBase {
   /** Event type */
-  eventType: WSEventType;
+  eventType: WSEventType
 }
 
 export interface WSMessageSend extends WSEventBase {
-  eventType: 'message:send';
+  eventType: 'message:send'
   /** Thread ID */
-  threadId: string;
+  threadId: string
   /** Message content */
-  content: string;
+  content: string
   /** Content type */
-  contentType: ContentType;
+  contentType: ContentType
   /** Client message ID */
-  clientMessageId: string;
+  clientMessageId: string
   /** Attachments */
-  attachments?: FileAttachment[];
+  attachments?: FileAttachment[]
   /** Location data */
-  location?: LocationData;
+  location?: LocationData
   /** Quote data */
-  quoteData?: QuoteCardData;
+  quoteData?: QuoteCardData
   /** Reply to ID */
-  replyToId?: string;
+  replyToId?: string
 }
 
 export interface WSMessageNew extends WSEventBase {
-  eventType: 'message:new';
+  eventType: 'message:new'
   /** New message */
-  message: MessageResponse;
+  message: MessageResponse
 }
 
 export interface WSMessageAck extends WSEventBase {
-  eventType: 'message:ack';
+  eventType: 'message:ack'
   /** Client message ID */
-  clientMessageId: string;
+  clientMessageId: string
   /** Created message */
-  message: MessageResponse;
+  message: MessageResponse
 }
 
 export interface WSMessageError extends WSEventBase {
-  eventType: 'message:error';
+  eventType: 'message:error'
   /** Client message ID */
-  clientMessageId: string;
+  clientMessageId: string
   /** Error message */
-  error: string;
+  error: string
 }
 
 export interface WSMessageRead extends WSEventBase {
-  eventType: 'message:read';
+  eventType: 'message:read'
   /** Thread ID */
-  threadId: string;
+  threadId: string
   /** Message ID */
-  messageId: string;
+  messageId: string
   /** User ID */
-  userId: string;
+  userId: string
 }
 
 export interface WSTypingStart extends WSEventBase {
-  eventType: 'typing:start';
+  eventType: 'typing:start'
   /** Thread ID */
-  threadId: string;
+  threadId: string
 }
 
 export interface WSTypingStop extends WSEventBase {
-  eventType: 'typing:stop';
+  eventType: 'typing:stop'
   /** Thread ID */
-  threadId: string;
+  threadId: string
 }
 
 export interface WSTypingIndicator extends WSEventBase {
-  eventType: 'typing:indicator';
+  eventType: 'typing:indicator'
   /** Thread ID */
-  threadId: string;
+  threadId: string
   /** User ID */
-  userId: string;
+  userId: string
   /** Is typing */
-  isTyping: boolean;
+  isTyping: boolean
 }
 
 export interface WSThreadJoin extends WSEventBase {
-  eventType: 'thread:join';
+  eventType: 'thread:join'
   /** Thread ID */
-  threadId: string;
+  threadId: string
 }
 
 export interface WSThreadLeave extends WSEventBase {
-  eventType: 'thread:leave';
+  eventType: 'thread:leave'
   /** Thread ID */
-  threadId: string;
+  threadId: string
 }
 
 export interface WSThreadUpdated extends WSEventBase {
-  eventType: 'thread:updated';
+  eventType: 'thread:updated'
   /** Thread ID */
-  threadId: string;
+  threadId: string
   /** Last message */
-  lastMessage: MessageResponse | null;
+  lastMessage: MessageResponse | null
   /** Unread count */
-  unreadCount: number;
+  unreadCount: number
 }
 
 export interface WSPresenceChanged extends WSEventBase {
-  eventType: 'presence:changed';
+  eventType: 'presence:changed'
   /** User ID */
-  userId: string;
+  userId: string
   /** Presence status */
-  status: PresenceStatus;
+  status: PresenceStatus
 }
 
 // ============== Chat Hook Types ==============
 
 export interface UseChatOptions {
   /** Auto-connect on mount */
-  autoConnect?: boolean;
+  autoConnect?: boolean
   /** Auto-reconnect on disconnect */
-  autoReconnect?: boolean;
+  autoReconnect?: boolean
   /** Reconnect attempts */
-  reconnectAttempts?: number;
+  reconnectAttempts?: number
   /** Reconnect interval in ms */
-  reconnectInterval?: number;
+  reconnectInterval?: number
 }
 
 export interface UseChatReturn {
   /** Connected threads */
-  threads: ThreadWithLastMessage[];
+  threads: ThreadWithLastMessage[]
   /** Active thread */
-  activeThread: ThreadDetailResponse | null;
+  activeThread: ThreadDetailResponse | null
   /** Messages for active thread */
-  messages: MessageResponse[];
+  messages: MessageResponse[]
   /** Is connecting */
-  isConnecting: boolean;
+  isConnecting: boolean
   /** Is connected */
-  isConnected: boolean;
+  isConnected: boolean
   /** Is typing indicator */
-  isTyping: boolean;
+  isTyping: boolean
   /** Typing user ID */
-  typingUserId: string | null;
+  typingUserId: string | null
   /** Error */
-  error: Error | null;
+  error: Error | null
   /** Connect to socket */
-  connect: () => void;
+  connect: () => void
   /** Disconnect from socket */
-  disconnect: () => void;
+  disconnect: () => void
   /** Join thread */
-  joinThread: (threadId: string) => void;
+  joinThread: (threadId: string) => void
   /** Leave thread */
-  leaveThread: (threadId: string) => void;
+  leaveThread: (threadId: string) => void
   /** Send message */
-  sendMessage: (data: MessageCreate) => void;
+  sendMessage: (data: MessageCreate) => void
   /** Mark as read */
-  markAsRead: (threadId: string, messageId: string) => void;
+  markAsRead: (threadId: string, messageId: string) => void
   /** Start typing indicator */
-  startTyping: (threadId: string) => void;
+  startTyping: (threadId: string) => void
   /** Stop typing indicator */
-  stopTyping: (threadId: string) => void;
+  stopTyping: (threadId: string) => void
   /** Load more messages */
-  loadMoreMessages: () => void;
+  loadMoreMessages: () => void
   /** Has more messages */
-  hasMoreMessages: boolean;
+  hasMoreMessages: boolean
   /** Refresh threads */
-  refreshThreads: () => void;
+  refreshThreads: () => void
 }
 
 export interface UseWebSocketOptions {
   /** Socket URL */
-  url?: string;
+  url?: string
   /** Auth token */
-  token: string;
+  token: string
   /** Auto-connect */
-  autoConnect?: boolean;
+  autoConnect?: boolean
   /** Reconnect attempts */
-  reconnectAttempts?: number;
+  reconnectAttempts?: number
   /** Reconnect interval */
-  reconnectInterval?: number;
+  reconnectInterval?: number
 }
+
+// ============== Convenience Type Aliases ==============
+
+/** Alias for QuickReplyInDB, used in UI components */
+export type QuickReply = QuickReplyInDB
+
+/** Alias for MessageResponse, used in UI components */
+export type ChatMessage = MessageResponse
+
+/** Alias for ThreadWithLastMessage, used in UI components */
+export type ChatThread = ThreadWithLastMessage
 
 export interface UseWebSocketReturn {
   /** Socket instance */
-  socket: any | null;
+  socket: unknown | null
   /** Is connected */
-  isConnected: boolean;
+  isConnected: boolean
   /** Is connecting */
-  isConnecting: boolean;
+  isConnecting: boolean
   /** Error */
-  error: Error | null;
+  error: Error | null
   /** Connect */
-  connect: () => void;
+  connect: () => void
   /** Disconnect */
-  disconnect: () => void;
+  disconnect: () => void
   /** Emit event */
-  emit: (event: string, data: any) => void;
+  emit: (event: string, data: unknown) => void
   /** Subscribe to event */
-  on: (event: string, callback: (data: any) => void) => void;
+  on: (event: string, callback: (data: unknown) => void) => void
   /** Unsubscribe from event */
-  off: (event: string, callback: (data: any) => void) => void;
+  off: (event: string, callback: (data: unknown) => void) => void
 }

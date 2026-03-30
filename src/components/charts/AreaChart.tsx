@@ -16,7 +16,7 @@ import {
 } from 'recharts'
 import { ComponentType } from 'react'
 
-interface AreaChartProps {
+export interface AreaChartProps {
   data: Record<string, unknown>[]
   areas: Array<{
     dataKey: string

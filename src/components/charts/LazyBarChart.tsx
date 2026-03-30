@@ -24,14 +24,17 @@ interface BarChartProps {
   className?: string
 }
 
-const BarChartComponent = dynamic(() => import('./BarChart'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-full w-full bg-[var(--brand-background)] dark:bg-gray-800 animate-pulse">
-      <div className="h-4 w-4 bg-[var(--brand-border)] dark:bg-gray-600 rounded-full animate-bounce" />
-    </div>
-  ),
-}) as ComponentType<BarChartProps>
+const BarChartComponent = dynamic(
+  () => import('./BarChart').then((mod) => ({ default: mod.BarChart })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-full w-full bg-[var(--brand-background)] dark:bg-gray-800 animate-pulse">
+        <div className="h-4 w-4 bg-[var(--brand-border)] dark:bg-gray-600 rounded-full animate-bounce" />
+      </div>
+    ),
+  }
+) as ComponentType<BarChartProps>
 
 export function LazyBarChart(props: BarChartProps) {
   return <BarChartComponent {...props} />

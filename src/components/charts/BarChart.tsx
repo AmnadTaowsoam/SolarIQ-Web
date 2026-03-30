@@ -16,7 +16,7 @@ import {
 } from 'recharts'
 import { ComponentType } from 'react'
 
-interface BarChartProps {
+export interface BarChartProps {
   data: Record<string, unknown>[]
   bars: Array<{
     dataKey: string

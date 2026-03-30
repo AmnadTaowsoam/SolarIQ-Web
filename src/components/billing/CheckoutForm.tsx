@@ -71,9 +71,9 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
   const [selectedBank, setSelectedBank] = useState('internet_banking_scb')
   const [isProcessing, setIsProcessing] = useState(false)
   const [checkoutResult, setCheckoutResult] = useState<{
-    authorizeUri?: string
-    chargeId?: string
-    qrCodeUri?: string
+    authorize_uri?: string
+    charge_id?: string
+    qr_code_uri?: string
   } | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -118,12 +118,12 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
 
       setCheckoutResult(result)
 
-      if (result.authorizeUri) {
+      if (result.authorize_uri) {
         // Redirect to payment page for bank transfer or credit card
-        window.location.href = result.authorizeUri
-      } else if (result.chargeId && selectedMethod === 'promptpay') {
+        window.location.href = result.authorize_uri
+      } else if (result.charge_id && selectedMethod === 'promptpay') {
         // Show QR code for PromptPay
-        onSuccess?.(result.chargeId)
+        onSuccess?.(result.charge_id)
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Payment processing failed'
@@ -243,11 +243,11 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
           )}
 
           {/* PromptPay QR Code Display */}
-          {checkoutResult?.qrCodeUri && selectedMethod === 'promptpay' && (
+          {checkoutResult?.qr_code_uri && selectedMethod === 'promptpay' && (
             <div className="bg-[var(--brand-background)] rounded-lg p-6 text-center">
               <div className="mb-4">
                 <Image
-                  src={checkoutResult.qrCodeUri}
+                  src={checkoutResult.qr_code_uri}
                   alt="PromptPay QR Code"
                   width={256}
                   height={256}
@@ -283,7 +283,7 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
             variant="primary"
             size="lg"
             className="w-full"
-            disabled={isProcessing || !!checkoutResult?.qrCodeUri}
+            disabled={isProcessing || !!checkoutResult?.qr_code_uri}
           >
             {isProcessing ? (
               <>

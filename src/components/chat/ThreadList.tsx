@@ -92,7 +92,7 @@ function ThreadItem({ thread, isSelected, onClick, t }: ThreadItemProps) {
       })
     : ''
 
-  const hasUnread = thread.unreadCount && thread.unreadCount > 0
+  const hasUnread = thread.unreadContractor && thread.unreadContractor > 0
 
   return (
     <button
@@ -111,7 +111,7 @@ function ThreadItem({ thread, isSelected, onClick, t }: ThreadItemProps) {
             </span>
             {hasUnread && (
               <span className="flex-shrink-0 w-5 h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
-                {thread.unreadCount}
+                {thread.unreadContractor}
               </span>
             )}
           </div>
@@ -177,10 +177,13 @@ export function ThreadList({
       }
 
       // Assignee filter
-      if (assigneeFilter === 'mine' && !thread.isAssignedToMe) {
+      if (assigneeFilter === 'mine' && !thread.assignedTo) {
         return false
       }
-      if (assigneeFilter === 'unread' && (!thread.unreadCount || thread.unreadCount === 0)) {
+      if (
+        assigneeFilter === 'unread' &&
+        (!thread.unreadContractor || thread.unreadContractor === 0)
+      ) {
         return false
       }
 
@@ -285,9 +288,9 @@ export function ThreadList({
       {/* Footer with stats */}
       <div className="p-3 border-t border-[var(--brand-border)] bg-[var(--brand-background)] text-xs text-[var(--brand-text-secondary)]">
         {filteredThreads.length} {t('all').toLowerCase()}
-        {threads.some((th) => th.unreadCount && th.unreadCount > 0) && (
+        {threads.some((th) => th.unreadContractor && th.unreadContractor > 0) && (
           <span className="ml-2">
-            • {threads.reduce((sum, th) => sum + (th.unreadCount || 0), 0)} {t('unread')}
+            • {threads.reduce((sum, th) => sum + (th.unreadContractor || 0), 0)} {t('unread')}
           </span>
         )}
       </div>

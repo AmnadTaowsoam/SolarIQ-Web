@@ -35,11 +35,12 @@ const ENERGY_COLOR_KEYS = [
 
 function getPanelColor(energyKwh: number): string {
   for (let i = ENERGY_COLOR_KEYS.length - 1; i >= 0; i--) {
-    if (energyKwh >= ENERGY_COLOR_KEYS[i].threshold) {
-      return ENERGY_COLOR_KEYS[i].color
+    const key = ENERGY_COLOR_KEYS[i]
+    if (key && energyKwh >= key.threshold) {
+      return key.color
     }
   }
-  return ENERGY_COLOR_KEYS[0].color
+  return ENERGY_COLOR_KEYS[0]?.color ?? '#ef4444'
 }
 
 /**

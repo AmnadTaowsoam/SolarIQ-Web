@@ -29,14 +29,17 @@ interface LineChartProps {
 }
 
 // Lazy load the actual chart component
-const LineChartComponent = dynamic(() => import('./LineChart'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-full w-full bg-[var(--brand-background)] dark:bg-gray-800 animate-pulse">
-      <div className="h-4 w-4 bg-[var(--brand-border)] dark:bg-gray-600 rounded-full animate-bounce" />
-    </div>
-  ),
-}) as ComponentType<LineChartProps>
+const LineChartComponent = dynamic(
+  () => import('./LineChart').then((mod) => ({ default: mod.LineChart })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-full w-full bg-[var(--brand-background)] dark:bg-gray-800 animate-pulse">
+        <div className="h-4 w-4 bg-[var(--brand-border)] dark:bg-gray-600 rounded-full animate-bounce" />
+      </div>
+    ),
+  }
+) as ComponentType<LineChartProps>
 
 export function LazyLineChart(props: LineChartProps) {
   return <LineChartComponent {...props} />

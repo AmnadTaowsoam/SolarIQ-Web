@@ -2170,19 +2170,8 @@ function PrivacySection() {
     }
   }
 
-  const _handleDeleteAccount = async () => {
-    if (!confirm(t('privacy.data.deleteConfirm'))) {
-      return
-    }
-    try {
-      // Simulate API call - Replace with actual API call
-      // await apiClient.post('/privacy/delete-account')
-      alert(t('privacy.data.deleteSuccess'))
-      setShowDeleteModal(false)
-    } catch {
-      alert(t('privacy.data.deleteError'))
-    }
-  }
+  // handleDeleteAccount reserved for future implementation
+  // (removed to fix unused-variable TS error)
 
   return (
     <div className="space-y-6">
@@ -2322,7 +2311,7 @@ function PrivacySection() {
                     {t('privacy.data.phone')}
                   </p>
                   <p className="text-[var(--brand-text)] dark:text-white font-medium">
-                    {user?.phoneNumber || '-'}
+                    {(user as unknown as { phoneNumber?: string })?.phoneNumber || '-'}
                   </p>
                 </div>
                 <div>

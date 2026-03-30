@@ -38,10 +38,10 @@ function FAQItem({ question, answer }: FAQItemProps) {
 }
 
 interface BillingFAQProps {
-  _locale?: string
+  locale?: string
 }
 
-export function BillingFAQ({ _locale = 'th' }: BillingFAQProps) {
+export function BillingFAQ({ locale: _locale = 'th' }: BillingFAQProps) {
   const t = useTranslations('billingPolicy')
 
   const faqs = [

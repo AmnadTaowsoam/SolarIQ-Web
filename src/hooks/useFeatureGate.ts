@@ -38,7 +38,7 @@ export function useFeatureGate() {
       return false
     }
     const features = PLAN_FEATURES[planId] || PLAN_FEATURES.starter
-    return features.includes(feature)
+    return features?.includes(feature) ?? false
   }
 
   const isTrialing = subscriptionStatus === 'trialing'

@@ -28,7 +28,7 @@ interface QuickReplyPanelProps {
 }
 
 interface QuickReplyFormData {
-  name: string
+  title: string
   content: string
   category: QuickReplyCategory
   variables?: string[]
@@ -82,7 +82,7 @@ function extractVariables(content: string): string[] {
   let match
 
   while ((match = regex.exec(content)) !== null) {
-    if (!variables.includes(match[1])) {
+    if (match[1] && !variables.includes(match[1])) {
       variables.push(match[1])
     }
   }
@@ -119,7 +119,7 @@ function QuickReplyItem({ reply, onSelect, onEdit, onDelete, t }: QuickReplyItem
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-[var(--brand-text)] truncate">{reply.name}</span>
+            <span className="font-medium text-[var(--brand-text)] truncate">{reply.title}</span>
             <Badge className={getCategoryColor(reply.category)}>
               {getCategoryLabel(reply.category, t)}
             </Badge>
@@ -193,7 +193,7 @@ function QuickReplyFormModal({
   isLoading = false,
   t,
 }: QuickReplyFormModalProps) {
-  const [name, setName] = useState(initialData?.name || '')
+  const [name, setName] = useState(initialData?.title || '')
   const [content, setContent] = useState(initialData?.content || '')
   const [category, setCategory] = useState<QuickReplyCategory>(
     initialData?.category || QuickReplyCategory.CUSTOM
@@ -209,7 +209,7 @@ function QuickReplyFormModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     await onSubmit({
-      name,
+      title: name,
       content,
       category,
       variables: detectedVariables,
@@ -312,7 +312,7 @@ function VariableInputModal({ isOpen, onClose, onSubmit, reply, t }: VariableInp
   React.useEffect(() => {
     if (isOpen) {
       const initial: Record<string, string> = {}
-      reply.variables?.forEach((v) => {
+      reply.variables?.forEach((v: string) => {
         initial[v] = ''
       })
       setValues(initial)
@@ -322,7 +322,7 @@ function VariableInputModal({ isOpen, onClose, onSubmit, reply, t }: VariableInp
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('insertVariable')}>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {reply.variables?.map((variable) => (
+        {reply.variables?.map((variable: string) => (
           <div key={variable}>
             <label className="block text-sm font-medium text-[var(--brand-text)] mb-1">
               {variable}
@@ -392,7 +392,7 @@ export function QuickReplyPanel({
       if (searchQuery) {
         const query = searchQuery.toLowerCase()
         return (
-          reply.name.toLowerCase().includes(query) || reply.content.toLowerCase().includes(query)
+          reply.title.toLowerCase().includes(query) || reply.content.toLowerCase().includes(query)
         )
       }
 
@@ -426,7 +426,7 @@ export function QuickReplyPanel({
     if (editingReply && onUpdate) {
       await onUpdate(editingReply.id, data)
     } else if (onCreate) {
-      await onCreate(data as QuickReplyCreate)
+      await onCreate(data as unknown as QuickReplyCreate)
     }
     setEditingReply(null)
   }
@@ -491,7 +491,7 @@ export function QuickReplyPanel({
                   : 'bg-[var(--brand-background)] text-[var(--brand-text-secondary)] hover:bg-[var(--brand-border)]'
               )}
             >
-              {getCategoryLabel(cat)}
+              {getCategoryLabel(cat, t)}
             </button>
           ))}
         </div>

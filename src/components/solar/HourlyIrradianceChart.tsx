@@ -36,8 +36,8 @@ export function HourlyIrradianceChart({ data }: HourlyIrradianceChartProps) {
   }))
 
   const peakHours = data.filter((d) => d.isPeak)
-  const peakStart = peakHours.length > 0 ? peakHours[0].hour : 10
-  const peakEnd = peakHours.length > 0 ? peakHours[peakHours.length - 1].hour : 14
+  const peakStart = peakHours.length > 0 ? (peakHours[0]?.hour ?? 10) : 10
+  const peakEnd = peakHours.length > 0 ? (peakHours[peakHours.length - 1]?.hour ?? 14) : 14
   const maxIrradiance = Math.max(...data.map((d) => d.irradianceWPerM2))
   const avgPeakIrradiance =
     peakHours.length > 0

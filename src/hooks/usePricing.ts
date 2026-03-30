@@ -9,7 +9,10 @@ import { InstallationCost, ElectricityRate, EquipmentPricing } from '@/types'
 export function useInstallationCosts() {
   return useQuery({
     queryKey: ['installation-costs'],
-    queryFn: () => api.get<InstallationCost[]>(API_ENDPOINTS.PRICING.INSTALLATION_COST),
+    queryFn: async () => {
+      const response = await api.get<InstallationCost[]>(API_ENDPOINTS.PRICING.INSTALLATION_COST)
+      return response.data
+    },
   })
 }
 
@@ -41,8 +44,7 @@ export function useDeleteInstallationCost() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) =>
-      api.delete(`${API_ENDPOINTS.PRICING.INSTALLATION_COST}/${id}`),
+    mutationFn: (id: string) => api.delete(`${API_ENDPOINTS.PRICING.INSTALLATION_COST}/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['installation-costs'] })
     },
@@ -53,7 +55,10 @@ export function useDeleteInstallationCost() {
 export function useElectricityRates() {
   return useQuery({
     queryKey: ['electricity-rates'],
-    queryFn: () => api.get<ElectricityRate[]>(API_ENDPOINTS.PRICING.ELECTRICITY_RATES),
+    queryFn: async () => {
+      const response = await api.get<ElectricityRate[]>(API_ENDPOINTS.PRICING.ELECTRICITY_RATES)
+      return response.data
+    },
   })
 }
 
@@ -85,8 +90,7 @@ export function useDeleteElectricityRate() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) =>
-      api.delete(`${API_ENDPOINTS.PRICING.ELECTRICITY_RATES}/${id}`),
+    mutationFn: (id: string) => api.delete(`${API_ENDPOINTS.PRICING.ELECTRICITY_RATES}/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['electricity-rates'] })
     },
@@ -129,8 +133,7 @@ export function useDeleteEquipmentPricing() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) =>
-      api.delete(`${API_ENDPOINTS.PRICING.EQUIPMENT}/${id}`),
+    mutationFn: (id: string) => api.delete(`${API_ENDPOINTS.PRICING.EQUIPMENT}/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['equipment-pricing'] })
     },

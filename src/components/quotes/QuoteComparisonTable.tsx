@@ -112,10 +112,6 @@ export function QuoteComparisonTable({
       {sorted.map((item, index) => {
         const badges = getBadges(item)
         const isAcceptingThis = isAccepting === item.quoteId
-        const _installmentMonth = item.pricing.monthlyInstallment
-          ? Object.entries({}).reduce((_, [k]) => k, '36')
-          : null
-
         return (
           <div
             key={item.quoteId}

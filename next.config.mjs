@@ -58,7 +58,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   // WK-109: Performance Optimization - Image optimization
   images: {

@@ -112,7 +112,11 @@ export function QuotaExceededModal({
                 </p>
               </div>
               <Button
-                onClick={() => onUpgrade(recommendedPlan)}
+                onClick={() => {
+                  if (recommendedPlan) {
+                    onUpgrade(recommendedPlan)
+                  }
+                }}
                 disabled={isUpgrading}
                 variant="primary"
               >

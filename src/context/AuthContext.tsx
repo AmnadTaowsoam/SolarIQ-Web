@@ -180,7 +180,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     let isMounted = true
-    let unsubscribe = () => undefined
+    let unsubscribe: () => void = () => undefined
 
     // Prevent infinite loading if Firebase listener cannot initialize.
     const loadingTimeout = setTimeout(() => {

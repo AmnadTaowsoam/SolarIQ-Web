@@ -31,7 +31,7 @@ function getInitialsColor(name: string): string {
     'bg-teal-400',
   ]
   const idx = name.charCodeAt(0) % colors.length
-  return colors[idx]
+  return colors[idx] || 'bg-orange-400'
 }
 
 function formatThreadTime(date: Date, yesterday: string): string {

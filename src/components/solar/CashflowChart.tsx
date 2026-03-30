@@ -45,7 +45,8 @@ const formatCompact = (value: number): string => {
 
 export function CashflowChart({ cashflow, paybackYears, installationCost }: CashflowChartProps) {
   const paybackYear = Math.ceil(paybackYears)
-  const totalSavings25 = cashflow.length > 0 ? cashflow[cashflow.length - 1].cumulativeSavingThb : 0
+  const totalSavings25 =
+    cashflow.length > 0 ? (cashflow[cashflow.length - 1]?.cumulativeSavingThb ?? 0) : 0
   const totalROI =
     installationCost > 0 ? ((totalSavings25 - installationCost) / installationCost) * 100 : 0
 

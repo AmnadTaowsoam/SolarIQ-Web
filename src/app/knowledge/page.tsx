@@ -12,6 +12,8 @@ import {
   useUploadDocument,
   useSearchKnowledge,
   useDeleteDocument,
+  type SearchResult,
+  type Document,
 } from '@/hooks/useKnowledge'
 
 export default function KnowledgePage() {
@@ -25,7 +27,7 @@ export default function KnowledgePage() {
   const deleteMutation = useDeleteDocument()
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<Record<string, unknown>[]>([])
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [uploadForm, setUploadForm] = useState({
     content: '',
@@ -34,8 +36,8 @@ export default function KnowledgePage() {
     metadata: '',
   })
 
-  const documents = documentsData?.documents || []
-  const stats = statsData || {
+  const documents: Document[] = documentsData?.data?.documents || []
+  const stats = statsData?.data || {
     total_documents: 0,
     total_chunks: 0,
     by_source: [],
@@ -51,7 +53,7 @@ export default function KnowledgePage() {
         top_k: 5,
         min_score: 0.5,
       })
-      setSearchResults(result.results)
+      setSearchResults(result.data.results)
     } catch (err) {
       void err // handled by UI state;
     }

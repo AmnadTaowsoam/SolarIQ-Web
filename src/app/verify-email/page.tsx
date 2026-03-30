@@ -48,14 +48,14 @@ export default function VerifyEmailPage() {
           message?: string
           requires_onboarding?: boolean
         }>('/api/v1/auth/verify-email', { token })
-        if (response.success) {
+        if (response.data.success) {
           setStatus('success')
           setTimeout(() => {
-            router.push(response.requires_onboarding ? onboardingPath : dashboardPath)
+            router.push(response.data.requires_onboarding ? onboardingPath : dashboardPath)
           }, 2000)
         } else {
           setStatus('error')
-          setError(response.message || t('errors.verifyFailed'))
+          setError(response.data.message || t('errors.verifyFailed'))
         }
       } catch {
         setStatus('error')

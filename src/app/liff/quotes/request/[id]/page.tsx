@@ -79,13 +79,14 @@ export default function QuoteRequestStatusPage() {
 
   useEffect(() => {
     if (!request) {
-      return
+      return undefined
     }
     // Auto-refresh every 30s while open
     if (request.status === 'open' || request.status === 'quotes_received') {
       const interval = setInterval(refetch, 30000)
       return () => clearInterval(interval)
     }
+    return undefined
   }, [request, refetch])
 
   if (isLoading) {
@@ -110,7 +111,6 @@ export default function QuoteRequestStatusPage() {
   }
 
   const statusInfo = STATUS_CONFIG[request.status]
-  const _quotesLeft = request.maxQuotes - request.quotesReceived
   const hasQuotes = request.quotesReceived > 0
 
   return (
@@ -181,7 +181,9 @@ export default function QuoteRequestStatusPage() {
             <div className="flex justify-between">
               <span className="text-[var(--brand-text-secondary)]">ไทม์ไลน์</span>
               <span className="font-medium text-[var(--brand-text)]">
-                {TIMELINE_LABELS[request.preferences.preferredTimeline].split('(')[0].trim()}
+                {(TIMELINE_LABELS[request.preferences.preferredTimeline] ?? '')
+                  .split('(')[0]
+                  ?.trim()}
               </span>
             </div>
             <div className="flex justify-between">

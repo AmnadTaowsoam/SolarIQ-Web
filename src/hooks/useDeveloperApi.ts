@@ -71,12 +71,20 @@ export interface ApiUsageSummary {
 export const WEBHOOK_EVENTS: WebhookEvent[] = [
   { id: 'lead.created', name: 'lead.created', description: 'เมื่อมี Lead ใหม่' },
   { id: 'lead.updated', name: 'lead.updated', description: 'เมื่อ Lead อัปเดต' },
-  { id: 'lead.status_changed', name: 'lead.status_changed', description: 'เมื่อสถานะ Lead เปลี่ยน' },
+  {
+    id: 'lead.status_changed',
+    name: 'lead.status_changed',
+    description: 'เมื่อสถานะ Lead เปลี่ยน',
+  },
   { id: 'quote.created', name: 'quote.created', description: 'เมื่อสร้างใบเสนอราคา' },
   { id: 'quote.accepted', name: 'quote.accepted', description: 'เมื่อลูกค้ายอมรับใบเสนอราคา' },
   { id: 'deal.created', name: 'deal.created', description: 'เมื่อสร้าง Deal' },
   { id: 'deal.closed', name: 'deal.closed', description: 'เมื่อ Deal ปิด' },
-  { id: 'solar.analysis_complete', name: 'solar.analysis_complete', description: 'เมื่อวิเคราะห์โซลาร์เสร็จ' },
+  {
+    id: 'solar.analysis_complete',
+    name: 'solar.analysis_complete',
+    description: 'เมื่อวิเคราะห์โซลาร์เสร็จ',
+  },
 ]
 
 // ============== Demo Data ==============
@@ -128,7 +136,7 @@ function generateDailyStats(): ApiUsageStat[] {
     d.setDate(d.getDate() - i)
     const calls = Math.floor(Math.random() * 2000) + 500
     stats.push({
-      date: d.toISOString().split('T')[0],
+      date: d.toISOString().split('T')[0] || '',
       calls,
       errors: Math.floor(calls * 0.02),
     })
@@ -178,36 +186,41 @@ export function useApiKeys() {
     }
   }, [])
 
-  useEffect(() => { fetchKeys() }, [fetchKeys])
+  useEffect(() => {
+    fetchKeys()
+  }, [fetchKeys])
 
-  const createKey = useCallback(async (data: {
-    name: string
-    environment: 'live' | 'test'
-    permissions: string[]
-  }): Promise<ApiKeyCreateResult> => {
-    try {
-      const response = await apiClient.post('/api/v1/developer/keys', data)
-      const newKey = response.data
-      setKeys((prev) => [...prev, newKey])
-      return newKey
-    } catch {
-      // Demo mode: simulate key creation
-      const demoKey: ApiKeyCreateResult = {
-        id: `key-demo-${Date.now()}`,
-        name: data.name,
-        keyPrefix: data.environment === 'live' ? 'sk-live' : 'sk-test',
-        keyMasked: `${data.environment === 'live' ? 'sk-live' : 'sk-test'}-••••••••••••••••••••••Demo${Math.random().toString(36).slice(2, 6)}`,
-        fullKey: `${data.environment === 'live' ? 'sk-live' : 'sk-test'}-${Array.from({ length: 32 }, () => Math.random().toString(36)[2]).join('')}`,
-        environment: data.environment,
-        permissions: data.permissions,
-        status: 'active',
-        createdAt: new Date(),
-        callCount: 0,
+  const createKey = useCallback(
+    async (data: {
+      name: string
+      environment: 'live' | 'test'
+      permissions: string[]
+    }): Promise<ApiKeyCreateResult> => {
+      try {
+        const response = await apiClient.post('/api/v1/developer/keys', data)
+        const newKey = response.data
+        setKeys((prev) => [...prev, newKey])
+        return newKey
+      } catch {
+        // Demo mode: simulate key creation
+        const demoKey: ApiKeyCreateResult = {
+          id: `key-demo-${Date.now()}`,
+          name: data.name,
+          keyPrefix: data.environment === 'live' ? 'sk-live' : 'sk-test',
+          keyMasked: `${data.environment === 'live' ? 'sk-live' : 'sk-test'}-••••••••••••••••••••••Demo${Math.random().toString(36).slice(2, 6)}`,
+          fullKey: `${data.environment === 'live' ? 'sk-live' : 'sk-test'}-${Array.from({ length: 32 }, () => Math.random().toString(36)[2]).join('')}`,
+          environment: data.environment,
+          permissions: data.permissions,
+          status: 'active',
+          createdAt: new Date(),
+          callCount: 0,
+        }
+        setKeys((prev) => [...prev, demoKey])
+        return demoKey
       }
-      setKeys((prev) => [...prev, demoKey])
-      return demoKey
-    }
-  }, [])
+    },
+    []
+  )
 
   const revokeKey = useCallback(async (keyId: string): Promise<void> => {
     try {
@@ -215,7 +228,7 @@ export function useApiKeys() {
     } catch {
       // Demo mode: allow
     }
-    setKeys((prev) => prev.map((k) => k.id === keyId ? { ...k, status: 'revoked' as const } : k))
+    setKeys((prev) => prev.map((k) => (k.id === keyId ? { ...k, status: 'revoked' as const } : k)))
   }, [])
 
   return { keys, isLoading, isDemoMode, createKey, revokeKey, refetch: fetchKeys }
@@ -241,31 +254,33 @@ export function useWebhooks() {
     }
   }, [])
 
-  useEffect(() => { fetchWebhooks() }, [fetchWebhooks])
+  useEffect(() => {
+    fetchWebhooks()
+  }, [fetchWebhooks])
 
-  const createWebhook = useCallback(async (data: {
-    url: string
-    events: string[]
-  }): Promise<Webhook> => {
-    try {
-      const response = await apiClient.post('/api/v1/developer/webhooks', data)
-      const wh = response.data
-      setWebhooks((prev) => [...prev, wh])
-      return wh
-    } catch {
-      const demoWh: Webhook = {
-        id: `wh-demo-${Date.now()}`,
-        url: data.url,
-        events: data.events,
-        status: 'active',
-        secret: `whsec_demo_${Math.random().toString(36).slice(2, 18)}`,
-        createdAt: new Date(),
-        failureCount: 0,
+  const createWebhook = useCallback(
+    async (data: { url: string; events: string[] }): Promise<Webhook> => {
+      try {
+        const response = await apiClient.post('/api/v1/developer/webhooks', data)
+        const wh = response.data
+        setWebhooks((prev) => [...prev, wh])
+        return wh
+      } catch {
+        const demoWh: Webhook = {
+          id: `wh-demo-${Date.now()}`,
+          url: data.url,
+          events: data.events,
+          status: 'active',
+          secret: `whsec_demo_${Math.random().toString(36).slice(2, 18)}`,
+          createdAt: new Date(),
+          failureCount: 0,
+        }
+        setWebhooks((prev) => [...prev, demoWh])
+        return demoWh
       }
-      setWebhooks((prev) => [...prev, demoWh])
-      return demoWh
-    }
-  }, [])
+    },
+    []
+  )
 
   const deleteWebhook = useCallback(async (webhookId: string): Promise<void> => {
     try {

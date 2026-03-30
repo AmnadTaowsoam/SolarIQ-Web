@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { DealStage, DEMO_QUOTES } from '@/hooks/useQuotes'
+import { DEMO_QUOTES } from '@/hooks/useQuotes'
 import {
+  DealStage,
   Deal as DealType,
   DealMilestone as DealMilestoneType,
   DEAL_STAGE_ORDER,

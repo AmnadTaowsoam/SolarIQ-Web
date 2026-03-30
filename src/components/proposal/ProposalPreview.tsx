@@ -257,7 +257,9 @@ export function ProposalPreview({
                       setIsLoadingPdf(false)
                     }
                   } else {
-                    window.open(proposal.pdf_url, '_blank')
+                    if (proposal.pdf_url) {
+                      window.open(proposal.pdf_url, '_blank')
+                    }
                   }
                 }}
               >
@@ -287,7 +289,7 @@ export function ProposalPreview({
 
       {/* Send Modal */}
       {showSendModal && (
-        <Modal onClose={() => setShowSendModal(false)}>
+        <Modal isOpen={showSendModal} onClose={() => setShowSendModal(false)}>
           <div className="bg-[var(--brand-surface)] rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-bold mb-4">{t('title')}</h3>
             <div className="space-y-4">
@@ -347,7 +349,7 @@ export function ProposalPreview({
 
       {/* Status Modal */}
       {showStatusModal && (
-        <Modal onClose={() => setShowStatusModal(false)}>
+        <Modal isOpen={showStatusModal} onClose={() => setShowStatusModal(false)}>
           <div className="bg-[var(--brand-surface)] rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-bold mb-4">{t('nextSteps')}</h3>
             <div className="space-y-4">

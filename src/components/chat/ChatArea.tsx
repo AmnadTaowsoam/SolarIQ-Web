@@ -114,7 +114,7 @@ function MessageBubble({ message, showAvatar = true, onReply: _onReply }: Messag
         {/* Attachments */}
         {message.attachments && message.attachments.length > 0 && (
           <div className="mt-2 space-y-2">
-            {message.attachments.map((attachment, idx) => (
+            {message.attachments.map((attachment: FileAttachment, idx: number) => (
               <MessageAttachment key={idx} attachment={attachment} isOwn={isOwn} />
             ))}
           </div>

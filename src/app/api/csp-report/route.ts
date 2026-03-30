@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     // Extract key information from the report
     const cspReport = report['csp-report'] || report
-    const _violationInfo = {
+    const violationInfo = {
       timestamp: new Date().toISOString(),
       'document-uri': cspReport['document-uri'] || 'unknown',
       referrer: cspReport['referrer'] || 'unknown',
@@ -29,9 +29,12 @@ export async function POST(request: NextRequest) {
       'column-number': cspReport['column-number'] || 0,
     }
 
-    // In production, you would send _violationInfo to a logging service
-    // For now, we'll just acknowledge receipt
-    // Note: We don't log the full report to avoid potential injection in logs
+    // Log key violation info for monitoring (avoid full report to prevent log injection)
+    console.warn(
+      '[CSP Violation]',
+      violationInfo['violated-directive'],
+      violationInfo['blocked-uri']
+    )
 
     // Return 204 No Content (standard for CSP reports)
     return new NextResponse(null, { status: 204 })

@@ -174,7 +174,7 @@ export default function QuotePreviewPage() {
                 </p>
                 <p>
                   {t('labels.validUntil')}:{' '}
-                  {new Date(Date.now() + data?.validDays ?? 30 * 86400000).toLocaleDateString(
+                  {new Date(Date.now() + (data?.validDays ?? 30) * 86400000).toLocaleDateString(
                     'th-TH',
                     { year: 'numeric', month: 'long', day: 'numeric' }
                   )}
@@ -190,22 +190,34 @@ export default function QuotePreviewPage() {
                 {t('sections.systemInfo')}
               </h3>
               <div className="grid grid-cols-2 gap-x-8 gap-y-1">
-                <Row label={tLabels('panels')} value={`${spec.panelBrand} ${spec.panelModel}`} />
+                <Row
+                  label={tLabels('panels')}
+                  value={`${spec?.panelBrand ?? ''} ${spec?.panelModel ?? ''}`}
+                />
                 <Row
                   label={tLabels('panelCount')}
-                  value={`${spec.panelCount} ${t('panels')} (${spec.panelWattage}W)`}
+                  value={`${spec?.panelCount ?? 0} ${t('panels')} (${spec?.panelWattage ?? 0}W)`}
                 />
-                <Row label={tLabels('totalSystemSize')} value={`${spec.totalPanelKw} kW`} bold />
+                <Row
+                  label={tLabels('totalSystemSize')}
+                  value={`${spec?.totalPanelKw ?? 0} kW`}
+                  bold
+                />
                 <Row
                   label={tLabels('inverter')}
-                  value={`${spec.inverterBrand} ${spec.inverterModel}`}
+                  value={`${spec?.inverterBrand ?? ''} ${spec?.inverterModel ?? ''}`}
                 />
-                <Row label={tLabels('inverterCapacity')} value={`${spec.inverterCapacityKw} kW`} />
+                <Row
+                  label={tLabels('inverterCapacity')}
+                  value={`${spec?.inverterCapacityKw ?? 0} kW`}
+                />
                 <Row
                   label={tLabels('mounting')}
-                  value={spec.mountingType === 'roof_rail' ? t('onRoof') : spec.mountingType}
+                  value={
+                    spec?.mountingType === 'roof_rail' ? t('onRoof') : (spec?.mountingType ?? '')
+                  }
                 />
-                {spec.batteryBrand && (
+                {spec?.batteryBrand && (
                   <Row
                     label={t('labels.battery')}
                     value={`${spec.batteryBrand} ${spec.batteryCapacityKwh} kWh`}
@@ -214,7 +226,7 @@ export default function QuotePreviewPage() {
                 <Row
                   label={t('labels.monitoringSystem')}
                   value={
-                    spec.monitoringSystem === 'included'
+                    spec?.monitoringSystem === 'included'
                       ? t('labels.includedInPackage')
                       : t('labels.optional')
                   }
@@ -228,47 +240,56 @@ export default function QuotePreviewPage() {
                 {tLabels('priceDetails')}
               </h3>
               <div className="space-y-0.5">
-                <Row label={t('labels.panelCost')} value={formatThb(pricing.panelCost)} />
-                <Row label={t('labels.inverterCost')} value={formatThb(pricing.inverterCost)} />
-                {pricing.batteryCost && (
+                <Row label={t('labels.panelCost')} value={formatThb(pricing?.panelCost ?? 0)} />
+                <Row
+                  label={t('labels.inverterCost')}
+                  value={formatThb(pricing?.inverterCost ?? 0)}
+                />
+                {pricing?.batteryCost && (
                   <Row label={t('labels.batteryCost')} value={formatThb(pricing.batteryCost)} />
                 )}
-                <Row label={t('labels.mountingCost')} value={formatThb(pricing.mountingCost)} />
+                <Row
+                  label={t('labels.mountingCost')}
+                  value={formatThb(pricing?.mountingCost ?? 0)}
+                />
                 <Row
                   label={t('labels.cableAndAccessories')}
-                  value={formatThb(pricing.cableAndAccessories)}
+                  value={formatThb(pricing?.cableAndAccessories ?? 0)}
                 />
-                <Row label={t('labels.laborCost')} value={formatThb(pricing.laborCost)} />
-                {pricing.scaffoldingCost && (
+                <Row label={t('labels.laborCost')} value={formatThb(pricing?.laborCost ?? 0)} />
+                {pricing?.scaffoldingCost && (
                   <Row
                     label={t('labels.scaffoldingCost')}
                     value={formatThb(pricing.scaffoldingCost)}
                   />
                 )}
-                <Row label={t('labels.permitCost')} value={formatThb(pricing.permitCost)} />
-                {pricing.engineeringCost && (
+                <Row label={t('labels.permitCost')} value={formatThb(pricing?.permitCost ?? 0)} />
+                {pricing?.engineeringCost && (
                   <Row
                     label={t('labels.engineeringCost')}
                     value={formatThb(pricing.engineeringCost)}
                   />
                 )}
-                {pricing.discountAmount > 0 && (
+                {(pricing?.discountAmount ?? 0) > 0 && (
                   <div className="flex justify-between py-1.5 border-b border-[var(--brand-border)] text-sm text-red-600">
                     <span>
                       {t('labels.discount')}{' '}
-                      {pricing.discountReason && `(${pricing.discountReason})`}
+                      {pricing?.discountReason && `(${pricing.discountReason})`}
                     </span>
-                    <span>-{formatThb(pricing.discountAmount)}</span>
+                    <span>-{formatThb(pricing?.discountAmount ?? 0)}</span>
                   </div>
                 )}
-                <Row label={t('labels.subtotal')} value={formatThb(pricing.subtotal)} />
-                <Row label={`VAT ${pricing.vatRate}%`} value={formatThb(pricing.vatAmount)} />
+                <Row label={t('labels.subtotal')} value={formatThb(pricing?.subtotal ?? 0)} />
+                <Row
+                  label={`VAT ${pricing?.vatRate ?? 0}%`}
+                  value={formatThb(pricing?.vatAmount ?? 0)}
+                />
                 <div className="flex justify-between py-2 mt-2 border-t-2 border-orange-200 font-bold text-base text-orange-700">
                   <span>{t('labels.total')}</span>
-                  <span>{formatThb(pricing.totalPrice)}</span>
+                  <span>{formatThb(pricing?.totalPrice ?? 0)}</span>
                 </div>
                 <p className="text-xs text-[var(--brand-text-secondary)] text-right">
-                  {t('labels.pricePerKw')}: {formatThb(pricing.pricePerKw)}/kW
+                  {t('labels.pricePerKw')}: {formatThb(pricing?.pricePerKw ?? 0)}/kW
                 </p>
               </div>
             </div>
@@ -279,7 +300,7 @@ export default function QuotePreviewPage() {
                 {tLabels('timeline')}
               </h3>
               <div className="space-y-0.5">
-                {timeline.siteSurveyDate && (
+                {timeline?.siteSurveyDate && (
                   <Row
                     label={tLabels('siteSurvey')}
                     value={new Date(timeline.siteSurveyDate).toLocaleDateString('th-TH', {
@@ -291,15 +312,18 @@ export default function QuotePreviewPage() {
                 )}
                 <Row
                   label={tLabels('installationStart')}
-                  value={new Date(timeline.installationStartDate).toLocaleDateString('th-TH', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
+                  value={new Date(timeline?.installationStartDate ?? '').toLocaleDateString(
+                    'th-TH',
+                    {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    }
+                  )}
                 />
                 <Row
                   label={tLabels('installationComplete')}
-                  value={new Date(timeline.installationEndDate).toLocaleDateString('th-TH', {
+                  value={new Date(timeline?.installationEndDate ?? '').toLocaleDateString('th-TH', {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
@@ -307,7 +331,7 @@ export default function QuotePreviewPage() {
                 />
                 <Row
                   label={tLabels('totalDuration')}
-                  value={`${timeline.estimatedTotalDays} ${t('days')}`}
+                  value={`${timeline?.estimatedTotalDays ?? 0} ${t('days')}`}
                 />
               </div>
             </div>
@@ -320,27 +344,27 @@ export default function QuotePreviewPage() {
               <div className="grid grid-cols-2 gap-x-8 gap-y-0.5">
                 <Row
                   label={tLabels('panelPerformance')}
-                  value={`${warranty.panelPerformanceYears} ${t('years')}`}
+                  value={`${warranty?.panelPerformanceYears ?? 0} ${t('years')}`}
                 />
                 <Row
                   label={tLabels('panelProduct')}
-                  value={`${warranty.panelProductYears} ${t('years')}`}
+                  value={`${warranty?.panelProductYears ?? 0} ${t('years')}`}
                 />
                 <Row
                   label={tLabels('inverter')}
-                  value={`${warranty.inverterYears} ${t('years')}`}
+                  value={`${warranty?.inverterYears ?? 0} ${t('years')}`}
                 />
                 <Row
                   label={tLabels('installationWarranty')}
-                  value={`${warranty.installationYears} ${t('years')}`}
+                  value={`${warranty?.installationYears ?? 0} ${t('years')}`}
                 />
-                {warranty.roofLeakYears && (
+                {warranty?.roofLeakYears && (
                   <Row
                     label={tLabels('roofLeak')}
                     value={`${warranty.roofLeakYears} ${t('years')}`}
                   />
                 )}
-                {warranty.batteryYears && (
+                {warranty?.batteryYears && (
                   <Row
                     label={tLabels('battery')}
                     value={`${warranty.batteryYears} ${t('years')}`}
@@ -358,15 +382,15 @@ export default function QuotePreviewPage() {
                 {[
                   {
                     label: tLabels('monthlyProduction'),
-                    value: `${spec.estimatedMonthlyKwh.toLocaleString()} kWh`,
+                    value: `${(spec?.estimatedMonthlyKwh ?? 0).toLocaleString()} kWh`,
                   },
                   {
                     label: tLabels('monthlySavings'),
-                    value: formatThb(spec.estimatedMonthlySavingsThb),
+                    value: formatThb(spec?.estimatedMonthlySavingsThb ?? 0),
                   },
                   {
                     label: tLabels('paybackPeriod'),
-                    value: `${spec.estimatedPaybackYears} ${t('years')}`,
+                    value: `${spec?.estimatedPaybackYears ?? 0} ${t('years')}`,
                   },
                 ].map((item) => (
                   <div key={item.label} className="text-center bg-orange-50 rounded-xl p-3">
@@ -378,22 +402,22 @@ export default function QuotePreviewPage() {
             </div>
 
             {/* Financing */}
-            {(financing.installmentAvailable || financing.leasingAvailable) && (
+            {(financing?.installmentAvailable || financing?.leasingAvailable) && (
               <div>
                 <h3 className="font-bold text-[var(--brand-text)] mb-3 pb-1 border-b border-[var(--brand-border)]">
                   {tLabels('financing')}
                 </h3>
-                {financing.cashDiscountPct && (
+                {financing?.cashDiscountPct && (
                   <div className="text-sm text-green-700 bg-green-500/10 rounded-lg px-3 py-2 mb-2">
                     {tLabels('cashPayment')}: {tLabels('cashDiscount')} {financing.cashDiscountPct}%
                   </div>
                 )}
-                {financing.installmentAvailable && financing.installmentMonths && (
+                {financing?.installmentAvailable && financing?.installmentMonths && (
                   <div className="flex flex-wrap gap-2">
                     {financing.installmentMonths.map((m) => {
                       const monthly =
                         financing.installmentMonthlyAmount?.[m] ||
-                        Math.round(pricing.totalPrice / m)
+                        Math.round((pricing?.totalPrice ?? 0) / m)
                       return (
                         <div
                           key={m}
@@ -406,7 +430,7 @@ export default function QuotePreviewPage() {
                             {formatThb(monthly)}/{t('labels.months')}
                           </div>
                           <div className="text-xs text-green-600">
-                            {t('labels.interestRate')} {financing.installmentInterestRate || 0}%
+                            {t('labels.interestRate')} {financing?.installmentInterestRate ?? 0}%
                           </div>
                         </div>
                       )
@@ -417,14 +441,14 @@ export default function QuotePreviewPage() {
             )}
 
             {/* Additional services */}
-            {additionalServices.filter((s) => s.included).length > 0 && (
+            {(additionalServices?.filter((s) => s.included).length ?? 0) > 0 && (
               <div>
                 <h3 className="font-bold text-[var(--brand-text)] mb-2 pb-1 border-b border-[var(--brand-border)]">
                   {t('sections.additionalServices')}
                 </h3>
                 <ul className="space-y-1">
                   {additionalServices
-                    .filter((s) => s.included)
+                    ?.filter((s) => s.included)
                     .map((s, i) => (
                       <li
                         key={i}

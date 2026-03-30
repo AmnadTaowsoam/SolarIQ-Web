@@ -165,9 +165,9 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
 
   const handleAcceptSelected = () => {
     const newConsent: CookieConsent = {
-      necessary: preferences.necessary,
-      analytics: preferences.analytics,
-      marketing: preferences.marketing,
+      necessary: preferences.necessary ?? false,
+      analytics: preferences.analytics ?? false,
+      marketing: preferences.marketing ?? false,
       timestamp: Date.now(),
     }
     setCookieConsent(newConsent)
@@ -304,7 +304,7 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        checked={preferences[category.key]}
+                        checked={preferences[category.key] ?? false}
                         onChange={(e) => handleToggle(category.key, e.target.checked)}
                         disabled={category.required}
                         className="h-5 w-5 rounded border-[var(--brand-border)] text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"

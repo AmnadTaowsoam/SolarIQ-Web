@@ -64,7 +64,7 @@ export interface LIFFSendMessage {
   contents?: Record<string, unknown>
 }
 
-type LIFFSDK = typeof import('@line/liff')
+type LIFFSDK = import('@line/liff').Liff
 
 let liffSDK: LIFFSDK | null = null
 let isInitialized = false
@@ -75,9 +75,10 @@ let initPromise: Promise<void> | null = null
  */
 async function getLIFFSDK(): Promise<LIFFSDK> {
   if (!liffSDK) {
-    liffSDK = await import('@line/liff')
+    const mod = await import('@line/liff')
+    liffSDK = mod.default ?? mod.liff
   }
-  return liffSDK
+  return liffSDK as LIFFSDK
 }
 
 /**
@@ -217,7 +218,7 @@ export async function sendMessages(messages: LIFFSendMessage[]): Promise<void> {
   if (!isInitialized) {
     throw new Error('LIFF not initialized. Call initLIFF first.')
   }
-  
+
   const inClient = liff.isInClient()
   if (!inClient) {
     logger.warn('sendMessages called outside LINE app')
@@ -243,13 +244,15 @@ export async function sendLocationMessage(
   latitude: number,
   longitude: number
 ): Promise<void> {
-  await sendMessages([{
-    type: 'location',
-    title,
-    address,
-    latitude,
-    longitude,
-  }])
+  await sendMessages([
+    {
+      type: 'location',
+      title,
+      address,
+      latitude,
+      longitude,
+    },
+  ])
 }
 
 /**
@@ -259,11 +262,13 @@ export async function sendFlexMessage(
   altText: string,
   contents: Record<string, unknown>
 ): Promise<void> {
-  await sendMessages([{
-    type: 'flex',
-    altText,
-    contents,
-  }])
+  await sendMessages([
+    {
+      type: 'flex',
+      altText,
+      contents,
+    },
+  ])
 }
 
 /**
@@ -280,10 +285,7 @@ export async function closeWindow(): Promise<void> {
 /**
  * Open external URL in in-app browser or external browser
  */
-export async function openWindow(
-  url: string,
-  options?: { external?: boolean }
-): Promise<void> {
+export async function openWindow(url: string, options?: { external?: boolean }): Promise<void> {
   const liff = await getLIFFSDK()
   if (!isInitialized) {
     throw new Error('LIFF not initialized. Call initLIFF first.')
@@ -296,7 +298,7 @@ export async function openWindow(
  */
 export async function getLIFFOS(): Promise<string> {
   const liff = await getLIFFSDK()
-  return liff.getOS()
+  return liff.getOS() || ''
 }
 
 /**
@@ -304,7 +306,7 @@ export async function getLIFFOS(): Promise<string> {
  */
 export async function getLINEVersion(): Promise<string> {
   const liff = await getLIFFSDK()
-  return liff.getLineVersion()
+  return liff.getLineVersion() || ''
 }
 
 /**
@@ -326,8 +328,15 @@ export async function requestPermission(
     throw new Error('LIFF not initialized. Call initLIFF first.')
   }
   try {
-    await liff.permission.request(permission)
-    return true
+    const status = await liff.permission.query(permission)
+    if (status.state === 'granted') {
+      return true
+    }
+    if (status.state === 'prompt') {
+      await liff.permission.requestAll()
+      return true
+    }
+    return false
   } catch {
     return false
   }
@@ -345,7 +354,9 @@ export async function shareTargetPicker(
   }
 
   try {
-    const result = await liff.shareTargetPicker(messages as Parameters<typeof liff.shareTargetPicker>[0])
+    const result = await liff.shareTargetPicker(
+      messages as Parameters<typeof liff.shareTargetPicker>[0]
+    )
     return result as { status: 'success' | 'cancel' | 'error' }
   } catch (error) {
     logger.error('Share target picker failed', { error })
@@ -363,7 +374,7 @@ export async function scanCode(): Promise<string | null> {
   }
 
   try {
-    const result = await liff.scanCode()
+    const result = await liff.scanCode?.()
     return result?.value ?? null
   } catch (error) {
     logger.error('Scan code failed', { error })

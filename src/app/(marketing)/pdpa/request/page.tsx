@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { FileText, ArrowLeft, CheckCircle, AlertCircle, Clock, Mail, Shield } from 'lucide-react'
+import { FileText, ArrowLeft, CheckCircle, AlertCircle, Mail, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
@@ -10,19 +10,12 @@ import { Input } from '@/components/ui/Input'
 /* ------------------------------------------------------------------ */
 /*  Types                                                               */
 /* ------------------------------------------------------------------ */
-export enum DSRRequestType {
+enum DSRRequestType {
   ACCESS = 'access',
   CORRECTION = 'correction',
   DELETION = 'deletion',
   PORTABILITY = 'portability',
   OBJECTION = 'objection',
-}
-
-export enum DSRRequestStatus {
-  PENDING = 'pending',
-  PROCESSING = 'processing',
-  COMPLETED = 'completed',
-  REJECTED = 'rejected',
 }
 
 interface DSRFormData {
@@ -68,29 +61,8 @@ const REQUEST_TYPES = [
   },
 ]
 
-const _STATUS_LABELS: Record<DSRRequestStatus, string> = {
-  [DSRRequestStatus.PENDING]: 'รอดำเนินการ',
-  [DSRRequestStatus.PROCESSING]: 'กำลังดำเนินการ',
-  [DSRRequestStatus.COMPLETED]: 'เสร็จสิ้น',
-  [DSRRequestStatus.REJECTED]: 'ถูกปฏิเสธ',
-}
-
-const _STATUS_COLORS: Record<DSRRequestStatus, string> = {
-  [DSRRequestStatus.PENDING]:
-    'bg-yellow-500/10 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400',
-  [DSRRequestStatus.PROCESSING]:
-    'bg-blue-500/10 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-  [DSRRequestStatus.COMPLETED]:
-    'bg-green-500/10 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-  [DSRRequestStatus.REJECTED]: 'bg-red-100 text-red-400 dark:bg-red-900/30 dark:text-red-400',
-}
-
-const _STATUS_ICONS: Record<DSRRequestStatus, React.ComponentType<{ className?: string }>> = {
-  [DSRRequestStatus.PENDING]: Clock,
-  [DSRRequestStatus.PROCESSING]: Clock,
-  [DSRRequestStatus.COMPLETED]: CheckCircle,
-  [DSRRequestStatus.REJECTED]: AlertCircle,
-}
+// STATUS_LABELS, STATUS_COLORS, STATUS_ICONS reserved for future DSR status display
+// (removed to fix unused-variable TS errors)
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                           */

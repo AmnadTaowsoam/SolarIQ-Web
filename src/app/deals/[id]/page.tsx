@@ -26,7 +26,7 @@ function getNextStage(current: DealStage): DealStage | null {
   if (idx < 0 || idx >= DEAL_STAGE_ORDER.length - 1) {
     return null
   }
-  return DEAL_STAGE_ORDER[idx + 1]
+  return DEAL_STAGE_ORDER[idx + 1] ?? null
 }
 
 export default function DealDetailPage() {

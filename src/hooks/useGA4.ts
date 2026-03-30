@@ -271,7 +271,7 @@ export function useGA4(options: UseGA4Options = {}) {
       if (!hasAnalyticsConsent()) {
         return
       }
-      trackBeginCheckout(params)
+      trackBeginCheckout(params ?? {})
     },
     []
   )
@@ -282,7 +282,7 @@ export function useGA4(options: UseGA4Options = {}) {
       if (!hasAnalyticsConsent()) {
         return
       }
-      trackAddPaymentInfo(params)
+      trackAddPaymentInfo(params ?? {})
     },
     []
   )

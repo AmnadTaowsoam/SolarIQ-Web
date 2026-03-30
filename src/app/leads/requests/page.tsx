@@ -12,10 +12,6 @@ import { ROUTES } from '@/lib/constants'
 import { formatDistanceToNow, isPast, parseISO } from 'date-fns'
 import { th } from 'date-fns/locale'
 
-function _formatThb(value: number): string {
-  return `฿${value.toLocaleString('en-US')}`
-}
-
 function ExpiryCountdown({ expiresAt, t }: { expiresAt: string; t: (key: string) => string }) {
   const expired = isPast(parseISO(expiresAt))
   const label = expired

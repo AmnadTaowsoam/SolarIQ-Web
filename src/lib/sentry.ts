@@ -5,11 +5,11 @@
  * This module provides Sentry integration for error tracking and performance monitoring.
  */
 
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from '@sentry/nextjs'
 
-const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
-const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT || 'development';
-const RELEASE = process.env.NEXT_PUBLIC_COMMIT_SHA || process.env.npm_package_version || 'unknown';
+const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT || 'development'
+const RELEASE = process.env.NEXT_PUBLIC_COMMIT_SHA || process.env.npm_package_version || 'unknown'
 
 /**
  * Initialize Sentry for Next.js application
@@ -17,7 +17,7 @@ const RELEASE = process.env.NEXT_PUBLIC_COMMIT_SHA || process.env.npm_package_ve
 export function initSentry(): void {
   if (!SENTRY_DSN) {
     // Sentry DSN not configured, skipping initialization
-    return;
+    return
   }
 
   Sentry.init({
@@ -34,39 +34,35 @@ export function initSentry(): void {
 
     // Integrations
     integrations: [
-      // Browser tracing
-      new Sentry.BrowserTracing({
-        tracePropagationTargets: [
-          'localhost',
-          /^https:\/\/solariq\.app/,
-          /^https:\/\/.*\.vercel\.app/,
-        ],
+      Sentry.browserTracingIntegration({
+        enableInp: true,
       }),
-
-      // Session replay
-      new Sentry.Replay({
+      Sentry.replayIntegration({
         maskAllText: false,
         blockAllMedia: false,
       }),
     ],
 
+    // Trace propagation targets
+    tracePropagationTargets: ['localhost', /^https:\/\/solariq\.app/, /^https:\/\/.*\.vercel\.app/],
+
     // Before send hook
     beforeSend(event, hint) {
       // Filter out health check errors
-      const request = event.request || {};
+      const request = event.request || {}
       if (request.url && request.url.includes('/api/health')) {
-        return null;
+        return null
       }
 
       // Filter out rate limit errors
-      const exception = hint.originalException;
+      const exception = hint.originalException
       if (exception && typeof exception === 'object' && 'status' in exception) {
         if ((exception as { status: number }).status === 429) {
-          return null;
+          return null
         }
       }
 
-      return event;
+      return event
     },
 
     // Ignore specific errors
@@ -89,7 +85,7 @@ export function initSentry(): void {
 
     // Send default PII (set to false for strict privacy)
     sendDefaultPii: false,
-  });
+  })
 
   // Sentry initialized successfully
 }
@@ -97,36 +93,32 @@ export function initSentry(): void {
 /**
  * Set user context for error tracking
  */
-export function setUserContext(user: {
-  id?: string;
-  email?: string;
-  username?: string;
-}): void {
-  Sentry.setUser(user);
+export function setUserContext(user: { id?: string; email?: string; username?: string }): void {
+  Sentry.setUser(user)
 }
 
 /**
  * Clear user context (on logout)
  */
 export function clearUserContext(): void {
-  Sentry.setUser(null);
+  Sentry.setUser(null)
 }
 
 /**
  * Add breadcrumb for debugging
  */
 export function addBreadcrumb(options: {
-  message: string;
-  category?: string;
-  level?: 'debug' | 'info' | 'warning' | 'error';
-  data?: Record<string, unknown>;
+  message: string
+  category?: string
+  level?: 'debug' | 'info' | 'warning' | 'error'
+  data?: Record<string, unknown>
 }): void {
   Sentry.addBreadcrumb({
     message: options.message,
     category: options.category || 'custom',
     level: options.level || 'info',
     data: options.data,
-  });
+  })
 }
 
 /**
@@ -138,7 +130,7 @@ export function captureException(
 ): string | undefined {
   return Sentry.captureException(error, {
     contexts: context ? { custom: context } : undefined,
-  });
+  })
 }
 
 /**
@@ -152,22 +144,25 @@ export function captureMessage(
   return Sentry.captureMessage(message, {
     level,
     contexts: context ? { custom: context } : undefined,
-  });
+  })
 }
 
 /**
- * Start a performance transaction
+ * Start a performance span
  */
 export function startTransaction(options: {
-  name: string;
-  op?: string;
-  data?: Record<string, unknown>;
-}): Sentry.Transaction {
-  return Sentry.startTransaction({
-    name: options.name,
-    op: options.op || 'custom',
-    data: options.data,
-  });
+  name: string
+  op?: string
+  data?: Record<string, unknown>
+}) {
+  return Sentry.startSpan(
+    {
+      name: options.name,
+      op: options.op || 'custom',
+      attributes: options.data as Record<string, string | number | boolean | undefined>,
+    },
+    () => {}
+  )
 }
 
 /**
@@ -176,20 +171,20 @@ export function startTransaction(options: {
 export function withSentry<T extends (...args: unknown[]) => unknown>(
   fn: T,
   options?: {
-    operation?: string;
-    name?: string;
+    operation?: string
+    name?: string
   }
 ): T {
   return Sentry.withScope(() => {
     if (options?.operation) {
-      Sentry.setTag('operation', options.operation);
+      Sentry.setTag('operation', options.operation)
     }
     if (options?.name) {
-      Sentry.setTag('function', options.name);
+      Sentry.setTag('function', options.name)
     }
-    return fn;
-  }) as T;
+    return fn
+  }) as T
 }
 
 // Export Sentry for direct access
-export { Sentry };
+export { Sentry }

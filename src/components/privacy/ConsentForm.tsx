@@ -141,9 +141,8 @@ export function ConsentForm({ onComplete, showRequiredOnly = false }: ConsentFor
         <Button
           type="submit"
           variant="primary"
-          fullWidth
           disabled={!allRequiredAccepted || isSubmitting || isLoadingConsent}
-          className="py-3"
+          className="w-full py-3"
         >
           {isSubmitting ? (
             <span className="flex items-center justify-center gap-2">
