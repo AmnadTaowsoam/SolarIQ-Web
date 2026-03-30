@@ -17,7 +17,15 @@ const formatDecimal = (value: number): string =>
   new Intl.NumberFormat('th-TH', { maximumFractionDigits: 1 }).format(value)
 
 /** Animated counter that counts up from 0 to target */
-function AnimatedNumber({ target, duration = 2000, decimals = 0 }: { target: number; duration?: number; decimals?: number }) {
+function AnimatedNumber({
+  target,
+  duration = 2000,
+  decimals = 0,
+}: {
+  target: number
+  duration?: number
+  decimals?: number
+}) {
   const [current, setCurrent] = useState(0)
 
   useEffect(() => {
@@ -25,7 +33,9 @@ function AnimatedNumber({ target, duration = 2000, decimals = 0 }: { target: num
     let animationFrame: number
 
     const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp
+      if (!startTime) {
+        startTime = timestamp
+      }
       const elapsed = timestamp - startTime
       const progress = Math.min(elapsed / duration, 1)
       // Ease-out cubic
@@ -53,26 +63,32 @@ interface ImpactCardProps {
   colorClass: string
 }
 
-function ImpactCard({ icon, label, value, unit, explanation, decimals = 0, colorClass }: ImpactCardProps) {
+function ImpactCard({
+  icon,
+  label,
+  value,
+  unit,
+  explanation,
+  decimals = 0,
+  colorClass,
+}: ImpactCardProps) {
   return (
-    <div className={`relative overflow-hidden rounded-xl border border-[var(--brand-border)] p-4 transition-all hover:shadow-md`}>
-      <div className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full opacity-10 ${colorClass}`} />
+    <div
+      className={`relative overflow-hidden rounded-xl border border-[var(--brand-border)] p-4 transition-all hover:shadow-md`}
+    >
+      <div
+        className={`absolute top-0 right-0 w-24 h-24 -mr-8 -mt-8 rounded-full opacity-10 ${colorClass}`}
+      />
       <div className="relative">
         <div className="flex items-start gap-3">
-          <div className={`p-2 rounded-lg ${colorClass} bg-opacity-10`}>
-            {icon}
-          </div>
+          <div className={`p-2 rounded-lg ${colorClass} bg-opacity-10`}>{icon}</div>
           <div className="flex-1 min-w-0">
             <div className="text-2xl font-bold text-[var(--brand-text)]">
               <AnimatedNumber target={value} decimals={decimals} />
               {unit && <span className="text-sm font-normal ml-1">{unit}</span>}
             </div>
-            <div className="text-sm font-medium text-[var(--brand-text)] mt-0.5">
-              {label}
-            </div>
-            <div className="text-xs text-[var(--brand-text-secondary)] mt-1">
-              {explanation}
-            </div>
+            <div className="text-sm font-medium text-[var(--brand-text)] mt-0.5">{label}</div>
+            <div className="text-xs text-[var(--brand-text-secondary)] mt-1">{explanation}</div>
           </div>
         </div>
       </div>
@@ -117,36 +133,52 @@ export function EnvironmentalImpact({ data, annualProductionKwh }: Environmental
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <ImpactCard
             icon={<Trees className="w-5 h-5 text-green-600" />}
-            label={'\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E48\u0E32\u0E01\u0E32\u0E23\u0E1B\u0E25\u0E39\u0E01\u0E15\u0E49\u0E19\u0E44\u0E21\u0E49'}
+            label={
+              '\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E48\u0E32\u0E01\u0E32\u0E23\u0E1B\u0E25\u0E39\u0E01\u0E15\u0E49\u0E19\u0E44\u0E21\u0E49'
+            }
             value={data.treesEquivalent}
             unit={'\u0E15\u0E49\u0E19'}
-            explanation={'\u0E08\u0E33\u0E19\u0E27\u0E19\u0E15\u0E49\u0E19\u0E44\u0E21\u0E49\u0E17\u0E35\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E1B\u0E25\u0E39\u0E01\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E14\u0E39\u0E14\u0E0B\u0E31\u0E1A CO2 \u0E40\u0E17\u0E48\u0E32\u0E01\u0E31\u0E19'}
+            explanation={
+              '\u0E08\u0E33\u0E19\u0E27\u0E19\u0E15\u0E49\u0E19\u0E44\u0E21\u0E49\u0E17\u0E35\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E1B\u0E25\u0E39\u0E01\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E14\u0E39\u0E14\u0E0B\u0E31\u0E1A CO2 \u0E40\u0E17\u0E48\u0E32\u0E01\u0E31\u0E19'
+            }
             colorClass="bg-green-500"
           />
           <ImpactCard
             icon={<Car className="w-5 h-5 text-blue-600" />}
-            label={'\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E48\u0E32\u0E01\u0E32\u0E23\u0E2B\u0E22\u0E38\u0E14\u0E43\u0E0A\u0E49\u0E23\u0E16\u0E22\u0E19\u0E15\u0E4C'}
+            label={
+              '\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E48\u0E32\u0E01\u0E32\u0E23\u0E2B\u0E22\u0E38\u0E14\u0E43\u0E0A\u0E49\u0E23\u0E16\u0E22\u0E19\u0E15\u0E4C'
+            }
             value={data.carsOffRoad}
             unit={'\u0E04\u0E31\u0E19/\u0E1B\u0E35'}
-            explanation={'\u0E25\u0E14\u0E01\u0E32\u0E23\u0E1B\u0E25\u0E48\u0E2D\u0E22 CO2 \u0E40\u0E17\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E48\u0E32\u0E01\u0E32\u0E23\u0E2B\u0E22\u0E38\u0E14\u0E43\u0E0A\u0E49\u0E23\u0E16\u0E22\u0E19\u0E15\u0E4C'}
+            explanation={
+              '\u0E25\u0E14\u0E01\u0E32\u0E23\u0E1B\u0E25\u0E48\u0E2D\u0E22 CO2 \u0E40\u0E17\u0E35\u0E22\u0E1A\u0E40\u0E17\u0E48\u0E32\u0E01\u0E32\u0E23\u0E2B\u0E22\u0E38\u0E14\u0E43\u0E0A\u0E49\u0E23\u0E16\u0E22\u0E19\u0E15\u0E4C'
+            }
             decimals={1}
             colorClass="bg-blue-500"
           />
           <ImpactCard
             icon={<Home className="w-5 h-5 text-purple-600" />}
-            label={'\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F\u0E40\u0E1E\u0E35\u0E22\u0E07\u0E1E\u0E2D\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A'}
+            label={
+              '\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F\u0E40\u0E1E\u0E35\u0E22\u0E07\u0E1E\u0E2D\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A'
+            }
             value={data.homesPowered}
             unit={'\u0E04\u0E23\u0E31\u0E27\u0E40\u0E23\u0E37\u0E2D\u0E19'}
-            explanation={'\u0E08\u0E33\u0E19\u0E27\u0E19\u0E04\u0E23\u0E31\u0E27\u0E40\u0E23\u0E37\u0E2D\u0E19\u0E17\u0E35\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E43\u0E0A\u0E49\u0E44\u0E1F\u0E44\u0E14\u0E49\u0E08\u0E32\u0E01\u0E23\u0E30\u0E1A\u0E1A\u0E19\u0E35\u0E49'}
+            explanation={
+              '\u0E08\u0E33\u0E19\u0E27\u0E19\u0E04\u0E23\u0E31\u0E27\u0E40\u0E23\u0E37\u0E2D\u0E19\u0E17\u0E35\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E43\u0E0A\u0E49\u0E44\u0E1F\u0E44\u0E14\u0E49\u0E08\u0E32\u0E01\u0E23\u0E30\u0E1A\u0E1A\u0E19\u0E35\u0E49'
+            }
             decimals={1}
             colorClass="bg-purple-500"
           />
           <ImpactCard
             icon={<Fuel className="w-5 h-5 text-amber-600" />}
-            label={'\u0E25\u0E14\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E16\u0E48\u0E32\u0E19\u0E2B\u0E34\u0E19'}
+            label={
+              '\u0E25\u0E14\u0E01\u0E32\u0E23\u0E43\u0E0A\u0E49\u0E16\u0E48\u0E32\u0E19\u0E2B\u0E34\u0E19'
+            }
             value={data.coalAvoidedKg}
             unit={'\u0E01\u0E01./\u0E1B\u0E35'}
-            explanation={'\u0E1B\u0E23\u0E34\u0E21\u0E32\u0E13\u0E16\u0E48\u0E32\u0E19\u0E2B\u0E34\u0E19\u0E17\u0E35\u0E48\u0E44\u0E21\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E1C\u0E32\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F\u0E1F\u0E49\u0E32'}
+            explanation={
+              '\u0E1B\u0E23\u0E34\u0E21\u0E32\u0E13\u0E16\u0E48\u0E32\u0E19\u0E2B\u0E34\u0E19\u0E17\u0E35\u0E48\u0E44\u0E21\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E1C\u0E32\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F\u0E1F\u0E49\u0E32'
+            }
             colorClass="bg-amber-500"
           />
           <ImpactCard
@@ -154,7 +186,9 @@ export function EnvironmentalImpact({ data, annualProductionKwh }: Environmental
             label={'\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E19\u0E49\u0E33'}
             value={data.waterSavedLiters}
             unit={'\u0E25\u0E34\u0E15\u0E23/\u0E1B\u0E35'}
-            explanation={'\u0E19\u0E49\u0E33\u0E17\u0E35\u0E48\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E44\u0E14\u0E49\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E01\u0E31\u0E1A\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F\u0E08\u0E32\u0E01\u0E40\u0E0A\u0E37\u0E49\u0E2D\u0E40\u0E1E\u0E25\u0E34\u0E07\u0E1F\u0E2D\u0E2A\u0E0B\u0E34\u0E25'}
+            explanation={
+              '\u0E19\u0E49\u0E33\u0E17\u0E35\u0E48\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14\u0E44\u0E14\u0E49\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E17\u0E35\u0E22\u0E1A\u0E01\u0E31\u0E1A\u0E01\u0E32\u0E23\u0E1C\u0E25\u0E34\u0E15\u0E44\u0E1F\u0E08\u0E32\u0E01\u0E40\u0E0A\u0E37\u0E49\u0E2D\u0E40\u0E1E\u0E25\u0E34\u0E07\u0E1F\u0E2D\u0E2A\u0E0B\u0E34\u0E25'
+            }
             colorClass="bg-cyan-500"
           />
         </div>

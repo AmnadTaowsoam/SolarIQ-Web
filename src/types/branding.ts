@@ -103,7 +103,7 @@ export interface BrandCreate {
   active?: boolean
 }
 
-export interface BrandUpdate extends Partial<BrandCreate> {}
+export type BrandUpdate = Partial<BrandCreate>
 
 export interface BrandDomain {
   id: string

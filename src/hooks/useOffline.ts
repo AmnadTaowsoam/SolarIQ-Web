@@ -29,7 +29,7 @@ interface UseOfflineReturn {
 
 export function useOffline(): UseOfflineReturn {
   const [isOffline, setIsOffline] = useState<boolean>(
-    typeof navigator !== 'undefined' ? !navigator.onLine : false,
+    typeof navigator !== 'undefined' ? !navigator.onLine : false
   )
   const [pendingActionsCount, setPendingActionsCount] = useState<number>(0)
   const [showOfflineBanner, setShowOfflineBanner] = useState<boolean>(false)
@@ -65,6 +65,7 @@ export function useOffline(): UseOfflineReturn {
           setPendingActionsCount(stored)
         }
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('[useOffline] Failed to load pending actions count:', err)
       }
     }
@@ -78,6 +79,7 @@ export function useOffline(): UseOfflineReturn {
 
   const syncPendingActions = useCallback(async () => {
     if (isOffline) {
+      // eslint-disable-next-line no-console
       console.warn('[useOffline] Cannot sync while offline.')
       return
     }
@@ -92,42 +94,47 @@ export function useOffline(): UseOfflineReturn {
       }
 
       // Attempt to replay each pending action against the server
+      // eslint-disable-next-line no-console
       console.log('[useOffline] Syncing pending actions...')
       setPendingActionsCount(0)
+      // eslint-disable-next-line no-console
       console.log('[useOffline] Actions synced successfully.')
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('[useOffline] Failed to sync pending actions:', err)
     }
   }, [isOffline])
 
-  const registerBackgroundSync = useCallback(
-    async (tag = 'solariq-sync') => {
-      if (!('serviceWorker' in navigator)) {
-        console.warn('[useOffline] Service worker not supported.')
+  const registerBackgroundSync = useCallback(async (tag = 'solariq-sync') => {
+    if (!('serviceWorker' in navigator)) {
+      console.warn('[useOffline] Service worker not supported.')
+      return
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.ready
+
+      // Background Sync API (type augmentation needed for TypeScript)
+      const syncManager = (
+        registration as ServiceWorkerRegistration & {
+          sync?: { register: (tag: string) => Promise<void> }
+        }
+      ).sync
+
+      if (!syncManager) {
+        // eslint-disable-next-line no-console
+        console.warn('[useOffline] Background Sync API not supported in this browser.')
         return
       }
 
-      try {
-        const registration = await navigator.serviceWorker.ready
-
-        // Background Sync API (type augmentation needed for TypeScript)
-        const syncManager = (registration as ServiceWorkerRegistration & {
-          sync?: { register: (tag: string) => Promise<void> }
-        }).sync
-
-        if (!syncManager) {
-          console.warn('[useOffline] Background Sync API not supported in this browser.')
-          return
-        }
-
-        await syncManager.register(tag)
-        console.log(`[useOffline] Background sync registered: ${tag}`)
-      } catch (err) {
-        console.error('[useOffline] Failed to register background sync:', err)
-      }
-    },
-    [],
-  )
+      await syncManager.register(tag)
+      // eslint-disable-next-line no-console
+      console.log(`[useOffline] Background sync registered: ${tag}`)
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('[useOffline] Failed to register background sync:', err)
+    }
+  }, [])
 
   return {
     isOffline,

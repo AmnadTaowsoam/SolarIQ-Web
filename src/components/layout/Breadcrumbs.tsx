@@ -97,7 +97,9 @@ export function Breadcrumbs() {
   const { pathname: cleanPath } = extractLocaleFromPath(pathname)
   const segments = cleanPath.split('/').filter(Boolean)
 
-  if (segments.length === 0) return null
+  if (segments.length === 0) {
+    return null
+  }
 
   const crumbs = segments.map((segment, index) => ({
     segment,

@@ -61,7 +61,7 @@ export function LIFFProvider({ liffId, children }: LIFFProviderProps): React.Rea
     try {
       const profile: LIFFProfile = await getProfile()
       const accessToken = await getAccessToken()
-      
+
       return {
         userId: profile.userId,
         displayName: profile.displayName,
@@ -70,6 +70,7 @@ export function LIFFProvider({ liffId, children }: LIFFProviderProps): React.Rea
         accessToken,
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to fetch user profile:', error)
       return null
     }
@@ -79,9 +80,9 @@ export function LIFFProvider({ liffId, children }: LIFFProviderProps): React.Rea
     const loggedIn = await isLoggedIn()
     if (loggedIn) {
       const user = await fetchUserProfile()
-      setState(prev => ({ ...prev, isLoggedIn: true, user }))
+      setState((prev) => ({ ...prev, isLoggedIn: true, user }))
     } else {
-      setState(prev => ({ ...prev, isLoggedIn: false, user: null }))
+      setState((prev) => ({ ...prev, isLoggedIn: false, user: null }))
     }
   }, [fetchUserProfile])
 
@@ -92,8 +93,10 @@ export function LIFFProvider({ liffId, children }: LIFFProviderProps): React.Rea
     const initialize = async (): Promise<void> => {
       try {
         await initLIFF(liffId)
-        
-        if (!mounted) return
+
+        if (!mounted) {
+          return
+        }
 
         const inLINE = await isInLINEApp()
         const loggedIn = await isLoggedIn()
@@ -119,8 +122,10 @@ export function LIFFProvider({ liffId, children }: LIFFProviderProps): React.Rea
           })
         }
       } catch (error) {
-        if (!mounted) return
-        setState(prev => ({
+        if (!mounted) {
+          return
+        }
+        setState((prev) => ({
           ...prev,
           isInitialized: false,
           isLoading: false,
@@ -137,32 +142,31 @@ export function LIFFProvider({ liffId, children }: LIFFProviderProps): React.Rea
   }, [liffId, fetchUserProfile])
 
   const handleLogin = useCallback(async (redirectUri?: string): Promise<void> => {
-    setState(prev => ({ ...prev, isLoading: true }))
+    setState((prev) => ({ ...prev, isLoading: true }))
     await login(redirectUri)
     // After login, page will redirect, so loading state will be reset on new page load
   }, [])
 
   const handleLogout = useCallback(async (): Promise<void> => {
     await logout()
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       isLoggedIn: false,
       user: null,
     }))
   }, [])
 
-  const contextValue = useMemo<LIFFContextValue>(() => ({
-    ...state,
-    login: handleLogin,
-    logout: handleLogout,
-    refreshProfile,
-  }), [state, handleLogin, handleLogout, refreshProfile])
-
-  return (
-    <LIFFContext.Provider value={contextValue}>
-      {children}
-    </LIFFContext.Provider>
+  const contextValue = useMemo<LIFFContextValue>(
+    () => ({
+      ...state,
+      login: handleLogin,
+      logout: handleLogout,
+      refreshProfile,
+    }),
+    [state, handleLogin, handleLogout, refreshProfile]
   )
+
+  return <LIFFContext.Provider value={contextValue}>{children}</LIFFContext.Provider>
 }
 
 export function useLIFF(): LIFFContextValue {

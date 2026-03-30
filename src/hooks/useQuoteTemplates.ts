@@ -131,7 +131,12 @@ export const DEMO_TEMPLATES: QuoteTemplate[] = [
     },
     additionalServices: [
       { name: 'ระบบ Monitoring', description: 'แอปติดตามการผลิตไฟฟ้า', price: 0, included: true },
-      { name: 'สัญญาบำรุงรักษา 3 ปี', description: 'ตรวจสอบระบบ 2 ครั้ง/ปี', price: 15000, included: false },
+      {
+        name: 'สัญญาบำรุงรักษา 3 ปี',
+        description: 'ตรวจสอบระบบ 2 ครั้ง/ปี',
+        price: 15000,
+        included: false,
+      },
     ],
     notes: 'ระบบ Hybrid รองรับ Off-Grid ได้บางส่วน',
     isDefault: false,
@@ -154,7 +159,9 @@ export function useQuoteTemplates() {
       const res = await window.fetch(`${API_BASE}/quotes/templates`, {
         headers: { 'Content-Type': 'application/json' },
       })
-      if (!res.ok) throw new Error('API error')
+      if (!res.ok) {
+        throw new Error('API error')
+      }
       const json = await res.json()
       setData(json.items || json)
     } catch {
@@ -164,7 +171,9 @@ export function useQuoteTemplates() {
     }
   }, [])
 
-  useEffect(() => { fetch() }, [fetch])
+  useEffect(() => {
+    fetch()
+  }, [fetch])
 
   return { data, isLoading, error, refetch: fetch }
 }
@@ -173,29 +182,36 @@ export function useSaveTemplate() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const save = useCallback(async (template: Omit<QuoteTemplate, 'id' | 'contractorId' | 'createdAt' | 'updatedAt'>): Promise<QuoteTemplate> => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const res = await window.fetch(`${API_BASE}/quotes/templates`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(template),
-      })
-      if (!res.ok) throw new Error('Failed to save template')
-      return await res.json()
-    } catch {
-      return {
-        ...template,
-        id: `tpl-${Date.now()}`,
-        contractorId: 'current-contractor',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+  const save = useCallback(
+    async (
+      template: Omit<QuoteTemplate, 'id' | 'contractorId' | 'createdAt' | 'updatedAt'>
+    ): Promise<QuoteTemplate> => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const res = await window.fetch(`${API_BASE}/quotes/templates`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(template),
+        })
+        if (!res.ok) {
+          throw new Error('Failed to save template')
+        }
+        return await res.json()
+      } catch {
+        return {
+          ...template,
+          id: `tpl-${Date.now()}`,
+          contractorId: 'current-contractor',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+      } finally {
+        setIsLoading(false)
       }
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+    },
+    []
+  )
 
   return { save, isLoading, error }
 }
@@ -226,7 +242,9 @@ export function useDeleteTemplate() {
       const res = await window.fetch(`${API_BASE}/quotes/templates/${templateId}`, {
         method: 'DELETE',
       })
-      if (!res.ok) throw new Error('Failed to delete template')
+      if (!res.ok) {
+        throw new Error('Failed to delete template')
+      }
     } catch {
       // Demo: no-op
     } finally {

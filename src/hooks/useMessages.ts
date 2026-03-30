@@ -111,7 +111,8 @@ const DEMO_MESSAGES: Record<string, Message[]> = {
     {
       id: 'msg-2',
       threadId: 'thread-1',
-      content: 'สวัสดีครับคุณสมชาย ยินดีให้บริการครับ ขอทราบข้อมูลบิลค่าไฟเฉลี่ยต่อเดือนได้ไหมครับ?',
+      content:
+        'สวัสดีครับคุณสมชาย ยินดีให้บริการครับ ขอทราบข้อมูลบิลค่าไฟเฉลี่ยต่อเดือนได้ไหมครับ?',
       contentType: 'text',
       senderType: 'contractor',
       createdAt: new Date(Date.now() - 25 * 60 * 1000),
@@ -228,6 +229,7 @@ export function useThreads() {
       const data = response.data
       if (data && data.threads && data.threads.length >= 0) {
         // Map API response to our type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mapped: MessageThread[] = data.threads.map((t: any) => ({
           id: t.id,
           customerName: t.metadata?.customerName || t.customerName || 'ลูกค้า',
@@ -241,7 +243,8 @@ export function useThreads() {
           lastMessage: t.lastMessagePreview || '',
           lastMessageTime: new Date(t.lastMessageAt || t.updatedAt),
           unreadCount: t.unreadContractor || 0,
-          status: t.status === 'active' ? 'active' : t.status === 'closed' ? 'completed' : 'pending',
+          status:
+            t.status === 'active' ? 'active' : t.status === 'closed' ? 'completed' : 'pending',
           leadId: t.leadId,
           dealId: t.dealId,
           leadStatus: t.leadStatus,
@@ -274,18 +277,26 @@ export function useMessages(threadId: string | null) {
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchMessages = useCallback(async () => {
-    if (!threadId) return
+    if (!threadId) {
+      return
+    }
     setIsLoading(true)
     try {
       const response = await apiClient.get(`/api/v1/chat/threads/${threadId}/messages`)
       const data = response.data
       if (data && data.messages) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mapped: Message[] = data.messages.map((m: any) => ({
           id: m.id,
           threadId: m.threadId,
           content: m.content,
           contentType: m.contentType || 'text',
-          senderType: m.senderType === 'b2c' ? 'customer' : m.senderType === 'system' ? 'system' : 'contractor',
+          senderType:
+            m.senderType === 'b2c'
+              ? 'customer'
+              : m.senderType === 'system'
+                ? 'system'
+                : 'contractor',
           createdAt: new Date(m.createdAt),
           isRead: m.isRead || false,
           attachmentUrl: m.attachments?.[0]?.url,
@@ -325,52 +336,62 @@ export function useMessages(threadId: string | null) {
 export function useSendMessage(threadId: string | null) {
   const [isSending, setIsSending] = useState(false)
 
-  const sendMessage = useCallback(async (content: string): Promise<Message | null> => {
-    if (!threadId || !content.trim()) return null
-    setIsSending(true)
-    try {
-      const response = await apiClient.post(`/api/v1/chat/threads/${threadId}/messages`, {
-        content,
-        contentType: 'text',
-      })
-      return response.data
-    } catch {
-      // Demo mode: return a fake sent message
-      const demoMsg: Message = {
-        id: `msg-demo-${Date.now()}`,
-        threadId,
-        content,
-        contentType: 'text',
-        senderType: 'contractor',
-        createdAt: new Date(),
-        isRead: false,
+  const sendMessage = useCallback(
+    async (content: string): Promise<Message | null> => {
+      if (!threadId || !content.trim()) {
+        return null
       }
-      return demoMsg
-    } finally {
-      setIsSending(false)
-    }
-  }, [threadId])
+      setIsSending(true)
+      try {
+        const response = await apiClient.post(`/api/v1/chat/threads/${threadId}/messages`, {
+          content,
+          contentType: 'text',
+        })
+        return response.data
+      } catch {
+        // Demo mode: return a fake sent message
+        const demoMsg: Message = {
+          id: `msg-demo-${Date.now()}`,
+          threadId,
+          content,
+          contentType: 'text',
+          senderType: 'contractor',
+          createdAt: new Date(),
+          isRead: false,
+        }
+        return demoMsg
+      } finally {
+        setIsSending(false)
+      }
+    },
+    [threadId]
+  )
 
-  const addNote = useCallback(async (content: string): Promise<InternalNote | null> => {
-    if (!threadId || !content.trim()) return null
-    try {
-      const response = await apiClient.post(`/api/v1/chat/threads/${threadId}/notes`, {
-        content,
-        pinned: false,
-      })
-      return response.data
-    } catch {
-      const demoNote: InternalNote = {
-        id: `note-demo-${Date.now()}`,
-        threadId,
-        content,
-        authorName: 'คุณ',
-        createdAt: new Date(),
-        pinned: false,
+  const addNote = useCallback(
+    async (content: string): Promise<InternalNote | null> => {
+      if (!threadId || !content.trim()) {
+        return null
       }
-      return demoNote
-    }
-  }, [threadId])
+      try {
+        const response = await apiClient.post(`/api/v1/chat/threads/${threadId}/notes`, {
+          content,
+          pinned: false,
+        })
+        return response.data
+      } catch {
+        const demoNote: InternalNote = {
+          id: `note-demo-${Date.now()}`,
+          threadId,
+          content,
+          authorName: 'คุณ',
+          createdAt: new Date(),
+          pinned: false,
+        }
+        return demoNote
+      }
+    },
+    [threadId]
+  )
 
   return { sendMessage, addNote, isSending }
 }

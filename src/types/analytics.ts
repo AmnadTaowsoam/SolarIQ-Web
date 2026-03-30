@@ -20,7 +20,7 @@ export interface Insight {
   title: string
   body: string
   severity: string
-  data?: Record<string, any> | null
+  data?: Record<string, unknown> | null
   actionable?: boolean
   action?: string | null
   created_at?: string
@@ -64,7 +64,14 @@ export interface RevenueTrendPoint {
 export interface RevenueAnalyticsResponse {
   trend: RevenueTrendPoint[]
   mrr: { current: number; previous: number; change: number }
-  mrrWaterfall: { starting: number; new: number; expansion: number; contraction: number; churn: number; ending: number }
+  mrrWaterfall: {
+    starting: number
+    new: number
+    expansion: number
+    contraction: number
+    churn: number
+    ending: number
+  }
   arpu: { value: number; trend: number[] }
   churnRate: { value: number; trend: number[] }
 }
@@ -72,7 +79,10 @@ export interface RevenueAnalyticsResponse {
 export interface MarketResponse {
   systemSize: { avg: number; distribution: Record<string, number>; trend: number[] }
   pricePerKwp: { avg: number; min: number; max: number; trend: number[] }
-  popularBrands: { panels: { name: string; count: number }[]; inverters: { name: string; count: number }[] }
+  popularBrands: {
+    panels: { name: string; count: number }[]
+    inverters: { name: string; count: number }[]
+  }
   seasonalPattern: number[]
   roiBenchmarks: { region: string; avgRoi: number; avgPayback: number }[]
 }
@@ -81,7 +91,7 @@ export interface ReportConfig {
   dataSources: string[]
   fields: { source: string; field: string; aggregation?: string; alias?: string }[]
   calculatedFields?: { name: string; expression: string }[]
-  filters?: { field: string; operator: string; value: any }[]
+  filters?: { field: string; operator: string; value: unknown }[]
   groupBy?: string[]
   sortBy?: { field: string; direction: 'asc' | 'desc' }[]
   visualization: 'table' | 'bar' | 'line' | 'pie' | 'summary'
@@ -94,7 +104,7 @@ export interface CustomReport {
   description?: string | null
   category: string
   config: ReportConfig
-  schedule?: Record<string, any> | null
+  schedule?: Record<string, unknown> | null
   recipients?: string[] | null
   sharedWith?: string[] | null
   lastRunAt?: string | null
@@ -114,6 +124,6 @@ export interface Scorecard {
   grade: string
   rank?: number | null
   percentile?: number | null
-  rawMetrics: Record<string, any>
-  recommendations?: Record<string, any>[] | null
+  rawMetrics: Record<string, unknown>
+  recommendations?: Record<string, unknown>[] | null
 }
