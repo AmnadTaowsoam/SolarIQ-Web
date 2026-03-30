@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import apiClient from '@/lib/api'
 import {
   DashboardResponse,
   PipelineResponse,
@@ -13,7 +14,8 @@ import {
   ReportConfig,
 } from '@/types/analytics'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
+// API_BASE kept for reference; actual calls use apiClient with /api/v1 prefix
+// const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
 
 // Demo data
 const DEMO_DASHBOARD: DashboardResponse = {
@@ -244,16 +246,12 @@ function useApi<T>(endpoint: string, demo: T) {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}${endpoint}`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(json)
+      const response = await apiClient.get(`/api/v1${endpoint}`)
+      setData(response.data)
     } catch {
+      // Fallback to demo data when API is unavailable
       setData(demo)
+      setError('Using demo data')
     } finally {
       setIsLoading(false)
     }
@@ -319,14 +317,8 @@ export function useReport(reportId: string | null) {
     }
     setIsLoading(true)
     try {
-      const res = await window.fetch(`${API_BASE}/reports/${reportId}`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(json)
+      const response = await apiClient.get(`/api/v1/reports/${reportId}`)
+      setData(response.data)
     } catch {
       const demo = DEMO_REPORTS.find((r) => r.id === reportId) || null
       setData(demo)
@@ -343,18 +335,13 @@ export function useReport(reportId: string | null) {
 }
 
 export async function runReport(reportId: string, format: 'json' | 'csv' = 'json') {
-  const res = await window.fetch(`${API_BASE}/reports/${reportId}/run?format=${format}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await apiClient.post(`/api/v1/reports/${reportId}/run`, null, {
+    params: { format },
   })
-  if (!res.ok) {
-    throw new Error('Failed to run report')
-  }
   if (format === 'csv') {
-    const csv = await res.text()
-    return { format: 'csv', content: csv }
+    return { format: 'csv', content: response.data }
   }
-  return res.json()
+  return response.data
 }
 
 export async function createReport(payload: {
@@ -363,13 +350,6 @@ export async function createReport(payload: {
   category?: string
   config: ReportConfig
 }) {
-  const res = await window.fetch(`${API_BASE}/reports`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  })
-  if (!res.ok) {
-    throw new Error('Failed to create report')
-  }
-  return res.json()
+  const response = await apiClient.post('/api/v1/reports', payload)
+  return response.data
 }

@@ -1026,8 +1026,33 @@ function NotificationPreferencesSection() {
 
 function TeamMembersSection() {
   const t = useTranslations('settingsPage')
-  const [members] = useState<TeamMember[]>(DEMO_TEAM)
+  const [members, setMembers] = useState<TeamMember[]>(DEMO_TEAM)
   const [inviteEmail, setInviteEmail] = useState('')
+
+  // Fetch team members from API with demo fallback
+  useEffect(() => {
+    apiClient
+      .get('/api/v1/users')
+      .then((response) => {
+        const payload = response.data
+        const users = payload.users || payload.items || payload
+        if (Array.isArray(users) && users.length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setMembers(
+            users.map((u: Record<string, any>) => ({
+              id: u.id ?? '',
+              name: u.name ?? u.display_name ?? u.email ?? '',
+              email: u.email ?? '',
+              role: u.role ?? 'contractor',
+              status: (u.status ?? u.is_active) ? 'active' : 'inactive',
+            }))
+          )
+        }
+      })
+      .catch(() => {
+        /* keep demo data */
+      })
+  }, [])
   const [inviteRole, setInviteRole] = useState<'admin' | 'contractor'>('contractor')
   const [showInvite, setShowInvite] = useState(false)
 

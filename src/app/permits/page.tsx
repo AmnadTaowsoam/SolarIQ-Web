@@ -5,9 +5,10 @@
  * MEA/PEA automated permitting workflow management
  */
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
+import apiClient from '@/lib/api'
 import { Shield, Clock, CheckCircle, AlertTriangle, FileText, Plus } from 'lucide-react'
 import Link from 'next/link'
 
@@ -78,10 +79,48 @@ const statusConfig = {
   rejected: { label: 'Rejected', color: 'bg-red-500/10 text-red-600', icon: AlertTriangle },
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapPermit(raw: Record<string, any>): PermitRecord {
+  return {
+    id: raw.id ?? raw.permit_id ?? '',
+    type: raw.type ?? raw.permit_type ?? 'MEA',
+    customerName: raw.customerName ?? raw.customer_name ?? '',
+    dealId: raw.dealId ?? raw.deal_id ?? '',
+    status: raw.status ?? 'draft',
+    systemSize: Number(raw.systemSize ?? raw.system_size ?? 0),
+    submittedDate: raw.submittedDate ?? raw.submitted_date ?? raw.submitted_at ?? null,
+    approvedDate: raw.approvedDate ?? raw.approved_date ?? raw.approved_at ?? null,
+  }
+}
+
 export default function PermitsPage() {
   const { user } = useAuth()
-  const [permits] = useState<PermitRecord[]>(DEMO_PERMITS)
+  const [permits, setPermits] = useState<PermitRecord[]>(DEMO_PERMITS)
+  const [, setIsLoading] = useState(false)
   const [filterStatus, setFilterStatus] = useState<string>('all')
+
+  const fetchPermits = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const response = await apiClient.get('/api/v1/permits')
+      const payload = response.data
+      const items = payload.permits || payload.items || payload || []
+      if (Array.isArray(items) && items.length > 0) {
+        setPermits(items.map(mapPermit))
+      } else {
+        setPermits(DEMO_PERMITS)
+      }
+    } catch {
+      // Fallback to demo data
+      setPermits(DEMO_PERMITS)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchPermits()
+  }, [fetchPermits])
 
   const filteredPermits =
     filterStatus === 'all' ? permits : permits.filter((p) => p.status === filterStatus)

@@ -705,7 +705,12 @@ function generatePrintHtml(result: SolarAnalysisAdvanced): string {
   </div>
 
   <script>
-    window.onload = function() { window.print(); };
+    // Use setTimeout to prevent blocking the main thread and avoid page freeze
+    window.onload = function() {
+      setTimeout(function() {
+        try { window.print(); } catch(e) { console.error('Print failed:', e); }
+      }, 500);
+    };
   </script>
 </body>
 </html>`
@@ -717,10 +722,15 @@ export function AnalysisReportExport({ result }: AnalysisReportExportProps) {
 
   const handlePrintReport = () => {
     const html = generatePrintHtml(result)
-    const printWindow = window.open('', '_blank')
+    // Use about:blank and setTimeout to avoid blocking the main thread
+    const printWindow = window.open('about:blank', '_blank')
     if (printWindow) {
-      printWindow.document.write(html)
-      printWindow.document.close()
+      // Write content asynchronously to prevent main tab freeze
+      setTimeout(() => {
+        printWindow.document.open()
+        printWindow.document.write(html)
+        printWindow.document.close()
+      }, 100)
     }
   }
 

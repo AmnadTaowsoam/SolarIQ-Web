@@ -1247,8 +1247,9 @@ export default function AnalyzePage() {
                       estimated_cost: result.financialAnalysis.installationCost,
                       format: 'email',
                     })
-                  } catch {
-                    addToast('error', t('noDataAvailable'))
+                  } catch (err) {
+                    const errorMsg = err instanceof Error ? err.message : 'Failed to save lead'
+                    addToast('error', `ไม่สามารถบันทึกลีดได้: ${errorMsg}`)
                   }
                 }}
                 className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
