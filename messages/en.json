@@ -3366,7 +3366,10 @@
     "save": "Save Layout",
     "zoom": "Zoom",
     "rotate": "Rotate",
-    "coordinates": "Coordinates"
+    "coordinates": "Coordinates",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
   },
   "selfConsumption": {
     "title": "Self-Consumption Rate",

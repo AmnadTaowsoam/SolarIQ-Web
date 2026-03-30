@@ -3366,7 +3366,10 @@
     "save": "บันทึกแผนผัง",
     "zoom": "ซูม",
     "rotate": "หมุน",
-    "coordinates": "พิกัด"
+    "coordinates": "พิกัด",
+    "low": "ต่ำ",
+    "medium": "ปานกลาง",
+    "high": "สูง"
   },
   "selfConsumption": {
     "title": "อัตราการใช้ไฟฟ้าเอง",
