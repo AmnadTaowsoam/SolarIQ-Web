@@ -76,12 +76,18 @@ function extractData<T>(resp: unknown): T {
   return r?.data !== undefined ? r.data : (resp as T)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractItems<T>(resp: unknown): T[] {
+  const data = extractData<{ items: T[]; total: number } | T[]>(resp)
+  return Array.isArray(data) ? data : data.items || []
+}
+
 export function useInstallations(status?: string) {
   return useQuery({
     queryKey: ['installations', status],
     queryFn: async () => {
       const resp = await api.get('/api/v1/installations', { params: status ? { status } : {} })
-      return extractData<Installation[]>(resp)
+      return extractItems<Installation>(resp)
     },
   })
 }
@@ -185,7 +191,7 @@ export function useUpcomingMaintenance(days = 30) {
     queryKey: ['upcoming-maintenance', days],
     queryFn: async () => {
       const resp = await api.get('/api/v1/maintenance/upcoming', { params: { days } })
-      return extractData<UpcomingMaintenance[]>(resp)
+      return extractItems<UpcomingMaintenance>(resp)
     },
   })
 }
