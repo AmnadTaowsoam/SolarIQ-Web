@@ -81,6 +81,7 @@ export default function VATInvoicePage() {
   const [, setIsLoading] = useState(false)
   const [downloadingId, setDownloadingId] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [showNewForm, setShowNewForm] = useState(false)
 
   const fetchInvoices = useCallback(async () => {
     setIsLoading(true)
@@ -183,11 +184,84 @@ export default function VATInvoicePage() {
               Manage tax invoices with Thai Revenue Department compliance
             </p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-[var(--brand-primary)] text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium">
+          <button
+            onClick={() => setShowNewForm(!showNewForm)}
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--brand-primary)] text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+          >
             <Plus className="w-4 h-4" />
             New Invoice
           </button>
         </div>
+
+        {/* New Invoice Form */}
+        {showNewForm && (
+          <form
+            className="rounded-xl border border-orange-200 bg-orange-50 p-5"
+            onSubmit={async (e) => {
+              e.preventDefault()
+              const form = e.target as HTMLFormElement
+              const data = new FormData(form)
+              const amount = Number(data.get('amount') || 0)
+              const vatAmount = Math.round(amount * 0.07)
+              try {
+                await apiClient.post('/api/v1/invoices', {
+                  customer_name: data.get('customer_name'),
+                  tax_id: data.get('tax_id'),
+                  amount,
+                  vat_amount: vatAmount,
+                  total_amount: amount + vatAmount,
+                  status: 'draft',
+                })
+                setShowNewForm(false)
+                form.reset()
+                fetchInvoices()
+              } catch {
+                // Silently handle
+              }
+            }}
+          >
+            <h3 className="mb-3 font-semibold text-[var(--brand-text)]">Create New Invoice</h3>
+            <div className="grid gap-3 md:grid-cols-2">
+              <input
+                name="customer_name"
+                placeholder="Customer Name *"
+                required
+                className="rounded-lg border px-3 py-2 text-sm"
+              />
+              <input
+                name="tax_id"
+                placeholder="Tax ID (เลขประจำตัวผู้เสียภาษี) *"
+                required
+                className="rounded-lg border px-3 py-2 text-sm"
+              />
+              <input
+                name="amount"
+                type="number"
+                placeholder="Amount (THB) *"
+                required
+                className="rounded-lg border px-3 py-2 text-sm"
+              />
+              <p className="flex items-center text-sm text-[var(--brand-text-secondary)]">
+                VAT 7% will be calculated automatically
+              </p>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <button
+                type="submit"
+                className="rounded-lg bg-[var(--brand-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+              >
+                Create Invoice
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowNewForm(false)}
+                className="rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-600 hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

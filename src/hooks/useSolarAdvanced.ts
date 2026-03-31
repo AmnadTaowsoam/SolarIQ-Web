@@ -86,7 +86,7 @@ function mapApiResponse(raw: any, inputLat?: number, inputLng?: number): SolarAn
       imageryDate: sp.imagery_date || '',
     },
     panelConfig: {
-      panelsCount: pc.panels_count || 0,
+      panelsCount: pc.panels_count || sp.max_panels || Math.round(systemKw / 0.55) || 0,
       capacityKw: systemKw,
       yearlyEnergyDcKwh: pc.yearly_energy_dc_kwh || 0,
     },
