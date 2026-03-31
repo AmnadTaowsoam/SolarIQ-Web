@@ -62,7 +62,8 @@ export function useServiceRequests(status?: string, type?: string) {
         params.type = type
       }
       const resp = await api.get('/api/v1/service-requests', { params })
-      return extractData<ServiceRequest[]>(resp)
+      const data = extractData<{ items: ServiceRequest[]; total: number } | ServiceRequest[]>(resp)
+      return Array.isArray(data) ? data : data.items || []
     },
   })
 }
