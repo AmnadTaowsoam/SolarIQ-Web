@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { QuoteTemplate } from '@/types/quotes'
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
+import { apiClient } from '@/lib/api'
 
 // ── Demo Data ─────────────────────────────────────────────────────────────────
 
@@ -156,14 +155,8 @@ export function useQuoteTemplates() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/templates`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(json.items || json)
+      const res = await apiClient.get('/api/v1/quotes/templates')
+      setData(res.data.items || res.data)
     } catch {
       setData(DEMO_TEMPLATES)
     } finally {
@@ -189,15 +182,8 @@ export function useSaveTemplate() {
       setIsLoading(true)
       setError(null)
       try {
-        const res = await window.fetch(`${API_BASE}/quotes/templates`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(template),
-        })
-        if (!res.ok) {
-          throw new Error('Failed to save template')
-        }
-        return await res.json()
+        const res = await apiClient.post('/api/v1/quotes/templates', template)
+        return res.data
       } catch {
         return {
           ...template,
@@ -239,12 +225,7 @@ export function useDeleteTemplate() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/templates/${templateId}`, {
-        method: 'DELETE',
-      })
-      if (!res.ok) {
-        throw new Error('Failed to delete template')
-      }
+      await apiClient.delete(`/api/v1/quotes/templates/${templateId}`)
     } catch {
       // Demo: no-op
     } finally {

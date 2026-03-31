@@ -8,9 +8,7 @@ import {
   DealMilestone as DealMilestoneType,
   DEAL_STAGE_ORDER,
 } from '@/types/quotes'
-import { getAccessToken } from '@/lib/api'
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
+import { apiClient } from '@/lib/api'
 
 // ── Demo Data ─────────────────────────────────────────────────────────────────
 
@@ -153,20 +151,10 @@ export function useDeals() {
     setIsLoading(true)
     setError(null)
     try {
-      const token = getAccessToken()
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`
-      }
-      const res = await window.fetch(`${API_BASE}/deals`, { headers })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      const items = json.items || json
+      const res = await apiClient.get('/api/v1/deals')
+      const items = res.data.items || res.data
       setData(Array.isArray(items) ? items.map(transformDeal) : [])
     } catch {
-      // Show empty state instead of demo data for proper data isolation
       setData([])
     } finally {
       setIsLoading(false)
@@ -192,17 +180,8 @@ export function useDeal(dealId: string | null) {
     setIsLoading(true)
     setError(null)
     try {
-      const token = getAccessToken()
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`
-      }
-      const res = await window.fetch(`${API_BASE}/deals/${dealId}`, { headers })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(transformDeal(json))
+      const res = await apiClient.get(`/api/v1/deals/${dealId}`)
+      setData(transformDeal(res.data))
     } catch {
       setData(null)
     } finally {
@@ -226,20 +205,8 @@ export function useUpdateDealStage() {
       setIsLoading(true)
       setError(null)
       try {
-        const token = getAccessToken()
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`
-        }
-        const res = await window.fetch(`${API_BASE}/deals/${dealId}/stage`, {
-          method: 'PATCH',
-          headers,
-          body: JSON.stringify({ stage, notes }),
-        })
-        if (!res.ok) {
-          throw new Error('Failed to update stage')
-        }
-        return await res.json()
+        const res = await apiClient.patch(`/api/v1/deals/${dealId}/stage`, { stage, notes })
+        return res.data
       } catch (err) {
         setError('Failed to update deal stage')
         throw err
@@ -262,22 +229,14 @@ export function useUploadMilestonePhoto() {
       setIsLoading(true)
       setError(null)
       try {
-        const token = getAccessToken()
-        const headers: Record<string, string> = {}
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`
-        }
         const formData = new FormData()
         formData.append('file', file)
-        const res = await window.fetch(
-          `${API_BASE}/deals/${dealId}/milestones/${milestoneId}/photos`,
-          { method: 'POST', headers, body: formData }
+        const res = await apiClient.post(
+          `/api/v1/deals/${dealId}/milestones/${milestoneId}/photos`,
+          formData,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
         )
-        if (!res.ok) {
-          throw new Error('Failed to upload photo')
-        }
-        const json = await res.json()
-        return json.url
+        return res.data.url
       } catch {
         return URL.createObjectURL(file)
       } finally {
@@ -304,23 +263,11 @@ export function useCompleteMilestone() {
       setIsLoading(true)
       setError(null)
       try {
-        const token = getAccessToken()
-        const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`
-        }
-        const res = await window.fetch(
-          `${API_BASE}/deals/${dealId}/milestones/${milestoneId}/complete`,
-          {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ notes, photos: photoUrls }),
-          }
+        const res = await apiClient.post(
+          `/api/v1/deals/${dealId}/milestones/${milestoneId}/complete`,
+          { notes, photos: photoUrls }
         )
-        if (!res.ok) {
-          throw new Error('Failed to complete milestone')
-        }
-        return await res.json()
+        return res.data
       } catch (err) {
         setError('Failed to complete milestone')
         throw err

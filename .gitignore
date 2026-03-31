@@ -26,8 +26,8 @@ yarn-error.log*
 .env*.local
 .env
 
-# production env (use CI/CD environment variables instead)
-.env.production
+# production secrets (API keys that are NOT NEXT_PUBLIC_ should go in CI/CD)
+# Note: .env.production with NEXT_PUBLIC_* vars is tracked — these are public by design
 
 # vercel
 .vercel

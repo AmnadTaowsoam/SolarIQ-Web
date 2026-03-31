@@ -16,7 +16,7 @@ import {
   ContractorSummary,
 } from '@/types/quotes'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
+import { apiClient } from '@/lib/api'
 
 // ── Demo data fallback ─────────────────────────────────────────────────────────
 
@@ -324,14 +324,8 @@ export function useQuoteRequest(requestId: string | null) {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/requests/${requestId}`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(json)
+      const res = await apiClient.get(`/api/v1/quotes/requests/${requestId}`)
+      setData(res.data)
     } catch {
       const found = DEMO_QUOTE_REQUESTS.find((r) => r.id === requestId)
       setData(found || null)
@@ -356,14 +350,8 @@ export function useAvailableRequests() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/requests/available`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(json.items || json)
+      const res = await apiClient.get('/api/v1/quotes/requests/available')
+      setData(res.data.items || res.data)
     } catch {
       setData(DEMO_AVAILABLE_REQUESTS)
     } finally {
@@ -390,14 +378,8 @@ export function useQuoteComparison(requestId: string | null) {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/requests/${requestId}/compare`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(json)
+      const res = await apiClient.get(`/api/v1/quotes/requests/${requestId}/compare`)
+      setData(res.data)
     } catch {
       if (requestId === 'req-demo-1') {
         const items = DEMO_QUOTES.map((q) => ({
@@ -474,14 +456,8 @@ export function useQuoteDetail(quoteId: string | null) {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/${quoteId}`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(json)
+      const res = await apiClient.get(`/api/v1/quotes/${quoteId}`)
+      setData(res.data)
     } catch {
       const found = DEMO_QUOTES.find((q) => q.id === quoteId)
       setData(found || null)
@@ -506,14 +482,8 @@ export function useMyQuoteRequests() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/requests/my`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('API error')
-      }
-      const json = await res.json()
-      setData(json.items || json)
+      const res = await apiClient.get('/api/v1/quotes/requests/my')
+      setData(res.data.items || res.data)
     } catch {
       setData(DEMO_QUOTE_REQUESTS)
     } finally {
@@ -536,15 +506,8 @@ export function useSubmitQuoteRequest() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/requests`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) {
-        throw new Error('Failed to submit quote request')
-      }
-      return await res.json()
+      const res = await apiClient.post('/api/v1/quotes/requests', data)
+      return res.data
     } catch {
       // Demo fallback
       const newRequest: QuoteRequest = {
@@ -585,15 +548,8 @@ export function useSubmitQuote() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) {
-        throw new Error('Failed to submit quote')
-      }
-      return await res.json()
+      const res = await apiClient.post('/api/v1/quotes', data)
+      return res.data
     } catch {
       const mock: Quote = {
         id: `quote-${Date.now()}`,
@@ -634,15 +590,8 @@ export function useSaveDraftQuote() {
       setIsLoading(true)
       setError(null)
       try {
-        const res = await window.fetch(`${API_BASE}/quotes/draft`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-        if (!res.ok) {
-          throw new Error('Failed to save draft')
-        }
-        return await res.json()
+        const res = await apiClient.post('/api/v1/quotes/draft', data)
+        return res.data
       } catch {
         const mock: Quote = {
           id: `draft-${Date.now()}`,
@@ -683,14 +632,8 @@ export function useAcceptQuote() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/${quoteId}/accept`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      })
-      if (!res.ok) {
-        throw new Error('Failed to accept quote')
-      }
-      return await res.json()
+      const res = await apiClient.post(`/api/v1/quotes/${quoteId}/accept`)
+      return res.data
     } catch {
       return { dealId: `deal-${Date.now()}` }
     } finally {
@@ -709,14 +652,7 @@ export function useDeclineQuote() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await window.fetch(`${API_BASE}/quotes/${quoteId}/decline`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reason }),
-      })
-      if (!res.ok) {
-        throw new Error('Failed to decline quote')
-      }
+      await apiClient.post(`/api/v1/quotes/${quoteId}/decline`, { reason })
     } catch {
       // Demo: just resolve
     } finally {
@@ -736,14 +672,7 @@ export function useRequestRevision() {
       setIsLoading(true)
       setError(null)
       try {
-        const res = await window.fetch(`${API_BASE}/quotes/${quoteId}/revision`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, requestedChanges }),
-        })
-        if (!res.ok) {
-          throw new Error('Failed to request revision')
-        }
+        await apiClient.post(`/api/v1/quotes/${quoteId}/revision`, { message, requestedChanges })
       } catch {
         // Demo: just resolve
       } finally {

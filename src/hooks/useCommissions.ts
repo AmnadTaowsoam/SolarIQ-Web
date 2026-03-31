@@ -13,7 +13,7 @@ import {
   TopContractor,
 } from '@/types'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
+// All paths use apiClient with /api/v1 prefix
 
 const DEMO_COMMISSIONS: Commission[] = [
   {
@@ -164,7 +164,7 @@ export function useCommissions() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await apiClient.get(`${API_BASE}/commissions`)
+      const response = await apiClient.get(`/api/v1/commissions`)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload = response.data as Record<string, any>
       const commissions = (payload.commissions || []).map(mapCommission)
@@ -202,7 +202,7 @@ export function useCommissionSummary() {
   const fetchSummary = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await apiClient.get(`${API_BASE}/commissions/summary`)
+      const response = await apiClient.get(`/api/v1/commissions/summary`)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload = response.data as Record<string, any>
       setData({
@@ -235,7 +235,7 @@ export function useInvoices() {
   const fetchInvoices = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await apiClient.get(`${API_BASE}/commissions/invoices`)
+      const response = await apiClient.get(`/api/v1/commissions/invoices`)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload = response.data as Record<string, any>
       const invoices = (payload.invoices || []).map(mapInvoice)
@@ -264,7 +264,7 @@ export function useInvoice(invoiceId: string | null) {
     }
     setIsLoading(true)
     try {
-      const response = await apiClient.get(`${API_BASE}/commissions/invoices/${invoiceId}`)
+      const response = await apiClient.get(`/api/v1/commissions/invoices/${invoiceId}`)
       setData(mapInvoice(response.data))
     } catch {
       setData(DEMO_INVOICES[0] ?? null)
@@ -287,7 +287,7 @@ export function useAdminRevenue() {
   const fetchRevenue = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await apiClient.get(`${API_BASE}/admin/revenue`)
+      const response = await apiClient.get(`/api/v1/admin/revenue`)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload = response.data as Record<string, any>
       setData({
@@ -340,7 +340,7 @@ export function useRevenueForecast() {
   const fetchForecast = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await apiClient.get(`${API_BASE}/admin/revenue/forecast`)
+      const response = await apiClient.get(`/api/v1/admin/revenue/forecast`)
       setData(response.data)
     } catch {
       setData({
@@ -370,7 +370,7 @@ export function useTopContractors() {
   const fetchTop = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await apiClient.get(`${API_BASE}/admin/revenue/top-contractors`)
+      const response = await apiClient.get(`/api/v1/admin/revenue/top-contractors`)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload = response.data as Record<string, any>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
