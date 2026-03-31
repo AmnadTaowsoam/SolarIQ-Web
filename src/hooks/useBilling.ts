@@ -39,7 +39,7 @@ export function usePlans() {
   return useQuery({
     queryKey: billingKeys.plans(),
     queryFn: async (): Promise<PlanList> => {
-      const response = await apiClient.get<PlanList>('/billing/plans')
+      const response = await apiClient.get<PlanList>('/api/v1/billing/plans')
       return response.data
     },
     staleTime: 1000 * 60 * 60, // 1 hour - plans don't change often
@@ -52,7 +52,7 @@ export function useOrganization() {
   return useQuery({
     queryKey: billingKeys.organization(),
     queryFn: async (): Promise<Organization> => {
-      const response = await apiClient.get<Organization>('/billing/organization')
+      const response = await apiClient.get<Organization>('/api/v1/billing/organization')
       return response.data
     },
   })
@@ -68,7 +68,7 @@ export function useCreateOrganization() {
       address?: string
       plan_id?: PlanType
     }): Promise<Organization> => {
-      const response = await apiClient.post<Organization>('/billing/organization', data)
+      const response = await apiClient.post<Organization>('/api/v1/billing/organization', data)
       return response.data
     },
     onSuccess: () => {
@@ -86,7 +86,7 @@ export function useUpdateOrganization() {
       tax_id?: string
       address?: string
     }): Promise<Organization> => {
-      const response = await apiClient.patch<Organization>('/billing/organization', data)
+      const response = await apiClient.patch<Organization>('/api/v1/billing/organization', data)
       return response.data
     },
     onSuccess: () => {
@@ -101,7 +101,9 @@ export function useSubscription() {
   return useQuery({
     queryKey: billingKeys.subscription(),
     queryFn: async (): Promise<SubscriptionWithPlan | null> => {
-      const response = await apiClient.get<SubscriptionWithPlan | null>('/billing/subscription')
+      const response = await apiClient.get<SubscriptionWithPlan | null>(
+        '/api/v1/billing/subscription'
+      )
       return response.data
     },
   })
@@ -116,7 +118,7 @@ export function useSubscribe() {
       payment_method_id?: string
       trial?: boolean
     }): Promise<Subscription> => {
-      const response = await apiClient.post<Subscription>('/billing/subscribe', data)
+      const response = await apiClient.post<Subscription>('/api/v1/billing/subscribe', data)
       return response.data
     },
     onSuccess: () => {
@@ -131,7 +133,7 @@ export function useUpdateSubscription() {
 
   return useMutation({
     mutationFn: async (data: { plan_id: PlanType }): Promise<Subscription> => {
-      const response = await apiClient.patch<Subscription>('/billing/subscription', data)
+      const response = await apiClient.patch<Subscription>('/api/v1/billing/subscription', data)
       return response.data
     },
     onSuccess: () => {
@@ -147,7 +149,7 @@ export function useCancelSubscription() {
   return useMutation({
     mutationFn: async (data?: { reason?: string }): Promise<Subscription> => {
       const response = await apiClient.post<Subscription>(
-        '/billing/subscription/cancel',
+        '/api/v1/billing/subscription/cancel',
         data || {}
       )
       return response.data
@@ -163,7 +165,7 @@ export function useResumeSubscription() {
 
   return useMutation({
     mutationFn: async (): Promise<Subscription> => {
-      const response = await apiClient.post<Subscription>('/billing/subscription/resume', {})
+      const response = await apiClient.post<Subscription>('/api/v1/billing/subscription/resume', {})
       return response.data
     },
     onSuccess: () => {
@@ -178,7 +180,7 @@ export function useInvoices(page: number = 1, pageSize: number = 10) {
   return useQuery({
     queryKey: billingKeys.invoices(page),
     queryFn: async (): Promise<InvoiceListResponse> => {
-      const response = await apiClient.get<InvoiceListResponse>('/billing/invoices', {
+      const response = await apiClient.get<InvoiceListResponse>('/api/v1/billing/invoices', {
         params: { page, page_size: pageSize },
       })
       return response.data
@@ -190,7 +192,7 @@ export function useInvoicePdf() {
   return useMutation({
     mutationFn: async (invoiceId: string): Promise<{ pdf_url: string }> => {
       const response = await apiClient.get<{ pdf_url: string }>(
-        `/billing/invoices/${invoiceId}/pdf`
+        `/api/v1/billing/invoices/${invoiceId}/pdf`
       )
       return response.data
     },
@@ -203,7 +205,7 @@ export function useUsage() {
   return useQuery({
     queryKey: billingKeys.usage(),
     queryFn: async (): Promise<UsageResponse> => {
-      const response = await apiClient.get<UsageResponse>('/billing/usage')
+      const response = await apiClient.get<UsageResponse>('/api/v1/billing/usage')
       return response.data
     },
   })
@@ -228,7 +230,7 @@ export function useBillingStatus() {
   return useQuery({
     queryKey: billingKeys.status(),
     queryFn: async (): Promise<BillingStatus> => {
-      const response = await apiClient.get<BillingStatus>('/billing/status')
+      const response = await apiClient.get<BillingStatus>('/api/v1/billing/status')
       return response.data
     },
   })
@@ -239,7 +241,10 @@ export function useBillingStatus() {
 export function useCreateSetupIntent() {
   return useMutation({
     mutationFn: async (): Promise<PaymentSetupResponse> => {
-      const response = await apiClient.post<PaymentSetupResponse>('/billing/setup-intent', {})
+      const response = await apiClient.post<PaymentSetupResponse>(
+        '/api/v1/billing/setup-intent',
+        {}
+      )
       return response.data
     },
   })
@@ -257,7 +262,7 @@ export function useCreateCheckoutSession() {
       promo_code?: string
     }): Promise<CheckoutResponse> => {
       const response = await apiClient.post<CheckoutResponse>(
-        '/billing/create-checkout-session',
+        '/api/v1/billing/create-checkout-session',
         data
       )
       return response.data
@@ -272,7 +277,10 @@ export function useCreateCheckoutSession() {
 export function useCustomerPortal() {
   return useMutation({
     mutationFn: async (): Promise<PaymentPortalResponse> => {
-      const response = await apiClient.post<PaymentPortalResponse>('/billing/customer-portal', {})
+      const response = await apiClient.post<PaymentPortalResponse>(
+        '/api/v1/billing/customer-portal',
+        {}
+      )
       return response.data
     },
   })

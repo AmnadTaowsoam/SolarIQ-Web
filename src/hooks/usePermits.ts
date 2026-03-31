@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { apiClient } from '@/lib/api'
 import {
   PermitPackage,
   PermitDocument,
@@ -14,8 +15,6 @@ import {
   PermitDocumentReview,
   ApprovedEquipmentSearch,
 } from '@/types/permit'
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1'
 
 // ── Demo Data ──────────────────────────────────────────────────────────────
 
@@ -196,23 +195,13 @@ export function usePermits(status?: string, page = 1, limit = 20) {
     setLoading(true)
     setError(null)
     try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-      })
+      const params: Record<string, string | number> = { page, limit }
       if (status) {
-        params.append('status', status)
+        params.status = status
       }
 
-      const response = await fetch(`${API_BASE}/permits?${params}`, {
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch permits')
-      }
-
-      const data = await response.json()
+      const response = await apiClient.get('/api/v1/permits', { params })
+      const data = response.data
       setPackages((data.items || []).map(transformPermit))
       setTotal(data.total || 0)
     } catch (err) {
@@ -241,16 +230,8 @@ export function usePermit(id: string) {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`${API_BASE}/permits/${id}`, {
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch permit')
-      }
-
-      const data = await response.json()
-      setPermit(transformPermit(data))
+      const response = await apiClient.get(`/api/v1/permits/${id}`)
+      setPermit(transformPermit(response.data))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
       // Use demo data as fallback
@@ -277,16 +258,8 @@ export function usePermitChecklist(permitId: string) {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`${API_BASE}/permits/${permitId}/checklist`, {
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch checklist')
-      }
-
-      const data = await response.json()
-      setChecklist(data || [])
+      const response = await apiClient.get(`/api/v1/permits/${permitId}/checklist`)
+      setChecklist(response.data || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
@@ -310,33 +283,25 @@ export function useApprovedEquipment(searchParams?: ApprovedEquipmentSearch) {
     setLoading(true)
     setError(null)
     try {
-      const params = new URLSearchParams()
+      const params: Record<string, string | number> = {}
       if (searchParams?.equipmentType) {
-        params.append('equipment_type', searchParams.equipmentType)
+        params.equipment_type = searchParams.equipmentType
       }
       if (searchParams?.authority) {
-        params.append('authority', searchParams.authority)
+        params.authority = searchParams.authority
       }
       if (searchParams?.brand) {
-        params.append('brand', searchParams.brand)
+        params.brand = searchParams.brand
       }
       if (searchParams?.minPower !== undefined) {
-        params.append('min_power', searchParams.minPower.toString())
+        params.min_power = searchParams.minPower
       }
       if (searchParams?.maxPower !== undefined) {
-        params.append('max_power', searchParams.maxPower.toString())
+        params.max_power = searchParams.maxPower
       }
 
-      const response = await fetch(`${API_BASE}/permits/equipment/inverters?${params}`, {
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch equipment')
-      }
-
-      const data = await response.json()
-      setEquipment(data.items || [])
+      const response = await apiClient.get('/api/v1/permits/equipment/inverters', { params })
+      setEquipment(response.data.items || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
       // Use demo data as fallback
@@ -362,24 +327,16 @@ export function usePermitTemplates(authority?: 'mea' | 'pea', permitType?: strin
     setLoading(true)
     setError(null)
     try {
-      const params = new URLSearchParams()
+      const params: Record<string, string> = {}
       if (authority) {
-        params.append('authority', authority)
+        params.authority = authority
       }
       if (permitType) {
-        params.append('permit_type', permitType)
+        params.permit_type = permitType
       }
 
-      const response = await fetch(`${API_BASE}/permits/templates?${params}`, {
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch templates')
-      }
-
-      const data = await response.json()
-      setTemplates(data || [])
+      const response = await apiClient.get('/api/v1/permits/templates', { params })
+      setTemplates(response.data || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
       // Use demo data as fallback
@@ -405,16 +362,8 @@ export function usePermitStats() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`${API_BASE}/permits/stats`, {
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch stats')
-      }
-
-      const data = await response.json()
-      setStats(data)
+      const response = await apiClient.get('/api/v1/permits/stats')
+      setStats(response.data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
@@ -432,66 +381,24 @@ export function usePermitStats() {
 // ── API Actions ─────────────────────────────────────────────────────────────
 
 export async function createPermitPackage(data: PermitPackageCreate): Promise<PermitPackage> {
-  try {
-    const response = await fetch(`${API_BASE}/permits`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to create permit package')
-    }
-
-    return await response.json()
-  } catch (err) {
-    throw err
-  }
+  const response = await apiClient.post('/api/v1/permits', data)
+  return response.data
 }
 
 export async function updatePermitPackage(
   id: string,
   data: PermitPackageUpdate
 ): Promise<PermitPackage> {
-  try {
-    const response = await fetch(`${API_BASE}/permits/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to update permit package')
-    }
-
-    return await response.json()
-  } catch (err) {
-    throw err
-  }
+  const response = await apiClient.patch(`/api/v1/permits/${id}`, data)
+  return response.data
 }
 
 export async function generatePermitDocument(
   permitId: string,
   data: PermitDocumentGenerate
 ): Promise<PermitDocument> {
-  try {
-    const response = await fetch(`${API_BASE}/permits/${permitId}/documents`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to generate document')
-    }
-
-    return await response.json()
-  } catch (err) {
-    throw err
-  }
+  const response = await apiClient.post(`/api/v1/permits/${permitId}/documents`, data)
+  return response.data
 }
 
 export async function reviewPermitDocument(
@@ -499,20 +406,9 @@ export async function reviewPermitDocument(
   documentId: string,
   data: PermitDocumentReview
 ): Promise<PermitDocument> {
-  try {
-    const response = await fetch(`${API_BASE}/permits/${permitId}/documents/${documentId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to review document')
-    }
-
-    return await response.json()
-  } catch (err) {
-    throw err
-  }
+  const response = await apiClient.patch(
+    `/api/v1/permits/${permitId}/documents/${documentId}`,
+    data
+  )
+  return response.data
 }
