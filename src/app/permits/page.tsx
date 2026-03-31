@@ -98,6 +98,7 @@ export default function PermitsPage() {
   const [permits, setPermits] = useState<PermitRecord[]>(DEMO_PERMITS)
   const [, setIsLoading] = useState(false)
   const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [showNewForm, setShowNewForm] = useState(false)
 
   const fetchPermits = useCallback(async () => {
     setIsLoading(true)
@@ -146,11 +147,80 @@ export default function PermitsPage() {
               Manage grid connection permits for solar installations
             </p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-[var(--brand-primary)] text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium">
+          <button
+            onClick={() => setShowNewForm(!showNewForm)}
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--brand-primary)] text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+          >
             <Plus className="w-4 h-4" />
             New Permit
           </button>
         </div>
+
+        {/* New Permit Form */}
+        {showNewForm && (
+          <form
+            className="rounded-xl border border-amber-200 bg-amber-50 p-5"
+            onSubmit={async (e) => {
+              e.preventDefault()
+              const form = e.target as HTMLFormElement
+              const data = new FormData(form)
+              try {
+                await apiClient.post('/api/v1/permits', {
+                  authority: data.get('authority'),
+                  permit_type: data.get('permit_type'),
+                  customer_name: data.get('customer_name'),
+                  system_size_kw: Number(data.get('system_size_kw')),
+                })
+                setShowNewForm(false)
+                form.reset()
+                fetchPermits()
+              } catch {
+                // Silently handle
+              }
+            }}
+          >
+            <h3 className="mb-3 font-semibold text-[var(--brand-text)]">Create New Permit</h3>
+            <div className="grid gap-3 md:grid-cols-2">
+              <select name="authority" required className="rounded-lg border px-3 py-2 text-sm">
+                <option value="mea">MEA (การไฟฟ้านครหลวง)</option>
+                <option value="pea">PEA (การไฟฟ้าส่วนภูมิภาค)</option>
+              </select>
+              <select name="permit_type" required className="rounded-lg border px-3 py-2 text-sm">
+                <option value="self_consumption">Self Consumption</option>
+                <option value="net_metering">Net Metering</option>
+                <option value="feed_in_tariff">Feed-in Tariff</option>
+              </select>
+              <input
+                name="customer_name"
+                placeholder="Customer Name *"
+                required
+                className="rounded-lg border px-3 py-2 text-sm"
+              />
+              <input
+                name="system_size_kw"
+                type="number"
+                placeholder="System Size (kW) *"
+                required
+                className="rounded-lg border px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="mt-3 flex gap-2">
+              <button
+                type="submit"
+                className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600"
+              >
+                Create Permit
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowNewForm(false)}
+                className="rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-600 hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

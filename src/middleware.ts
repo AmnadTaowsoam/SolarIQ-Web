@@ -44,7 +44,7 @@ const SECURITY_HEADERS = {
 
   // Permissions-Policy - Control browser features
   'Permissions-Policy':
-    'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=()',
+    'geolocation=(self), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=()',
 
   // Cross-Origin-Embedder-Policy - use unsafe-none to allow cross-origin resources
   // (Firebase SDK, Google Fonts, Analytics, etc. don't send CORP headers)
