@@ -1,6 +1,8 @@
 'use client'
 
 import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { apiClient } from '@/lib/api'
 import { useUpcomingMaintenance } from './useMaintenance'
 import { useServiceRequests } from './useServiceRequests'
 
@@ -13,6 +15,27 @@ export interface CalendarEvent {
   status: string
   href: string
   customerName: string
+}
+
+interface RawCalendarEvent {
+  id: string
+  title: string
+  type: string
+  date: string
+  time: string
+  customer_name?: string
+  notes?: string
+}
+
+function useCustomCalendarEvents() {
+  return useQuery({
+    queryKey: ['calendar-events'],
+    queryFn: async () => {
+      const resp = await apiClient.get('/api/v1/calendar/events')
+      const data = resp.data
+      return (data.events || data.items || []) as RawCalendarEvent[]
+    },
+  })
 }
 
 /**
@@ -39,9 +62,24 @@ export function useCalendarEvents() {
   const { data: maintenance } = useUpcomingMaintenance(90)
   const { data: openRequests } = useServiceRequests('open')
   const { data: inProgressRequests } = useServiceRequests('in_progress')
+  const { data: customEvents } = useCustomCalendarEvents()
 
   const events = useMemo(() => {
     const items: CalendarEvent[] = []
+
+    // Custom calendar events
+    for (const ce of customEvents || []) {
+      items.push({
+        id: `cal-${ce.id}`,
+        title: ce.title,
+        date: ce.date,
+        type: 'installation', // Use installation type for custom events (green dot)
+        priority: 'medium',
+        status: 'upcoming',
+        href: '#',
+        customerName: ce.customer_name || '',
+      })
+    }
 
     // Maintenance events — safely coerce to array
     const maintenanceList = toArray<{
@@ -91,7 +129,7 @@ export function useCalendarEvents() {
     // Sort by date
     items.sort((a, b) => a.date.localeCompare(b.date))
     return items
-  }, [maintenance, openRequests, inProgressRequests])
+  }, [maintenance, openRequests, inProgressRequests, customEvents])
 
   return events
 }

@@ -335,6 +335,7 @@ function AddActivityModal({
         notes: form.notes || undefined,
       })
       // Invalidate calendar-related queries so the UI refreshes without a full page reload
+      await queryClient.invalidateQueries({ queryKey: ['calendar-events'] })
       await queryClient.invalidateQueries({ queryKey: ['upcoming-maintenance'] })
       await queryClient.invalidateQueries({ queryKey: ['service-requests'] })
       onClose()
