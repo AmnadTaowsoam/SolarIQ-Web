@@ -20,7 +20,8 @@ export default function ForgotPasswordPage() {
   const loginPath = useMemo(() => buildLocalizedPath(ROUTES.LOGIN, locale), [locale])
   const signupPath = useMemo(() => buildLocalizedPath(ROUTES.SIGNUP, locale), [locale])
   const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'support@solariq.th'
-  const isDevLoginEnabled = process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true'
+  const isDevLoginEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true' && process.env.NODE_ENV !== 'production'
 
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')

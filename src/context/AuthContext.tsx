@@ -58,7 +58,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const isDevLoginEnabled = process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true'
+  const isDevLoginEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN === 'true' && process.env.NODE_ENV !== 'production'
   const devLoginEmail = (process.env.NEXT_PUBLIC_DEV_LOGIN_EMAIL || '').trim().toLowerCase()
   const devLoginPassword = process.env.NEXT_PUBLIC_DEV_LOGIN_PASSWORD || ''
   const devLoginRole =
