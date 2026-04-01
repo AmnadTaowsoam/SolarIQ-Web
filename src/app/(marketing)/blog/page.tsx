@@ -1,84 +1,12 @@
-export const runtime = 'edge'
-
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Calendar, Clock, Tag, Search, Filter } from 'lucide-react'
+import { getAllBlogPosts } from '@/lib/blog'
+import { toAbsoluteUrl } from '@/lib/site'
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                               */
-/* ------------------------------------------------------------------ */
-interface BlogPost {
-  slug: string
-  title: string
-  excerpt: string
-  category: string
-  author: string
-  date: string
-  readTime: string
-  tags: string[]
-}
+export const runtime = 'nodejs'
 
-/* ------------------------------------------------------------------ */
-/*  Static blog data (edge-compatible, no fs required)                  */
-/* ------------------------------------------------------------------ */
-const BLOG_POSTS: BlogPost[] = [
-  {
-    slug: 'solar-rooftop-roi',
-    title: 'คู่มือคำนวณ ROI โซลาร์รูฟท็อป สำหรับผู้รับเหมา',
-    excerpt: 'เรียนรู้วิธีคำนวณผลตอบแทนการลงทุนโซลาร์รูฟท็อปอย่างแม่นยำ พร้อมตัวอย่างจริง',
-    category: 'การเงิน',
-    author: 'SolarIQ Team',
-    date: '2025-03-15',
-    readTime: '8 นาที',
-    tags: ['ROI', 'โซลาร์รูฟท็อป', 'การลงทุน'],
-  },
-  {
-    slug: 'choosing-solar-panels',
-    title: 'วิธีเลือกแผงโซลาร์เซลล์ที่เหมาะสมกับลูกค้า',
-    excerpt: 'เปรียบเทียบแผงโซลาร์เซลล์แต่ละประเภท พร้อมข้อดีข้อเสียเพื่อช่วยแนะนำลูกค้า',
-    category: 'เทคนิค',
-    author: 'SolarIQ Team',
-    date: '2025-03-10',
-    readTime: '6 นาที',
-    tags: ['แผงโซลาร์', 'Mono', 'Poly', 'HJT'],
-  },
-  {
-    slug: 'pm25-solar-impact',
-    title: 'ผลกระทบ PM2.5 ต่อประสิทธิภาพโซลาร์เซลล์',
-    excerpt: 'วิเคราะห์ผลกระทบฝุ่น PM2.5 ต่อการผลิตไฟฟ้าโซลาร์เซลล์ในประเทศไทย',
-    category: 'วิจัย',
-    author: 'SolarIQ Team',
-    date: '2025-03-05',
-    readTime: '5 นาที',
-    tags: ['PM2.5', 'ประสิทธิภาพ', 'คุณภาพอากาศ'],
-  },
-  {
-    slug: 'mea-pea-permit',
-    title: 'คู่มือขอใบอนุญาต MEA/PEA สำหรับโซลาร์รูฟท็อป',
-    excerpt: 'ขั้นตอนการขอใบอนุญาตจาก MEA และ PEA สำหรับระบบโซลาร์รูฟท็อป',
-    category: 'กฎหมาย',
-    author: 'SolarIQ Team',
-    date: '2025-02-28',
-    readTime: '10 นาที',
-    tags: ['MEA', 'PEA', 'ใบอนุญาต', 'กฎหมาย'],
-  },
-  {
-    slug: 'net-metering-thailand',
-    title: 'Net Metering ในประเทศไทย: สิ่งที่ผู้รับเหมาต้องรู้',
-    excerpt: 'ทำความเข้าใจระบบ Net Metering และการขายไฟคืนให้การไฟฟ้าในประเทศไทย',
-    category: 'นโยบาย',
-    author: 'SolarIQ Team',
-    date: '2025-02-20',
-    readTime: '7 นาที',
-    tags: ['Net Metering', 'การขายไฟ', 'นโยบาย'],
-  },
-]
-
-function getBlogPosts(): BlogPost[] {
-  return [...BLOG_POSTS].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-}
-
-function getCategories(posts: BlogPost[]): string[] {
+function getCategories(posts: ReturnType<typeof getAllBlogPosts>): string[] {
   const categories = new Set(posts.map((post) => post.category))
   return Array.from(categories).sort()
 }
@@ -92,38 +20,35 @@ function formatDate(dateString: string): string {
   })
 }
 
-/* ------------------------------------------------------------------ */
-/*  SEO Metadata                                                        */
-/* ------------------------------------------------------------------ */
 export const metadata: Metadata = {
-  title: 'บล็อก - SolarIQ',
-  description: 'บทความและข้อมูลเกี่ยวกับพลังงานแสงอาทิตย์ โซลาร์เซลล์ และการประหยัดค่าไฟฟ้า',
-  keywords: ['โซลาร์เซลล์', 'พลังงานแสงอาทิตย์', 'Solar Rooftop', 'ค่าไฟฟ้า', 'ROI'],
+  title: 'SolarIQ Blog',
+  description:
+    'Insights on rooftop ROI, proposals, solar sales, and operations for solar teams in Thailand.',
+  keywords: ['SolarIQ blog', 'solar rooftop', 'solar ROI', 'solar CRM', 'Thailand solar'],
   openGraph: {
-    title: 'บล็อก - SolarIQ',
-    description: 'บทความและข้อมูลเกี่ยวกับพลังงานแสงอาทิตย์ โซลาร์เซลล์ และการประหยัดค่าไฟฟ้า',
+    title: 'SolarIQ Blog',
+    description:
+      'Insights on rooftop ROI, proposals, solar sales, and operations for solar teams in Thailand.',
     type: 'website',
     locale: 'th_TH',
+    url: toAbsoluteUrl('/blog'),
   },
 }
 
-/* ------------------------------------------------------------------ */
-/*  Page Component                                                      */
-/* ------------------------------------------------------------------ */
 export default function BlogPage() {
-  const posts = getBlogPosts()
+  const posts = getAllBlogPosts()
   const categories = getCategories(posts)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[var(--brand-background)] to-[var(--brand-surface)]">
-      {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-700 to-amber-600 py-20">
         <div className="absolute inset-0 bg-[url('/SolarIQ/4.png')] bg-cover bg-center opacity-10" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">บล็อก SolarIQ</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">SolarIQ Blog</h1>
             <p className="text-xl text-primary-100 max-w-2xl mx-auto">
-              บทความและข้อมูลเกี่ยวกับพลังงานแสงอาทิตย์ โซลาร์เซลล์ และการประหยัดค่าไฟฟ้า
+              Practical articles on rooftop ROI, proposal generation, solar sales, and field
+              operations.
             </p>
           </div>
         </div>
@@ -131,21 +56,18 @@ export default function BlogPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main Content */}
           <div className="flex-1">
-            {/* Search Bar */}
             <div className="mb-8">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--brand-text-secondary)]" />
                 <input
                   type="text"
-                  placeholder="ค้นหาบทความ..."
+                  placeholder="Search articles..."
                   className="w-full pl-10 pr-4 py-3 border border-[var(--brand-border)] rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-[var(--brand-surface)] text-[var(--brand-text)]"
                 />
               </div>
             </div>
 
-            {/* Blog Posts Grid */}
             <div className="grid gap-8">
               {posts.map((post) => (
                 <Link
@@ -154,7 +76,6 @@ export default function BlogPage() {
                   className="group block bg-[var(--brand-surface)] rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-[var(--brand-border)]"
                 >
                   <div className="p-6">
-                    {/* Category & Date */}
                     <div className="flex items-center gap-4 mb-3">
                       <span className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 text-sm font-medium rounded-full">
                         {post.category}
@@ -169,17 +90,14 @@ export default function BlogPage() {
                       </div>
                     </div>
 
-                    {/* Title */}
                     <h2 className="text-2xl font-bold text-[var(--brand-text)] mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                       {post.title}
                     </h2>
 
-                    {/* Excerpt */}
                     <p className="text-[var(--brand-text-secondary)] mb-4 line-clamp-2">
                       {post.excerpt}
                     </p>
 
-                    {/* Tags */}
                     <div className="flex items-center gap-2 flex-wrap">
                       <Tag className="h-4 w-4 text-[var(--brand-text-secondary)]" />
                       {post.tags.map((tag) => (
@@ -194,13 +112,11 @@ export default function BlogPage() {
             </div>
           </div>
 
-          {/* Sidebar */}
           <aside className="lg:w-80">
-            {/* Categories */}
             <div className="bg-[var(--brand-surface)] rounded-xl shadow-sm p-6 mb-6 border border-[var(--brand-border)]">
               <div className="flex items-center gap-2 mb-4">
                 <Filter className="h-5 w-5 text-primary-600" />
-                <h3 className="text-lg font-semibold text-[var(--brand-text)]">หมวดหมู่</h3>
+                <h3 className="text-lg font-semibold text-[var(--brand-text)]">Categories</h3>
               </div>
               <ul className="space-y-2">
                 {categories.map((category) => (
@@ -211,7 +127,7 @@ export default function BlogPage() {
                     >
                       <span>{category}</span>
                       <span className="text-sm text-[var(--brand-text-secondary)]">
-                        {posts.filter((p) => p.category === category).length}
+                        {posts.filter((post) => post.category === category).length}
                       </span>
                     </Link>
                   </li>
@@ -219,17 +135,16 @@ export default function BlogPage() {
               </ul>
             </div>
 
-            {/* CTA Card */}
             <div className="bg-gradient-to-br from-primary-600 to-amber-600 rounded-xl p-6 text-white">
-              <h3 className="text-xl font-bold mb-3">เริ่มต้นใช้งาน SolarIQ ฟรี</h3>
+              <h3 className="text-xl font-bold mb-3">Try SolarIQ Free</h3>
               <p className="text-primary-100 mb-4">
-                ทดลองใช้งาน SolarIQ ฟรี 14 วัน วิเคราะห์ศักยภาพโซลาร์เซลล์ และคำนวณ ROI ได้ทันที
+                Start a free trial and explore rooftop analysis, proposal workflows, and ROI tools.
               </p>
               <Link
                 href="/signup"
                 className="inline-block w-full text-center bg-[var(--brand-surface)] text-primary-600 font-semibold py-3 px-6 rounded-lg hover:bg-primary-50 transition-colors"
               >
-                ทดลองฟรี
+                Start Free Trial
               </Link>
             </div>
           </aside>

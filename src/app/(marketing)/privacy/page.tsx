@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { toAbsoluteUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'นโยบายความเป็นส่วนตัว - SolarIQ',
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     title: 'นโยบายความเป็นส่วนตัว - SolarIQ',
     description:
       'นโยบายความเป็นส่วนตัวของ SolarIQ อธิบายวิธีการเก็บรวบรวม ใช้ และปกป้องข้อมูลส่วนบุคคลของคุณ',
-    url: 'https://solariqapp.com/privacy',
+    url: toAbsoluteUrl('/privacy'),
   },
 }
 

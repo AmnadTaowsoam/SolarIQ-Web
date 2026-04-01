@@ -11,6 +11,7 @@ import { Preconnect } from '@/components/Preconnect'
 import { PerformanceMonitor } from '@/components/PerformanceMonitor'
 import { GoogleAnalytics } from '@/components/GoogleAnalytics'
 import { CookieConsentBanner } from '@/components/CookieConsent'
+import { SITE_URL, toAbsoluteUrl } from '@/lib/site'
 import './globals.css'
 
 const inter = Inter({
@@ -25,8 +26,6 @@ const notoSansThai = Noto_Sans_Thai({
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
 })
-
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://solariqapp.com'
 
 export const metadata: Metadata = {
   title: {
@@ -49,7 +48,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'SolarIQ Team' }],
   manifest: '/site.webmanifest',
-  metadataBase: new URL(appUrl),
+  metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: '/',
   },
@@ -60,16 +59,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'th_TH',
-    url: appUrl,
+    url: SITE_URL,
     siteName: 'SolarIQ',
     title: 'SolarIQ - แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ',
     description:
       'แพลตฟอร์มวิเคราะห์โซลาร์เซลล์สำหรับธุรกิจ คำนวณ ROI วิเคราะห์ผลตอบแทน บริหารลูกค้าเป้าหมาย',
     images: [
       {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
+        url: toAbsoluteUrl('/SolarIQ/4.png'),
+        width: 512,
+        height: 512,
         alt: 'SolarIQ - Solar Energy Analysis Platform',
       },
     ],
@@ -79,7 +78,7 @@ export const metadata: Metadata = {
     title: 'SolarIQ - แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ',
     description:
       'แพลตฟอร์มวิเคราะห์โซลาร์เซลล์สำหรับธุรกิจ คำนวณ ROI วิเคราะห์ผลตอบแทน บริหารลูกค้าเป้าหมาย',
-    images: ['/og-image.png'],
+    images: [toAbsoluteUrl('/SolarIQ/4.png')],
   },
   robots: {
     index: true,
@@ -120,7 +119,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               operatingSystem: 'Web',
               description:
                 'AI-powered solar energy analysis platform for contractors and installers in Thailand. Calculate ROI, generate proposals, manage leads.',
-              url: appUrl,
+              url: SITE_URL,
               offers: {
                 '@type': 'Offer',
                 price: '0',
@@ -130,8 +129,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               provider: {
                 '@type': 'Organization',
                 name: 'SolarIQ',
-                url: appUrl,
-                logo: `${appUrl}/logo.svg`,
+                url: SITE_URL,
+                logo: toAbsoluteUrl('/SolarIQ/4.png'),
                 contactPoint: {
                   '@type': 'ContactPoint',
                   telephone: '+66-85-662-1113',

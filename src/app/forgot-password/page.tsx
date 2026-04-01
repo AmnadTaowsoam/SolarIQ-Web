@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useMemo, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { sendPasswordResetEmail } from 'firebase/auth'
@@ -27,6 +27,11 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   const validateEmail = (value: string) => {
     const normalized = value.trim()
@@ -41,6 +46,10 @@ export default function ForgotPasswordPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    if (!isHydrated) {
+      return
+    }
 
     const nextError = validateEmail(email)
     setError(nextError)
@@ -125,11 +134,17 @@ export default function ForgotPasswordPage() {
                   error={error || undefined}
                   placeholder={t('emailPlaceholder')}
                   autoComplete="email"
-                  disabled={isSubmitting}
+                  disabled={!isHydrated || isSubmitting}
                   maxLength={255}
                 />
 
-                <Button type="submit" className="w-full" size="lg" isLoading={isSubmitting}>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  size="lg"
+                  isLoading={isSubmitting}
+                  disabled={!isHydrated || isSubmitting}
+                >
                   {t('submit')}
                 </Button>
               </form>

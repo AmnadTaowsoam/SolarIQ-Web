@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { toAbsoluteUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'แพ็กเกจและราคา - SolarIQ',
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     title: 'แพ็กเกจและราคา - SolarIQ',
     description:
       'เปรียบเทียบแพ็กเกจ SolarIQ ตั้งแต่ทดลองฟรี 14 วัน จนถึง Enterprise เลือกแผนที่เหมาะกับธุรกิจโซลาร์ของคุณ',
-    url: 'https://solariqapp.com/pricing-plans',
+    url: toAbsoluteUrl('/pricing-plans'),
   },
 }
 
@@ -34,7 +35,7 @@ const productOffersJsonLd = {
     '@type': 'Brand',
     name: 'SolarIQ',
   },
-  url: 'https://solariqapp.com/pricing-plans',
+  url: toAbsoluteUrl('/pricing-plans'),
   offers: [
     {
       '@type': 'Offer',
@@ -42,7 +43,7 @@ const productOffersJsonLd = {
       price: '0',
       priceCurrency: 'THB',
       description: 'ทดลองใช้ฟรี 14 วัน วิเคราะห์โซลาร์ 5 ครั้ง ROI Calculator พื้นฐาน 1 ผู้ใช้',
-      url: 'https://solariqapp.com/signup?trial=true',
+      url: toAbsoluteUrl('/signup?trial=true'),
       availability: 'https://schema.org/InStock',
       priceValidUntil: '2027-12-31',
     },
@@ -53,7 +54,7 @@ const productOffersJsonLd = {
       priceCurrency: 'THB',
       description:
         'สำหรับทีมขนาดเล็ก วิเคราะห์โซลาร์ 20 ครั้ง/เดือน PDF Proposal Generation Basic Dashboard 1 ผู้ใช้',
-      url: 'https://solariqapp.com/checkout?plan=starter&billing=monthly',
+      url: toAbsoluteUrl('/checkout?plan=starter&billing=monthly'),
       availability: 'https://schema.org/InStock',
       priceValidUntil: '2027-12-31',
       unitCode: 'MON',
@@ -65,7 +66,7 @@ const productOffersJsonLd = {
       priceCurrency: 'THB',
       description:
         'สำหรับทีมที่ต้องการเติบโต วิเคราะห์โซลาร์ 100 ครั้ง/เดือน Climate Reliability Score PM2.5 Impact Analysis API Access 5 ผู้ใช้',
-      url: 'https://solariqapp.com/checkout?plan=professional&billing=monthly',
+      url: toAbsoluteUrl('/checkout?plan=professional&billing=monthly'),
       availability: 'https://schema.org/InStock',
       priceValidUntil: '2027-12-31',
       unitCode: 'MON',
@@ -77,7 +78,7 @@ const productOffersJsonLd = {
       priceCurrency: 'THB',
       description:
         'สำหรับองค์กรขนาดใหญ่ วิเคราะห์โซลาร์ไม่จำกัด White-label Branding Custom API Integration ผู้ใช้ไม่จำกัด SLA 99.9%',
-      url: 'https://solariqapp.com/contact?subject=enterprise',
+      url: toAbsoluteUrl('/contact?subject=enterprise'),
       availability: 'https://schema.org/InStock',
       priceValidUntil: '2027-12-31',
       unitCode: 'MON',

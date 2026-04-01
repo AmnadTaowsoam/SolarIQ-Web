@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { toAbsoluteUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'นโยบายการคืนเงิน - SolarIQ',
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     title: 'นโยบายการคืนเงิน - SolarIQ',
     description:
       'นโยบายการคืนเงินของ SolarIQ รวมถึงเงื่อนไขการคืนเงินสำหรับแพ็กเกจรายเดือนและรายปี',
-    url: 'https://solariqapp.com/refund-policy',
+    url: toAbsoluteUrl('/refund-policy'),
   },
 }
 

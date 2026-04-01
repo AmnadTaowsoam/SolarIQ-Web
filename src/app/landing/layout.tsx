@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'SolarIQ - แพลตฟอร์ม AI วิเคราะห์พลังงานแสงอาทิตย์',
@@ -66,7 +67,7 @@ const webSiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'SolarIQ',
-  url: 'https://solariqapp.com',
+  url: SITE_URL,
   description: 'แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ สำหรับธุรกิจโซลาร์ยุคใหม่ในประเทศไทย',
   inLanguage: ['th', 'en'],
 }

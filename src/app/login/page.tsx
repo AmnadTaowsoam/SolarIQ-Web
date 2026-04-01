@@ -35,9 +35,14 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
   const [failedAttempts, setFailedAttempts] = useState(0)
   const [lockoutUntil, setLockoutUntil] = useState<number | null>(null)
+
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -73,6 +78,10 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!isHydrated) {
+      return
+    }
 
     if (lockoutUntil && Date.now() < lockoutUntil) {
       const remainingTime = Math.ceil((lockoutUntil - Date.now()) / 1000)
@@ -193,7 +202,11 @@ export default function LoginPage() {
                 error={errors.email}
                 placeholder={t('emailPlaceholder')}
                 autoComplete="email"
-                disabled={isSubmitting || (lockoutUntil !== null && Date.now() < lockoutUntil)}
+                disabled={
+                  !isHydrated ||
+                  isSubmitting ||
+                  (lockoutUntil !== null && Date.now() < lockoutUntil)
+                }
                 maxLength={255}
               />
 
@@ -205,7 +218,11 @@ export default function LoginPage() {
                 error={errors.password}
                 placeholder="••••••••"
                 autoComplete="current-password"
-                disabled={isSubmitting || (lockoutUntil !== null && Date.now() < lockoutUntil)}
+                disabled={
+                  !isHydrated ||
+                  isSubmitting ||
+                  (lockoutUntil !== null && Date.now() < lockoutUntil)
+                }
                 maxLength={128}
               />
 
@@ -232,7 +249,7 @@ export default function LoginPage() {
                 className="w-full"
                 size="lg"
                 isLoading={isSubmitting}
-                disabled={lockoutUntil !== null && Date.now() < lockoutUntil}
+                disabled={!isHydrated || (lockoutUntil !== null && Date.now() < lockoutUntil)}
               >
                 {t('submit')}
               </Button>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Shield, Lock, Database, Globe, FileText, Mail, CheckCircle } from 'lucide-react'
+import { toAbsoluteUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'นโยบาย PDPA - SolarIQ',
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     title: 'นโยบาย PDPA - SolarIQ',
     description:
       'นโยบายคุ้มครองข้อมูลส่วนบุคคลตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ของ SolarIQ',
-    url: 'https://solariqapp.com/pdpa',
+    url: toAbsoluteUrl('/pdpa'),
   },
 }
 

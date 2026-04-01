@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/site'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.solariqapp.com'
   const isProduction =
     process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_ENABLE_DEV_LOGIN
 
@@ -24,6 +24,6 @@ export default function robots(): MetadataRoute.Robots {
           },
         ]
       : [{ userAgent: '*', disallow: '/' }],
-    sitemap: isProduction ? `${baseUrl}/sitemap.xml` : undefined,
+    sitemap: isProduction ? `${SITE_URL}/sitemap.xml` : undefined,
   }
 }

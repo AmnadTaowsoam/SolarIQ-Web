@@ -163,6 +163,7 @@ export default function SignupPage() {
   const privacyPath = buildLocalizedPath('/privacy', locale)
   const [isLoading, setIsLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -199,6 +200,10 @@ export default function SignupPage() {
     [locale]
   )
 
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
+
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
@@ -229,6 +234,11 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!isHydrated) {
+      return
+    }
+
     setError(null)
 
     // Validate all fields
@@ -298,6 +308,10 @@ export default function SignupPage() {
   }
 
   const handleGoogleSignup = async () => {
+    if (!isHydrated) {
+      return
+    }
+
     setGoogleLoading(true)
     setError(null)
 
@@ -381,7 +395,7 @@ export default function SignupPage() {
             type="button"
             variant="outline"
             onClick={handleGoogleSignup}
-            disabled={googleLoading || isLoading}
+            disabled={!isHydrated || googleLoading || isLoading}
             className="w-full mb-6 flex items-center justify-center gap-3"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -442,7 +456,7 @@ export default function SignupPage() {
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 onBlur={() => handleBlur('email')}
                 error={touched.email ? formErrors.email : undefined}
-                disabled={isLoading || googleLoading}
+                disabled={!isHydrated || isLoading || googleLoading}
               />
             </div>
 
@@ -463,12 +477,13 @@ export default function SignupPage() {
                   onChange={(e) => handleInputChange('password', e.target.value)}
                   onBlur={() => handleBlur('password')}
                   error={touched.password ? formErrors.password : undefined}
-                  disabled={isLoading || googleLoading}
+                  disabled={!isHydrated || isLoading || googleLoading}
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={!isHydrated || isLoading || googleLoading}
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -549,12 +564,13 @@ export default function SignupPage() {
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                   onBlur={() => handleBlur('confirmPassword')}
                   error={touched.confirmPassword ? formErrors.confirmPassword : undefined}
-                  disabled={isLoading || googleLoading}
+                  disabled={!isHydrated || isLoading || googleLoading}
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)]"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  disabled={!isHydrated || isLoading || googleLoading}
                 >
                   {showConfirmPassword ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -601,7 +617,7 @@ export default function SignupPage() {
                 onChange={(e) => handleInputChange('companyName', e.target.value)}
                 onBlur={() => handleBlur('companyName')}
                 error={touched.companyName ? formErrors.companyName : undefined}
-                disabled={isLoading || googleLoading}
+                disabled={!isHydrated || isLoading || googleLoading}
               />
             </div>
 
@@ -618,7 +634,7 @@ export default function SignupPage() {
                 value={formData.province}
                 onChange={(e) => handleInputChange('province', e.target.value)}
                 onBlur={() => handleBlur('province')}
-                disabled={isLoading || googleLoading}
+                disabled={!isHydrated || isLoading || googleLoading}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   touched.province && formErrors.province
                     ? 'border-red-500'
@@ -653,7 +669,7 @@ export default function SignupPage() {
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 onBlur={() => handleBlur('phone')}
                 error={touched.phone ? formErrors.phone : undefined}
-                disabled={isLoading || googleLoading}
+                disabled={!isHydrated || isLoading || googleLoading}
               />
             </div>
 
@@ -664,7 +680,7 @@ export default function SignupPage() {
                   type="checkbox"
                   checked={formData.acceptTerms}
                   onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                  disabled={isLoading || googleLoading}
+                  disabled={!isHydrated || isLoading || googleLoading}
                   className="mt-1 h-4 w-4 text-blue-600 border-[var(--brand-border)] rounded focus:ring-blue-500"
                 />
                 <span className="text-sm text-[var(--brand-text-secondary)]">
@@ -684,7 +700,7 @@ export default function SignupPage() {
                   type="checkbox"
                   checked={formData.acceptPdpa}
                   onChange={(e) => handleInputChange('acceptPdpa', e.target.checked)}
-                  disabled={isLoading || googleLoading}
+                  disabled={!isHydrated || isLoading || googleLoading}
                   className="mt-1 h-4 w-4 text-blue-600 border-[var(--brand-border)] rounded focus:ring-blue-500"
                 />
                 <span className="text-sm text-[var(--brand-text-secondary)]">
@@ -705,7 +721,11 @@ export default function SignupPage() {
             </div>
 
             {/* Submit Button */}
-            <Button type="submit" disabled={isLoading || googleLoading} className="w-full mt-6">
+            <Button
+              type="submit"
+              disabled={!isHydrated || isLoading || googleLoading}
+              className="w-full mt-6"
+            >
               {isLoading ? t('submitting') : t('submit')}
             </Button>
           </form>

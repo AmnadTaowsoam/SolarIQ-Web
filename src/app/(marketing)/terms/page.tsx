@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { toAbsoluteUrl } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'ข้อกำหนดการใช้งาน - SolarIQ',
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'ข้อกำหนดการใช้งาน - SolarIQ',
     description: 'ข้อกำหนดและเงื่อนไขการใช้งานแพลตฟอร์ม SolarIQ สำหรับธุรกิจโซลาร์เซลล์ในประเทศไทย',
-    url: 'https://solariqapp.com/terms',
+    url: toAbsoluteUrl('/terms'),
   },
 }
 

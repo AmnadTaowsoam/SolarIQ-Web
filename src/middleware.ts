@@ -63,12 +63,41 @@ const SECURITY_HEADERS = {
  * Paths that should be excluded from security header enforcement
  */
 const EXEMPT_PATHS = ['/_next', '/api/health', '/api/webhook', '/api/analytics/vitals']
+const PUBLIC_PATHS = new Set([
+  '/',
+  '/about',
+  '/blog',
+  '/contact',
+  '/forgot-password',
+  '/help',
+  '/landing',
+  '/login',
+  '/offline',
+  '/pdpa',
+  '/pdpa/request',
+  '/pricing-plans',
+  '/privacy',
+  '/refund-policy',
+  '/robots.txt',
+  '/signup',
+  '/sitemap.xml',
+  '/status',
+  '/terms',
+  '/verify-email',
+  '/llms.txt',
+  '/llms-full.txt',
+])
+const PUBLIC_PREFIXES = ['/blog/', '/checkout', '/liff']
 
 /**
  * Check if path should be exempted from security headers
  */
 function shouldExemptPath(pathname: string): boolean {
   return EXEMPT_PATHS.some((exempt) => pathname.startsWith(exempt))
+}
+
+function isPublicPath(pathname: string): boolean {
+  return PUBLIC_PATHS.has(pathname) || PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 }
 
 /**
@@ -100,9 +129,16 @@ export function middleware(request: NextRequest) {
     return redirectResponse
   }
 
+  const sessionCookie = request.cookies.get('__session')?.value
+
+  if (!pathname.startsWith('/api') && !isPublicPath(pathname) && !sessionCookie) {
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = '/login'
+    return NextResponse.redirect(loginUrl)
+  }
+
   // Protect /admin routes: redirect non-admin users to /dashboard
   if (pathname.startsWith('/admin')) {
-    const sessionCookie = request.cookies.get('__session')?.value
     const roleCookie = request.cookies.get('user-role')?.value
 
     if (!sessionCookie) {

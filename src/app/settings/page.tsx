@@ -50,6 +50,35 @@ interface TeamMember {
   status: 'active' | 'pending' | 'inactive'
 }
 
+function toTeamMember(user: unknown): TeamMember | null {
+  if (!user || typeof user !== 'object') {
+    return null
+  }
+
+  const record = user as Record<string, unknown>
+  const id = typeof record.id === 'string' || typeof record.id === 'number' ? String(record.id) : ''
+  const email = typeof record.email === 'string' ? record.email : ''
+  const name =
+    [record.name, record.display_name, record.email].find(
+      (value): value is string => typeof value === 'string'
+    ) ?? ''
+  const role = record.role === 'admin' ? 'admin' : 'contractor'
+  const status =
+    record.status === 'active' || record.status === 'pending' || record.status === 'inactive'
+      ? record.status
+      : record.is_active
+        ? 'active'
+        : 'inactive'
+
+  return {
+    id,
+    name,
+    email,
+    role,
+    status,
+  }
+}
+
 interface NotificationChannel {
   line: boolean
   email: boolean
@@ -1037,16 +1066,12 @@ function TeamMembersSection() {
         const payload = response.data
         const users = payload.users || payload.items || payload
         if (Array.isArray(users) && users.length > 0) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setMembers(
-            users.map((u: Record<string, any>) => ({
-              id: u.id ?? '',
-              name: u.name ?? u.display_name ?? u.email ?? '',
-              email: u.email ?? '',
-              role: u.role ?? 'contractor',
-              status: (u.status ?? u.is_active) ? 'active' : 'inactive',
-            }))
-          )
+          const nextMembers = users
+            .map(toTeamMember)
+            .filter((member): member is TeamMember => member !== null)
+          if (nextMembers.length > 0) {
+            setMembers(nextMembers)
+          }
         }
       })
       .catch(() => {

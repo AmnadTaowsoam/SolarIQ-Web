@@ -52,7 +52,6 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   eslint: {
@@ -71,6 +70,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'solariqapp.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.solariqapp.com',
       },
     ],
     formats: ['image/avif', 'image/webp'],

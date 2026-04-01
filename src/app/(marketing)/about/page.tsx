@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { toAbsoluteUrl } from '@/lib/site'
 import {
   Target,
   Zap,
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     title: 'เกี่ยวกับเรา - SolarIQ',
     description:
       'เรียนรู้เกี่ยวกับ SolarIQ แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะสำหรับธุรกิจโซลาร์ในประเทศไทย',
-    url: 'https://solariqapp.com/about',
+    url: toAbsoluteUrl('/about'),
   },
 }
 

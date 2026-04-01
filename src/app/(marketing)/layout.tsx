@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Zap, Menu, X, Facebook, Linkedin, Mail, Phone, MapPin, Clock } from 'lucide-react'
+import { SITE_URL, toAbsoluteUrl } from '@/lib/site'
 
 /* ------------------------------------------------------------------ */
 /*  Marketing Navbar                                                    */
@@ -276,8 +277,8 @@ const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'SolarIQ',
-  url: 'https://solariqapp.com',
-  logo: 'https://solariqapp.com/logo.png',
+  url: SITE_URL,
+  logo: toAbsoluteUrl('/SolarIQ/4.png'),
   description: 'แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ สำหรับธุรกิจโซลาร์ยุคใหม่ในประเทศไทย',
   email: 'contact@solariqapp.com',
   telephone: '+66-85-662-1113',
@@ -302,25 +303,25 @@ const breadcrumbJsonLd = {
       '@type': 'ListItem',
       position: 1,
       name: 'หน้าแรก',
-      item: 'https://solariqapp.com/landing',
+      item: toAbsoluteUrl('/landing'),
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'แพ็กเกจ',
-      item: 'https://solariqapp.com/pricing-plans',
+      item: toAbsoluteUrl('/pricing-plans'),
     },
     {
       '@type': 'ListItem',
       position: 3,
       name: 'เกี่ยวกับเรา',
-      item: 'https://solariqapp.com/about',
+      item: toAbsoluteUrl('/about'),
     },
     {
       '@type': 'ListItem',
       position: 4,
       name: 'ติดต่อ',
-      item: 'https://solariqapp.com/contact',
+      item: toAbsoluteUrl('/contact'),
     },
   ],
 }
