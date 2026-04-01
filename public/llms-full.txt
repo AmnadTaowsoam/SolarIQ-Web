@@ -1,0 +1,215 @@
+# SolarIQ - AI-Powered Solar Business Management Platform
+
+> SolarIQ is a comprehensive B2B SaaS platform designed for solar panel installation contractors and EPC companies in Thailand. It provides end-to-end business management from lead capture and AI-powered solar analysis to proposal generation, deal pipeline management, invoicing, permitting, and post-installation maintenance tracking.
+
+> Keywords (Thai): โซลาร์เซลล์, แผงโซลาร์, ติดตั้งโซลาร์เซลล์, พลังงานแสงอาทิตย์, ระบบโซลาร์เซลล์, ผู้รับเหมาโซลาร์, Solar EPC ไทย, ธุรกิจโซลาร์, บริหารงานโซลาร์, ใบเสนอราคาโซลาร์
+
+## About SolarIQ
+
+SolarIQ (สมาร์ทโซลาร์ไอคิว) is a cloud-based platform built specifically for the Thai solar energy market. It helps solar contractors digitize their operations, close more deals, and deliver better service to their customers. The platform combines AI-driven solar analysis with a full-featured CRM, project management, and financial tools — all in one place.
+
+SolarIQ is developed and operated from Nonthaburi, Thailand, with a focus on solving real problems that Thai solar installers face daily: manual proposal creation, disorganized lead tracking, fragmented maintenance records, and lack of data-driven insights.
+
+## Platform URL
+
+https://www.solariqapp.com
+
+## Core Features
+
+### 1. AI-Powered Solar Analysis (วิเคราะห์โซลาร์เซลล์ด้วย AI)
+SolarIQ uses Google Gemini AI combined with satellite imagery and solar irradiance data to analyze rooftops and recommend optimal solar panel configurations. The analysis includes:
+- Rooftop area detection and usable space calculation
+- Solar irradiance modeling based on location, tilt, and orientation
+- Panel layout optimization for maximum energy yield
+- Financial modeling including ROI, payback period, and electricity savings
+- Carbon offset and environmental impact calculations
+- Support for both residential and commercial installations
+
+### 2. Lead Management & CRM (ระบบจัดการลูกค้า)
+A purpose-built CRM for solar sales teams with:
+- 6-stage lead pipeline: New → Qualified → Analyzing → Proposal → Negotiation → Won
+- AI-powered lead scoring to prioritize high-value prospects
+- Lead source tracking (LINE, website, referral, walk-in)
+- Customer communication history and notes
+- Automated follow-up reminders
+- Bulk lead import and export
+- LINE Messaging API integration for direct customer communication
+
+### 3. Deal Pipeline Management (ระบบจัดการดีล)
+Track installation projects from contract signing through completion:
+- Visual Kanban board for deal stages
+- Deal value tracking and revenue forecasting
+- Document attachment and contract management
+- Team assignment and collaboration
+- Stage-by-stage progress tracking
+- Win/loss analysis and reporting
+
+### 4. Auto Proposal Generator (สร้างใบเสนอราคาอัตโนมัติ)
+Generate professional PDF proposals automatically:
+- System sizing based on AI analysis results
+- Itemized equipment and installation cost breakdown
+- ROI analysis with payback period calculations
+- Energy production estimates (monthly and annual)
+- Carbon offset impact statements
+- Company branding and customization
+- One-click PDF generation and sharing
+
+### 5. Maintenance & Warranty Tracking (ระบบติดตามการบำรุงรักษา)
+Post-installation service management:
+- Automated maintenance schedule reminders
+- Warranty period tracking per installation
+- Service history and maintenance logs
+- Performance monitoring alerts
+- Preventive maintenance checklists
+
+### 6. Customer Service Portal (ระบบบริการลูกค้า)
+Handle post-installation customer interactions:
+- Repair request intake and tracking
+- Complaint management workflow
+- Customer feedback collection
+- Service ticket assignment and resolution
+- Communication history per customer
+
+### 7. Invoice & Billing Management (ระบบจัดการใบแจ้งหนี้)
+Financial tools for solar businesses:
+- Invoice generation linked to deals
+- Payment tracking and reminders
+- Revenue reporting and analytics
+- Integration-ready for Thai accounting workflows
+
+### 8. Permitting & Grid Connection (ระบบจัดการใบอนุญาต)
+Track regulatory requirements:
+- PEA/MEA grid connection application tracking
+- Document checklist management
+- Status tracking through approval stages
+- Deadline and expiration alerts
+
+### 9. Work Calendar & Scheduling (ปฏิทินงาน)
+Coordinate field operations:
+- Installation scheduling
+- Site survey appointments
+- Maintenance visit planning
+- Team availability management
+- Calendar views (daily, weekly, monthly)
+
+### 10. Analytics Dashboard (แดชบอร์ดวิเคราะห์ข้อมูล)
+Data-driven business insights:
+- Revenue trends and projections
+- Lead conversion funnel analysis
+- Sales team performance metrics
+- AI-generated business recommendations
+- Commission tracking and calculations
+- Regional performance comparisons
+
+## Technology Stack
+
+- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS, shadcn/ui
+- **Backend**: Python FastAPI, PostgreSQL, Firebase Authentication
+- **AI Engine**: Google Gemini for solar analysis, lead scoring, proposal generation, and business insights
+- **Integrations**: LINE Messaging API, Google Maps Platform, Omise Payments (Thai payment gateway)
+- **Infrastructure**: Cloud-hosted, SSL encrypted, daily backups
+- **Mobile**: Responsive web application accessible on all devices
+
+## Target Audience
+
+SolarIQ is built for:
+- **Solar panel installation contractors** (ผู้รับเหมาติดตั้งโซลาร์เซลล์) — small to medium companies doing residential and commercial installations
+- **Solar EPC companies** (บริษัท Solar EPC) — engineering, procurement, and construction firms in the solar industry
+- **Solar distributors and resellers** (ตัวแทนจำหน่ายโซลาร์เซลล์) — companies selling and installing solar systems
+- **Solar sales teams** — individual salespeople and teams managing solar leads and proposals
+
+The platform is designed for the Thai market with Thai language support, Thai payment integration (Omise), and features tailored to Thai regulatory requirements (PEA/MEA grid connection processes).
+
+## Pricing Model
+
+- **Free Trial**: New users can start with a free trial to explore all platform features
+- **Subscription Plans**: Monthly and annual subscription options available
+- **Payment Methods**: Credit/debit card payments via Omise (Thai payment gateway)
+- **No long-term contracts**: Cancel anytime
+- Visit https://www.solariqapp.com for current pricing details
+
+## Key Differentiators
+
+1. **Built for Thailand**: Unlike generic CRM tools, SolarIQ is purpose-built for the Thai solar market with local payment integration, Thai language support, and features aligned with Thai regulations
+2. **AI-Powered Analysis**: Automated rooftop analysis eliminates manual calculations and reduces proposal creation time from hours to minutes
+3. **End-to-End Platform**: One platform replaces multiple tools — no need for separate CRM, project management, invoicing, and maintenance systems
+4. **LINE Integration**: Connect with customers through Thailand's most popular messaging platform
+5. **Solar-Specific Workflows**: Every feature is designed around how solar businesses actually operate, not adapted from generic business software
+6. **Data-Driven Insights**: AI-powered analytics help solar companies identify trends, optimize sales processes, and grow revenue
+
+## Use Cases
+
+### For a Small Solar Installer (1-5 person team)
+- Replace spreadsheets and paper-based tracking with a digital system
+- Generate professional proposals quickly to compete with larger companies
+- Track all leads and follow up consistently to improve close rates
+- Manage maintenance schedules to retain customers and earn recurring revenue
+
+### For a Medium Solar EPC Company (10-50 person team)
+- Manage multiple sales reps with lead assignment and commission tracking
+- Standardize the sales process with a defined pipeline and stage gates
+- Track project progress from sale through installation and grid connection
+- Analyze business performance with dashboards and AI insights
+- Coordinate field teams with shared calendars and scheduling
+
+### For Solar Sales Representatives
+- Access lead information and customer history on mobile devices during site visits
+- Generate proposals on the spot after a site survey
+- Track personal pipeline and commission earnings
+- Receive AI-powered recommendations on which leads to prioritize
+
+## API & Developer Access
+
+- REST API available at /api/v1/*
+- Firebase Authentication for secure access
+- Developer portal with API keys and sandbox environment
+- Webhook support for integrations
+
+## Frequently Asked Questions
+
+### What is SolarIQ?
+SolarIQ is a B2B SaaS platform that provides solar panel installation companies in Thailand with AI-powered tools for solar analysis, lead management, proposal generation, deal tracking, maintenance scheduling, and business analytics.
+
+### Who is SolarIQ for?
+SolarIQ is designed for solar contractors, EPC companies, and solar distributors operating in Thailand. It serves businesses of all sizes, from individual installers to companies with large sales and installation teams.
+
+### How does the AI solar analysis work?
+SolarIQ uses Google Gemini AI combined with satellite imagery and solar irradiance data to analyze rooftops. It automatically calculates usable roof area, optimal panel placement, expected energy production, financial returns (ROI and payback period), and environmental impact.
+
+### Is SolarIQ available in Thai?
+Yes, SolarIQ supports the Thai language and is built specifically for the Thai solar market, including Thai payment processing and compliance with local regulatory processes.
+
+### How much does SolarIQ cost?
+SolarIQ offers a free trial for new users. After the trial, subscription plans are available on a monthly or annual basis. Visit https://www.solariqapp.com for current pricing.
+
+### Can I integrate SolarIQ with LINE?
+Yes, SolarIQ integrates with the LINE Messaging API, allowing you to communicate with leads and customers directly through LINE, Thailand's most popular messaging platform.
+
+### Is my data secure?
+Yes, SolarIQ uses Firebase Authentication, SSL encryption, and cloud infrastructure with daily backups to keep your data secure.
+
+### Can I use SolarIQ on my phone?
+Yes, SolarIQ is a responsive web application that works on smartphones, tablets, and desktop computers. No app download is required.
+
+### How do I get started?
+Visit https://www.solariqapp.com to sign up for a free trial. No credit card is required to start.
+
+### Does SolarIQ handle permitting and grid connection tracking?
+Yes, SolarIQ includes tools for tracking PEA/MEA grid connection applications, managing required documents, and monitoring approval status.
+
+### Can multiple team members use SolarIQ?
+Yes, SolarIQ supports team collaboration with role-based access, lead assignment, calendar sharing, and commission tracking for sales teams.
+
+## Contact Information
+
+- **Website**: https://www.solariqapp.com
+- **Email**: contact@solariqapp.com
+- **Phone**: 085-662-1113
+- **Location**: Nonthaburi, Thailand (นนทบุรี, ประเทศไทย)
+
+## Additional Resources
+
+- Landing page: https://www.solariqapp.com
+- Privacy policy: https://www.solariqapp.com/privacy
+- Terms of service: https://www.solariqapp.com/terms
+- LLMs.txt (summary): https://www.solariqapp.com/llms.txt

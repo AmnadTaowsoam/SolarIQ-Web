@@ -1,4 +1,27 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'นโยบายความเป็นส่วนตัว - SolarIQ',
+  description:
+    'นโยบายความเป็นส่วนตัวของ SolarIQ อธิบายวิธีการเก็บรวบรวม ใช้ และปกป้องข้อมูลส่วนบุคคลของคุณ ปฏิบัติตาม PDPA อย่างเคร่งครัด',
+  keywords: [
+    'นโยบายความเป็นส่วนตัว',
+    'Privacy Policy',
+    'SolarIQ',
+    'PDPA',
+    'ข้อมูลส่วนบุคคล',
+    'ความเป็นส่วนตัว',
+    'data privacy',
+    'solar energy',
+  ],
+  openGraph: {
+    title: 'นโยบายความเป็นส่วนตัว - SolarIQ',
+    description:
+      'นโยบายความเป็นส่วนตัวของ SolarIQ อธิบายวิธีการเก็บรวบรวม ใช้ และปกป้องข้อมูลส่วนบุคคลของคุณ',
+    url: 'https://solariqapp.com/privacy',
+  },
+}
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                               */

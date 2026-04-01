@@ -269,9 +269,73 @@ function MarketingFooter() {
 /* ------------------------------------------------------------------ */
 /*  Marketing Layout                                                    */
 /* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+/*  JSON-LD Structured Data                                            */
+/* ------------------------------------------------------------------ */
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'SolarIQ',
+  url: 'https://solariqapp.com',
+  logo: 'https://solariqapp.com/logo.png',
+  description: 'แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะ สำหรับธุรกิจโซลาร์ยุคใหม่ในประเทศไทย',
+  email: 'contact@solariqapp.com',
+  telephone: '+66-85-662-1113',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Nonthaburi',
+    addressCountry: 'TH',
+  },
+  sameAs: [],
+  foundingDate: '2024',
+  areaServed: {
+    '@type': 'Country',
+    name: 'Thailand',
+  },
+}
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'หน้าแรก',
+      item: 'https://solariqapp.com/landing',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'แพ็กเกจ',
+      item: 'https://solariqapp.com/pricing-plans',
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: 'เกี่ยวกับเรา',
+      item: 'https://solariqapp.com/about',
+    },
+    {
+      '@type': 'ListItem',
+      position: 4,
+      name: 'ติดต่อ',
+      item: 'https://solariqapp.com/contact',
+    },
+  ],
+}
+
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-[var(--brand-surface)] dark:bg-gray-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <MarketingNavbar />
       <main className="flex-1 pt-16">{children}</main>
       <MarketingFooter />

@@ -10,5 +10,7 @@ Disallow: /api/
 Allow: /login
 Allow: /privacy
 Allow: /liff/about
+Allow: /llms.txt
+Allow: /llms-full.txt
 
-Sitemap: https://solariq.app/sitemap.xml
+Sitemap: https://www.solariqapp.com/sitemap.xml

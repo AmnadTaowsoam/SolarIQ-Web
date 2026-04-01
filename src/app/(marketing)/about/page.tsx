@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   Target,
@@ -14,6 +15,28 @@ import {
   Code2,
   CalendarClock,
 } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'เกี่ยวกับเรา - SolarIQ',
+  description:
+    'เรียนรู้เกี่ยวกับ SolarIQ แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะสำหรับธุรกิจโซลาร์ในประเทศไทย พันธกิจ ทีมงาน และเทคโนโลยีที่ใช้',
+  keywords: [
+    'เกี่ยวกับ SolarIQ',
+    'About SolarIQ',
+    'วิเคราะห์พลังงานแสงอาทิตย์',
+    'โซลาร์เซลล์',
+    'solar energy',
+    'พลังงานสะอาด',
+    'B2B SaaS',
+    'ประเทศไทย',
+  ],
+  openGraph: {
+    title: 'เกี่ยวกับเรา - SolarIQ',
+    description:
+      'เรียนรู้เกี่ยวกับ SolarIQ แพลตฟอร์มวิเคราะห์พลังงานแสงอาทิตย์อัจฉริยะสำหรับธุรกิจโซลาร์ในประเทศไทย',
+    url: 'https://solariqapp.com/about',
+  },
+}
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                                */

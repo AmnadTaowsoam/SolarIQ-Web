@@ -1,4 +1,26 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'นโยบายการคืนเงิน - SolarIQ',
+  description:
+    'นโยบายการคืนเงินของ SolarIQ รวมถึงเงื่อนไขการคืนเงินสำหรับแพ็กเกจรายเดือนและรายปี วิธีขอคืนเงิน และระยะเวลาดำเนินการ',
+  keywords: [
+    'นโยบายการคืนเงิน',
+    'Refund Policy',
+    'SolarIQ',
+    'คืนเงิน',
+    'ยกเลิกแพ็กเกจ',
+    'การคืนเงินโซลาร์',
+    'solar refund',
+  ],
+  openGraph: {
+    title: 'นโยบายการคืนเงิน - SolarIQ',
+    description:
+      'นโยบายการคืนเงินของ SolarIQ รวมถึงเงื่อนไขการคืนเงินสำหรับแพ็กเกจรายเดือนและรายปี',
+    url: 'https://solariqapp.com/refund-policy',
+  },
+}
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                                */

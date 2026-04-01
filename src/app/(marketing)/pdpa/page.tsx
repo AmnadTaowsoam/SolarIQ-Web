@@ -1,5 +1,28 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Shield, Lock, Database, Globe, FileText, Mail, CheckCircle } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'นโยบาย PDPA - SolarIQ',
+  description:
+    'นโยบายคุ้มครองข้อมูลส่วนบุคคลตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ของ SolarIQ รวมถึงสิทธิ์ของเจ้าของข้อมูล และมาตรการรักษาความปลอดภัย',
+  keywords: [
+    'PDPA',
+    'พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล',
+    'SolarIQ',
+    'ข้อมูลส่วนบุคคล',
+    'data protection',
+    'privacy',
+    'Thailand PDPA',
+    'สิทธิ์เจ้าของข้อมูล',
+  ],
+  openGraph: {
+    title: 'นโยบาย PDPA - SolarIQ',
+    description:
+      'นโยบายคุ้มครองข้อมูลส่วนบุคคลตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ของ SolarIQ',
+    url: 'https://solariqapp.com/pdpa',
+  },
+}
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                               */

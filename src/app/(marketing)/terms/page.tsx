@@ -1,4 +1,25 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'ข้อกำหนดการใช้งาน - SolarIQ',
+  description:
+    'ข้อกำหนดและเงื่อนไขการใช้งานแพลตฟอร์ม SolarIQ สำหรับธุรกิจโซลาร์เซลล์ในประเทศไทย รวมถึงสิทธิ์การใช้งาน การชำระเงิน และนโยบายการยกเลิก',
+  keywords: [
+    'ข้อกำหนดการใช้งาน',
+    'Terms of Service',
+    'SolarIQ',
+    'เงื่อนไขการใช้งาน',
+    'นโยบายการใช้บริการ',
+    'โซลาร์เซลล์',
+    'solar energy',
+  ],
+  openGraph: {
+    title: 'ข้อกำหนดการใช้งาน - SolarIQ',
+    description: 'ข้อกำหนดและเงื่อนไขการใช้งานแพลตฟอร์ม SolarIQ สำหรับธุรกิจโซลาร์เซลล์ในประเทศไทย',
+    url: 'https://solariqapp.com/terms',
+  },
+}
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                               */
