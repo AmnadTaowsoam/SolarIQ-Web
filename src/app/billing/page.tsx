@@ -22,7 +22,6 @@ import {
   useSubscribe,
   useUpdateSubscription,
   useCancelSubscription,
-  useCustomerPortal,
 } from '@/hooks/useBilling'
 import { type PlanType } from '@/types/billing'
 import { useGA4 } from '@/hooks/useGA4'
@@ -35,22 +34,26 @@ export default function BillingPage() {
   const { trackUpgradeClick } = useGA4()
   const [activeTab, setActiveTab] = useState<TabType>('overview')
   const [isProcessing, setIsProcessing] = useState(false)
+  const [billingNotice, setBillingNotice] = useState<string | null>(null)
 
   // Queries
-  const { data: billingStatus, isLoading: isLoadingStatus } = useBillingStatus()
+  const { data: billingStatus, isLoading: isLoadingStatus, error: statusError } = useBillingStatus()
   usePlans()
-  const { data: invoicesData, isLoading: isLoadingInvoices } = useInvoices(1, 10)
-  const { data: usageData } = useUsage()
+  const {
+    data: invoicesData,
+    isLoading: isLoadingInvoices,
+    error: invoicesError,
+  } = useInvoices(1, 10)
+  const { data: usageData, error: usageError } = useUsage()
 
   // Mutations
   const subscribeMutation = useSubscribe()
   const updateSubscriptionMutation = useUpdateSubscription()
   const cancelSubscriptionMutation = useCancelSubscription()
-  // Customer portal kept for payment method management via Opn
-  const customerPortalMutation = useCustomerPortal()
 
   const handleSelectPlan = async (planId: PlanType) => {
     setIsProcessing(true)
+    setBillingNotice(null)
     try {
       // Track upgrade click event
       const currentPlan = billingStatus?.subscription?.plan_id
@@ -78,6 +81,7 @@ export default function BillingPage() {
   const handleCancelSubscription = async () => {
     if (confirm(t('actions.cancelConfirm'))) {
       setIsProcessing(true)
+      setBillingNotice(null)
       try {
         await cancelSubscriptionMutation.mutateAsync({})
       } catch (error) {
@@ -89,12 +93,8 @@ export default function BillingPage() {
   }
 
   const handleOpenPortal = async () => {
-    try {
-      const result = await customerPortalMutation.mutateAsync()
-      window.open(result.url, '_blank')
-    } catch (error) {
-      void error // handled by mutation state
-    }
+    void Promise.resolve()
+    setBillingNotice('Payment method self-service is not available in this deployment yet.')
   }
 
   if (authLoading || isLoadingStatus) {
@@ -108,6 +108,8 @@ export default function BillingPage() {
   if (!user) {
     return null
   }
+
+  const billingError = statusError || invoicesError || usageError
 
   const tabs = [
     { id: 'overview' as TabType, label: t('tabs.overview'), icon: CreditCard },
@@ -124,6 +126,13 @@ export default function BillingPage() {
           <h1 className="text-3xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
           <p className="mt-2 text-[var(--brand-text-secondary)]">{t('subtitle')}</p>
         </div>
+
+        {(billingError || billingNotice) && (
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {billingNotice ||
+              'Some billing endpoints are unavailable. This page now shows live empty/setup states instead of misleading sample data.'}
+          </div>
+        )}
 
         {/* Tabs */}
         <div className="border-b border-[var(--brand-border)] mb-8">
@@ -148,6 +157,19 @@ export default function BillingPage() {
         {/* Tab Content */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
+            {!billingStatus && !usageData && (
+              <div className="bg-[var(--brand-surface)] rounded-lg shadow p-6">
+                <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-2">
+                  Billing setup incomplete
+                </h2>
+                <p className="text-sm text-[var(--brand-text-secondary)]">
+                  Subscription, usage, or organization data is not available yet. You can still
+                  review plans below and complete billing setup once the backend endpoints are ready
+                  for this account.
+                </p>
+              </div>
+            )}
+
             {/* Subscription Card */}
             {billingStatus?.subscription && (
               <SubscriptionCard
@@ -175,6 +197,18 @@ export default function BillingPage() {
                     />
                   ))}
                 </div>
+              </div>
+            )}
+
+            {!usageData && (
+              <div className="bg-[var(--brand-surface)] rounded-lg shadow p-6">
+                <h2 className="text-lg font-semibold text-[var(--brand-text)] mb-2">
+                  Usage data unavailable
+                </h2>
+                <p className="text-sm text-[var(--brand-text-secondary)]">
+                  Resource usage will appear here after the billing usage endpoint is available for
+                  this organization.
+                </p>
               </div>
             )}
 
@@ -250,6 +284,10 @@ export default function BillingPage() {
               <div className="p-6 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
               </div>
+            ) : invoicesError ? (
+              <div className="p-6 text-sm text-[var(--brand-text-secondary)]">
+                Invoice history is not available for this billing account yet.
+              </div>
             ) : (
               <InvoiceTable invoices={invoicesData?.invoices ?? []} />
             )}
@@ -289,6 +327,17 @@ export default function BillingPage() {
                 ))}
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'usage' && !usageData && (
+          <div className="bg-[var(--brand-surface)] rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold text-[var(--brand-text)] mb-2">
+              Usage details unavailable
+            </h2>
+            <p className="text-sm text-[var(--brand-text-secondary)]">
+              This organization does not currently return billing usage data.
+            </p>
           </div>
         )}
       </div>

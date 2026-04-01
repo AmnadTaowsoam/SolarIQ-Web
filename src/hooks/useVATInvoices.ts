@@ -5,6 +5,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
 
+const VAT_INVOICES_API_BASE = '/api/v1/invoices'
+
 // ============== Types ==============
 
 export enum VATDocumentType {
@@ -142,7 +144,7 @@ export function useTaxProfile() {
   return useQuery({
     queryKey: vatInvoiceKeys.taxProfile(),
     queryFn: async (): Promise<TaxProfile> => {
-      const response = await apiClient.get<TaxProfile>('/invoices/tax-profile')
+      const response = await apiClient.get<TaxProfile>(`${VAT_INVOICES_API_BASE}/tax-profile`)
       return response.data
     },
   })
@@ -153,7 +155,10 @@ export function useUpdateTaxProfile() {
 
   return useMutation({
     mutationFn: async (data: Partial<TaxProfile>): Promise<TaxProfile> => {
-      const response = await apiClient.patch<TaxProfile>('/invoices/tax-profile', data)
+      const response = await apiClient.patch<TaxProfile>(
+        `${VAT_INVOICES_API_BASE}/tax-profile`,
+        data
+      )
       return response.data
     },
     onSuccess: () => {
@@ -173,7 +178,7 @@ export function useVATInvoices(filters?: {
   return useQuery({
     queryKey: vatInvoiceKeys.invoices(filters),
     queryFn: async (): Promise<VATInvoiceListResponse> => {
-      const response = await apiClient.get<VATInvoiceListResponse>('/invoices', {
+      const response = await apiClient.get<VATInvoiceListResponse>(VAT_INVOICES_API_BASE, {
         params: filters,
       })
       return response.data
@@ -185,7 +190,7 @@ export function useVATInvoice(id: string) {
   return useQuery({
     queryKey: vatInvoiceKeys.invoice(id),
     queryFn: async (): Promise<VATInvoice> => {
-      const response = await apiClient.get<VATInvoice>(`/invoices/${id}`)
+      const response = await apiClient.get<VATInvoice>(`${VAT_INVOICES_API_BASE}/${id}`)
       return response.data
     },
     enabled: !!id,
@@ -197,7 +202,7 @@ export function useCreateVATInvoice() {
 
   return useMutation({
     mutationFn: async (data: VATInvoiceCreate): Promise<VATInvoice> => {
-      const response = await apiClient.post<VATInvoice>('/invoices', data)
+      const response = await apiClient.post<VATInvoice>(VAT_INVOICES_API_BASE, data)
       return response.data
     },
     onSuccess: () => {
@@ -209,7 +214,9 @@ export function useCreateVATInvoice() {
 export function useVATInvoicePdf() {
   return useMutation({
     mutationFn: async (invoiceId: string): Promise<{ pdf_url: string }> => {
-      const response = await apiClient.get<{ pdf_url: string }>(`/invoices/${invoiceId}/pdf`)
+      const response = await apiClient.get<{ pdf_url: string }>(
+        `${VAT_INVOICES_API_BASE}/${invoiceId}/pdf`
+      )
       return response.data
     },
   })
@@ -227,7 +234,7 @@ export function useSendVATInvoiceEmail() {
       data?: InvoiceEmailRequest
     }): Promise<{ message: string }> => {
       const response = await apiClient.post<{ message: string }>(
-        `/invoices/${invoiceId}/send`,
+        `${VAT_INVOICES_API_BASE}/${invoiceId}/send`,
         data || {}
       )
       return response.data
@@ -244,7 +251,9 @@ export function useMarkVATInvoicePaid() {
 
   return useMutation({
     mutationFn: async (invoiceId: string): Promise<VATInvoice> => {
-      const response = await apiClient.post<VATInvoice>(`/invoices/${invoiceId}/mark-paid`)
+      const response = await apiClient.post<VATInvoice>(
+        `${VAT_INVOICES_API_BASE}/${invoiceId}/mark-paid`
+      )
       return response.data
     },
     onSuccess: (_, invoiceId) => {
@@ -265,9 +274,11 @@ export function useVoidVATInvoice() {
       invoiceId: string
       reason: string
     }): Promise<VATInvoice> => {
-      const response = await apiClient.post<VATInvoice>(`/invoices/${invoiceId}/void`, null, {
-        params: { reason },
-      })
+      const response = await apiClient.post<VATInvoice>(
+        `${VAT_INVOICES_API_BASE}/${invoiceId}/void`,
+        null,
+        { params: { reason } }
+      )
       return response.data
     },
     onSuccess: (_, { invoiceId }) => {
@@ -284,7 +295,10 @@ export function useCreateCreditNote() {
 
   return useMutation({
     mutationFn: async (data: CreditNoteCreate): Promise<VATInvoice> => {
-      const response = await apiClient.post<VATInvoice>('/invoices/credit-notes', data)
+      const response = await apiClient.post<VATInvoice>(
+        `${VAT_INVOICES_API_BASE}/credit-notes`,
+        data
+      )
       return response.data
     },
     onSuccess: () => {
@@ -298,7 +312,10 @@ export function useCreateCreditNote() {
 export function useGenerateMonthlyStatement() {
   return useMutation({
     mutationFn: async (data: MonthlyStatementRequest): Promise<unknown> => {
-      const response = await apiClient.post<unknown>('/invoices/statements/monthly', data)
+      const response = await apiClient.post<unknown>(
+        `${VAT_INVOICES_API_BASE}/statements/monthly`,
+        data
+      )
       return response.data
     },
   })

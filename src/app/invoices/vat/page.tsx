@@ -15,88 +15,63 @@ interface VATInvoice {
   id: string
   invoiceNumber: string
   customerName: string
-  taxId: string
   amount: number
   vatAmount: number
   totalAmount: number
   issueDate: string
-  status: 'draft' | 'issued' | 'voided'
+  status: 'draft' | 'issued' | 'sent' | 'paid' | 'void'
 }
 
-// Demo data
-const DEMO_INVOICES: VATInvoice[] = [
-  {
-    id: '1',
-    invoiceNumber: 'INV-2026-0001',
-    customerName: 'Solar Home Bangkok Co., Ltd.',
-    taxId: '0105564000001',
-    amount: 350000,
-    vatAmount: 24500,
-    totalAmount: 374500,
-    issueDate: '2026-01-15',
-    status: 'issued',
-  },
-  {
-    id: '2',
-    invoiceNumber: 'INV-2026-0002',
-    customerName: 'Green Factory Chiang Mai Co., Ltd.',
-    taxId: '0505564000002',
-    amount: 1200000,
-    vatAmount: 84000,
-    totalAmount: 1284000,
-    issueDate: '2026-02-20',
-    status: 'issued',
-  },
-  {
-    id: '3',
-    invoiceNumber: 'INV-2026-0003',
-    customerName: 'Smart Office Nonthaburi',
-    taxId: '0105564000003',
-    amount: 450000,
-    vatAmount: 31500,
-    totalAmount: 481500,
-    issueDate: '2026-03-10',
-    status: 'draft',
-  },
-]
+function formatError(error: unknown) {
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+  return 'Unable to complete the invoice request right now.'
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapInvoice(raw: Record<string, any>): VATInvoice {
+  const buyerInfo = raw.buyer_info || {}
   return {
     id: raw.id ?? '',
-    invoiceNumber: raw.invoiceNumber ?? raw.invoice_number ?? '',
-    customerName: raw.customerName ?? raw.customer_name ?? '',
-    taxId: raw.taxId ?? raw.tax_id ?? '',
-    amount: Number(raw.amount ?? raw.subtotal ?? 0),
-    vatAmount: Number(raw.vatAmount ?? raw.vat_amount ?? raw.tax_amount ?? 0),
-    totalAmount: Number(raw.totalAmount ?? raw.total_amount ?? raw.grand_total ?? 0),
-    issueDate: raw.issueDate ?? raw.issue_date ?? raw.created_at ?? '',
+    invoiceNumber: raw.document_number ?? raw.invoice_number ?? raw.id ?? '',
+    customerName:
+      buyerInfo.name_th ??
+      buyerInfo.name_en ??
+      raw.customer_name ??
+      raw.customerName ??
+      'Unassigned customer',
+    amount: Number(raw.subtotal ?? raw.amount ?? 0),
+    vatAmount: Number(raw.vat_amount ?? raw.tax_amount ?? 0),
+    totalAmount: Number(raw.total ?? raw.total_amount ?? 0),
+    issueDate: raw.issued_at ?? raw.issue_date ?? raw.created_at ?? '',
     status: raw.status ?? 'draft',
   }
 }
 
 export default function VATInvoicePage() {
   const { user } = useAuth()
-  const [invoices, setInvoices] = useState<VATInvoice[]>(DEMO_INVOICES)
-  const [, setIsLoading] = useState(false)
+  const [invoices, setInvoices] = useState<VATInvoice[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [loadingError, setLoadingError] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
   const [downloadingId, setDownloadingId] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [showNewForm, setShowNewForm] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const fetchInvoices = useCallback(async () => {
     setIsLoading(true)
+    setLoadingError(null)
     try {
-      const response = await apiClient.get('/api/v1/invoices')
-      const payload = response.data
-      const items = payload.invoices || payload.items || payload
-      if (Array.isArray(items) && items.length > 0) {
-        setInvoices(items.map(mapInvoice))
-      } else {
-        setInvoices(DEMO_INVOICES)
-      }
-    } catch {
-      // Fallback to demo data
-      setInvoices(DEMO_INVOICES)
+      const response = await apiClient.get('/api/v1/invoices', {
+        params: { page: 1, page_size: 100 },
+      })
+      const items = Array.isArray(response.data?.items) ? response.data.items : []
+      setInvoices(items.map(mapInvoice))
+    } catch (error) {
+      setInvoices([])
+      setLoadingError(formatError(error))
     } finally {
       setIsLoading(false)
     }
@@ -108,6 +83,7 @@ export default function VATInvoicePage() {
 
   const handleDownloadPdf = async (invoice: VATInvoice) => {
     setDownloadingId(invoice.id)
+    setActionError(null)
     try {
       const response = await apiClient.get(`/api/v1/invoices/${invoice.id}/pdf`, {
         responseType: 'blob',
@@ -121,39 +97,8 @@ export default function VATInvoicePage() {
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
-    } catch {
-      // If API fails, generate a simple client-side PDF receipt
-      const printWindow = window.open('', '_blank')
-      if (printWindow) {
-        printWindow.document.write(`<!DOCTYPE html>
-<html><head><title>${invoice.invoiceNumber}</title>
-<style>
-  body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #1a1a2e; }
-  h1 { color: #f97316; border-bottom: 2px solid #f97316; padding-bottom: 8px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; }
-  th { background: #f8fafc; }
-  .total { font-weight: bold; font-size: 18px; color: #f97316; }
-  .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #999; }
-</style></head><body>
-  <h1>VAT Invoice / ใบกำกับภาษี</h1>
-  <p><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
-  <p><strong>Customer:</strong> ${invoice.customerName}</p>
-  <p><strong>Tax ID:</strong> ${invoice.taxId}</p>
-  <p><strong>Date:</strong> ${invoice.issueDate}</p>
-  <table>
-    <tr><th>Description</th><th style="text-align:right">Amount (THB)</th></tr>
-    <tr><td>Solar Installation Service</td><td style="text-align:right">${invoice.amount.toLocaleString()}</td></tr>
-    <tr><td>VAT (7%)</td><td style="text-align:right">${invoice.vatAmount.toLocaleString()}</td></tr>
-    <tr><td class="total">Total</td><td style="text-align:right" class="total">${invoice.totalAmount.toLocaleString()}</td></tr>
-  </table>
-  <div class="footer">
-    <p>Generated by SolarIQ — ${new Date().toLocaleDateString('th-TH')}</p>
-  </div>
-  <script>setTimeout(function(){ window.print(); }, 300);</script>
-</body></html>`)
-        printWindow.document.close()
-      }
+    } catch (error) {
+      setActionError(formatError(error))
     } finally {
       setDownloadingId(null)
     }
@@ -163,29 +108,35 @@ export default function VATInvoicePage() {
     filterStatus === 'all' ? invoices : invoices.filter((inv) => inv.status === filterStatus)
 
   const totalRevenue = invoices
-    .filter((inv) => inv.status === 'issued')
+    .filter((inv) => inv.status === 'issued' || inv.status === 'paid' || inv.status === 'sent')
     .reduce((sum, inv) => sum + inv.totalAmount, 0)
 
   const totalVAT = invoices
-    .filter((inv) => inv.status === 'issued')
+    .filter((inv) => inv.status === 'issued' || inv.status === 'paid' || inv.status === 'sent')
     .reduce((sum, inv) => sum + inv.vatAmount, 0)
+
+  if (!user) {
+    return null
+  }
 
   return (
     <AppLayout user={user}>
       <div className="max-w-6xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-[var(--brand-text)] flex items-center gap-2">
               <Receipt className="w-7 h-7 text-[var(--brand-primary)]" />
               VAT Invoices
             </h1>
             <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
-              Manage tax invoices with Thai Revenue Department compliance
+              Manage tax invoices using the live `/api/v1/invoices` backend.
             </p>
           </div>
           <button
-            onClick={() => setShowNewForm(!showNewForm)}
+            onClick={() => {
+              setActionError(null)
+              setShowNewForm((prev) => !prev)
+            }}
             className="flex items-center gap-2 px-4 py-2 bg-[var(--brand-primary)] text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
           >
             <Plus className="w-4 h-4" />
@@ -193,7 +144,12 @@ export default function VATInvoicePage() {
           </button>
         </div>
 
-        {/* New Invoice Form */}
+        {(loadingError || actionError) && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {loadingError || actionError}
+          </div>
+        )}
+
         {showNewForm && (
           <form
             className="rounded-xl border border-orange-200 bg-orange-50 p-5"
@@ -202,55 +158,74 @@ export default function VATInvoicePage() {
               const form = e.target as HTMLFormElement
               const data = new FormData(form)
               const amount = Number(data.get('amount') || 0)
-              const vatAmount = Math.round(amount * 0.07)
+              const description = String(data.get('description') || '').trim()
+              const dueDate = String(data.get('due_date') || '').trim()
+              const notes = String(data.get('notes') || '').trim()
+
+              if (!description || amount <= 0) {
+                setActionError('Please provide a valid description and amount.')
+                return
+              }
+
+              setIsSubmitting(true)
+              setActionError(null)
+
               try {
                 await apiClient.post('/api/v1/invoices', {
-                  customer_name: data.get('customer_name'),
-                  tax_id: data.get('tax_id'),
-                  amount,
-                  vat_amount: vatAmount,
-                  total_amount: amount + vatAmount,
-                  status: 'draft',
+                  document_type: 'invoice',
+                  due_date: dueDate ? new Date(dueDate).toISOString() : null,
+                  notes: notes || null,
+                  line_items: [
+                    {
+                      description,
+                      quantity: 1,
+                      unit_price: amount,
+                      subtotal: amount,
+                    },
+                  ],
                 })
+
                 setShowNewForm(false)
                 form.reset()
-                fetchInvoices()
-              } catch {
-                // Silently handle
+                await fetchInvoices()
+              } catch (error) {
+                setActionError(formatError(error))
+              } finally {
+                setIsSubmitting(false)
               }
             }}
           >
             <h3 className="mb-3 font-semibold text-[var(--brand-text)]">Create New Invoice</h3>
             <div className="grid gap-3 md:grid-cols-2">
               <input
-                name="customer_name"
-                placeholder="Customer Name *"
-                required
-                className="rounded-lg border px-3 py-2 text-sm"
-              />
-              <input
-                name="tax_id"
-                placeholder="Tax ID (เลขประจำตัวผู้เสียภาษี) *"
+                name="description"
+                placeholder="Line item description *"
                 required
                 className="rounded-lg border px-3 py-2 text-sm"
               />
               <input
                 name="amount"
                 type="number"
-                placeholder="Amount (THB) *"
+                min="0"
+                step="0.01"
+                placeholder="Subtotal amount (THB) *"
                 required
                 className="rounded-lg border px-3 py-2 text-sm"
               />
-              <p className="flex items-center text-sm text-[var(--brand-text-secondary)]">
-                VAT 7% will be calculated automatically
-              </p>
+              <input name="due_date" type="date" className="rounded-lg border px-3 py-2 text-sm" />
+              <input
+                name="notes"
+                placeholder="Optional internal note"
+                className="rounded-lg border px-3 py-2 text-sm"
+              />
             </div>
             <div className="mt-3 flex gap-2">
               <button
                 type="submit"
-                className="rounded-lg bg-[var(--brand-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+                disabled={isSubmitting}
+                className="rounded-lg bg-[var(--brand-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
               >
-                Create Invoice
+                {isSubmitting ? 'Creating...' : 'Create Invoice'}
               </button>
               <button
                 type="button"
@@ -263,7 +238,6 @@ export default function VATInvoicePage() {
           </form>
         )}
 
-        {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-[var(--brand-surface)] border border-[var(--brand-border)] rounded-xl p-4">
             <div className="flex items-center gap-3">
@@ -304,9 +278,8 @@ export default function VATInvoicePage() {
           </div>
         </div>
 
-        {/* Filter */}
         <div className="flex gap-2">
-          {['all', 'draft', 'issued', 'voided'].map((status) => (
+          {['all', 'draft', 'issued', 'sent', 'paid', 'void'].map((status) => (
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
@@ -321,92 +294,103 @@ export default function VATInvoicePage() {
           ))}
         </div>
 
-        {/* Invoice Table */}
         <div className="bg-[var(--brand-surface)] border border-[var(--brand-border)] rounded-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[var(--brand-border)]">
-                  <th className="text-left py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
-                    Invoice #
-                  </th>
-                  <th className="text-left py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
-                    Customer
-                  </th>
-                  <th className="text-left py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
-                    Tax ID
-                  </th>
-                  <th className="text-right py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
-                    Amount
-                  </th>
-                  <th className="text-right py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
-                    VAT (7%)
-                  </th>
-                  <th className="text-right py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
-                    Total
-                  </th>
-                  <th className="text-center py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
-                    Status
-                  </th>
-                  <th className="text-center py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredInvoices.map((inv) => (
-                  <tr
-                    key={inv.id}
-                    className="border-b border-[var(--brand-border)]/50 hover:bg-[var(--brand-primary-light)] transition-colors"
-                  >
-                    <td className="py-3 px-4 font-medium text-[var(--brand-primary)]">
-                      {inv.invoiceNumber}
-                    </td>
-                    <td className="py-3 px-4 text-[var(--brand-text)]">{inv.customerName}</td>
-                    <td className="py-3 px-4 text-[var(--brand-text-secondary)] font-mono text-xs">
-                      {inv.taxId}
-                    </td>
-                    <td className="py-3 px-4 text-right text-[var(--brand-text)]">
-                      {inv.amount.toLocaleString()}
-                    </td>
-                    <td className="py-3 px-4 text-right text-[var(--brand-text-secondary)]">
-                      {inv.vatAmount.toLocaleString()}
-                    </td>
-                    <td className="py-3 px-4 text-right font-medium text-[var(--brand-text)]">
-                      {inv.totalAmount.toLocaleString()}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                          inv.status === 'issued'
-                            ? 'bg-green-500/10 text-green-600'
-                            : inv.status === 'draft'
-                              ? 'bg-gray-500/10 text-[var(--brand-text-secondary)]'
-                              : 'bg-red-500/10 text-red-600'
-                        }`}
-                      >
-                        {inv.status}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <button
-                        className="p-1 hover:bg-[var(--brand-primary-light)] rounded transition-colors"
-                        title="Download PDF"
-                        onClick={() => handleDownloadPdf(inv)}
-                        disabled={downloadingId === inv.id}
-                      >
-                        {downloadingId === inv.id ? (
-                          <Loader2 className="w-4 h-4 text-[var(--brand-primary)] animate-spin" />
-                        ) : (
-                          <Download className="w-4 h-4 text-[var(--brand-text-secondary)]" />
-                        )}
-                      </button>
-                    </td>
+          {isLoading ? (
+            <div className="py-12 flex items-center justify-center">
+              <Loader2 className="w-5 h-5 animate-spin text-[var(--brand-primary)]" />
+            </div>
+          ) : filteredInvoices.length === 0 ? (
+            <div className="py-12 text-center text-sm text-[var(--brand-text-secondary)]">
+              No VAT invoices are available for this account.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--brand-border)]">
+                    <th className="text-left py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
+                      Invoice #
+                    </th>
+                    <th className="text-left py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
+                      Customer
+                    </th>
+                    <th className="text-right py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
+                      Amount
+                    </th>
+                    <th className="text-right py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
+                      VAT (7%)
+                    </th>
+                    <th className="text-right py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
+                      Total
+                    </th>
+                    <th className="text-center py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
+                      Issued
+                    </th>
+                    <th className="text-center py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
+                      Status
+                    </th>
+                    <th className="text-center py-3 px-4 text-[var(--brand-text-secondary)] font-medium">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredInvoices.map((inv) => (
+                    <tr
+                      key={inv.id}
+                      className="border-b border-[var(--brand-border)]/50 hover:bg-[var(--brand-primary-light)] transition-colors"
+                    >
+                      <td className="py-3 px-4 font-medium text-[var(--brand-primary)]">
+                        {inv.invoiceNumber}
+                      </td>
+                      <td className="py-3 px-4 text-[var(--brand-text)]">{inv.customerName}</td>
+                      <td className="py-3 px-4 text-right text-[var(--brand-text)]">
+                        {inv.amount.toLocaleString()}
+                      </td>
+                      <td className="py-3 px-4 text-right text-[var(--brand-text-secondary)]">
+                        {inv.vatAmount.toLocaleString()}
+                      </td>
+                      <td className="py-3 px-4 text-right font-medium text-[var(--brand-text)]">
+                        {inv.totalAmount.toLocaleString()}
+                      </td>
+                      <td className="py-3 px-4 text-center text-[var(--brand-text-secondary)]">
+                        {inv.issueDate ? new Date(inv.issueDate).toLocaleDateString('th-TH') : '-'}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            inv.status === 'issued' ||
+                            inv.status === 'paid' ||
+                            inv.status === 'sent'
+                              ? 'bg-green-500/10 text-green-600'
+                              : inv.status === 'draft'
+                                ? 'bg-gray-500/10 text-[var(--brand-text-secondary)]'
+                                : 'bg-red-500/10 text-red-600'
+                          }`}
+                        >
+                          {inv.status}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <button
+                          className="p-1 hover:bg-[var(--brand-primary-light)] rounded transition-colors"
+                          title="Download PDF"
+                          onClick={() => handleDownloadPdf(inv)}
+                          disabled={downloadingId === inv.id}
+                        >
+                          {downloadingId === inv.id ? (
+                            <Loader2 className="w-4 h-4 text-[var(--brand-primary)] animate-spin" />
+                          ) : (
+                            <Download className="w-4 h-4 text-[var(--brand-text-secondary)]" />
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </AppLayout>

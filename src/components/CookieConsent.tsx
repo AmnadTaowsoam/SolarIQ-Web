@@ -205,32 +205,119 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-[var(--brand-surface)] dark:bg-gray-900 border-t border-[var(--brand-border)] dark:border-gray-700 shadow-lg">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Simple View */}
-        {!showDetails ? (
-          <div className="py-6 sm:py-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="flex-shrink-0">
-                  <Cookie className="h-8 w-8 text-primary-600" />
+    <div className="fixed inset-x-4 bottom-4 z-50 sm:left-auto sm:right-4 sm:w-full sm:max-w-xl">
+      <div className="max-h-[calc(100vh-2rem)] overflow-y-auto rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] shadow-2xl dark:border-gray-700 dark:bg-gray-900">
+        <div className="px-4 sm:px-6">
+          {/* Simple View */}
+          {!showDetails ? (
+            <div className="py-6 sm:py-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-4 flex-1">
+                  <div className="flex-shrink-0">
+                    <Cookie className="h-8 w-8 text-primary-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white mb-2">
+                      {t('title')}
+                    </h3>
+                    <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                      {t('description')}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white mb-2">
-                    {t('title')}
-                  </h3>
-                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
-                    {t('description')}
-                  </p>
+                <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                  <button
+                    onClick={handleManageSettings}
+                    className="px-4 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  >
+                    {t('customize')}
+                  </button>
+                  <button
+                    onClick={handleRejectAll}
+                    className="px-4 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] border border-[var(--brand-border)] dark:border-gray-600 rounded-lg hover:bg-[var(--brand-background)] dark:hover:bg-gray-800 transition-colors"
+                  >
+                    {t('rejectAll')}
+                  </button>
+                  <button
+                    onClick={handleAcceptAll}
+                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
+                  >
+                    {t('acceptAll')}
+                  </button>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+            </div>
+          ) : (
+            /* Detailed View */
+            <div className="py-6 sm:py-8">
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-start gap-4 flex-1">
+                  <div className="flex-shrink-0">
+                    <Cookie className="h-8 w-8 text-primary-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white mb-2">
+                      {t('title')}
+                    </h3>
+                    <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-4">
+                      {t('description')}
+                    </p>
+                    <Link
+                      href="/privacy"
+                      className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+                    >
+                      {t('privacyPolicy')}
+                    </Link>
+                  </div>
+                </div>
                 <button
-                  onClick={handleManageSettings}
-                  className="px-4 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  onClick={() => setIsVisible(false)}
+                  className="flex-shrink-0 p-2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] dark:hover:text-gray-200 transition-colors"
+                  aria-label="Close"
                 >
-                  {t('customize')}
+                  <X className="h-5 w-5" />
                 </button>
+              </div>
+
+              {/* Cookie Categories */}
+              <div className="space-y-4 mb-6">
+                {COOKIE_CATEGORIES.map((category) => (
+                  <div
+                    key={category.key}
+                    className="border border-[var(--brand-border)] dark:border-gray-700 rounded-lg p-4"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-medium text-[var(--brand-text)] dark:text-white">
+                            {t(category.nameKey)}
+                          </h4>
+                          {category.required && (
+                            <span className="text-xs bg-[var(--brand-background)] dark:bg-gray-800 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] px-2 py-0.5 rounded">
+                              {t('necessary')}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                          {t(category.descriptionKey)}
+                        </p>
+                      </div>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={preferences[category.key] ?? false}
+                          onChange={(e) => handleToggle(category.key, e.target.checked)}
+                          disabled={category.required}
+                          className="h-5 w-5 rounded border-[var(--brand-border)] text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-end">
                 <button
                   onClick={handleRejectAll}
                   className="px-4 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] border border-[var(--brand-border)] dark:border-gray-600 rounded-lg hover:bg-[var(--brand-background)] dark:hover:bg-gray-800 transition-colors"
@@ -243,101 +330,16 @@ export function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProp
                 >
                   {t('acceptAll')}
                 </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* Detailed View */
-          <div className="py-6 sm:py-8">
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="flex-shrink-0">
-                  <Cookie className="h-8 w-8 text-primary-600" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-[var(--brand-text)] dark:text-white mb-2">
-                    {t('title')}
-                  </h3>
-                  <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] mb-4">
-                    {t('description')}
-                  </p>
-                  <Link
-                    href="/privacy"
-                    className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
-                  >
-                    {t('privacyPolicy')}
-                  </Link>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsVisible(false)}
-                className="flex-shrink-0 p-2 text-[var(--brand-text-secondary)] hover:text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] dark:hover:text-gray-200 transition-colors"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Cookie Categories */}
-            <div className="space-y-4 mb-6">
-              {COOKIE_CATEGORIES.map((category) => (
-                <div
-                  key={category.key}
-                  className="border border-[var(--brand-border)] dark:border-gray-700 rounded-lg p-4"
+                <button
+                  onClick={handleAcceptSelected}
+                  className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-medium text-[var(--brand-text)] dark:text-white">
-                          {t(category.nameKey)}
-                        </h4>
-                        {category.required && (
-                          <span className="text-xs bg-[var(--brand-background)] dark:bg-gray-800 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] px-2 py-0.5 rounded">
-                            {t('necessary')}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
-                        {t(category.descriptionKey)}
-                      </p>
-                    </div>
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={preferences[category.key] ?? false}
-                        onChange={(e) => handleToggle(category.key, e.target.checked)}
-                        disabled={category.required}
-                        className="h-5 w-5 rounded border-[var(--brand-border)] text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                      />
-                    </label>
-                  </div>
-                </div>
-              ))}
+                  {t('save')}
+                </button>
+              </div>
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-end">
-              <button
-                onClick={handleRejectAll}
-                className="px-4 py-2 text-sm font-medium text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)] border border-[var(--brand-border)] dark:border-gray-600 rounded-lg hover:bg-[var(--brand-background)] dark:hover:bg-gray-800 transition-colors"
-              >
-                {t('rejectAll')}
-              </button>
-              <button
-                onClick={handleAcceptAll}
-                className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
-              >
-                {t('acceptAll')}
-              </button>
-              <button
-                onClick={handleAcceptSelected}
-                className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                {t('save')}
-              </button>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   )

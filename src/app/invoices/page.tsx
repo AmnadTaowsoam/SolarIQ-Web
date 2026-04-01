@@ -38,7 +38,11 @@ export default function InvoicesPage() {
   const [documentType, setDocumentType] = useState<VATDocumentType | undefined>()
   const [status, setStatus] = useState<VATDocumentStatus | undefined>()
 
-  const { data, isLoading } = useVATInvoices({
+  const {
+    data,
+    isLoading,
+    error: invoicesError,
+  } = useVATInvoices({
     document_type: documentType,
     status,
     page,
@@ -116,6 +120,11 @@ export default function InvoicesPage() {
         <Card>
           <CardHeader title={t('history.title')} subtitle={`${t('history.subtitle')} (${total})`} />
           <CardBody className="p-0">
+            {invoicesError && !isLoading && (
+              <div className="px-6 pt-6 text-sm text-[var(--brand-text-secondary)]">
+                Invoice data is not available for this account yet.
+              </div>
+            )}
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead>

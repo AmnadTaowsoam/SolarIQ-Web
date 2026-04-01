@@ -1517,7 +1517,7 @@ function WhiteLabelSection() {
       const formData = new FormData()
       formData.append('file', file)
       const res = await apiClient.post<{ url: string }>(
-        `/brands/${manageableBrand.id}/logo`,
+        `/api/v1/brands/${manageableBrand.id}/logo`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

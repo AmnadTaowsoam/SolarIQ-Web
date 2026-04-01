@@ -20,7 +20,7 @@ function formatThb(value: number) {
 
 export default function AnalyticsOverviewPage() {
   const t = useTranslations('analyticsPage')
-  const { data } = useAnalyticsDashboard()
+  const { data, error } = useAnalyticsDashboard()
 
   const kpis = data.kpis
 
@@ -28,6 +28,13 @@ export default function AnalyticsOverviewPage() {
 
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Analytics data is temporarily unavailable. The widgets below reflect the live empty state
+          instead of sample data.
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4">
         {[
           {
@@ -121,28 +128,36 @@ export default function AnalyticsOverviewPage() {
       <Card>
         <CardHeader title={t('aiInsights.title')} subtitle={t('aiInsights.subtitle')} />
         <CardBody>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {data.recentInsights.map((insight) => (
-              <div
-                key={insight.id}
-                className="border border-[var(--brand-border)] rounded-lg p-4 bg-[var(--brand-surface)]"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold text-[var(--brand-text)]">{insight.title}</p>
-                  <Badge
-                    className={
-                      insight.severity === 'warning'
-                        ? 'bg-yellow-500/10 text-yellow-600'
-                        : 'bg-emerald-100 text-emerald-700'
-                    }
-                  >
-                    {insight.type}
-                  </Badge>
+          {data.recentInsights.length === 0 ? (
+            <p className="text-sm text-[var(--brand-text-secondary)]">
+              No analytics insights are available yet.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {data.recentInsights.map((insight) => (
+                <div
+                  key={insight.id}
+                  className="border border-[var(--brand-border)] rounded-lg p-4 bg-[var(--brand-surface)]"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-semibold text-[var(--brand-text)]">
+                      {insight.title}
+                    </p>
+                    <Badge
+                      className={
+                        insight.severity === 'warning'
+                          ? 'bg-yellow-500/10 text-yellow-600'
+                          : 'bg-emerald-100 text-emerald-700'
+                      }
+                    >
+                      {insight.type}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-[var(--brand-text-secondary)] mt-2">{insight.body}</p>
                 </div>
-                <p className="text-sm text-[var(--brand-text-secondary)] mt-2">{insight.body}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardBody>
       </Card>
     </div>

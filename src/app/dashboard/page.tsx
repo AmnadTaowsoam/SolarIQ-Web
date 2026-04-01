@@ -15,12 +15,6 @@ import {
   useDateTime,
 } from '@/hooks'
 import { ROUTES, LEAD_STATUS_COLORS } from '@/lib/constants'
-import {
-  DEMO_STATS,
-  DEMO_RECENT_LEADS,
-  DEMO_LEADS_OVER_TIME,
-  DEMO_TOP_LOCATIONS,
-} from '@/lib/demo-data'
 import { Lead, LeadStatus } from '@/types'
 import {
   XAxis,
@@ -35,6 +29,13 @@ import {
 } from 'recharts'
 import { format } from 'date-fns'
 import GettingStartedCard from '@/components/onboarding/GettingStartedCard'
+
+const EMPTY_STATS = {
+  totalLeads: 0,
+  newLeads: 0,
+  conversionRate: 0,
+  revenue: 0,
+}
 
 // Stat Card Component
 function StatCard({
@@ -249,6 +250,30 @@ function LeadsOverTimeChart({ data }: { data: { date: string; count: number }[] 
   const tDashboard = useTranslations('dashboard')
   const tNav = useTranslations('nav')
   const formatNumber = useFormatter()
+
+  if (data.length === 0) {
+    return (
+      <Card>
+        <CardHeader
+          title={tDashboard('leadsOverTime')}
+          subtitle={tDashboard('leadsOverTimeSubtitle')}
+        />
+        <CardBody>
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <p className="text-sm font-medium text-[var(--brand-text-secondary)]">
+                No lead trend data yet
+              </p>
+              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
+                Lead activity will appear here after your first submissions sync successfully.
+              </p>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+    )
+  }
+
   return (
     <Card>
       <CardHeader
@@ -381,10 +406,10 @@ function TopLocationsChart({ data }: { data: { location: string; count: number }
 export default function DashboardPage() {
   const router = useRouter()
   const { user, isLoading: authLoading } = useAuth()
-  const { data: statsData } = useDashboardStats()
-  const { data: recentLeads = [] } = useRecentLeads(5)
-  const { data: leadsOverTime = [] } = useLeadsOverTime(30)
-  const { data: topLocations = [] } = useTopLocations(5)
+  const { data: statsData, error: statsError } = useDashboardStats()
+  const { data: recentLeads = [], error: recentLeadsError } = useRecentLeads(5)
+  const { data: leadsOverTime = [], error: leadsOverTimeError } = useLeadsOverTime(30)
+  const { data: topLocations = [], error: topLocationsError } = useTopLocations(5)
   const tDashboard = useTranslations('dashboard')
   const tCommon = useTranslations('common')
   const format = useFormatter()
@@ -411,11 +436,10 @@ export default function DashboardPage() {
     return null
   }
 
-  const stats = statsData?.data || DEMO_STATS
-  const isDemoMode = recentLeads.length === 0
-  const displayLeads = recentLeads.length > 0 ? recentLeads : DEMO_RECENT_LEADS.slice(0, 5)
-  const displayLeadsOverTime = leadsOverTime.length > 0 ? leadsOverTime : DEMO_LEADS_OVER_TIME
-  const displayTopLocations = topLocations.length > 0 ? topLocations : DEMO_TOP_LOCATIONS
+  const stats = statsData?.data ?? EMPTY_STATS
+  const hasDataWarning = Boolean(
+    statsError || recentLeadsError || leadsOverTimeError || topLocationsError
+  )
   const formatNumber = (value: number) => format.number(value)
 
   return (
@@ -446,8 +470,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Demo mode banner */}
-        {isDemoMode && (
+        {/* Data warning banner */}
+        {hasDataWarning && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 flex items-center gap-2 text-sm">
             <svg
               className="w-4 h-4 text-amber-500 flex-shrink-0"
@@ -462,7 +486,10 @@ export default function DashboardPage() {
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-amber-800">{tDashboard('demoMode')}</span>
+            <span className="text-amber-800">
+              Some dashboard widgets are temporarily unavailable. Empty sections below reflect live
+              backend responses, not sample data.
+            </span>
           </div>
         )}
 
@@ -558,12 +585,12 @@ export default function DashboardPage() {
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <LeadsOverTimeChart data={displayLeadsOverTime} />
-          <TopLocationsChart data={displayTopLocations} />
+          <LeadsOverTimeChart data={leadsOverTime} />
+          <TopLocationsChart data={topLocations} />
         </div>
 
         {/* Recent leads */}
-        <RecentLeadsTable leads={displayLeads} />
+        <RecentLeadsTable leads={recentLeads} />
       </div>
     </AppLayout>
   )

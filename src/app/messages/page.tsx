@@ -78,14 +78,12 @@ function ThreadListPanel({
   threads,
   selectedId,
   onSelect,
-  isDemoMode,
-  onNewConversation,
+  serviceUnavailable,
 }: {
   threads: MessageThread[]
   selectedId: string | null
   onSelect: (t: MessageThread) => void
-  isDemoMode: boolean
-  onNewConversation: () => void
+  serviceUnavailable: boolean
 }) {
   const t = useTranslations('messagesPage')
   const [search, setSearch] = useState('')
@@ -120,9 +118,9 @@ function ThreadListPanel({
       <div className="px-4 pt-4 pb-3 border-b border-[var(--brand-border)]">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-bold text-[var(--brand-text)]">{t('title')}</h2>
-          {isDemoMode && (
+          {serviceUnavailable && (
             <span className="text-[10px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-              Demo
+              Offline
             </span>
           )}
         </div>
@@ -275,24 +273,6 @@ function ThreadListPanel({
           ))
         )}
       </div>
-
-      {/* New conversation button */}
-      <div className="p-3 border-t border-[var(--brand-border)]">
-        <button
-          onClick={onNewConversation}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-500 text-white text-sm font-semibold rounded-xl hover:bg-orange-600 transition-colors shadow-sm"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          {t('startNewConversation')}
-        </button>
-      </div>
     </div>
   )
 }
@@ -304,11 +284,13 @@ function ChatAreaPanel({
   messages,
   isLoading,
   onSend,
+  isInteractionDisabled,
 }: {
   thread: MessageThread | null
   messages: Message[]
   isLoading: boolean
   onSend: (content: string) => void
+  isInteractionDisabled: boolean
 }) {
   const t = useTranslations('messagesPage')
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -473,9 +455,13 @@ function ChatAreaPanel({
         onSend={onSend}
         onTypingStart={() => {}}
         onTypingStop={() => {}}
-        disabled={thread.status === 'completed'}
+        disabled={thread.status === 'completed' || isInteractionDisabled}
         placeholder={
-          thread.status === 'completed' ? t('conversationCompleted') : t('inputPlaceholder')
+          thread.status === 'completed'
+            ? t('conversationCompleted')
+            : isInteractionDisabled
+              ? 'Messaging is temporarily unavailable'
+              : t('inputPlaceholder')
         }
       />
     </div>
@@ -716,7 +702,6 @@ function InfoPanel({
 // ============== Main Page ==============
 
 export default function MessagesPage() {
-  const t = useTranslations('messagesPage')
   const tc = useTranslations('common')
   const router = useRouter()
   const { user, isLoading: authLoading } = useAuth()
@@ -725,9 +710,14 @@ export default function MessagesPage() {
   const [localNotes, setLocalNotes] = useState<InternalNote[]>([])
   const [mobileView, setMobileView] = useState<'threads' | 'chat'>('threads')
 
-  const { threads, isLoading: _threadsLoading, isDemoMode } = useThreads()
-  const { messages, notes, isLoading: messagesLoading } = useMessages(selectedThread?.id || null)
-  const { sendMessage, addNote } = useSendMessage(selectedThread?.id || null)
+  const { threads, isLoading: _threadsLoading, error: threadsError } = useThreads()
+  const {
+    messages,
+    notes,
+    isLoading: messagesLoading,
+    error: messagesError,
+  } = useMessages(selectedThread?.id || null)
+  const { sendMessage, addNote, error: composeError } = useSendMessage(selectedThread?.id || null)
 
   // Sync messages/notes from hook to local state
   useEffect(() => {
@@ -780,12 +770,14 @@ export default function MessagesPage() {
     return null
   }
 
+  const messagingError = threadsError || messagesError || composeError
+
   return (
     <AppLayout user={user}>
       {/* Full-height chat layout */}
       <div className="h-[calc(100vh-8rem)] flex flex-col overflow-hidden -mb-4 lg:-mb-6 xl:-mb-8">
-        {/* Demo banner */}
-        {isDemoMode && (
+        {/* Service banner */}
+        {messagingError && (
           <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 flex items-center gap-2 text-xs flex-shrink-0">
             <svg
               className="w-4 h-4 text-amber-500 flex-shrink-0"
@@ -800,7 +792,9 @@ export default function MessagesPage() {
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-amber-800 font-medium">{t('demoMode')}</span>
+            <span className="text-amber-800 font-medium">
+              {messagingError}. Live chat is shown without fallback demo content.
+            </span>
           </div>
         )}
 
@@ -818,22 +812,7 @@ export default function MessagesPage() {
               threads={threads}
               selectedId={selectedThread?.id || null}
               onSelect={handleSelectThread}
-              isDemoMode={isDemoMode}
-              onNewConversation={() => {
-                const newThread: MessageThread = {
-                  id: `thread-new-${Date.now()}`,
-                  customerName: 'New Conversation',
-                  customerInitials: 'NC',
-                  lastMessage: '',
-                  lastMessageTime: new Date(),
-                  unreadCount: 0,
-                  status: 'active' as const,
-                }
-                setSelectedThread(newThread)
-                setLocalMessages([])
-                setLocalNotes([])
-                setMobileView('chat')
-              }}
+              serviceUnavailable={Boolean(threadsError)}
             />
           </div>
 
@@ -869,6 +848,7 @@ export default function MessagesPage() {
               messages={localMessages}
               isLoading={messagesLoading}
               onSend={handleSendMessage}
+              isInteractionDisabled={Boolean(messagingError)}
             />
           </div>
 

@@ -21,6 +21,8 @@ import type {
   CheckoutResponse,
 } from '@/types/billing'
 
+const BILLING_API_BASE = '/api/v1/billing'
+
 // ============== Query Keys ==============
 
 export const billingKeys = {
@@ -39,7 +41,7 @@ export function usePlans() {
   return useQuery({
     queryKey: billingKeys.plans(),
     queryFn: async (): Promise<PlanList> => {
-      const response = await apiClient.get<PlanList>('/api/v1/billing/plans')
+      const response = await apiClient.get<PlanList>(`${BILLING_API_BASE}/plans`)
       return response.data
     },
     staleTime: 1000 * 60 * 60, // 1 hour - plans don't change often
@@ -52,7 +54,7 @@ export function useOrganization() {
   return useQuery({
     queryKey: billingKeys.organization(),
     queryFn: async (): Promise<Organization> => {
-      const response = await apiClient.get<Organization>('/api/v1/billing/organization')
+      const response = await apiClient.get<Organization>(`${BILLING_API_BASE}/organization`)
       return response.data
     },
   })
@@ -68,7 +70,7 @@ export function useCreateOrganization() {
       address?: string
       plan_id?: PlanType
     }): Promise<Organization> => {
-      const response = await apiClient.post<Organization>('/api/v1/billing/organization', data)
+      const response = await apiClient.post<Organization>(`${BILLING_API_BASE}/organization`, data)
       return response.data
     },
     onSuccess: () => {
@@ -86,7 +88,7 @@ export function useUpdateOrganization() {
       tax_id?: string
       address?: string
     }): Promise<Organization> => {
-      const response = await apiClient.patch<Organization>('/api/v1/billing/organization', data)
+      const response = await apiClient.patch<Organization>(`${BILLING_API_BASE}/organization`, data)
       return response.data
     },
     onSuccess: () => {
@@ -102,7 +104,7 @@ export function useSubscription() {
     queryKey: billingKeys.subscription(),
     queryFn: async (): Promise<SubscriptionWithPlan | null> => {
       const response = await apiClient.get<SubscriptionWithPlan | null>(
-        '/api/v1/billing/subscription'
+        `${BILLING_API_BASE}/subscription`
       )
       return response.data
     },
@@ -118,7 +120,7 @@ export function useSubscribe() {
       payment_method_id?: string
       trial?: boolean
     }): Promise<Subscription> => {
-      const response = await apiClient.post<Subscription>('/api/v1/billing/subscribe', data)
+      const response = await apiClient.post<Subscription>(`${BILLING_API_BASE}/subscribe`, data)
       return response.data
     },
     onSuccess: () => {
@@ -133,7 +135,7 @@ export function useUpdateSubscription() {
 
   return useMutation({
     mutationFn: async (data: { plan_id: PlanType }): Promise<Subscription> => {
-      const response = await apiClient.patch<Subscription>('/api/v1/billing/subscription', data)
+      const response = await apiClient.patch<Subscription>(`${BILLING_API_BASE}/subscription`, data)
       return response.data
     },
     onSuccess: () => {
@@ -149,7 +151,7 @@ export function useCancelSubscription() {
   return useMutation({
     mutationFn: async (data?: { reason?: string }): Promise<Subscription> => {
       const response = await apiClient.post<Subscription>(
-        '/api/v1/billing/subscription/cancel',
+        `${BILLING_API_BASE}/subscription/cancel`,
         data || {}
       )
       return response.data
@@ -165,7 +167,10 @@ export function useResumeSubscription() {
 
   return useMutation({
     mutationFn: async (): Promise<Subscription> => {
-      const response = await apiClient.post<Subscription>('/api/v1/billing/subscription/resume', {})
+      const response = await apiClient.post<Subscription>(
+        `${BILLING_API_BASE}/subscription/resume`,
+        {}
+      )
       return response.data
     },
     onSuccess: () => {
@@ -180,7 +185,7 @@ export function useInvoices(page: number = 1, pageSize: number = 10) {
   return useQuery({
     queryKey: billingKeys.invoices(page),
     queryFn: async (): Promise<InvoiceListResponse> => {
-      const response = await apiClient.get<InvoiceListResponse>('/api/v1/billing/invoices', {
+      const response = await apiClient.get<InvoiceListResponse>(`${BILLING_API_BASE}/invoices`, {
         params: { page, page_size: pageSize },
       })
       return response.data
@@ -192,7 +197,7 @@ export function useInvoicePdf() {
   return useMutation({
     mutationFn: async (invoiceId: string): Promise<{ pdf_url: string }> => {
       const response = await apiClient.get<{ pdf_url: string }>(
-        `/api/v1/billing/invoices/${invoiceId}/pdf`
+        `${BILLING_API_BASE}/invoices/${invoiceId}/pdf`
       )
       return response.data
     },
@@ -205,7 +210,7 @@ export function useUsage() {
   return useQuery({
     queryKey: billingKeys.usage(),
     queryFn: async (): Promise<UsageResponse> => {
-      const response = await apiClient.get<UsageResponse>('/api/v1/billing/usage')
+      const response = await apiClient.get<UsageResponse>(`${BILLING_API_BASE}/usage`)
       return response.data
     },
   })
@@ -230,7 +235,7 @@ export function useBillingStatus() {
   return useQuery({
     queryKey: billingKeys.status(),
     queryFn: async (): Promise<BillingStatus> => {
-      const response = await apiClient.get<BillingStatus>('/api/v1/billing/status')
+      const response = await apiClient.get<BillingStatus>(`${BILLING_API_BASE}/status`)
       return response.data
     },
   })
@@ -242,7 +247,7 @@ export function useCreateSetupIntent() {
   return useMutation({
     mutationFn: async (): Promise<PaymentSetupResponse> => {
       const response = await apiClient.post<PaymentSetupResponse>(
-        '/api/v1/billing/setup-intent',
+        `${BILLING_API_BASE}/setup-payment`,
         {}
       )
       return response.data
@@ -262,7 +267,7 @@ export function useCreateCheckoutSession() {
       promo_code?: string
     }): Promise<CheckoutResponse> => {
       const response = await apiClient.post<CheckoutResponse>(
-        '/api/v1/billing/create-checkout-session',
+        `${BILLING_API_BASE}/create-checkout-session`,
         data
       )
       return response.data
@@ -296,7 +301,7 @@ export function useConvertTrial() {
       planId: string
       paymentMethodId: string
     }) => {
-      const { data } = await apiClient.post('/api/v1/billing/convert-trial', null, {
+      const { data } = await apiClient.post(`${BILLING_API_BASE}/convert-trial`, null, {
         params: { plan_id: planId, payment_method_id: paymentMethodId },
       })
       return data

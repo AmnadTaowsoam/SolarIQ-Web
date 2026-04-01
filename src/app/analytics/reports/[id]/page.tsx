@@ -8,7 +8,7 @@ import { useReport, runReport } from '@/hooks/useAnalytics'
 export default function ReportDetailPage() {
   const params = useParams()
   const reportId = params?.id as string
-  const { data: report } = useReport(reportId)
+  const { data: report, error } = useReport(reportId)
   const [result, setResult] = useState<{
     columns: string[]
     rows: Record<string, unknown>[]
@@ -26,7 +26,15 @@ export default function ReportDetailPage() {
   }
 
   if (!report) {
-    return null
+    return (
+      <Card>
+        <CardBody>
+          <p className="text-sm text-[var(--brand-text-secondary)]">
+            {error || 'This report is not available.'}
+          </p>
+        </CardBody>
+      </Card>
+    )
   }
 
   return (
