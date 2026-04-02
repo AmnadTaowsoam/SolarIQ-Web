@@ -81,7 +81,7 @@ const plans: Plan[] = [
     popular: false,
   },
   {
-    id: 'professional',
+    id: 'pro',
     icon: Rocket,
     name: 'Professional',
     subtitle: 'สำหรับทีมที่ต้องการเติบโต',

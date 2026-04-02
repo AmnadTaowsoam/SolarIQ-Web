@@ -11,6 +11,7 @@ import { PLANS, formatPrice, type Plan, type PlanType } from '@/types/billing'
 
 interface PlanSelectorProps {
   currentPlan?: PlanType
+  plans?: Plan[]
   onSelectPlan: (planId: PlanType) => void
   isLoading?: boolean
   showBillingCycle?: boolean
@@ -20,6 +21,7 @@ interface PlanSelectorProps {
 
 export function PlanSelector({
   currentPlan,
+  plans: providedPlans,
   onSelectPlan,
   isLoading,
   showBillingCycle = true,
@@ -33,7 +35,7 @@ export function PlanSelector({
     onBillingCycleChange?.(cycle)
   }
 
-  const plans = Object.values(PLANS)
+  const plans = providedPlans && providedPlans.length > 0 ? providedPlans : Object.values(PLANS)
 
   return (
     <div>

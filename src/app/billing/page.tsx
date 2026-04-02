@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { CreditCard, FileText, BarChart3, Settings, ExternalLink } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout'
@@ -19,7 +20,6 @@ import {
   usePlans,
   useInvoices,
   useUsage,
-  useSubscribe,
   useUpdateSubscription,
   useCancelSubscription,
 } from '@/hooks/useBilling'
@@ -32,13 +32,14 @@ export default function BillingPage() {
   const { user, isLoading: authLoading } = useAuth()
   const t = useTranslations('billingPage')
   const { trackUpgradeClick } = useGA4()
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState<TabType>('overview')
   const [isProcessing, setIsProcessing] = useState(false)
   const [billingNotice, setBillingNotice] = useState<string | null>(null)
 
   // Queries
   const { data: billingStatus, isLoading: isLoadingStatus, error: statusError } = useBillingStatus()
-  usePlans()
+  const { data: plansData, error: plansError } = usePlans()
   const {
     data: invoicesData,
     isLoading: isLoadingInvoices,
@@ -47,7 +48,6 @@ export default function BillingPage() {
   const { data: usageData, error: usageError } = useUsage()
 
   // Mutations
-  const subscribeMutation = useSubscribe()
   const updateSubscriptionMutation = useUpdateSubscription()
   const cancelSubscriptionMutation = useCancelSubscription()
 
@@ -68,8 +68,12 @@ export default function BillingPage() {
         // Update existing subscription
         await updateSubscriptionMutation.mutateAsync({ plan_id: planId })
       } else {
-        // Create new subscription
-        await subscribeMutation.mutateAsync({ plan_id: planId })
+        router.push(
+          planId === 'enterprise'
+            ? '/contact?subject=enterprise'
+            : `/checkout?plan=${planId}&billing=monthly`
+        )
+        return
       }
     } catch (error) {
       void error // handled by mutation state
@@ -109,7 +113,7 @@ export default function BillingPage() {
     return null
   }
 
-  const billingError = statusError || invoicesError || usageError
+  const billingError = statusError || invoicesError || usageError || plansError
 
   const tabs = [
     { id: 'overview' as TabType, label: t('tabs.overview'), icon: CreditCard },
@@ -266,6 +270,7 @@ export default function BillingPage() {
             </div>
             <PlanSelector
               currentPlan={billingStatus?.subscription?.plan_id}
+              plans={plansData?.plans}
               onSelectPlan={handleSelectPlan}
               isLoading={isProcessing}
             />

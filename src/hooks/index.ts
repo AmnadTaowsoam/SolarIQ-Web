@@ -76,7 +76,6 @@ export {
   useUsage,
   useBillingStatus,
   useCreateSetupIntent,
-  useCustomerPortal,
   billingKeys,
 } from './useBilling'
 export {

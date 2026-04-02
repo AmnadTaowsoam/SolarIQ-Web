@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -16,7 +16,6 @@ import {
   Building2,
   Gift,
   QrCode,
-  RefreshCw,
   X,
   Landmark,
 } from 'lucide-react'
@@ -24,11 +23,12 @@ import { api } from '@/lib/api'
 import { API_ENDPOINTS } from '@/lib/constants'
 import type { OpnSourceType, CheckoutResponse } from '@/types/billing'
 import { useTranslations } from 'next-intl'
+import { usePlans } from '@/hooks/useBilling'
 
 /* ------------------------------------------------------------------ */
 /*  Plan Data                                                          */
 /* ------------------------------------------------------------------ */
-type PlanId = 'trial' | 'starter' | 'professional' | 'enterprise'
+type PlanId = 'trial' | 'starter' | 'pro' | 'enterprise'
 type BillingCycle = 'monthly' | 'annual'
 
 interface PlanRaw {
@@ -77,8 +77,8 @@ const PLANS: Record<string, PlanRaw> = {
       'starterFeature6',
     ],
   },
-  professional: {
-    id: 'professional',
+  pro: {
+    id: 'pro',
     nameKey: 'planPro',
     subtitleKey: 'planProfessionalSubtitle',
     icon: Rocket,
@@ -124,9 +124,20 @@ export default function CheckoutPage() {
   const t = useTranslations('checkout')
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { data: plansData } = usePlans()
 
-  const planId = (searchParams.get('plan') ?? 'starter') as PlanId
-  const initialBilling = (searchParams.get('billing') ?? 'monthly') as BillingCycle
+  const requestedPlanId = searchParams.get('plan') ?? 'starter'
+  const planId: PlanId =
+    requestedPlanId === 'professional'
+      ? 'pro'
+      : requestedPlanId === 'trial' ||
+          requestedPlanId === 'starter' ||
+          requestedPlanId === 'pro' ||
+          requestedPlanId === 'enterprise'
+        ? requestedPlanId
+        : 'starter'
+  const requestedBilling = searchParams.get('billing')
+  const initialBilling: BillingCycle = requestedBilling === 'annual' ? 'annual' : 'monthly'
 
   const [billing, setBilling] = useState<BillingCycle>(initialBilling)
   const [paymentMethod, setPaymentMethod] = useState<OpnSourceType>('credit_card')
@@ -137,7 +148,6 @@ export default function CheckoutPage() {
   const [error, setError] = useState('')
   const [qrCodeUri, setQrCodeUri] = useState<string | null>(null)
   const [chargeId, setChargeId] = useState<string | null>(null)
-  const [isPolling, setIsPolling] = useState(false)
 
   const PAYMENT_METHODS: { id: OpnSourceType; label: string; icon: React.ElementType }[] = [
     { id: 'credit_card', label: t('creditCard'), icon: CreditCard },
@@ -171,19 +181,37 @@ export default function CheckoutPage() {
     }
   }, [planId, router])
 
+  const backendPlan = plansData?.plans.find((item) => item.id === planId)
+
   const price = useMemo(() => {
     if (!plan) {
       return 0
     }
+    if (backendPlan) {
+      return billing === 'annual'
+        ? Math.floor(backendPlan.price_thb * 12 * 0.8)
+        : backendPlan.price_thb
+    }
     return billing === 'annual' ? plan.annualPrice : plan.monthlyPrice
-  }, [plan, billing])
+  }, [backendPlan, plan, billing])
 
   const savings = useMemo(() => {
     if (!plan || billing !== 'annual') {
       return 0
     }
+    if (backendPlan) {
+      return backendPlan.price_thb * 12 - Math.floor(backendPlan.price_thb * 12 * 0.8)
+    }
     return (plan.monthlyPrice - plan.annualPrice) * 12
-  }, [plan, billing])
+  }, [backendPlan, plan, billing])
+
+  const totalLabel = useMemo(
+    () =>
+      billing === 'annual'
+        ? t('billedAnnually', { amount: price.toLocaleString('th-TH') })
+        : t('pricePerMonth', { price: price.toLocaleString('th-TH') }),
+    [billing, price, t]
+  )
 
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) {
@@ -199,25 +227,6 @@ export default function CheckoutPage() {
       setPromoApplied(false)
     }
   }
-
-  const handleCheckPaymentStatus = useCallback(async () => {
-    if (!chargeId) {
-      return
-    }
-    setIsPolling(true)
-    try {
-      const statusResponse = await api.get<{ status: string }>(
-        `${API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ?? '/api/v1/billing/create-checkout-session'}/${chargeId}/status`
-      )
-      if ((statusResponse as unknown as { status: string }).status === 'successful') {
-        window.location.href = `${window.location.origin}/checkout/success?charge_id=${chargeId}`
-      }
-    } catch {
-      // Silently ignore polling errors
-    } finally {
-      setIsPolling(false)
-    }
-  }, [chargeId])
 
   const handleCheckout = async () => {
     setIsLoading(true)
@@ -348,14 +357,12 @@ export default function CheckoutPage() {
 
                 <div className="flex justify-between text-base font-bold">
                   <span className="text-[var(--brand-text)] dark:text-white">{t('total')}</span>
-                  <span className="text-[var(--brand-text)] dark:text-white">
-                    {t('pricePerMonth', { price: price.toLocaleString('th-TH') })}
-                  </span>
+                  <span className="text-[var(--brand-text)] dark:text-white">{totalLabel}</span>
                 </div>
 
                 {billing === 'annual' && (
                   <p className="text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
-                    {t('billedAnnually', { amount: (price * 12).toLocaleString('th-TH') })}
+                    {t('pricePerMonth', { price: Math.floor(price / 12).toLocaleString('th-TH') })}
                   </p>
                 )}
               </div>
@@ -504,14 +511,10 @@ export default function CheckoutPage() {
                     {t('scanQrPromptpay')}
                   </p>
 
-                  <button
-                    onClick={handleCheckPaymentStatus}
-                    disabled={isPolling}
-                    className="inline-flex items-center gap-2 rounded-lg bg-primary-50 dark:bg-primary-900/20 px-4 py-2.5 text-sm font-medium text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors disabled:opacity-50"
-                  >
-                    <RefreshCw className={`h-4 w-4 ${isPolling ? 'animate-spin' : ''}`} />
-                    {isPolling ? t('checkingStatus') : t('checkPaymentStatus')}
-                  </button>
+                  <div className="rounded-lg bg-primary-50 px-4 py-3 text-sm text-primary-700 dark:bg-primary-900/20 dark:text-primary-300">
+                    PromptPay confirmation is handled by Opn after the transfer completes. Keep this
+                    reference for support: {chargeId || 'pending'}.
+                  </div>
                 </div>
               )}
 
@@ -529,7 +532,7 @@ export default function CheckoutPage() {
                 ) : (
                   <>
                     <CreditCard className="h-5 w-5" />
-                    {t('pay')} {t('pricePerMonth', { price: price.toLocaleString('th-TH') })}
+                    {t('pay')} {totalLabel}
                   </>
                 )}
               </button>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card'
@@ -1448,7 +1448,6 @@ function ApiKeysSection() {
 
 function WhiteLabelSection() {
   const t = useTranslations('settingsPage')
-  const tExtra = useTranslations('settingsExtra')
   const { brand, brands, switchBrand, refresh } = useBrand()
   const manageableBrand = brand && 'id' in brand ? brand : null
   const [activeBrandId, setActiveBrandId] = useState(manageableBrand?.id ?? '')
@@ -1465,8 +1464,6 @@ function WhiteLabelSection() {
   const [fontBody, setFontBody] = useState(manageableBrand?.fonts?.body ?? 'Sarabun')
   const [fontHeading, setFontHeading] = useState(manageableBrand?.fonts?.heading ?? 'Prompt')
   const [borderRadius, setBorderRadius] = useState(manageableBrand?.border_radius ?? 8)
-  const logoUploadRef = useRef<HTMLInputElement>(null)
-  const [isUploadingLogo, setIsUploadingLogo] = useState(false)
 
   // Live preview: inject CSS vars when colors change
   useEffect(() => {
@@ -1503,35 +1500,6 @@ function WhiteLabelSection() {
     document.documentElement.style.setProperty('--font-brand', fontBody)
   }, [fontBody])
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) {
-      return
-    }
-    if (!manageableBrand) {
-      alert(tExtra('brandRequired'))
-      return
-    }
-    setIsUploadingLogo(true)
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-      const res = await apiClient.post<{ url: string }>(
-        `/api/v1/brands/${manageableBrand.id}/logo`,
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        }
-      )
-      setLogoLightUrl(res.data.url)
-      await refresh()
-      alert(tExtra('logoUploaded'))
-    } catch {
-      alert(tExtra('logoUploadError'))
-    } finally {
-      setIsUploadingLogo(false)
-    }
-  }
   const [customDomain, setCustomDomain] = useState(manageableBrand?.domain ?? '')
   const [domainInfo, setDomainInfo] = useState<BrandDomain | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -1711,21 +1679,9 @@ function WhiteLabelSection() {
               onChange={(e) => setLogoLightUrl(e.target.value)}
             />
             <div className="mt-2 flex items-center gap-2">
-              <input
-                type="file"
-                ref={logoUploadRef}
-                accept="image/png,image/jpeg,image/svg+xml"
-                className="hidden"
-                onChange={handleLogoUpload}
-              />
-              <button
-                type="button"
-                onClick={() => logoUploadRef.current?.click()}
-                disabled={isUploadingLogo}
-                className="text-xs text-[var(--brand-primary)] hover:underline disabled:opacity-50"
-              >
-                {isUploadingLogo ? tExtra('saving') : tExtra('uploadLogo')}
-              </button>
+              <span className="text-xs text-[var(--brand-text-secondary)]">
+                Upload is not available from this screen yet. Paste a hosted logo URL instead.
+              </span>
               {logoLightUrl && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={logoLightUrl} alt="logo preview" className="h-8 object-contain rounded" />

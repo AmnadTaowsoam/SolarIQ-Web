@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { AppLayout } from '@/components/layout'
 import { useAuth } from '@/context'
+import { useTaxProfile } from '@/hooks'
 import apiClient from '@/lib/api'
 import { FileText, Download, Plus, Building2, Receipt, Loader2 } from 'lucide-react'
 
@@ -40,7 +41,9 @@ function mapInvoice(raw: Record<string, any>): VATInvoice {
       buyerInfo.name_en ??
       raw.customer_name ??
       raw.customerName ??
-      'Unassigned customer',
+      raw.document_number ??
+      raw.reference_invoice_id ??
+      'Buyer details pending',
     amount: Number(raw.subtotal ?? raw.amount ?? 0),
     vatAmount: Number(raw.vat_amount ?? raw.tax_amount ?? 0),
     totalAmount: Number(raw.total ?? raw.total_amount ?? 0),
@@ -51,6 +54,7 @@ function mapInvoice(raw: Record<string, any>): VATInvoice {
 
 export default function VATInvoicePage() {
   const { user } = useAuth()
+  const { data: taxProfile, isLoading: isLoadingTaxProfile } = useTaxProfile()
   const [invoices, setInvoices] = useState<VATInvoice[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [loadingError, setLoadingError] = useState<string | null>(null)
@@ -114,6 +118,9 @@ export default function VATInvoicePage() {
   const totalVAT = invoices
     .filter((inv) => inv.status === 'issued' || inv.status === 'paid' || inv.status === 'sent')
     .reduce((sum, inv) => sum + inv.vatAmount, 0)
+  const hasTaxProfile = Boolean(
+    taxProfile?.tax_id && (taxProfile.company_name_th || taxProfile.company_name_en)
+  )
 
   if (!user) {
     return null
@@ -137,12 +144,20 @@ export default function VATInvoicePage() {
               setActionError(null)
               setShowNewForm((prev) => !prev)
             }}
+            disabled={!hasTaxProfile && !isLoadingTaxProfile}
             className="flex items-center gap-2 px-4 py-2 bg-[var(--brand-primary)] text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
           >
             <Plus className="w-4 h-4" />
             New Invoice
           </button>
         </div>
+
+        {!isLoadingTaxProfile && !hasTaxProfile && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            Complete the organization tax profile in Settings before issuing VAT invoices. Seller
+            tax ID and company name are required for production documents.
+          </div>
+        )}
 
         {(loadingError || actionError) && (
           <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
@@ -164,6 +179,13 @@ export default function VATInvoicePage() {
 
               if (!description || amount <= 0) {
                 setActionError('Please provide a valid description and amount.')
+                return
+              }
+
+              if (!hasTaxProfile) {
+                setActionError(
+                  'Complete the organization tax profile in Settings before creating VAT invoices.'
+                )
                 return
               }
 

@@ -66,7 +66,7 @@ const productOffersJsonLd = {
       priceCurrency: 'THB',
       description:
         'สำหรับทีมที่ต้องการเติบโต วิเคราะห์โซลาร์ 100 ครั้ง/เดือน Climate Reliability Score PM2.5 Impact Analysis API Access 5 ผู้ใช้',
-      url: toAbsoluteUrl('/checkout?plan=professional&billing=monthly'),
+      url: toAbsoluteUrl('/checkout?plan=pro&billing=monthly'),
       availability: 'https://schema.org/InStock',
       priceValidUntil: '2027-12-31',
       unitCode: 'MON',

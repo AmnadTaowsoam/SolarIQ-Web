@@ -15,7 +15,6 @@ import type {
   Organization,
   BillingStatus,
   PaymentSetupResponse,
-  PaymentPortalResponse,
   PlanType,
   OpnSourceType,
   CheckoutResponse,
@@ -112,20 +111,15 @@ export function useSubscription() {
 }
 
 export function useSubscribe() {
-  const queryClient = useQueryClient()
-
   return useMutation({
-    mutationFn: async (data: {
+    mutationFn: async (_data: {
       plan_id: PlanType
       payment_method_id?: string
       trial?: boolean
     }): Promise<Subscription> => {
-      const response = await apiClient.post<Subscription>(`${BILLING_API_BASE}/subscribe`, data)
-      return response.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: billingKeys.subscription() })
-      queryClient.invalidateQueries({ queryKey: billingKeys.organization() })
+      throw new Error(
+        'Direct subscription creation is not available from this endpoint. Use checkout session flow instead.'
+      )
     },
   })
 }
@@ -281,12 +275,10 @@ export function useCreateCheckoutSession() {
 
 export function useCustomerPortal() {
   return useMutation({
-    mutationFn: async (): Promise<PaymentPortalResponse> => {
-      const response = await apiClient.post<PaymentPortalResponse>(
-        '/api/v1/billing/customer-portal',
-        {}
+    mutationFn: async (): Promise<never> => {
+      throw new Error(
+        'Customer portal is not available in this deployment. Use support or the billing settings page instead.'
       )
-      return response.data
     },
   })
 }
