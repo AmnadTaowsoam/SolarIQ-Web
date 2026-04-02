@@ -104,6 +104,24 @@ interface RoutingSettings {
   paused: boolean
 }
 
+interface UserProfileResponse {
+  id: string
+}
+
+interface ServiceAreaRecord {
+  id: string
+  area_type: AreaMode
+  provinces?: string[] | null
+  radius_km?: number | null
+}
+
+interface ContractorSettingsRecord {
+  max_leads_per_day: number
+  receiving_hours_start?: string | null
+  receiving_hours_end?: string | null
+  is_paused?: boolean
+}
+
 const DEFAULT_SETTINGS: RoutingSettings = {
   mode: 'province',
   provinces: [],
@@ -121,27 +139,122 @@ export default function ServiceAreaPage() {
   const [settings, setSettings] = useState<RoutingSettings>(DEFAULT_SETTINGS)
   const [isSaving, setIsSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [contractorId, setContractorId] = useState<string | null>(null)
+  const [serviceAreaId, setServiceAreaId] = useState<string | null>(null)
+  const [serviceAreaWarning, setServiceAreaWarning] = useState<string | null>(null)
   const [provinceSearch, setProvinceSearch] = useState('')
   const [showProvinceDropdown, setShowProvinceDropdown] = useState(false)
 
   useEffect(() => {
-    apiClient
-      .get<{ data: RoutingSettings }>('/lead-routing/settings')
-      .then((res) => setSettings({ ...DEFAULT_SETTINGS, ...res.data.data }))
-      .catch(() => {
-        /* use defaults */
-      })
-  }, [])
+    let isMounted = true
+
+    async function loadSettings() {
+      try {
+        const { data: profile } = await apiClient.get<UserProfileResponse>('/api/v1/users/me')
+        const resolvedContractorId = profile?.id || null
+        if (!resolvedContractorId) {
+          throw new Error('Missing contractor id')
+        }
+
+        const [{ data: areas }, { data: contractorSettings }] = await Promise.all([
+          apiClient.get<{ items?: ServiceAreaRecord[] } | ServiceAreaRecord[]>(
+            '/api/v1/lead-routing/service-areas',
+            {
+              params: { contractor_id: resolvedContractorId },
+            }
+          ),
+          apiClient.get<ContractorSettingsRecord>(
+            `/api/v1/lead-routing/contractor-settings/${resolvedContractorId}`
+          ),
+        ])
+
+        if (!isMounted) {
+          return
+        }
+
+        setContractorId(resolvedContractorId)
+
+        const serviceAreas = Array.isArray(areas) ? areas : areas?.items || []
+        const primaryArea = serviceAreas[0] || null
+        setServiceAreaId(primaryArea?.id || null)
+
+        setSettings((prev) => ({
+          ...prev,
+          mode: primaryArea?.area_type || prev.mode,
+          provinces: primaryArea?.provinces || [],
+          radius_km: primaryArea?.radius_km || prev.radius_km,
+          max_leads_per_day: contractorSettings?.max_leads_per_day ?? prev.max_leads_per_day,
+          active_from: contractorSettings?.receiving_hours_start || prev.active_from,
+          active_to: contractorSettings?.receiving_hours_end || prev.active_to,
+          paused: contractorSettings?.is_paused ?? prev.paused,
+        }))
+      } catch {
+        if (isMounted) {
+          setServiceAreaWarning(
+            'Service area settings are partially unavailable. Existing values below use local defaults.'
+          )
+        }
+      }
+    }
+
+    if (user?.uid) {
+      loadSettings()
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [user?.uid])
 
   const handleSave = async () => {
     setIsSaving(true)
     setSaved(false)
+    setServiceAreaWarning(null)
     try {
-      await apiClient.patch('/lead-routing/settings', settings)
+      let effectiveContractorId = contractorId
+      if (!effectiveContractorId) {
+        const profile = await apiClient.get<UserProfileResponse>('/api/v1/users/me')
+        effectiveContractorId = profile.data.id
+        setContractorId(effectiveContractorId)
+      }
+
+      await apiClient.patch(`/api/v1/lead-routing/contractor-settings/${effectiveContractorId}`, {
+        max_leads_per_day: settings.max_leads_per_day,
+        receiving_hours_start: settings.active_from,
+        receiving_hours_end: settings.active_to,
+        is_paused: settings.paused,
+      })
+
+      if (settings.mode === 'province') {
+        const payload = {
+          area_name: 'Primary Service Area',
+          area_type: 'province',
+          provinces: settings.provinces,
+          contractor_id: effectiveContractorId,
+          is_active: !settings.paused,
+        }
+
+        if (serviceAreaId) {
+          await apiClient.patch(`/api/v1/lead-routing/service-areas/${serviceAreaId}`, payload)
+        } else {
+          const response = await apiClient.post('/api/v1/lead-routing/service-areas', payload)
+          const createdId = response.data?.id
+          if (typeof createdId === 'string') {
+            setServiceAreaId(createdId)
+          }
+        }
+      } else {
+        setServiceAreaWarning(
+          'Radius and polygon saving need map coordinates before they can be synced to the live backend. Lead receiving hours were saved.'
+        )
+      }
+
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch {
-      // silent
+      setServiceAreaWarning(
+        'Unable to save service area settings right now. Please try again after refreshing the page.'
+      )
     } finally {
       setIsSaving(false)
     }
@@ -170,6 +283,12 @@ export default function ServiceAreaPage() {
           <h1 className="text-xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
           <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
         </div>
+
+        {serviceAreaWarning && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {serviceAreaWarning}
+          </div>
+        )}
 
         {/* Mode selector */}
         <Card>
