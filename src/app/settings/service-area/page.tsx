@@ -106,6 +106,7 @@ interface RoutingSettings {
 
 interface UserProfileResponse {
   id: string
+  organization_id?: string | null
 }
 
 interface ServiceAreaRecord {
@@ -151,7 +152,7 @@ export default function ServiceAreaPage() {
     async function loadSettings() {
       try {
         const { data: profile } = await apiClient.get<UserProfileResponse>('/api/v1/users/me')
-        const resolvedContractorId = profile?.id || null
+        const resolvedContractorId = profile?.organization_id || null
         if (!resolvedContractorId) {
           throw new Error('Missing contractor id')
         }
@@ -214,7 +215,10 @@ export default function ServiceAreaPage() {
       let effectiveContractorId = contractorId
       if (!effectiveContractorId) {
         const profile = await apiClient.get<UserProfileResponse>('/api/v1/users/me')
-        effectiveContractorId = profile.data.id
+        effectiveContractorId = profile.data.organization_id || null
+        if (!effectiveContractorId) {
+          throw new Error('Missing contractor id')
+        }
         setContractorId(effectiveContractorId)
       }
 
