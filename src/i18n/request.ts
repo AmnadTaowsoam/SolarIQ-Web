@@ -4,12 +4,13 @@ import { defaultLocale, isSupportedLocale, type Locale } from '@/i18n/config'
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const localeFromRequest = await requestLocale
-  const localeFromHeader = headers().get('x-locale')
+  const requestHeaders = await headers()
+  const localeFromHeader = requestHeaders.get('x-locale')
   const resolvedLocale: Locale = isSupportedLocale(localeFromRequest)
     ? localeFromRequest
     : isSupportedLocale(localeFromHeader)
       ? localeFromHeader
-    : defaultLocale
+      : defaultLocale
 
   return {
     locale: resolvedLocale,

@@ -86,7 +86,6 @@ const nextConfig = {
   },
   // WK-109: Performance Optimization - Bundle size and caching
   compress: true,
-  swcMinify: true,
   generateEtags: true,
   // WK-109: Performance Optimization - Headers for caching
   async headers() {
@@ -161,9 +160,8 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['recharts', 'lucide-react', '@heroicons/react', '@headlessui/react'],
-    // WK-109: Performance Optimization - Optimize server components
-    serverComponentsExternalPackages: ['sharp'],
   },
+  serverExternalPackages: ['sharp'],
   // WK-109: Performance Optimization - Webpack configuration
   webpack: (config, { isServer }) => {
     if (!isServer) {

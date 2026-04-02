@@ -17,11 +17,12 @@ function formatDate(dateString: string): string {
 }
 
 interface PageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const post = getBlogPostBySlug(params.slug)
+  const { slug } = await params
+  const post = getBlogPostBySlug(slug)
 
   if (!post) {
     return { title: 'Post Not Found - SolarIQ' }
@@ -51,14 +52,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default function BlogPostPage({ params }: PageProps) {
-  const post = getBlogPostBySlug(params.slug)
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await params
+  const post = getBlogPostBySlug(slug)
 
   if (!post) {
     notFound()
   }
 
-  const relatedPosts = getRelatedBlogPosts(params.slug, post.category)
+  const relatedPosts = getRelatedBlogPosts(slug, post.category)
   const articleUrl = toAbsoluteUrl(`/blog/${post.slug}`)
   const articleHtml = renderMarkdownToHtml(post.content)
   const articleJsonLd = {

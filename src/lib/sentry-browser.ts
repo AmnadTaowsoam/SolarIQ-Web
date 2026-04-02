@@ -1,6 +1,6 @@
 'use client'
 
-type SentryModule = typeof import('@sentry/nextjs')
+type SentryModule = typeof import('@sentry/browser')
 
 let sentryModulePromise: Promise<SentryModule | null> | null = null
 
@@ -10,7 +10,7 @@ async function loadSentry(): Promise<SentryModule | null> {
   }
 
   if (!sentryModulePromise) {
-    sentryModulePromise = import('@sentry/nextjs').catch(() => null)
+    sentryModulePromise = import('@sentry/browser').catch(() => null)
   }
 
   return sentryModulePromise
