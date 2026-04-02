@@ -238,7 +238,7 @@ export default function SessionsPage() {
   const handleTerminateOthers = async () => {
     setTerminatingAll(true)
     try {
-      await terminateOthers.mutateAsync()
+      await terminateOthers.mutateAsync(currentSession?.id)
     } finally {
       setTerminatingAll(false)
     }
