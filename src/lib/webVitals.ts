@@ -5,8 +5,8 @@
  * This module provides Web Vitals performance tracking and reporting.
  */
 
-import * as Sentry from '@sentry/nextjs'
 import { onCLS, onFID, onINP, onLCP, onFCP, onTTFB, Metric } from 'web-vitals'
+import { addSentryBreadcrumb, captureSentryMessage } from '@/lib/sentry-browser'
 
 // Web Vitals thresholds (in milliseconds)
 const THRESHOLDS = {
@@ -75,7 +75,7 @@ function sendToAnalytics(metric: Metric): void {
 
   // Send to Sentry as a transaction/span
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.addBreadcrumb({
+    addSentryBreadcrumb({
       category: 'web-vitals',
       message: `${metric.name}: ${metric.value.toFixed(2)} (${rating})`,
       level: rating === 'poor' ? 'warning' : 'info',
@@ -91,7 +91,7 @@ function sendToAnalytics(metric: Metric): void {
 
     // Track poor metrics as Sentry events
     if (rating === 'poor') {
-      Sentry.captureMessage(`Poor Web Vital: ${metric.name}`, {
+      captureSentryMessage(`Poor Web Vital: ${metric.name}`, {
         level: 'warning',
         tags: {
           metric_name: metric.name,
@@ -194,7 +194,7 @@ export function trackPerformanceMark(name: string, data?: Record<string, unknown
   performance.mark(markName)
 
   if (data && process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.addBreadcrumb({
+    addSentryBreadcrumb({
       category: 'performance-mark',
       message: markName,
       level: 'info',
@@ -236,7 +236,7 @@ export function trackApiCall(
   success: boolean
 ): void {
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.addBreadcrumb({
+    addSentryBreadcrumb({
       category: 'api-call',
       message: `${endpoint} - ${status} (${duration}ms)`,
       level: success ? 'info' : 'warning',
@@ -250,7 +250,7 @@ export function trackApiCall(
 
     // Track slow API calls (> 3 seconds)
     if (duration > 3000) {
-      Sentry.captureMessage(`Slow API call: ${endpoint}`, {
+      captureSentryMessage(`Slow API call: ${endpoint}`, {
         level: 'warning',
         tags: {
           endpoint,
@@ -273,7 +273,7 @@ export function trackInteraction(
   metadata?: Record<string, unknown>
 ): void {
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    Sentry.addBreadcrumb({
+    addSentryBreadcrumb({
       category: 'user-interaction',
       message: `${action} (${duration}ms)`,
       level: 'info',

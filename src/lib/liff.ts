@@ -3,18 +3,18 @@
  * Provides type-safe access to LIFF SDK functionality
  */
 
-import * as Sentry from '@sentry/nextjs'
+import { addSentryBreadcrumb, captureSentryMessage } from '@/lib/sentry-browser'
 
 // Simple logger for LIFF module
 const logger = {
   info: (message: string, data?: Record<string, unknown>) => {
-    Sentry.addBreadcrumb({ category: 'liff', message, level: 'info', data })
+    addSentryBreadcrumb({ category: 'liff', message, level: 'info', data })
   },
   warn: (message: string, data?: Record<string, unknown>) => {
-    Sentry.addBreadcrumb({ category: 'liff', message, level: 'warning', data })
+    addSentryBreadcrumb({ category: 'liff', message, level: 'warning', data })
   },
   error: (message: string, data?: Record<string, unknown>) => {
-    Sentry.captureMessage(message, { level: 'error', extra: data })
+    captureSentryMessage(message, { level: 'error', extra: data })
   },
 }
 

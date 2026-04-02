@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from 'react'
 import { onCLS, onFID, onLCP, onFCP, onTTFB, Metric } from 'web-vitals'
-import * as Sentry from '@sentry/nextjs'
+import { captureSentryMessage } from '@/lib/sentry-browser'
 
 interface PerformanceMetrics {
   cls?: number
@@ -108,7 +108,7 @@ export function PerformanceMonitor({
 
       // Report to Sentry if enabled and metric is poor
       if (reportToSentry && rating === 'poor' && process.env.NEXT_PUBLIC_SENTRY_DSN) {
-        Sentry.captureMessage(`Poor Performance Metric: ${metric.name}`, {
+        captureSentryMessage(`Poor Performance Metric: ${metric.name}`, {
           level: 'warning',
           tags: {
             metric_name: metric.name,
