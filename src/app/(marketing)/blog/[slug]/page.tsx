@@ -31,6 +31,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${post.title} - SolarIQ`,
     description: post.excerpt,
     keywords: post.tags,
+    alternates: {
+      canonical: toAbsoluteUrl(`/blog/${post.slug}`),
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
@@ -39,6 +42,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       authors: [post.author],
       locale: 'th_TH',
       url: toAbsoluteUrl(`/blog/${post.slug}`),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
     },
   }
 }
@@ -53,9 +61,65 @@ export default function BlogPostPage({ params }: PageProps) {
   const relatedPosts = getRelatedBlogPosts(params.slug, post.category)
   const articleUrl = toAbsoluteUrl(`/blog/${post.slug}`)
   const articleHtml = renderMarkdownToHtml(post.content)
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    dateModified: post.date,
+    mainEntityOfPage: articleUrl,
+    articleSection: post.category,
+    keywords: post.tags.join(', '),
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'SolarIQ',
+      url: toAbsoluteUrl('/'),
+      logo: {
+        '@type': 'ImageObject',
+        url: toAbsoluteUrl('/SolarIQ/4.png'),
+      },
+    },
+  }
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: toAbsoluteUrl('/'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: toAbsoluteUrl('/blog'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: articleUrl,
+      },
+    ],
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <article className="bg-gradient-to-br from-primary-600 via-primary-700 to-amber-600 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link

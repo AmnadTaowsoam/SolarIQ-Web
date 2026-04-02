@@ -88,6 +88,16 @@ const PUBLIC_PATHS = new Set([
   '/llms-full.txt',
 ])
 const PUBLIC_PREFIXES = ['/blog/', '/checkout', '/liff']
+const NOINDEX_PUBLIC_PATHS = new Set([
+  '/landing',
+  '/login',
+  '/signup',
+  '/forgot-password',
+  '/verify-email',
+  '/offline',
+  '/status',
+])
+const NOINDEX_PUBLIC_PREFIXES = ['/checkout', '/liff']
 
 /**
  * Check if path should be exempted from security headers
@@ -98,6 +108,18 @@ function shouldExemptPath(pathname: string): boolean {
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.has(pathname) || PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+}
+
+function shouldAddNoindexHeader(pathname: string): boolean {
+  if (NOINDEX_PUBLIC_PATHS.has(pathname)) {
+    return true
+  }
+
+  if (NOINDEX_PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
+    return true
+  }
+
+  return !pathname.startsWith('/api') && !isPublicPath(pathname)
 }
 
 /**
@@ -176,6 +198,10 @@ export function middleware(request: NextRequest) {
     )
     response.headers.set('Pragma', 'no-cache')
     response.headers.set('Expires', '0')
+  }
+
+  if (shouldAddNoindexHeader(request.nextUrl.pathname)) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive')
   }
 
   return response

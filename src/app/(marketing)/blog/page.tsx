@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   description:
     'Insights on rooftop ROI, proposals, solar sales, and operations for solar teams in Thailand.',
   keywords: ['SolarIQ blog', 'solar rooftop', 'solar ROI', 'solar CRM', 'Thailand solar'],
+  alternates: {
+    canonical: toAbsoluteUrl('/blog'),
+  },
   openGraph: {
     title: 'SolarIQ Blog',
     description:
