@@ -8,10 +8,64 @@ import { getIdToken } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const AUTH_BOOTSTRAP_TIMEOUT_MS = 5000
 
 // ── JWT Token Storage ───────────────────────────────────────────────
 let _accessToken: string | null = null
 let _refreshToken: string | null = null
+let authBootstrapSettled = false
+let resolveAuthBootstrap: (() => void) | null = null
+let authBootstrapPromise = createAuthBootstrapPromise()
+
+function createAuthBootstrapPromise() {
+  return new Promise<void>((resolve) => {
+    resolveAuthBootstrap = resolve
+  })
+}
+
+function isProtectedRequest(url: string | undefined) {
+  if (!url) {
+    return false
+  }
+
+  const normalized = url.toLowerCase()
+  if (normalized.startsWith('/api/v1/public') || normalized.startsWith('/api/v1/signup')) {
+    return false
+  }
+
+  return normalized.startsWith('/api/v1/') || normalized.startsWith('/auth/me')
+}
+
+async function waitForAuthBootstrap() {
+  if (authBootstrapSettled || typeof window === 'undefined') {
+    return
+  }
+
+  await Promise.race([
+    authBootstrapPromise,
+    new Promise<void>((resolve) => {
+      window.setTimeout(resolve, AUTH_BOOTSTRAP_TIMEOUT_MS)
+    }),
+  ])
+}
+
+export function beginAuthBootstrap() {
+  if (!authBootstrapSettled) {
+    return
+  }
+
+  authBootstrapSettled = false
+  authBootstrapPromise = createAuthBootstrapPromise()
+}
+
+export function completeAuthBootstrap() {
+  if (authBootstrapSettled) {
+    return
+  }
+
+  authBootstrapSettled = true
+  resolveAuthBootstrap?.()
+}
 
 export function setTokens(access: string, refresh: string) {
   _accessToken = access
@@ -84,6 +138,10 @@ const apiClient: AxiosInstance = axios.create({
 // Request interceptor to add auth token + CSRF token
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    if (isProtectedRequest(config.url)) {
+      await waitForAuthBootstrap()
+    }
+
     // Attach CSRF token for state-changing requests
     const csrfToken = getCookie('csrf_token')
     if (csrfToken && config.method && !['get', 'head', 'options'].includes(config.method)) {

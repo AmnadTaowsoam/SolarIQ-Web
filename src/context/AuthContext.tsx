@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode, useCallback 
 import { getIdToken, onIdTokenChanged, signOut, User as FirebaseUser } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { User } from '@/types'
-import { api, setTokens, clearTokens } from '@/lib/api'
+import { api, beginAuthBootstrap, completeAuthBootstrap, setTokens, clearTokens } from '@/lib/api'
 import { clearAuthData } from '@/lib/security'
 
 interface AuthContextType {
@@ -119,6 +119,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setSessionCookie(false)
       clearTokens()
       clearAuthData()
+      completeAuthBootstrap()
       if (typeof window !== 'undefined') {
         localStorage.removeItem(devAuthStorageKey)
       }
@@ -176,12 +177,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
           }
         }
       }
+      completeAuthBootstrap()
       setIsLoading(false)
       return
     }
 
     let isMounted = true
     let unsubscribe: () => void = () => undefined
+    beginAuthBootstrap()
 
     // Prevent infinite loading if Firebase listener cannot initialize.
     const loadingTimeout = setTimeout(() => {
@@ -191,6 +194,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(null)
       setFirebaseUser(null)
       setSessionCookie(false)
+      clearTokens()
+      completeAuthBootstrap()
       setIsLoading(false)
     }, 5000)
 
@@ -202,6 +207,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             return
           }
 
+          beginAuthBootstrap()
           setFirebaseUser(fbUser)
 
           if (fbUser) {
@@ -250,11 +256,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
               // Backend API failed — fallback user is already set, just log
               // eslint-disable-next-line no-console
               console.warn('[AuthContext] Backend sync failed, using Firebase fallback:', authError)
+            } finally {
+              completeAuthBootstrap()
             }
           } else {
             setUser(null)
             setSessionCookie(false)
+            clearTokens()
             clearTimeout(loadingTimeout)
+            completeAuthBootstrap()
             setIsLoading(false)
           }
         },
@@ -266,6 +276,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setUser(null)
           setFirebaseUser(null)
           setSessionCookie(false)
+          clearTokens()
+          completeAuthBootstrap()
           setIsLoading(false)
         }
       )
@@ -275,6 +287,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(null)
         setFirebaseUser(null)
         setSessionCookie(false)
+        clearTokens()
+        completeAuthBootstrap()
         setIsLoading(false)
       }
     }
