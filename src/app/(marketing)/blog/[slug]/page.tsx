@@ -2,15 +2,10 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Calendar, Clock, Tag, Share2, ArrowLeft, Facebook, Linkedin, Twitter } from 'lucide-react'
-import {
-  getAllBlogPosts,
-  getBlogPostBySlug,
-  getRelatedBlogPosts,
-  renderMarkdownToHtml,
-} from '@/lib/blog'
+import { getBlogPostBySlug, getRelatedBlogPosts, renderMarkdownToHtml } from '@/lib/blog'
 import { toAbsoluteUrl } from '@/lib/site'
 
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -23,10 +18,6 @@ function formatDate(dateString: string): string {
 
 interface PageProps {
   params: { slug: string }
-}
-
-export function generateStaticParams() {
-  return getAllBlogPosts().map((post) => ({ slug: post.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

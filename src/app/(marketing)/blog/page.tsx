@@ -4,7 +4,7 @@ import { Calendar, Clock, Tag, Search, Filter } from 'lucide-react'
 import { getAllBlogPosts } from '@/lib/blog'
 import { toAbsoluteUrl } from '@/lib/site'
 
-export const runtime = 'nodejs'
+export const runtime = 'edge'
 
 function getCategories(posts: ReturnType<typeof getAllBlogPosts>): string[] {
   const categories = new Set(posts.map((post) => post.category))

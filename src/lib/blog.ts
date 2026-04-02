@@ -1,113 +1,12 @@
 import 'server-only'
-import fs from 'fs'
-import path from 'path'
 
-export interface BlogPost {
-  slug: string
-  title: string
-  excerpt: string
-  category: string
-  author: string
-  date: string
-  readTime: string
-  tags: string[]
-  content: string
-}
+import { blogPosts } from '@/generated/blog-posts'
+import type { BlogPost } from '@/lib/blog-schema'
 
-const BLOG_DIRECTORY = path.join(process.cwd(), 'content', 'blog')
-
-function stripQuotes(value: string): string {
-  return value.trim().replace(/^['"]|['"]$/g, '')
-}
-
-function decodePossiblyMojibake(value: string): string {
-  if (!/[Ãàâð]/.test(value)) {
-    return value
-  }
-
-  try {
-    const decoded = Buffer.from(value, 'latin1').toString('utf8')
-    return decoded.includes('�') ? value : decoded
-  } catch {
-    return value
-  }
-}
-
-function parseTags(value: string): string[] {
-  const normalized = value.trim()
-  if (!normalized.startsWith('[') || !normalized.endsWith(']')) {
-    return []
-  }
-
-  return normalized
-    .slice(1, -1)
-    .split(',')
-    .map((tag) => stripQuotes(tag))
-    .filter(Boolean)
-}
-
-function parseFrontmatter(content: string): Record<string, string> {
-  const match = content.match(/^---\n([\s\S]*?)\n---/)
-  if (!match?.[1]) {
-    return {}
-  }
-
-  return match[1].split('\n').reduce<Record<string, string>>((acc, line) => {
-    const separatorIndex = line.indexOf(':')
-    if (separatorIndex === -1) {
-      return acc
-    }
-
-    const key = line.slice(0, separatorIndex).trim()
-    const value = line.slice(separatorIndex + 1).trim()
-    if (key) {
-      acc[key] = value
-    }
-    return acc
-  }, {})
-}
+export type { BlogPost } from '@/lib/blog-schema'
 
 export function getAllBlogPosts(): BlogPost[] {
-  const filenames = fs
-    .readdirSync(BLOG_DIRECTORY)
-    .filter((filename) => filename.endsWith('.md'))
-    .sort()
-
-  const posts = filenames
-    .map((filename) => {
-      const filePath = path.join(BLOG_DIRECTORY, filename)
-      const raw = decodePossiblyMojibake(fs.readFileSync(filePath, 'utf-8'))
-      const frontmatter = parseFrontmatter(raw)
-      const content = decodePossiblyMojibake(raw.replace(/^---\n[\s\S]*?\n---\n?/, '').trim())
-
-      const slug = stripQuotes(decodePossiblyMojibake(frontmatter.slug || ''))
-      const title = stripQuotes(decodePossiblyMojibake(frontmatter.title || ''))
-      const excerpt = stripQuotes(decodePossiblyMojibake(frontmatter.excerpt || ''))
-      const category = stripQuotes(decodePossiblyMojibake(frontmatter.category || ''))
-      const author = stripQuotes(decodePossiblyMojibake(frontmatter.author || 'SolarIQ Team'))
-      const date = stripQuotes(frontmatter.date || '')
-      const readTime = stripQuotes(decodePossiblyMojibake(frontmatter.readTime || ''))
-      const tags = parseTags(decodePossiblyMojibake(frontmatter.tags || ''))
-
-      if (!slug || !title || !date) {
-        return null
-      }
-
-      return {
-        slug,
-        title,
-        excerpt,
-        category,
-        author,
-        date,
-        readTime,
-        tags,
-        content,
-      }
-    })
-    .filter((post): post is BlogPost => post !== null)
-
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  return [...blogPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
 export function getBlogPostBySlug(slug: string): BlogPost | null {
