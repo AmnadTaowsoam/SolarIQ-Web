@@ -51,7 +51,7 @@ export default function GettingStartedCard() {
       id: 'service_area',
       title: t('skip'),
       description: t('progress'),
-      href: '/service-area',
+      href: '/settings/service-area',
       icon: '📍',
     },
   ]

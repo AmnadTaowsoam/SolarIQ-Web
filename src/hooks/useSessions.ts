@@ -132,7 +132,7 @@ export function useActiveSessions() {
     queryKey: ['sessions'],
     queryFn: async () => {
       try {
-        const res = await apiClient.get('/sessions')
+        const res = await apiClient.get('/api/v1/sessions')
         const items = Array.isArray(res.data)
           ? res.data
           : Array.isArray(res.data?.sessions)
@@ -152,7 +152,7 @@ export function useTerminateSession() {
   return useMutation({
     mutationFn: async (sessionId: string) => {
       try {
-        await apiClient.delete(`/sessions/${sessionId}`)
+        await apiClient.delete(`/api/v1/sessions/${sessionId}`)
       } catch (error) {
         throw new Error(formatSessionError(error))
       }
@@ -170,7 +170,7 @@ export function useTerminateOthers() {
     mutationFn: async (currentSessionId?: string) => {
       try {
         await apiClient.post(
-          '/sessions/terminate-others',
+          '/api/v1/sessions/terminate-others',
           currentSessionId ? { current_session_id: currentSessionId } : {}
         )
       } catch (error) {
@@ -188,7 +188,7 @@ export function useLoginHistory() {
     queryKey: ['login-history'],
     queryFn: async () => {
       try {
-        const res = await apiClient.get('/sessions/login-history')
+        const res = await apiClient.get('/api/v1/sessions/login-history')
         const items = Array.isArray(res.data)
           ? res.data
           : Array.isArray(res.data?.attempts)
