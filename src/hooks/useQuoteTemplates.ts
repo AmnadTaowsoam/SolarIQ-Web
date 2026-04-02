@@ -157,8 +157,9 @@ export function useQuoteTemplates() {
     try {
       const res = await apiClient.get('/api/v1/quotes/templates')
       setData(res.data.items || res.data)
-    } catch {
-      setData(DEMO_TEMPLATES)
+    } catch (err) {
+      setData([])
+      setError(err instanceof Error ? err.message : 'Quote templates are unavailable right now.')
     } finally {
       setIsLoading(false)
     }
@@ -184,14 +185,11 @@ export function useSaveTemplate() {
       try {
         const res = await apiClient.post('/api/v1/quotes/templates', template)
         return res.data
-      } catch {
-        return {
-          ...template,
-          id: `tpl-${Date.now()}`,
-          contractorId: 'current-contractor',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'Unable to save quote template right now.'
+        setError(message)
+        throw new Error(message)
       } finally {
         setIsLoading(false)
       }
@@ -226,8 +224,11 @@ export function useDeleteTemplate() {
     setError(null)
     try {
       await apiClient.delete(`/api/v1/quotes/templates/${templateId}`)
-    } catch {
-      // Demo: no-op
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Unable to delete quote template right now.'
+      setError(message)
+      throw new Error(message)
     } finally {
       setIsLoading(false)
     }

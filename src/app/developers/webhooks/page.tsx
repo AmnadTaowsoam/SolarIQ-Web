@@ -28,6 +28,7 @@ function AddEndpointModal({
   const [isCreating, setIsCreating] = useState(false)
   const [createdWebhook, setCreatedWebhook] = useState<Webhook | null>(null)
   const [urlError, setUrlError] = useState('')
+  const [submitError, setSubmitError] = useState('')
 
   const validateUrl = (value: string) => {
     try {
@@ -45,9 +46,12 @@ function AddEndpointModal({
       return
     }
     setIsCreating(true)
+    setSubmitError('')
     try {
       const result = await onAdd({ url, events: selectedEvents })
       setCreatedWebhook(result)
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Unable to create webhook right now.')
     } finally {
       setIsCreating(false)
     }
@@ -80,6 +84,11 @@ function AddEndpointModal({
         </div>
 
         <div className="p-6 space-y-5">
+          {submitError && (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {submitError}
+            </div>
+          )}
           {createdWebhook ? (
             <div className="space-y-4">
               <div className="bg-green-500/10 border border-green-200 rounded-xl p-4">
@@ -220,14 +229,16 @@ function AddEndpointModal({
 
 export default function WebhooksPage() {
   const t = useTranslations('developersExtra')
-  const { webhooks, isLoading, createWebhook, deleteWebhook, testWebhook } = useWebhooks()
+  const { webhooks, isLoading, error, createWebhook, deleteWebhook, testWebhook } = useWebhooks()
   const [showAddModal, setShowAddModal] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Webhook | null>(null)
   const [testingId, setTestingId] = useState<string | null>(null)
   const [testResult, setTestResult] = useState<Record<string, boolean | null>>({})
+  const [actionError, setActionError] = useState('')
 
   const handleTest = async (webhook: Webhook) => {
     setTestingId(webhook.id)
+    setActionError('')
     const ok = await testWebhook(webhook.id)
     setTestResult((prev) => ({ ...prev, [webhook.id]: ok }))
     setTestingId(null)
@@ -259,6 +270,12 @@ export default function WebhooksPage() {
           {t('webhooks.addWebhook')}
         </button>
       </div>
+
+      {(error || actionError) && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          {actionError || error}
+        </div>
+      )}
 
       {/* Webhooks table */}
       <div className="bg-[var(--brand-surface)] rounded-2xl border border-[var(--brand-border)] overflow-hidden">
@@ -473,8 +490,15 @@ export default function WebhooksPage() {
               </button>
               <button
                 onClick={async () => {
-                  await deleteWebhook(deleteTarget.id)
-                  setDeleteTarget(null)
+                  try {
+                    setActionError('')
+                    await deleteWebhook(deleteTarget.id)
+                    setDeleteTarget(null)
+                  } catch (err) {
+                    setActionError(
+                      err instanceof Error ? err.message : 'Unable to delete webhook right now.'
+                    )
+                  }
                 }}
                 className="flex-1 py-2.5 bg-red-500 text-white text-sm font-semibold rounded-xl hover:bg-red-600 transition-colors"
               >

@@ -23,50 +23,6 @@ interface PermitRecord {
   approvedDate: string | null
 }
 
-// Demo data
-const DEMO_PERMITS: PermitRecord[] = [
-  {
-    id: 'P-001',
-    type: 'MEA',
-    customerName: 'Solar Home Bangkok',
-    dealId: 'd-001',
-    status: 'approved',
-    systemSize: 10,
-    submittedDate: '2026-01-20',
-    approvedDate: '2026-02-15',
-  },
-  {
-    id: 'P-002',
-    type: 'PEA',
-    customerName: 'Green Factory Chiang Mai',
-    dealId: 'd-002',
-    status: 'reviewing',
-    systemSize: 50,
-    submittedDate: '2026-03-01',
-    approvedDate: null,
-  },
-  {
-    id: 'P-003',
-    type: 'MEA',
-    customerName: 'Smart Office Nonthaburi',
-    dealId: 'd-003',
-    status: 'submitted',
-    systemSize: 15,
-    submittedDate: '2026-03-15',
-    approvedDate: null,
-  },
-  {
-    id: 'P-004',
-    type: 'PEA',
-    customerName: 'Farm Power Korat',
-    dealId: 'd-004',
-    status: 'draft',
-    systemSize: 30,
-    submittedDate: null,
-    approvedDate: null,
-  },
-]
-
 const statusConfig = {
   draft: {
     label: 'Draft',
@@ -95,25 +51,24 @@ function mapPermit(raw: Record<string, any>): PermitRecord {
 
 export default function PermitsPage() {
   const { user } = useAuth()
-  const [permits, setPermits] = useState<PermitRecord[]>(DEMO_PERMITS)
-  const [, setIsLoading] = useState(false)
+  const [permits, setPermits] = useState<PermitRecord[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [showNewForm, setShowNewForm] = useState(false)
 
   const fetchPermits = useCallback(async () => {
     setIsLoading(true)
+    setError(null)
     try {
       const response = await apiClient.get('/api/v1/permits')
       const payload = response.data
       const items = payload.permits || payload.items || payload || []
-      if (Array.isArray(items) && items.length > 0) {
-        setPermits(items.map(mapPermit))
-      } else {
-        setPermits(DEMO_PERMITS)
-      }
-    } catch {
-      // Fallback to demo data
-      setPermits(DEMO_PERMITS)
+      setPermits(Array.isArray(items) ? items.map(mapPermit) : [])
+    } catch (err) {
+      setPermits([])
+      setError(err instanceof Error ? err.message : 'Permits are currently unavailable.')
     } finally {
       setIsLoading(false)
     }
@@ -162,6 +117,7 @@ export default function PermitsPage() {
             className="rounded-xl border border-amber-200 bg-amber-50 p-5"
             onSubmit={async (e) => {
               e.preventDefault()
+              setSubmitError(null)
               const form = e.target as HTMLFormElement
               const data = new FormData(form)
               try {
@@ -173,9 +129,11 @@ export default function PermitsPage() {
                 })
                 setShowNewForm(false)
                 form.reset()
-                fetchPermits()
-              } catch {
-                // Silently handle
+                await fetchPermits()
+              } catch (err) {
+                setSubmitError(
+                  err instanceof Error ? err.message : 'Unable to create permit right now.'
+                )
               }
             }}
           >
@@ -219,7 +177,14 @@ export default function PermitsPage() {
                 Cancel
               </button>
             </div>
+            {submitError && <p className="mt-3 text-sm text-red-600">{submitError}</p>}
           </form>
+        )}
+
+        {error && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {error}
+          </div>
         )}
 
         {/* Stats */}
@@ -287,6 +252,26 @@ export default function PermitsPage() {
                 </tr>
               </thead>
               <tbody>
+                {isLoading && (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="px-4 py-8 text-center text-[var(--brand-text-secondary)]"
+                    >
+                      Loading permits...
+                    </td>
+                  </tr>
+                )}
+                {!isLoading && filteredPermits.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="px-4 py-8 text-center text-[var(--brand-text-secondary)]"
+                    >
+                      No permits found for the selected filter.
+                    </td>
+                  </tr>
+                )}
                 {filteredPermits.map((permit) => {
                   const config = statusConfig[permit.status]
                   const StatusIcon = config.icon

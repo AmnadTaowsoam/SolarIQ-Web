@@ -25,7 +25,7 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
 
 export default function ApiUsagePage() {
   const t = useTranslations('developersExtra')
-  const { usage, isLoading } = useApiUsage()
+  const { usage, isLoading, error } = useApiUsage()
 
   const usagePercent = usage ? Math.round((usage.totalCallsMonth / usage.monthLimit) * 100) : 0
 
@@ -45,6 +45,12 @@ export default function ApiUsagePage() {
           {format(new Date(), 'MMMM yyyy', { locale: th })}
         </p>
       </div>
+
+      {error && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          {error}
+        </div>
+      )}
 
       {isLoading ? (
         <div className="space-y-4 animate-pulse">

@@ -49,7 +49,7 @@ export default function QuoteRequestsPage() {
   const t = useTranslations('quoteRequests')
   const router = useRouter()
   const { user, isLoading: authLoading } = useAuth()
-  const { data: requests, isLoading, refetch } = useAvailableRequests()
+  const { data: requests, isLoading, error, refetch } = useAvailableRequests()
   const [filter, setFilter] = useState<'all' | 'new' | 'open'>('all')
 
   useEffect(() => {
@@ -103,6 +103,12 @@ export default function QuoteRequestsPage() {
         </div>
 
         {/* Filter tabs */}
+        {error && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {error}
+          </div>
+        )}
+
         <div className="flex gap-2">
           {[
             { key: 'all', label: `${t('actions')} (${requests.length})` },

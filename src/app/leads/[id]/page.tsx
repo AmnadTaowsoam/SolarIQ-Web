@@ -696,7 +696,7 @@ export default function LeadDetailPage() {
   const { user, isLoading: authLoading } = useAuth()
   const { addToast } = useToast()
 
-  const { data: apiLead, isLoading } = useLead(id)
+  const { data: apiLead, isLoading, error } = useLead(id)
   const updateStatusMutation = useUpdateLeadStatus()
   const deleteMutation = useDeleteLead()
 
@@ -843,8 +843,32 @@ export default function LeadDetailPage() {
     )
   }
 
-  // ---------- Error state ----------
-  // When API fails, fall back to demo data instead of showing error
+  if (!apiLead) {
+    return (
+      <AppLayout user={user}>
+        <div className="max-w-3xl space-y-6">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {error instanceof Error
+              ? error.message
+              : 'This lead could not be loaded from the live API.'}
+          </div>
+          <Card>
+            <CardBody className="py-10 text-center">
+              <p className="text-lg font-semibold text-[var(--brand-text)]">Lead unavailable</p>
+              <p className="mt-2 text-sm text-[var(--brand-text-secondary)]">
+                The system is no longer showing sample lead data when the backend lookup fails.
+              </p>
+              <div className="mt-6">
+                <Button variant="outline" onClick={() => router.push(ROUTES.LEADS)}>
+                  Back to Leads
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </AppLayout>
+    )
+  }
 
   return (
     <AppLayout user={user}>

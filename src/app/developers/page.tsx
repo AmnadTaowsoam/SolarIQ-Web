@@ -97,8 +97,8 @@ function QuickLinkCard({
 }
 
 export default function DevelopersOverviewPage() {
-  const { keys } = useApiKeys()
-  const { usage } = useApiUsage()
+  const { keys, error: keysError } = useApiKeys()
+  const { usage, error: usageError } = useApiUsage()
   const t = useTranslations('developersPage')
 
   const hasActiveKey = keys.some((k) => k.status === 'active')
@@ -136,6 +136,11 @@ export default function DevelopersOverviewPage() {
       {/* Quick stats */}
       <div>
         <h3 className="text-sm font-semibold text-[var(--brand-text)] mb-3">{t('todayUsage')}</h3>
+        {(keysError || usageError) && (
+          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {keysError || usageError}
+          </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <StatCard
             label={t('stats.apiCallsToday')}

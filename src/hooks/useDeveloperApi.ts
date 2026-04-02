@@ -1,14 +1,12 @@
 'use client'
 
 /**
- * useDeveloperApi hook for SolarIQ Developer Portal (WK-031)
- * Provides API key management, webhook management, and usage statistics
+ * Developer API hooks for SolarIQ Developer Portal (WK-031)
+ * Uses live backend endpoints and avoids demo fallbacks in production.
  */
 
 import { useState, useCallback, useEffect } from 'react'
 import { apiClient } from '@/lib/api'
-
-// ============== Types ==============
 
 export interface ApiKey {
   id: string
@@ -24,7 +22,7 @@ export interface ApiKey {
 }
 
 export interface ApiKeyCreateResult extends ApiKey {
-  fullKey: string // shown only once
+  fullKey: string
 }
 
 export interface Webhook {
@@ -66,8 +64,6 @@ export interface ApiUsageSummary {
   endpointBreakdown: EndpointUsage[]
 }
 
-// ============== Available webhook events ==============
-
 export const WEBHOOK_EVENTS: WebhookEvent[] = [
   { id: 'lead.created', name: 'lead.created', description: 'เมื่อมี Lead ใหม่' },
   { id: 'lead.updated', name: 'lead.updated', description: 'เมื่อ Lead อัปเดต' },
@@ -87,100 +83,95 @@ export const WEBHOOK_EVENTS: WebhookEvent[] = [
   },
 ]
 
-// ============== Demo Data ==============
-
-const DEMO_API_KEYS: ApiKey[] = [
-  {
-    id: 'key-1',
-    name: 'Production Key',
-    keyPrefix: 'sk-live',
-    keyMasked: 'sk-live-••••••••••••••••••••••••••••••Kx7p',
-    environment: 'live',
-    permissions: ['leads:read', 'leads:write', 'solar:analyze', 'proposals:read'],
-    status: 'active',
-    createdAt: new Date('2026-03-15'),
-    lastUsedAt: new Date(Date.now() - 3 * 60 * 1000),
-    callCount: 1234,
-  },
-  {
-    id: 'key-2',
-    name: 'Test Key',
-    keyPrefix: 'sk-test',
-    keyMasked: 'sk-test-••••••••••••••••••••••••••••••Ab2m',
-    environment: 'test',
-    permissions: ['leads:read', 'leads:write', 'solar:analyze'],
-    status: 'active',
-    createdAt: new Date('2026-03-10'),
-    lastUsedAt: undefined,
-    callCount: 0,
-  },
-]
-
-const DEMO_WEBHOOKS: Webhook[] = [
-  {
-    id: 'wh-1',
-    url: 'https://yoursite.com/webhooks/solariq',
-    events: ['lead.created', 'lead.status_changed', 'quote.created', 'deal.created', 'deal.closed'],
-    status: 'active',
-    secret: 'whsec_demo_••••••••••••••••••••••••••••••',
-    lastTriggeredAt: new Date(Date.now() - 2 * 60 * 1000),
-    createdAt: new Date('2026-03-01'),
-    failureCount: 0,
-  },
-]
-
-function generateDailyStats(): ApiUsageStat[] {
-  const stats: ApiUsageStat[] = []
-  for (let i = 29; i >= 0; i--) {
-    const d = new Date()
-    d.setDate(d.getDate() - i)
-    const calls = Math.floor(Math.random() * 2000) + 500
-    stats.push({
-      date: d.toISOString().split('T')[0] || '',
-      calls,
-      errors: Math.floor(calls * 0.02),
-    })
+function formatApiError(error: unknown): string {
+  if (error instanceof Error && error.message) {
+    return error.message
   }
-  return stats
+  return 'Developer API is unavailable right now.'
 }
 
-const DEMO_USAGE: ApiUsageSummary = {
-  totalCallsToday: 1842,
-  totalCallsMonth: 45231,
-  monthLimit: 100000,
-  successRate: 98.7,
-  avgLatencyMs: 142,
-  dailyStats: generateDailyStats(),
-  endpointBreakdown: [
-    { endpoint: '/api/v1/leads', calls: 12543, percentage: 27.7 },
-    { endpoint: '/api/v1/solar/analyze', calls: 8921, percentage: 19.7 },
-    { endpoint: '/api/v1/proposals', calls: 4322, percentage: 9.6 },
-    { endpoint: '/api/v1/deals', calls: 3891, percentage: 8.6 },
-    { endpoint: '/api/v1/auth/me', calls: 2100, percentage: 4.6 },
-  ],
+function asArray<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : []
 }
 
-// ============== Hooks ==============
+function mapApiKey(raw: Record<string, unknown>): ApiKey {
+  const createdAt = raw.createdAt ?? raw.created_at
+  const lastUsedAt = raw.lastUsedAt ?? raw.last_used_at
+  return {
+    id: String(raw.id ?? ''),
+    name: String(raw.name ?? 'Unnamed key'),
+    keyPrefix: String(raw.keyPrefix ?? raw.key_prefix ?? ''),
+    keyMasked: String(raw.keyMasked ?? raw.key_masked ?? raw.masked_key ?? ''),
+    environment: raw.environment === 'live' ? 'live' : 'test',
+    permissions: asArray<string>(raw.permissions).map(String),
+    status: raw.status === 'revoked' ? 'revoked' : 'active',
+    createdAt: createdAt ? new Date(String(createdAt)) : new Date(),
+    lastUsedAt: lastUsedAt ? new Date(String(lastUsedAt)) : undefined,
+    callCount: Number(raw.callCount ?? raw.call_count ?? 0),
+  }
+}
+
+function mapApiKeyCreateResult(raw: Record<string, unknown>): ApiKeyCreateResult {
+  return {
+    ...mapApiKey(raw),
+    fullKey: String(raw.fullKey ?? raw.full_key ?? raw.key ?? ''),
+  }
+}
+
+function mapWebhook(raw: Record<string, unknown>): Webhook {
+  const createdAt = raw.createdAt ?? raw.created_at
+  const lastTriggeredAt = raw.lastTriggeredAt ?? raw.last_triggered_at
+  return {
+    id: String(raw.id ?? ''),
+    url: String(raw.url ?? ''),
+    events: asArray<string>(raw.events).map(String),
+    status: raw.status === 'disabled' ? 'disabled' : 'active',
+    secret: String(raw.secret ?? ''),
+    lastTriggeredAt: lastTriggeredAt ? new Date(String(lastTriggeredAt)) : undefined,
+    createdAt: createdAt ? new Date(String(createdAt)) : new Date(),
+    failureCount: Number(raw.failureCount ?? raw.failure_count ?? 0),
+  }
+}
+
+function mapUsage(raw: Record<string, unknown>): ApiUsageSummary {
+  return {
+    totalCallsToday: Number(raw.totalCallsToday ?? raw.total_calls_today ?? 0),
+    totalCallsMonth: Number(raw.totalCallsMonth ?? raw.total_calls_month ?? 0),
+    monthLimit: Number(raw.monthLimit ?? raw.month_limit ?? 0),
+    successRate: Number(raw.successRate ?? raw.success_rate ?? 0),
+    avgLatencyMs: Number(raw.avgLatencyMs ?? raw.avg_latency_ms ?? 0),
+    dailyStats: asArray<Record<string, unknown>>(raw.dailyStats ?? raw.daily_stats).map((item) => ({
+      date: String(item.date ?? ''),
+      calls: Number(item.calls ?? 0),
+      errors: Number(item.errors ?? 0),
+    })),
+    endpointBreakdown: asArray<Record<string, unknown>>(
+      raw.endpointBreakdown ?? raw.endpoint_breakdown
+    ).map((item) => ({
+      endpoint: String(item.endpoint ?? ''),
+      calls: Number(item.calls ?? 0),
+      percentage: Number(item.percentage ?? 0),
+    })),
+  }
+}
 
 export function useApiKeys() {
   const [keys, setKeys] = useState<ApiKey[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [isDemoMode, setIsDemoMode] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchKeys = useCallback(async () => {
     setIsLoading(true)
+    setError(null)
     try {
-      const response = await apiClient.get('/api/v1/developer/keys')
-      if (response.data?.keys) {
-        setKeys(response.data.keys)
-        setIsDemoMode(false)
-      } else {
-        setKeys(DEMO_API_KEYS)
-        setIsDemoMode(true)
-      }
-    } catch {
-      setKeys(DEMO_API_KEYS)
-      setIsDemoMode(true)
+      const response = await apiClient.get('/api/v1/developers/keys')
+      const items = asArray<Record<string, unknown>>(
+        response.data?.items ?? response.data?.keys ?? response.data
+      )
+      setKeys(items.map(mapApiKey))
+    } catch (err) {
+      setKeys([])
+      setError(formatApiError(err))
     } finally {
       setIsLoading(false)
     }
@@ -197,26 +188,15 @@ export function useApiKeys() {
       permissions: string[]
     }): Promise<ApiKeyCreateResult> => {
       try {
-        const response = await apiClient.post('/api/v1/developer/keys', data)
-        const newKey = response.data
+        setError(null)
+        const response = await apiClient.post('/api/v1/developers/keys', data)
+        const newKey = mapApiKeyCreateResult(response.data)
         setKeys((prev) => [...prev, newKey])
         return newKey
-      } catch {
-        // Demo mode: simulate key creation
-        const demoKey: ApiKeyCreateResult = {
-          id: `key-demo-${Date.now()}`,
-          name: data.name,
-          keyPrefix: data.environment === 'live' ? 'sk-live' : 'sk-test',
-          keyMasked: `${data.environment === 'live' ? 'sk-live' : 'sk-test'}-••••••••••••••••••••••Demo${Math.random().toString(36).slice(2, 6)}`,
-          fullKey: `${data.environment === 'live' ? 'sk-live' : 'sk-test'}-${Array.from({ length: 32 }, () => Math.random().toString(36)[2]).join('')}`,
-          environment: data.environment,
-          permissions: data.permissions,
-          status: 'active',
-          createdAt: new Date(),
-          callCount: 0,
-        }
-        setKeys((prev) => [...prev, demoKey])
-        return demoKey
+      } catch (err) {
+        const message = formatApiError(err)
+        setError(message)
+        throw new Error(message)
       }
     },
     []
@@ -224,31 +204,38 @@ export function useApiKeys() {
 
   const revokeKey = useCallback(async (keyId: string): Promise<void> => {
     try {
-      await apiClient.delete(`/api/v1/developer/keys/${keyId}`)
-    } catch {
-      // Demo mode: allow
+      setError(null)
+      await apiClient.delete(`/api/v1/developers/keys/${keyId}`)
+      setKeys((prev) =>
+        prev.map((key) => (key.id === keyId ? { ...key, status: 'revoked' as const } : key))
+      )
+    } catch (err) {
+      const message = formatApiError(err)
+      setError(message)
+      throw new Error(message)
     }
-    setKeys((prev) => prev.map((k) => (k.id === keyId ? { ...k, status: 'revoked' as const } : k)))
   }, [])
 
-  return { keys, isLoading, isDemoMode, createKey, revokeKey, refetch: fetchKeys }
+  return { keys, isLoading, error, createKey, revokeKey, refetch: fetchKeys }
 }
 
 export function useWebhooks() {
   const [webhooks, setWebhooks] = useState<Webhook[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchWebhooks = useCallback(async () => {
     setIsLoading(true)
+    setError(null)
     try {
-      const response = await apiClient.get('/api/v1/developer/webhooks')
-      if (response.data?.webhooks) {
-        setWebhooks(response.data.webhooks)
-      } else {
-        setWebhooks(DEMO_WEBHOOKS)
-      }
-    } catch {
-      setWebhooks(DEMO_WEBHOOKS)
+      const response = await apiClient.get('/api/v1/developers/webhooks')
+      const items = asArray<Record<string, unknown>>(
+        response.data?.items ?? response.data?.webhooks ?? response.data
+      )
+      setWebhooks(items.map(mapWebhook))
+    } catch (err) {
+      setWebhooks([])
+      setError(formatApiError(err))
     } finally {
       setIsLoading(false)
     }
@@ -261,22 +248,15 @@ export function useWebhooks() {
   const createWebhook = useCallback(
     async (data: { url: string; events: string[] }): Promise<Webhook> => {
       try {
-        const response = await apiClient.post('/api/v1/developer/webhooks', data)
-        const wh = response.data
-        setWebhooks((prev) => [...prev, wh])
-        return wh
-      } catch {
-        const demoWh: Webhook = {
-          id: `wh-demo-${Date.now()}`,
-          url: data.url,
-          events: data.events,
-          status: 'active',
-          secret: `whsec_demo_${Math.random().toString(36).slice(2, 18)}`,
-          createdAt: new Date(),
-          failureCount: 0,
-        }
-        setWebhooks((prev) => [...prev, demoWh])
-        return demoWh
+        setError(null)
+        const response = await apiClient.post('/api/v1/developers/webhooks', data)
+        const webhook = mapWebhook(response.data)
+        setWebhooks((prev) => [...prev, webhook])
+        return webhook
+      } catch (err) {
+        const message = formatApiError(err)
+        setError(message)
+        throw new Error(message)
       }
     },
     []
@@ -284,47 +264,60 @@ export function useWebhooks() {
 
   const deleteWebhook = useCallback(async (webhookId: string): Promise<void> => {
     try {
-      await apiClient.delete(`/api/v1/developer/webhooks/${webhookId}`)
-    } catch {
-      // Demo: allow
+      setError(null)
+      await apiClient.delete(`/api/v1/developers/webhooks/${webhookId}`)
+      setWebhooks((prev) => prev.filter((webhook) => webhook.id !== webhookId))
+    } catch (err) {
+      const message = formatApiError(err)
+      setError(message)
+      throw new Error(message)
     }
-    setWebhooks((prev) => prev.filter((w) => w.id !== webhookId))
   }, [])
 
   const testWebhook = useCallback(async (webhookId: string): Promise<boolean> => {
     try {
-      await apiClient.post(`/api/v1/developer/webhooks/${webhookId}/test`)
+      setError(null)
+      await apiClient.post(`/api/v1/developers/webhooks/${webhookId}/test`)
       return true
-    } catch {
+    } catch (err) {
+      setError(formatApiError(err))
       return false
     }
   }, [])
 
-  return { webhooks, isLoading, createWebhook, deleteWebhook, testWebhook, refetch: fetchWebhooks }
+  return {
+    webhooks,
+    isLoading,
+    error,
+    createWebhook,
+    deleteWebhook,
+    testWebhook,
+    refetch: fetchWebhooks,
+  }
 }
 
 export function useApiUsage() {
   const [usage, setUsage] = useState<ApiUsageSummary | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchUsage = async () => {
       setIsLoading(true)
+      setError(null)
       try {
-        const response = await apiClient.get('/api/v1/developer/usage')
-        if (response.data) {
-          setUsage(response.data)
-        } else {
-          setUsage(DEMO_USAGE)
-        }
-      } catch {
-        setUsage(DEMO_USAGE)
+        const response = await apiClient.get('/api/v1/developers/usage')
+        setUsage(response.data ? mapUsage(response.data) : null)
+      } catch (err) {
+        setUsage(null)
+        setError(formatApiError(err))
       } finally {
         setIsLoading(false)
       }
     }
-    fetch()
+
+    fetchUsage()
   }, [])
 
-  return { usage, isLoading }
+  return { usage, isLoading, error }
 }

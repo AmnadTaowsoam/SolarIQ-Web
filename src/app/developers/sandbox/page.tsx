@@ -211,9 +211,7 @@ function TestCard({
                 {result.latencyMs}ms
               </span>
             </div>
-            {result.error && (
-              <span className="text-xs text-orange-600">{t('sandbox.demoSimulated')}</span>
-            )}
+            {result.error && <span className="text-xs text-orange-600">{result.error}</span>}
           </div>
           <pre className="text-xs font-mono text-[var(--brand-text)] overflow-x-auto">
             {JSON.stringify(result.data, null, 2)}
@@ -230,9 +228,11 @@ export default function SandboxPage() {
   const [results, setResults] = useState<Record<string, TestResult | null>>({})
   const [runningId, setRunningId] = useState<string | null>(null)
   const [isResetting, setIsResetting] = useState(false)
+  const [error, setError] = useState('')
 
   const handleRun = async (test: QuickTest) => {
     setRunningId(test.id)
+    setError('')
     const start = Date.now()
     try {
       const response = await apiClient.post(test.endpoint.split(' ')[1] || '', test.payload, {
@@ -242,14 +242,15 @@ export default function SandboxPage() {
         ...prev,
         [test.id]: { status: response.status, data: response.data, latencyMs: Date.now() - start },
       }))
-    } catch {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Sandbox request failed.'
       setResults((prev) => ({
         ...prev,
         [test.id]: {
-          status: 200,
-          data: test.demoResponse,
+          status: 500,
+          data: { message },
           latencyMs: Date.now() - start,
-          error: 'demo',
+          error: message,
         },
       }))
     } finally {
@@ -259,10 +260,11 @@ export default function SandboxPage() {
 
   const handleReset = async () => {
     setIsResetting(true)
+    setError('')
     try {
-      await apiClient.post('/api/v1/developer/sandbox/reset')
-    } catch {
-      /* demo */
+      await apiClient.post('/api/v1/developers/sandbox/reset')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to reset sandbox right now.')
     }
     setResults({})
     setIsResetting(false)
@@ -299,6 +301,12 @@ export default function SandboxPage() {
           {isResetting ? t('sandbox.resetting') : t('sandbox.resetData')}
         </button>
       </div>
+
+      {error && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          {error}
+        </div>
+      )}
 
       {/* Sandbox key */}
       <div className="bg-blue-500/10 border border-blue-100 rounded-xl p-4 flex items-start gap-3">

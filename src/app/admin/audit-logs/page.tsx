@@ -257,8 +257,8 @@ export default function AdminAuditLogsPage() {
   // Applied filters (only sent to API on "Search" click)
   const [appliedFilters, setAppliedFilters] = useState<AuditLogFilters>({ page: 1, page_size: 50 })
 
-  const { data: logsData, isLoading: logsLoading } = useAuditLogs(appliedFilters)
-  const { data: stats, isLoading: statsLoading } = useAuditStats()
+  const { data: logsData, isLoading: logsLoading, error: logsError } = useAuditLogs(appliedFilters)
+  const { data: stats, isLoading: statsLoading, error: statsError } = useAuditStats()
   const { exportLogs } = useExportAuditLogs()
 
   const handleSearch = useCallback(() => {
@@ -290,15 +290,24 @@ export default function AdminAuditLogsPage() {
     setAppliedFilters((prev) => ({ ...prev, page: newPage }))
   }, [])
 
-  const handleExport = useCallback(() => {
-    exportLogs({
-      date_from: appliedFilters.date_from,
-      date_to: appliedFilters.date_to,
-      action: appliedFilters.action,
-      resource_type: appliedFilters.resource_type,
-      user_search: appliedFilters.user_search,
-    })
+  const handleExport = useCallback(async () => {
+    try {
+      await exportLogs({
+        date_from: appliedFilters.date_from,
+        date_to: appliedFilters.date_to,
+        action: appliedFilters.action,
+        resource_type: appliedFilters.resource_type,
+        user_search: appliedFilters.user_search,
+      })
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : 'Audit logs export is unavailable.')
+    }
   }, [exportLogs, appliedFilters])
+
+  const auditWarning =
+    (logsError instanceof Error && logsError.message) ||
+    (statsError instanceof Error && statsError.message) ||
+    null
 
   const logs = logsData?.items ?? []
   const totalPages = logsData?.total_pages ?? 1
@@ -356,6 +365,12 @@ export default function AdminAuditLogsPage() {
             {t('exportCsv')}
           </button>
         </div>
+
+        {auditWarning && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {auditWarning}
+          </div>
+        )}
 
         {/* Filter Bar */}
         <div className="bg-[var(--brand-surface)] rounded-xl border border-[var(--brand-border)] p-4">

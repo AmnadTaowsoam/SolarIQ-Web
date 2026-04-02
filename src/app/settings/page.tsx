@@ -1033,11 +1033,10 @@ function NotificationPreferencesSection() {
             onClick={async () => {
               try {
                 const { apiClient } = await import('@/lib/api')
-                await apiClient.put('/api/v1/users/notification-preferences', { preferences })
+                await apiClient.put('/api/v1/users/me/preferences', { notifications: preferences })
                 alert('Notification settings saved!')
               } catch {
-                localStorage.setItem('solariq_notification_prefs', JSON.stringify(preferences))
-                alert('Settings saved locally. Will sync when online.')
+                alert('Unable to save notification settings right now.')
               }
             }}
           >
@@ -1056,30 +1055,38 @@ function NotificationPreferencesSection() {
 function TeamMembersSection() {
   const t = useTranslations('settingsPage')
   const [members, setMembers] = useState<TeamMember[]>(DEMO_TEAM)
+  const [isLoadingMembers, setIsLoadingMembers] = useState(true)
+  const [membersError, setMembersError] = useState<string | null>(null)
   const [inviteEmail, setInviteEmail] = useState('')
 
-  // Fetch team members from API with demo fallback
+  // Team roster endpoint is not available yet; hydrate only the signed-in user when possible.
   useEffect(() => {
+    setIsLoadingMembers(true)
+    setMembersError(null)
     apiClient
-      .get('/api/v1/users')
+      .get('/api/v1/users/me')
       .then((response) => {
-        const payload = response.data
-        const users = payload.users || payload.items || payload
-        if (Array.isArray(users) && users.length > 0) {
-          const nextMembers = users
-            .map(toTeamMember)
-            .filter((member): member is TeamMember => member !== null)
-          if (nextMembers.length > 0) {
-            setMembers(nextMembers)
-          }
+        const member = toTeamMember(response.data)
+        if (member) {
+          setMembers([member])
+        } else {
+          setMembers([])
         }
       })
-      .catch(() => {
-        /* keep demo data */
+      .catch((error: unknown) => {
+        setMembers([])
+        setMembersError(
+          error instanceof Error
+            ? error.message
+            : 'Team member management is currently unavailable.'
+        )
+      })
+      .finally(() => {
+        setIsLoadingMembers(false)
       })
   }, [])
   const [inviteRole, setInviteRole] = useState<'admin' | 'contractor'>('contractor')
-  const [showInvite, setShowInvite] = useState(false)
+  const [showInvite, _setShowInvite] = useState(false)
 
   const statusLabel: Record<TeamMember['status'], { text: string; className: string }> = {
     active: { text: t('team.memberStatus.active'), className: 'bg-green-500/10 text-green-700' },
@@ -1104,7 +1111,7 @@ function TeamMembersSection() {
         title={t('team.title')}
         subtitle={t('team.subtitle')}
         action={
-          <Button variant="primary" size="sm" onClick={() => setShowInvite(!showInvite)}>
+          <Button variant="primary" size="sm" disabled>
             <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -1118,6 +1125,13 @@ function TeamMembersSection() {
         }
       />
       <CardBody className="space-y-4">
+        {membersError && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {membersError} Team invitations and full roster sync are disabled until a dedicated team
+            members endpoint is available.
+          </div>
+        )}
+
         {/* Invite form */}
         {showInvite && (
           <div className="p-4 bg-orange-50/50 border border-orange-100 rounded-xl space-y-3">
@@ -1171,64 +1185,85 @@ function TeamMembersSection() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--brand-border)]">
-              {members.map((member) => (
-                <tr key={member.id} className="hover:bg-[var(--brand-primary-light)]/50">
-                  <td className="py-3 px-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-gray-600 to-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs font-semibold text-white">
-                          {member.name.charAt(0)}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-[var(--brand-text)]">
-                          {member.name}
-                        </p>
-                        <p className="text-xs text-[var(--brand-text-secondary)] sm:hidden">
-                          {member.email}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 px-2 text-sm text-[var(--brand-text-secondary)] hidden sm:table-cell">
-                    {member.email}
-                  </td>
-                  <td className="py-3 px-2 text-sm text-[var(--brand-text)]">
-                    {roleLabel[member.role]}
-                  </td>
-                  <td className="py-3 px-2">
-                    <span
-                      className={clsx(
-                        'inline-flex px-2 py-0.5 rounded-full text-xs font-medium',
-                        statusLabel[member.status].className
-                      )}
-                    >
-                      {statusLabel[member.status].text}
-                    </span>
-                  </td>
-                  <td className="py-3 px-2 text-right">
-                    <button
-                      type="button"
-                      className="p-1.5 text-[var(--brand-text-secondary)] hover:text-red-600 hover:bg-red-500/10 rounded-lg transition-colors"
-                      title={t('team.deleteMember')}
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                        />
-                      </svg>
-                    </button>
+              {isLoadingMembers && (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="py-8 px-2 text-center text-sm text-[var(--brand-text-secondary)]"
+                  >
+                    Loading team members...
                   </td>
                 </tr>
-              ))}
+              )}
+              {!isLoadingMembers && members.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="py-8 px-2 text-center text-sm text-[var(--brand-text-secondary)]"
+                  >
+                    No team members could be loaded.
+                  </td>
+                </tr>
+              )}
+              {!isLoadingMembers &&
+                members.map((member) => (
+                  <tr key={member.id} className="hover:bg-[var(--brand-primary-light)]/50">
+                    <td className="py-3 px-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gradient-to-br from-gray-600 to-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-xs font-semibold text-white">
+                            {member.name.charAt(0)}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-[var(--brand-text)]">
+                            {member.name}
+                          </p>
+                          <p className="text-xs text-[var(--brand-text-secondary)] sm:hidden">
+                            {member.email}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 px-2 text-sm text-[var(--brand-text-secondary)] hidden sm:table-cell">
+                      {member.email}
+                    </td>
+                    <td className="py-3 px-2 text-sm text-[var(--brand-text)]">
+                      {roleLabel[member.role]}
+                    </td>
+                    <td className="py-3 px-2">
+                      <span
+                        className={clsx(
+                          'inline-flex px-2 py-0.5 rounded-full text-xs font-medium',
+                          statusLabel[member.status].className
+                        )}
+                      >
+                        {statusLabel[member.status].text}
+                      </span>
+                    </td>
+                    <td className="py-3 px-2 text-right">
+                      <button
+                        type="button"
+                        className="p-1.5 text-[var(--brand-text-secondary)] hover:text-red-600 hover:bg-red-500/10 rounded-lg transition-colors"
+                        title={t('team.deleteMember')}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                          />
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

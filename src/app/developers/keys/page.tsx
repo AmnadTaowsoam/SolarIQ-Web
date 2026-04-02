@@ -46,15 +46,19 @@ function CreateKeyModal({
   const [isCreating, setIsCreating] = useState(false)
   const [createdKey, setCreatedKey] = useState<ApiKeyCreateResult | null>(null)
   const [copied, setCopied] = useState(false)
+  const [error, setError] = useState('')
 
   const handleCreate = async () => {
     if (!name.trim()) {
       return
     }
     setIsCreating(true)
+    setError('')
     try {
       const result = await onCreate({ name: name.trim(), environment, permissions })
       setCreatedKey(result)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to create API key right now.')
     } finally {
       setIsCreating(false)
     }
@@ -95,6 +99,11 @@ function CreateKeyModal({
         </div>
 
         <div className="p-6 space-y-5">
+          {error && (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
           {createdKey ? (
             <div className="space-y-4">
               <div className="bg-green-500/10 border border-green-200 rounded-xl p-4">
@@ -324,10 +333,11 @@ function RevokeConfirmModal({
 // ============== Main Page ==============
 
 export default function ApiKeysPage() {
-  const { keys, isLoading, isDemoMode, createKey, revokeKey } = useApiKeys()
+  const { keys, isLoading, error, createKey, revokeKey } = useApiKeys()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [revokeTarget, setRevokeTarget] = useState<ApiKey | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [actionError, setActionError] = useState('')
   const t = useTranslations('developersPage')
 
   const handleCopy = (key: ApiKey) => {
@@ -340,8 +350,13 @@ export default function ApiKeysPage() {
     if (!revokeTarget) {
       return
     }
-    await revokeKey(revokeTarget.id)
-    setRevokeTarget(null)
+    try {
+      setActionError('')
+      await revokeKey(revokeTarget.id)
+      setRevokeTarget(null)
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Unable to revoke API key right now.')
+    }
   }
 
   return (
@@ -368,7 +383,7 @@ export default function ApiKeysPage() {
         </button>
       </div>
 
-      {isDemoMode && (
+      {(error || actionError) && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-center gap-2 text-sm">
           <svg
             className="w-4 h-4 text-amber-500 flex-shrink-0"
@@ -383,7 +398,7 @@ export default function ApiKeysPage() {
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span className="text-amber-800">{t('keys.demoMode')}</span>
+          <span className="text-amber-800">{actionError || error}</span>
         </div>
       )}
 

@@ -219,8 +219,8 @@ export default function SessionsPage() {
   const locale = extractLocaleFromPath(pathname).locale ?? defaultLocale
   const t = useTranslations('appPages.sessions')
   const { user, isLoading: authLoading } = useAuth()
-  const { data: sessions, isLoading: sessionsLoading } = useActiveSessions()
-  const { data: loginHistory, isLoading: historyLoading } = useLoginHistory()
+  const { data: sessions, isLoading: sessionsLoading, error: sessionsError } = useActiveSessions()
+  const { data: loginHistory, isLoading: historyLoading, error: historyError } = useLoginHistory()
   const terminateSession = useTerminateSession()
   const terminateOthers = useTerminateOthers()
   const [terminatingId, setTerminatingId] = useState<string | null>(null)
@@ -267,6 +267,15 @@ export default function SessionsPage() {
           <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
           <p className="text-sm text-[var(--brand-text-secondary)] mt-1">{t('subtitle')}</p>
         </div>
+
+        {(sessionsError || historyError || terminateSession.error || terminateOthers.error) && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {sessionsError?.message ||
+              historyError?.message ||
+              terminateSession.error?.message ||
+              terminateOthers.error?.message}
+          </div>
+        )}
 
         {/* Current Session */}
         <section>

@@ -7,16 +7,21 @@ import {
   QuoteComparisonData,
   QuoteFormData,
   QuoteRequestFormData,
-  QuoteStatus,
   SystemSpecification,
   PricingBreakdown,
   InstallationTimeline,
   WarrantyTerms,
   FinancingOptions,
-  ContractorSummary,
 } from '@/types/quotes'
 
 import { apiClient } from '@/lib/api'
+
+function formatQuoteError(error: unknown): string {
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+  return 'Quote service is unavailable right now.'
+}
 
 // ── Demo data fallback ─────────────────────────────────────────────────────────
 
@@ -324,11 +329,22 @@ export function useQuoteRequest(requestId: string | null) {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await apiClient.get(`/api/v1/quotes/requests/${requestId}`)
-      setData(res.data)
-    } catch {
-      const found = DEMO_QUOTE_REQUESTS.find((r) => r.id === requestId)
-      setData(found || null)
+      const res = await apiClient.get('/api/v1/quotes/requests', {
+        params: { limit: 100, offset: 0 },
+      })
+      const items = Array.isArray(res.data?.items)
+        ? res.data.items
+        : Array.isArray(res.data)
+          ? res.data
+          : []
+      const found = items.find((item: QuoteRequest) => item.id === requestId) ?? null
+      setData(found)
+      if (!found) {
+        setError('Quote request not found.')
+      }
+    } catch (err) {
+      setData(null)
+      setError(formatQuoteError(err))
     } finally {
       setIsLoading(false)
     }
@@ -352,8 +368,9 @@ export function useAvailableRequests() {
     try {
       const res = await apiClient.get('/api/v1/quotes/requests/available')
       setData(res.data.items || res.data)
-    } catch {
-      setData(DEMO_AVAILABLE_REQUESTS)
+    } catch (err) {
+      setData([])
+      setError(formatQuoteError(err))
     } finally {
       setIsLoading(false)
     }
@@ -378,60 +395,11 @@ export function useQuoteComparison(requestId: string | null) {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await apiClient.get(`/api/v1/quotes/requests/${requestId}/compare`)
+      const res = await apiClient.get(`/api/v1/quotes/compare/${requestId}`)
       setData(res.data)
-    } catch {
-      if (requestId === 'req-demo-1') {
-        const items = DEMO_QUOTES.map((q) => ({
-          quoteId: q.id,
-          contractor: q.contractor as ContractorSummary,
-          system: {
-            panelBrand: q.specifications.panelBrand,
-            panelWattage: q.specifications.panelWattage,
-            panelCount: q.specifications.panelCount,
-            totalKw: q.specifications.totalPanelKw,
-            inverterBrand: q.specifications.inverterBrand,
-            hasBattery: !!q.specifications.batteryBrand,
-          },
-          pricing: {
-            totalPrice: q.pricing.totalPrice,
-            pricePerKw: q.pricing.pricePerKw,
-            discountPct:
-              q.pricing.discountAmount > 0
-                ? (q.pricing.discountAmount / (q.pricing.subtotal + q.pricing.discountAmount)) * 100
-                : 0,
-            hasFinancing: q.financing?.installmentAvailable || false,
-            monthlyInstallment: q.financing?.installmentMonthlyAmount?.['36'],
-          },
-          timeline: {
-            installationStart: q.timeline.installationStartDate,
-            installationEnd: q.timeline.installationEndDate,
-            totalDays: q.timeline.estimatedTotalDays,
-          },
-          warranty: {
-            panelYears: q.warranty.panelPerformanceYears,
-            inverterYears: q.warranty.inverterYears,
-            installationYears: q.warranty.installationYears,
-          },
-          savings: {
-            monthlyKwh: q.specifications.estimatedMonthlyKwh,
-            monthlySavingsThb: q.specifications.estimatedMonthlySavingsThb,
-            paybackYears: q.specifications.estimatedPaybackYears,
-          },
-        }))
-        setData({
-          requestId,
-          quotes: items,
-          analysis: {
-            cheapest: 'quote-demo-1',
-            bestValue: 'quote-demo-1',
-            fastest: 'quote-demo-3',
-            highestRated: 'quote-demo-3',
-          },
-        })
-      } else {
-        setData({ requestId, quotes: [], analysis: null })
-      }
+    } catch (err) {
+      setData(null)
+      setError(formatQuoteError(err))
     } finally {
       setIsLoading(false)
     }
@@ -458,9 +426,9 @@ export function useQuoteDetail(quoteId: string | null) {
     try {
       const res = await apiClient.get(`/api/v1/quotes/${quoteId}`)
       setData(res.data)
-    } catch {
-      const found = DEMO_QUOTES.find((q) => q.id === quoteId)
-      setData(found || null)
+    } catch (err) {
+      setData(null)
+      setError(formatQuoteError(err))
     } finally {
       setIsLoading(false)
     }
@@ -482,10 +450,13 @@ export function useMyQuoteRequests() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await apiClient.get('/api/v1/quotes/requests/my')
+      const res = await apiClient.get('/api/v1/quotes/requests', {
+        params: { limit: 100, offset: 0 },
+      })
       setData(res.data.items || res.data)
-    } catch {
-      setData(DEMO_QUOTE_REQUESTS)
+    } catch (err) {
+      setData([])
+      setError(formatQuoteError(err))
     } finally {
       setIsLoading(false)
     }
@@ -506,32 +477,12 @@ export function useSubmitQuoteRequest() {
     setIsLoading(true)
     setError(null)
     try {
-      const res = await apiClient.post('/api/v1/quotes/requests', data)
+      const res = await apiClient.post('/api/v1/quotes/request', data)
       return res.data
-    } catch {
-      // Demo fallback
-      const newRequest: QuoteRequest = {
-        id: `req-${Date.now()}`,
-        leadId: data.leadId,
-        b2cUserId: 'current-user',
-        preferences: {
-          budgetRange: data.budgetRange,
-          preferredTimeline: data.preferredTimeline,
-          financingPreference: data.financingPreference,
-          preferredPanelBrand: data.preferredPanelBrand,
-          preferredSystemSizeKw: data.preferredSystemSizeKw,
-          additionalRequirements: data.additionalRequirements,
-          maxQuotes: data.maxQuotes,
-          contactPreference: data.contactPreference,
-        },
-        status: 'open',
-        maxQuotes: data.maxQuotes,
-        quotesReceived: 0,
-        contractorsNotified: 0,
-        createdAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      }
-      return newRequest
+    } catch (err) {
+      const message = formatQuoteError(err)
+      setError(message)
+      throw new Error(message)
     } finally {
       setIsLoading(false)
     }
@@ -550,29 +501,10 @@ export function useSubmitQuote() {
     try {
       const res = await apiClient.post('/api/v1/quotes', data)
       return res.data
-    } catch {
-      const mock: Quote = {
-        id: `quote-${Date.now()}`,
-        requestId: data.requestId,
-        contractorId: 'current-contractor',
-        version: 1,
-        quoteNumber: `Q-2569-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-        specifications: data.specifications,
-        pricing: data.pricing,
-        timeline: data.timeline,
-        warranty: data.warranty,
-        financing: data.financing,
-        additionalServices: data.additionalServices,
-        totalPrice: data.pricing.totalPrice,
-        pricePerKw: data.pricing.pricePerKw,
-        notes: data.notes,
-        attachments: data.attachments,
-        validUntil: new Date(Date.now() + data.validDays * 24 * 60 * 60 * 1000).toISOString(),
-        status: 'submitted' as QuoteStatus,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }
-      return mock
+    } catch (err) {
+      const message = formatQuoteError(err)
+      setError(message)
+      throw new Error(message)
     } finally {
       setIsLoading(false)
     }
@@ -592,28 +524,10 @@ export function useSaveDraftQuote() {
       try {
         const res = await apiClient.post('/api/v1/quotes/draft', data)
         return res.data
-      } catch {
-        const mock: Quote = {
-          id: `draft-${Date.now()}`,
-          requestId: data.requestId,
-          contractorId: 'current-contractor',
-          version: 1,
-          quoteNumber: '',
-          specifications:
-            (data.specifications as SystemSpecification) || ({} as SystemSpecification),
-          pricing: (data.pricing as PricingBreakdown) || ({} as PricingBreakdown),
-          timeline: (data.timeline as InstallationTimeline) || ({} as InstallationTimeline),
-          warranty: (data.warranty as WarrantyTerms) || ({} as WarrantyTerms),
-          additionalServices: [],
-          totalPrice: data.pricing?.totalPrice || 0,
-          pricePerKw: data.pricing?.pricePerKw || 0,
-          attachments: [],
-          validUntil: '',
-          status: 'draft' as QuoteStatus,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
-        return mock
+      } catch (err) {
+        const message = formatQuoteError(err)
+        setError(message)
+        throw new Error(message)
       } finally {
         setIsLoading(false)
       }
@@ -634,8 +548,10 @@ export function useAcceptQuote() {
     try {
       const res = await apiClient.post(`/api/v1/quotes/${quoteId}/accept`)
       return res.data
-    } catch {
-      return { dealId: `deal-${Date.now()}` }
+    } catch (err) {
+      const message = formatQuoteError(err)
+      setError(message)
+      throw new Error(message)
     } finally {
       setIsLoading(false)
     }
@@ -653,8 +569,10 @@ export function useDeclineQuote() {
     setError(null)
     try {
       await apiClient.post(`/api/v1/quotes/${quoteId}/decline`, { reason })
-    } catch {
-      // Demo: just resolve
+    } catch (err) {
+      const message = formatQuoteError(err)
+      setError(message)
+      throw new Error(message)
     } finally {
       setIsLoading(false)
     }
@@ -672,9 +590,14 @@ export function useRequestRevision() {
       setIsLoading(true)
       setError(null)
       try {
-        await apiClient.post(`/api/v1/quotes/${quoteId}/revision`, { message, requestedChanges })
-      } catch {
-        // Demo: just resolve
+        await apiClient.post(`/api/v1/quotes/${quoteId}/request-revision`, {
+          message,
+          requestedChanges,
+        })
+      } catch (err) {
+        const errMessage = formatQuoteError(err)
+        setError(errMessage)
+        throw new Error(errMessage)
       } finally {
         setIsLoading(false)
       }

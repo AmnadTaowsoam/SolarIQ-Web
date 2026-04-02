@@ -27,6 +27,7 @@ export default function DataRightsPage(): React.ReactElement {
   const [error, setError] = useState<string | null>(null)
 
   const fetchDataSummary = useCallback(async () => {
+    setError(null)
     try {
       const lineUserId = localStorage.getItem('line_user_id')
       if (!lineUserId) {
@@ -38,31 +39,16 @@ export default function DataRightsPage(): React.ReactElement {
         const data: DataSummary = await response.json()
         setDataSummary(data)
       } else {
-        // Use placeholder data if endpoint not yet implemented
-        setDataSummary({
-          name: '-',
-          phone: '-',
-          email: '-',
-          address: '-',
-          province: '-',
-          analysis_count: 0,
-          consent_count: 0,
-        })
+        setDataSummary(null)
+        setError(t('errors.generalError'))
       }
-    } catch {
-      setDataSummary({
-        name: '-',
-        phone: '-',
-        email: '-',
-        address: '-',
-        province: '-',
-        analysis_count: 0,
-        consent_count: 0,
-      })
+    } catch (err) {
+      setDataSummary(null)
+      setError(err instanceof Error ? err.message : t('errors.generalError'))
     } finally {
       setIsLoading(false)
     }
-  }, [router])
+  }, [router, t])
 
   useEffect(() => {
     fetchDataSummary()

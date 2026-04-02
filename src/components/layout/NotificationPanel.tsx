@@ -24,65 +24,10 @@ interface NotificationPanelProps {
 }
 
 // ---------------------------------------------------------------------------
-// Demo notifications
+// Notifications
 // ---------------------------------------------------------------------------
 
-const DEMO_NOTIFICATIONS: Notification[] = [
-  {
-    id: '1',
-    type: 'proposal',
-    titleKey: 'dealUpdated',
-    descriptionKey: 'dealUpdated',
-    timestampKey: 'minutesAgo',
-    timestampParams: { minutes: 5 },
-    read: false,
-  },
-  {
-    id: '2',
-    type: 'lead',
-    titleKey: 'leadAssigned',
-    descriptionKey: 'leadAssigned',
-    timestampKey: 'minutesAgo',
-    timestampParams: { minutes: 15 },
-    read: false,
-  },
-  {
-    id: '3',
-    type: 'report',
-    titleKey: 'serviceRequest',
-    descriptionKey: 'serviceRequest',
-    timestampKey: 'hoursAgo',
-    timestampParams: { hours: 1 },
-    read: false,
-  },
-  {
-    id: '4',
-    type: 'payment',
-    titleKey: 'invoicePaid',
-    descriptionKey: 'invoicePaid',
-    timestampKey: 'hoursAgo',
-    timestampParams: { hours: 3 },
-    read: true,
-  },
-  {
-    id: '5',
-    type: 'lead',
-    titleKey: 'dealUpdated',
-    descriptionKey: 'dealUpdated',
-    timestampKey: 'hoursAgo',
-    timestampParams: { hours: 5 },
-    read: true,
-  },
-  {
-    id: '6',
-    type: 'system',
-    titleKey: 'systemAlert',
-    descriptionKey: 'systemAlert',
-    timestampKey: 'daysAgo',
-    timestampParams: { days: 1 },
-    read: true,
-  },
-]
+const INITIAL_NOTIFICATIONS: Notification[] = []
 
 // ---------------------------------------------------------------------------
 // Notification type icon map
@@ -167,8 +112,7 @@ const TYPE_CONFIG: Record<Notification['type'], { bg: string; icon: React.ReactN
 // ---------------------------------------------------------------------------
 
 export function useNotificationCount() {
-  // In production, this would come from an API or WebSocket
-  return DEMO_NOTIFICATIONS.filter((n) => !n.read).length
+  return 0
 }
 
 // ---------------------------------------------------------------------------
@@ -176,7 +120,7 @@ export function useNotificationCount() {
 // ---------------------------------------------------------------------------
 
 export function NotificationPanel({ isOpen, onClose }: NotificationPanelProps) {
-  const [notifications, setNotifications] = useState<Notification[]>(DEMO_NOTIFICATIONS)
+  const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS)
   const tNotifications = useTranslations('notifications')
 
   const unreadCount = notifications.filter((n) => !n.read).length

@@ -1,19 +1,18 @@
+'use client'
+
+import { useEffect, useMemo, useState } from 'react'
 import {
-  CheckCircle2,
-  AlertCircle,
-  XCircle,
-  Clock,
   Activity,
-  Server,
-  Database,
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  CreditCard,
   Globe,
   MessageSquare,
-  CreditCard,
+  Server,
+  XCircle,
 } from 'lucide-react'
-
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
+import { apiClient } from '@/lib/api'
 
 type ServiceStatus = 'operational' | 'degraded' | 'outage' | 'maintenance'
 
@@ -22,121 +21,8 @@ interface Service {
   status: ServiceStatus
   description: string
   lastChecked: string
-  uptime: number
+  details?: string
 }
-
-interface Incident {
-  id: string
-  title: string
-  status: 'investigating' | 'identified' | 'monitoring' | 'resolved'
-  severity: 'critical' | 'major' | 'minor'
-  startedAt: string
-  updates: Array<{
-    time: string
-    message: string
-  }>
-}
-
-/* ------------------------------------------------------------------ */
-/*  Data                                                               */
-/* ------------------------------------------------------------------ */
-
-// In production, this data should be fetched from an API
-// For now, using mock data that will be replaced with real monitoring
-const services: Service[] = [
-  {
-    name: 'Frontend Website',
-    status: 'operational',
-    description: 'Public website at www.solariqapp.com',
-    lastChecked: new Date().toISOString(),
-    uptime: 99.9,
-  },
-  {
-    name: 'Backend API',
-    status: 'operational',
-    description: 'REST API at api.solariqapp.com',
-    lastChecked: new Date().toISOString(),
-    uptime: 99.8,
-  },
-  {
-    name: 'Database (Cloud SQL)',
-    status: 'operational',
-    description: 'PostgreSQL database cluster',
-    lastChecked: new Date().toISOString(),
-    uptime: 100,
-  },
-  {
-    name: 'Redis Cache',
-    status: 'operational',
-    description: 'Memorystore for session and caching',
-    lastChecked: new Date().toISOString(),
-    uptime: 100,
-  },
-  {
-    name: 'LINE Messaging API',
-    status: 'operational',
-    description: 'LINE webhook and message delivery',
-    lastChecked: new Date().toISOString(),
-    uptime: 99.9,
-  },
-  {
-    name: 'Payment Processing',
-    status: 'operational',
-    description: 'Stripe/Opn Payments integration',
-    lastChecked: new Date().toISOString(),
-    uptime: 99.5,
-  },
-  {
-    name: 'Google Solar API',
-    status: 'operational',
-    description: 'External API for solar analysis',
-    lastChecked: new Date().toISOString(),
-    uptime: 99.9,
-  },
-  {
-    name: 'AI Services (Gemini)',
-    status: 'operational',
-    description: 'Google Gemini for AI-powered features',
-    lastChecked: new Date().toISOString(),
-    uptime: 99.7,
-  },
-]
-
-const incidents: Incident[] = [
-  // Add active incidents here when they occur
-  // Example:
-  // {
-  //   id: 'INC-2024-001',
-  //   title: 'Elevated latency on Backend API',
-  //   status: 'monitoring',
-  //   severity: 'minor',
-  //   startedAt: '2024-03-27T10:00:00Z',
-  //   updates: [
-  //     {
-  //       time: '2024-03-27T10:00:00Z',
-  //       message: 'We are investigating elevated latency on the Backend API.',
-  //     },
-  //     {
-  //       time: '2024-03-27T10:15:00Z',
-  //       message: 'The issue has been identified and a fix is being deployed.',
-  //     },
-  //     {
-  //       time: '2024-03-27T10:30:00Z',
-  //       message: 'The fix has been deployed and we are monitoring the situation.',
-  //     },
-  //   ],
-  // },
-]
-
-const overallStatus: ServiceStatus = services.every((s) => s.status === 'operational')
-  ? 'operational'
-  : services.some((s) => s.status === 'outage')
-    ? 'outage'
-    : 'degraded'
-
-/* ------------------------------------------------------------------ */
-/*  Components                                                         */
-/* ------------------------------------------------------------------ */
 
 function StatusBadge({ status }: { status: ServiceStatus }) {
   const config = {
@@ -152,7 +38,7 @@ function StatusBadge({ status }: { status: ServiceStatus }) {
     },
     outage: {
       icon: XCircle,
-      className: 'bg-red-100 text-red-400 dark:bg-red-900/30 dark:text-red-400',
+      className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
       label: 'Outage',
     },
     maintenance: {
@@ -178,12 +64,9 @@ function ServiceIcon({ name }: { name: string }) {
   const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     'Frontend Website': Globe,
     'Backend API': Server,
-    'Database (Cloud SQL)': Database,
-    'Redis Cache': Activity,
     'LINE Messaging API': MessageSquare,
-    'Payment Processing': CreditCard,
-    'Google Solar API': Globe,
-    'AI Services (Gemini)': Activity,
+    'Billing & Checkout': CreditCard,
+    'Developer Sandbox': Activity,
   }
 
   const Icon = iconMap[name] || Server
@@ -195,7 +78,7 @@ function ServiceIcon({ name }: { name: string }) {
 function ServiceCard({ service }: { service: Service }) {
   return (
     <div className="rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] p-4 dark:border-gray-800 dark:bg-gray-900">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <ServiceIcon name={service.name} />
           <div>
@@ -205,87 +88,144 @@ function ServiceCard({ service }: { service: Service }) {
             <p className="mt-1 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
               {service.description}
             </p>
+            {service.details && (
+              <p className="mt-2 text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                {service.details}
+              </p>
+            )}
           </div>
         </div>
         <StatusBadge status={service.status} />
       </div>
-      <div className="mt-4 flex items-center justify-between text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
-        <span>Uptime: {service.uptime.toFixed(1)}%</span>
-        <span>Last checked: {new Date(service.lastChecked).toLocaleTimeString('th-TH')}</span>
+      <div className="mt-4 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+        Last checked: {new Date(service.lastChecked).toLocaleTimeString('th-TH')}
       </div>
     </div>
   )
 }
-
-function IncidentCard({ incident }: { incident: Incident }) {
-  const severityConfig = {
-    critical: 'border-red-500 bg-red-500/10 dark:bg-red-900/10',
-    major: 'border-amber-500 bg-amber-50 dark:bg-amber-900/10',
-    minor: 'border-blue-500 bg-blue-500/10 dark:bg-blue-900/10',
-  }
-
-  const statusConfig = {
-    investigating: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-    identified: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-    monitoring: 'bg-blue-500/10 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    resolved: 'bg-green-500/10 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-  }
-
-  return (
-    <div className={`rounded-lg border-l-4 p-4 ${severityConfig[incident.severity]}`}>
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium uppercase">
-              {incident.severity}
-            </span>
-            <span
-              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusConfig[incident.status]}`}
-            >
-              {incident.status}
-            </span>
-          </div>
-          <h3 className="mt-2 font-semibold text-[var(--brand-text)] dark:text-white">
-            {incident.title}
-          </h3>
-        </div>
-        <span className="text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
-          {new Date(incident.startedAt).toLocaleString('th-TH')}
-        </span>
-      </div>
-      <div className="mt-4 space-y-3">
-        {incident.updates.map((update, idx) => (
-          <div key={idx} className="flex gap-3 text-sm">
-            <span className="text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
-              {new Date(update.time).toLocaleString('th-TH')}
-            </span>
-            <span className="text-[var(--brand-text)] dark:text-[var(--brand-text-secondary)]">
-              {update.message}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Page                                                               */
-/* ------------------------------------------------------------------ */
 
 export default function StatusPage() {
+  const [services, setServices] = useState<Service[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [pageWarning, setPageWarning] = useState<string | null>(null)
+
+  useEffect(() => {
+    let isMounted = true
+
+    const now = new Date().toISOString()
+
+    const probe = async (name: string, description: string, request: () => Promise<unknown>) => {
+      try {
+        await request()
+        return { name, status: 'operational' as const, description, lastChecked: now }
+      } catch (error) {
+        return {
+          name,
+          status: 'degraded' as const,
+          description,
+          lastChecked: now,
+          details: error instanceof Error ? error.message : 'Probe failed',
+        }
+      }
+    }
+
+    const load = async () => {
+      setIsLoading(true)
+      setPageWarning(null)
+
+      const results = await Promise.allSettled([
+        probe('Frontend Website', 'Public website at www.solariqapp.com', () =>
+          fetch('/healthz').then((res) => {
+            if (!res.ok) {
+              throw new Error(`Frontend probe failed with ${res.status}`)
+            }
+          })
+        ),
+        probe('Backend API', 'Core REST API health check', async () => {
+          const response = await fetch(
+            'https://solariq-api-269682189177.asia-southeast1.run.app/healthz'
+          )
+          if (!response.ok) {
+            throw new Error(`Backend probe failed with ${response.status}`)
+          }
+        }),
+        probe('LINE Messaging API', 'LINE webhook and message delivery health', async () => {
+          const response = await fetch(
+            'https://solariq-api-269682189177.asia-southeast1.run.app/webhook/line/health'
+          )
+          if (!response.ok) {
+            throw new Error(`LINE probe failed with ${response.status}`)
+          }
+        }),
+        probe('Billing & Checkout', 'Subscription status and checkout readiness', async () => {
+          await apiClient.get('/api/v1/billing/status')
+        }),
+        probe('Developer Sandbox', 'Developer API sandbox availability', async () => {
+          await apiClient.get('/api/v1/developers/sandbox/status')
+        }),
+      ])
+
+      if (!isMounted) {
+        return
+      }
+
+      const nextServices: Service[] = []
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          nextServices.push(result.value)
+        }
+      }
+
+      setServices(nextServices)
+
+      const failedCount = results.filter((result) => result.status === 'rejected').length
+      if (failedCount > 0) {
+        setPageWarning(
+          'Some service probes could not be completed. Only live checks are shown here.'
+        )
+      }
+
+      setIsLoading(false)
+    }
+
+    void load()
+    const timer = window.setInterval(() => {
+      void load()
+    }, 60_000)
+
+    return () => {
+      isMounted = false
+      window.clearInterval(timer)
+    }
+  }, [])
+
+  const overallStatus = useMemo<ServiceStatus>(() => {
+    if (services.length === 0) {
+      return isLoading ? 'maintenance' : 'degraded'
+    }
+
+    if (services.some((service) => service.status === 'outage')) {
+      return 'outage'
+    }
+
+    if (services.some((service) => service.status !== 'operational')) {
+      return 'degraded'
+    }
+
+    return 'operational'
+  }, [isLoading, services])
+
   return (
     <div className="min-h-screen bg-[var(--brand-background)] dark:bg-gray-950">
-      {/* Header */}
       <div className="border-b border-[var(--brand-border)] bg-[var(--brand-surface)] dark:border-gray-800 dark:bg-gray-900">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold text-[var(--brand-text)] dark:text-white">
                 System Status
               </h1>
               <p className="mt-1 text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
-                Real-time status of SolarIQ services
+                Live status checks for SolarIQ services
               </p>
             </div>
             <StatusBadge status={overallStatus} />
@@ -293,73 +233,42 @@ export default function StatusPage() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Active Incidents */}
-        {incidents.length > 0 && (
-          <section className="mb-8">
-            <h2 className="mb-4 text-lg font-semibold text-[var(--brand-text)] dark:text-white">
-              Active Incidents
-            </h2>
-            <div className="space-y-4">
-              {incidents.map((incident) => (
-                <IncidentCard key={incident.id} incident={incident} />
-              ))}
-            </div>
-          </section>
+        {pageWarning && (
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {pageWarning}
+          </div>
         )}
 
-        {/* Services Status */}
         <section>
           <h2 className="mb-4 text-lg font-semibold text-[var(--brand-text)] dark:text-white">
             Services
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {services.map((service) => (
-              <ServiceCard key={service.name} service={service} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 text-sm text-[var(--brand-text-secondary)] dark:border-gray-800 dark:bg-gray-900 dark:text-[var(--brand-text-secondary)]">
+              Checking live service probes...
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {services.map((service) => (
+                <ServiceCard key={service.name} service={service} />
+              ))}
+            </div>
+          )}
         </section>
 
-        {/* Uptime History */}
         <section className="mt-8">
           <h2 className="mb-4 text-lg font-semibold text-[var(--brand-text)] dark:text-white">
-            Uptime History (Last 90 Days)
+            History
           </h2>
-          <div className="rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 dark:border-gray-800 dark:bg-gray-900">
-            <div className="flex gap-1">
-              {Array.from({ length: 90 }).map((_, i) => {
-                // In production, this would be real uptime data
-                const isDown = Math.random() > 0.995
-                return (
-                  <div
-                    key={i}
-                    className={`h-8 flex-1 rounded-sm ${isDown ? 'bg-red-500' : 'bg-green-500'}`}
-                    title={isDown ? 'Outage' : 'Operational'}
-                  />
-                )
-              })}
-            </div>
-            <div className="mt-4 flex items-center justify-between text-sm text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
-              <span>90 days ago</span>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <div className="h-3 w-3 rounded-sm bg-green-500" />
-                  <span>Operational</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="h-3 w-3 rounded-sm bg-red-500" />
-                  <span>Outage</span>
-                </div>
-              </div>
-              <span>Today</span>
-            </div>
+          <div className="rounded-lg border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 text-sm text-[var(--brand-text-secondary)] dark:border-gray-800 dark:bg-gray-900 dark:text-[var(--brand-text-secondary)]">
+            Historical uptime is not published until a dedicated monitoring backend is connected.
+            This page now shows only live probes instead of synthetic uptime data.
           </div>
         </section>
 
-        {/* Footer */}
         <footer className="mt-12 border-t border-[var(--brand-border)] pt-8 text-center text-sm text-[var(--brand-text-secondary)] dark:border-gray-800 dark:text-[var(--brand-text-secondary)]">
-          <p>Status page updated every 1 minute</p>
+          <p>Status page refreshes every 60 seconds</p>
           <p className="mt-1">
             Need help?{' '}
             <a
@@ -373,13 +282,4 @@ export default function StatusPage() {
       </div>
     </div>
   )
-}
-
-/* ------------------------------------------------------------------ */
-/*  Metadata                                                           */
-/* ------------------------------------------------------------------ */
-
-export const metadata = {
-  title: 'System Status - SolarIQ',
-  description: 'Real-time status of SolarIQ services and infrastructure',
 }

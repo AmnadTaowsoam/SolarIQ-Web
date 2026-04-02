@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardHeader, CardBody } from '@/components/ui/Card'
@@ -112,12 +112,14 @@ const DEMO_LAST_LOGIN: LastLoginInfo = {
 function Toggle({
   enabled,
   onChange,
+  disabled = false,
   label,
   description,
   icon: Icon,
 }: {
   enabled: boolean
   onChange: (v: boolean) => void
+  disabled?: boolean
   label: string
   description?: string
   icon?: React.ComponentType<{ className?: string }>
@@ -137,10 +139,11 @@ function Toggle({
         type="button"
         role="switch"
         aria-checked={enabled}
+        disabled={disabled}
         onClick={() => onChange(!enabled)}
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:ring-offset-2 ${
           enabled ? 'bg-[var(--brand-primary)]' : 'bg-[var(--brand-border)]'
-        }`}
+        } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
       >
         <span
           className={`inline-block h-4 w-4 rounded-full bg-[var(--brand-surface)] transition-transform ${
@@ -182,6 +185,9 @@ export default function ProfilePage() {
 
   // Notification prefs
   const [notifPrefs, setNotifPrefs] = useState<NotificationPrefs>(DEMO_NOTIF_PREFS)
+  const [isHydrating, setIsHydrating] = useState(true)
+  const [profileError, setProfileError] = useState<string | null>(null)
+  const [lastLogin, setLastLogin] = useState<LastLoginInfo>(DEMO_LAST_LOGIN)
 
   // Password modal
   const [showPasswordModal, setShowPasswordModal] = useState(false)
@@ -205,6 +211,89 @@ export default function ProfilePage() {
   // Exporting data
   const [exporting, setExporting] = useState(false)
 
+  useEffect(() => {
+    let isMounted = true
+
+    const hydrateProfile = async () => {
+      setIsHydrating(true)
+      setProfileError(null)
+
+      const [profileResult, preferencesResult, mfaResult] = await Promise.allSettled([
+        apiClient.get('/api/v1/users/me'),
+        apiClient.get('/api/v1/users/me/preferences'),
+        apiClient.get('/api/v1/mfa/status'),
+      ])
+
+      if (!isMounted) {
+        return
+      }
+
+      if (profileResult.status === 'fulfilled') {
+        const data = profileResult.value.data ?? {}
+        setProfile((prev) => ({
+          ...prev,
+          displayName: data.display_name ?? data.displayName ?? data.name ?? prev.displayName,
+          email: data.email ?? prev.email,
+          phone: data.phone ?? prev.phone,
+          role: data.role ?? prev.role,
+          emailVerified: Boolean(data.email_verified ?? data.emailVerified ?? prev.emailVerified),
+          firstName: data.first_name ?? data.firstName ?? prev.firstName,
+          lastName: data.last_name ?? data.lastName ?? prev.lastName,
+          position: data.position ?? prev.position,
+          company: data.company ?? data.organization_name ?? prev.company,
+          lineId: data.line_id ?? data.lineId ?? prev.lineId,
+          bio: data.bio ?? prev.bio,
+          photoUrl: data.photo_url ?? data.photoUrl ?? prev.photoUrl,
+        }))
+
+        setLastLogin({
+          ip: data.last_login_ip ?? data.lastLoginIp ?? DEMO_LAST_LOGIN.ip,
+          device: data.last_login_device ?? data.lastLoginDevice ?? DEMO_LAST_LOGIN.device,
+          time: data.last_login_at ?? data.lastLoginAt ?? DEMO_LAST_LOGIN.time,
+        })
+      } else {
+        setProfileError(
+          profileResult.reason instanceof Error
+            ? profileResult.reason.message
+            : t('messages.profileSaveError')
+        )
+      }
+
+      if (preferencesResult.status === 'fulfilled') {
+        const data = preferencesResult.value.data ?? {}
+        const source = data.notifications ?? data
+        setNotifPrefs((prev) => ({
+          emailNotifications: Boolean(
+            source.emailNotifications ?? source.email_notifications ?? prev.emailNotifications
+          ),
+          pushNotifications: Boolean(
+            source.pushNotifications ?? source.push_notifications ?? prev.pushNotifications
+          ),
+          lineNotifications: Boolean(
+            source.lineNotifications ?? source.line_notifications ?? prev.lineNotifications
+          ),
+          weeklyDigest: Boolean(source.weeklyDigest ?? source.weekly_digest ?? prev.weeklyDigest),
+          marketingEmails: Boolean(
+            source.marketingEmails ?? source.marketing_emails ?? prev.marketingEmails
+          ),
+        }))
+      }
+
+      if (mfaResult.status === 'fulfilled') {
+        const data = mfaResult.value.data ?? {}
+        setTwoFactorEnabled(Boolean(data.enabled ?? data.is_enabled ?? false))
+      }
+
+      setIsHydrating(false)
+    }
+
+    void hydrateProfile()
+
+    return () => {
+      isMounted = false
+    }
+  }, [t])
+
   // --- Handlers ---
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -226,13 +315,13 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     setSaving(true)
     try {
-      await apiClient.put('/auth/me', {
-        displayName: profile.displayName,
+      await apiClient.put('/api/v1/users/me', {
+        display_name: profile.displayName,
         phone: profile.phone,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
+        first_name: profile.firstName,
+        last_name: profile.lastName,
         position: profile.position,
-        lineId: profile.lineId,
+        line_id: profile.lineId,
         bio: profile.bio,
       })
       addToast('success', t('messages.profileSaved'))
@@ -245,7 +334,7 @@ export default function ProfilePage() {
 
   const handleSaveNotifications = async () => {
     try {
-      await apiClient.put('/auth/me/notifications', notifPrefs)
+      await apiClient.put('/api/v1/users/me/preferences', { notifications: notifPrefs })
       addToast('success', t('messages.notificationsSaved'))
     } catch {
       addToast('error', t('messages.notificationsSaveError'))
@@ -296,7 +385,7 @@ export default function ProfilePage() {
   const handleExportData = async () => {
     setExporting(true)
     try {
-      await apiClient.get('/auth/me/export')
+      await apiClient.post('/api/v1/privacy/export')
       addToast('success', t('messages.dataExported'))
     } catch {
       addToast('error', t('messages.dataExportError'))
@@ -317,9 +406,25 @@ export default function ProfilePage() {
     viewer: t('roles.viewer'),
   }
 
+  if (isHydrating) {
+    return (
+      <AppLayout>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <div className="w-10 h-10 border-2 border-orange-200 border-t-orange-600 rounded-full animate-spin" />
+        </div>
+      </AppLayout>
+    )
+  }
+
   return (
     <AppLayout>
       <div className="max-w-3xl mx-auto space-y-6">
+        {profileError && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {profileError}
+          </div>
+        )}
+
         {/* Page title */}
         <div>
           <h1 className="text-2xl font-bold text-[var(--brand-text)]">{t('title')}</h1>
@@ -630,7 +735,10 @@ export default function ProfilePage() {
               <div className="border-t border-[var(--brand-border)] pt-5">
                 <Toggle
                   enabled={twoFactorEnabled}
-                  onChange={setTwoFactorEnabled}
+                  onChange={() =>
+                    addToast('info', 'Two-factor setup is currently read-only on this page.')
+                  }
+                  disabled
                   label={t('security.twoFactor')}
                   description={t('security.twoFactorDesc')}
                   icon={Smartphone}
@@ -655,15 +763,15 @@ export default function ProfilePage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2 text-[var(--brand-text-secondary)]">
                     <MapPin className="w-4 h-4" />
-                    <span>{t('security.lastLoginIp', { ip: DEMO_LAST_LOGIN.ip })}</span>
+                    <span>{t('security.lastLoginIp', { ip: lastLogin.ip })}</span>
                   </div>
                   <div className="flex items-center gap-2 text-[var(--brand-text-secondary)]">
                     <Monitor className="w-4 h-4" />
-                    <span>{t('security.lastLoginDevice', { device: DEMO_LAST_LOGIN.device })}</span>
+                    <span>{t('security.lastLoginDevice', { device: lastLogin.device })}</span>
                   </div>
                   <div className="flex items-center gap-2 text-[var(--brand-text-secondary)]">
                     <Clock className="w-4 h-4" />
-                    <span>{t('security.lastLoginTime', { time: DEMO_LAST_LOGIN.time })}</span>
+                    <span>{t('security.lastLoginTime', { time: lastLogin.time })}</span>
                   </div>
                 </div>
               </div>

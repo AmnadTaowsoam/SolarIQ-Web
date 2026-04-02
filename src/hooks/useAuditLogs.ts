@@ -4,10 +4,6 @@ import { useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
 export type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'VIEW' | 'EXPORT' | 'LOGIN' | 'LOGOUT'
 export type AuditResourceType =
   | 'lead'
@@ -62,94 +58,111 @@ export interface PaginatedAuditLogs {
   total_pages: number
 }
 
-// ---------------------------------------------------------------------------
-// Demo Data
-// ---------------------------------------------------------------------------
-
-const DEMO_USERS = [
-  { id: 'u1', email: 'somchai@solariq.co', name: 'สมชาย วงศ์สวัสดิ์' },
-  { id: 'u2', email: 'wipa@solariq.co', name: 'วิภา สุขสันต์' },
-  { id: 'u3', email: 'admin@solariq.co', name: 'ผู้ดูแลระบบ' },
-  { id: 'u4', email: 'narong@solariq.co', name: 'ณรงค์ เจริญชัย' },
-]
-
-const DEMO_ACTIONS: AuditAction[] = [
-  'CREATE',
-  'UPDATE',
-  'DELETE',
-  'VIEW',
-  'EXPORT',
-  'LOGIN',
-  'LOGOUT',
-]
-const DEMO_RESOURCES: AuditResourceType[] = [
-  'lead',
-  'deal',
-  'quote',
-  'user',
-  'settings',
-  'session',
-  'api_key',
-]
-const DEMO_IPS = ['203.150.33.12', '184.22.100.55', '171.97.42.88', '49.228.15.201', '110.168.0.44']
-
-function generateDemoLogs(count: number): AuditLogEntry[] {
-  const logs: AuditLogEntry[] = []
-  const now = Date.now()
-  for (let i = 0; i < count; i++) {
-    const user = DEMO_USERS[i % DEMO_USERS.length] as (typeof DEMO_USERS)[number]
-    const action = DEMO_ACTIONS[i % DEMO_ACTIONS.length] as AuditAction
-    const resource = DEMO_RESOURCES[i % DEMO_RESOURCES.length] as AuditResourceType
-    const ts = new Date(now - i * 300_000).toISOString()
-    const entry: AuditLogEntry = {
-      id: `log-${i + 1}`,
-      timestamp: ts,
-      user_id: user.id,
-      user_email: user.email,
-      user_name: user.name,
-      action,
-      resource_type: resource,
-      resource_id: `${resource}-${100 + i}`,
-      description: descriptionForAction(action, resource),
-      ip_address: DEMO_IPS[i % DEMO_IPS.length] ?? '',
-      user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+function formatAuditError(error: unknown): string {
+  if (typeof error === 'object' && error !== null) {
+    const maybe = error as {
+      response?: { data?: { detail?: string; message?: string } }
+      message?: string
     }
-    if (action === 'UPDATE') {
-      entry.changes = {
-        before: { status: 'new', name: 'เดิม' },
-        after: { status: 'contacted', name: 'ใหม่' },
-      }
-    }
-    logs.push(entry)
+    return (
+      maybe.response?.data?.detail ||
+      maybe.response?.data?.message ||
+      maybe.message ||
+      'Audit logs are currently unavailable.'
+    )
   }
-  return logs
+
+  return 'Audit logs are currently unavailable.'
 }
 
-function descriptionForAction(action: AuditAction, resource: AuditResourceType): string {
-  const map: Record<AuditAction, string> = {
-    CREATE: `สร้าง ${resource} ใหม่`,
-    UPDATE: `แก้ไข ${resource}`,
-    DELETE: `ลบ ${resource}`,
-    VIEW: `ดู ${resource}`,
-    EXPORT: `ส่งออก ${resource}`,
-    LOGIN: 'เข้าสู่ระบบ',
-    LOGOUT: 'ออกจากระบบ',
+function normalizeAuditEntry(raw: Record<string, unknown>): AuditLogEntry {
+  const changes = raw.changes
+  const normalizedChanges =
+    changes && typeof changes === 'object'
+      ? {
+          before:
+            typeof (changes as { before?: unknown }).before === 'object' &&
+            (changes as { before?: unknown }).before !== null
+              ? ((changes as { before: Record<string, unknown> }).before ?? {})
+              : {},
+          after:
+            typeof (changes as { after?: unknown }).after === 'object' &&
+            (changes as { after?: unknown }).after !== null
+              ? ((changes as { after: Record<string, unknown> }).after ?? {})
+              : {},
+        }
+      : undefined
+
+  return {
+    id: String(raw.id ?? ''),
+    timestamp: String(raw.timestamp ?? raw.created_at ?? new Date().toISOString()),
+    user_id: String(raw.user_id ?? raw.userId ?? ''),
+    user_email: String(raw.user_email ?? raw.userEmail ?? ''),
+    user_name: String(raw.user_name ?? raw.userName ?? raw.email ?? 'Unknown user'),
+    action: String(raw.action ?? 'VIEW') as AuditAction,
+    resource_type: String(raw.resource_type ?? raw.resourceType ?? 'settings') as AuditResourceType,
+    resource_id:
+      raw.resource_id !== undefined || raw.resourceId !== undefined
+        ? String(raw.resource_id ?? raw.resourceId ?? '')
+        : undefined,
+    description: String(raw.description ?? raw.message ?? ''),
+    ip_address: String(raw.ip_address ?? raw.ipAddress ?? '-'),
+    user_agent:
+      raw.user_agent !== undefined || raw.userAgent !== undefined
+        ? String(raw.user_agent ?? raw.userAgent ?? '')
+        : undefined,
+    changes: normalizedChanges,
+    metadata:
+      raw.metadata && typeof raw.metadata === 'object'
+        ? (raw.metadata as Record<string, unknown>)
+        : undefined,
   }
-  return map[action]
 }
 
-const DEMO_LOGS = generateDemoLogs(120)
+function normalizePaginatedAuditLogs(
+  payload: unknown,
+  page: number,
+  pageSize: number
+): PaginatedAuditLogs {
+  const source = payload && typeof payload === 'object' ? (payload as Record<string, unknown>) : {}
+  const itemsSource = Array.isArray(source.items)
+    ? source.items
+    : Array.isArray(source.logs)
+      ? source.logs
+      : Array.isArray(payload)
+        ? payload
+        : []
+  const items = itemsSource
+    .filter((item): item is Record<string, unknown> => typeof item === 'object' && item !== null)
+    .map(normalizeAuditEntry)
+  const total = Number(source.total ?? items.length)
+  const currentPage = Number(source.page ?? page)
+  const currentPageSize = Number(source.page_size ?? source.pageSize ?? pageSize)
+  const totalPages = Number(
+    source.total_pages ??
+      source.totalPages ??
+      Math.max(1, Math.ceil(total / Math.max(currentPageSize, 1)))
+  )
 
-const DEMO_STATS: AuditLogStats = {
-  total_events_today: 87,
-  unique_users_today: 12,
-  most_common_action: 'VIEW',
-  suspicious_events: 2,
+  return {
+    items,
+    total,
+    page: currentPage,
+    page_size: currentPageSize,
+    total_pages: totalPages,
+  }
 }
 
-// ---------------------------------------------------------------------------
-// Hooks
-// ---------------------------------------------------------------------------
+function normalizeAuditStats(payload: unknown): AuditLogStats {
+  const source = payload && typeof payload === 'object' ? (payload as Record<string, unknown>) : {}
+
+  return {
+    total_events_today: Number(source.total_events_today ?? source.totalEventsToday ?? 0),
+    unique_users_today: Number(source.unique_users_today ?? source.uniqueUsersToday ?? 0),
+    most_common_action: String(source.most_common_action ?? source.mostCommonAction ?? '-'),
+    suspicious_events: Number(source.suspicious_events ?? source.suspiciousEvents ?? 0),
+  }
+}
 
 export function useAuditLogs(filters: AuditLogFilters = {}) {
   const { page = 1, page_size = 50, ...rest } = filters
@@ -157,59 +170,28 @@ export function useAuditLogs(filters: AuditLogFilters = {}) {
   return useQuery<PaginatedAuditLogs>({
     queryKey: ['audit-logs', page, page_size, rest],
     queryFn: async () => {
+      const params: Record<string, string | number> = { page, page_size }
+      if (rest.date_from) {
+        params.date_from = rest.date_from
+      }
+      if (rest.date_to) {
+        params.date_to = rest.date_to
+      }
+      if (rest.action) {
+        params.action = rest.action
+      }
+      if (rest.resource_type) {
+        params.resource_type = rest.resource_type
+      }
+      if (rest.user_search) {
+        params.user_search = rest.user_search
+      }
+
       try {
-        const params: Record<string, string | number> = { page, page_size }
-        if (rest.date_from) {
-          params.date_from = rest.date_from
-        }
-        if (rest.date_to) {
-          params.date_to = rest.date_to
-        }
-        if (rest.action) {
-          params.action = rest.action
-        }
-        if (rest.resource_type) {
-          params.resource_type = rest.resource_type
-        }
-        if (rest.user_search) {
-          params.user_search = rest.user_search
-        }
-
-        const res = await apiClient.get('/audit-logs', { params })
-        return res.data
-      } catch {
-        // Fallback to demo data
-        let filtered = [...DEMO_LOGS]
-        if (rest.action) {
-          filtered = filtered.filter((l) => l.action === rest.action)
-        }
-        if (rest.resource_type) {
-          filtered = filtered.filter((l) => l.resource_type === rest.resource_type)
-        }
-        if (rest.user_search) {
-          const q = rest.user_search.toLowerCase()
-          filtered = filtered.filter(
-            (l) => l.user_email.toLowerCase().includes(q) || l.user_name.toLowerCase().includes(q)
-          )
-        }
-        if (rest.date_from) {
-          filtered = filtered.filter((l) => l.timestamp >= (rest.date_from ?? ''))
-        }
-        if (rest.date_to) {
-          filtered = filtered.filter((l) => l.timestamp <= `${rest.date_to ?? ''}T23:59:59`)
-        }
-
-        const total = filtered.length
-        const start = (page - 1) * page_size
-        const items = filtered.slice(start, start + page_size)
-
-        return {
-          items,
-          total,
-          page,
-          page_size,
-          total_pages: Math.ceil(total / page_size),
-        }
+        const res = await apiClient.get('/api/v1/audit-logs', { params })
+        return normalizePaginatedAuditLogs(res.data, page, page_size)
+      } catch (error) {
+        throw new Error(formatAuditError(error))
       }
     },
   })
@@ -220,10 +202,10 @@ export function useAuditStats() {
     queryKey: ['audit-stats'],
     queryFn: async () => {
       try {
-        const res = await apiClient.get('/audit-logs/stats')
-        return res.data
-      } catch {
-        return DEMO_STATS
+        const res = await apiClient.get('/api/v1/audit-logs/stats')
+        return normalizeAuditStats(res.data)
+      } catch (error) {
+        throw new Error(formatAuditError(error))
       }
     },
   })
@@ -231,25 +213,25 @@ export function useAuditStats() {
 
 export function useExportAuditLogs() {
   const exportLogs = useCallback(async (filters: Omit<AuditLogFilters, 'page' | 'page_size'>) => {
-    try {
-      const params: Record<string, string> = {}
-      if (filters.date_from) {
-        params.date_from = filters.date_from
-      }
-      if (filters.date_to) {
-        params.date_to = filters.date_to
-      }
-      if (filters.action) {
-        params.action = filters.action
-      }
-      if (filters.resource_type) {
-        params.resource_type = filters.resource_type
-      }
-      if (filters.user_search) {
-        params.user_search = filters.user_search
-      }
+    const params: Record<string, string> = {}
+    if (filters.date_from) {
+      params.date_from = filters.date_from
+    }
+    if (filters.date_to) {
+      params.date_to = filters.date_to
+    }
+    if (filters.action) {
+      params.action = filters.action
+    }
+    if (filters.resource_type) {
+      params.resource_type = filters.resource_type
+    }
+    if (filters.user_search) {
+      params.user_search = filters.user_search
+    }
 
-      const res = await apiClient.get('/audit-logs/export', {
+    try {
+      const res = await apiClient.get('/api/v1/audit-logs/export', {
         params,
         responseType: 'blob',
       })
@@ -262,28 +244,8 @@ export function useExportAuditLogs() {
       link.click()
       link.remove()
       window.URL.revokeObjectURL(url)
-    } catch {
-      // Fallback: generate CSV from demo data
-      const headers = ['เวลา', 'ผู้ใช้', 'อีเมล', 'การกระทำ', 'ประเภท', 'รายละเอียด', 'IP']
-      const rows = DEMO_LOGS.map((l) => [
-        l.timestamp,
-        l.user_name,
-        l.user_email,
-        l.action,
-        l.resource_type,
-        l.description,
-        l.ip_address,
-      ])
-      const csv = [headers, ...rows].map((r) => r.join(',')).join('\n')
-      const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' })
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `audit-logs-${new Date().toISOString().slice(0, 10)}.csv`)
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      throw new Error(formatAuditError(error))
     }
   }, [])
 

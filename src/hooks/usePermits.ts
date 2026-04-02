@@ -206,9 +206,8 @@ export function usePermits(status?: string, page = 1, limit = 20) {
       setTotal(data.total || 0)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
-      // Use demo data as fallback
-      setPackages(DEMO_PERMIT_PACKAGES)
-      setTotal(DEMO_PERMIT_PACKAGES.length)
+      setPackages([])
+      setTotal(0)
     } finally {
       setLoading(false)
     }
@@ -234,9 +233,7 @@ export function usePermit(id: string) {
       setPermit(transformPermit(response.data))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
-      // Use demo data as fallback
-      const demoPermit = DEMO_PERMIT_PACKAGES.find((p) => p.id === id)
-      setPermit(demoPermit || null)
+      setPermit(null)
     } finally {
       setLoading(false)
     }
@@ -304,8 +301,7 @@ export function useApprovedEquipment(searchParams?: ApprovedEquipmentSearch) {
       setEquipment(response.data.items || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
-      // Use demo data as fallback
-      setEquipment(DEMO_APPROVED_EQUIPMENT)
+      setEquipment([])
     } finally {
       setLoading(false)
     }
@@ -339,8 +335,7 @@ export function usePermitTemplates(authority?: 'mea' | 'pea', permitType?: strin
       setTemplates(response.data || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
-      // Use demo data as fallback
-      setTemplates(DEMO_PERMIT_TEMPLATES)
+      setTemplates([])
     } finally {
       setLoading(false)
     }
