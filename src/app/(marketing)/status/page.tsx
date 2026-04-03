@@ -12,7 +12,6 @@ import {
   Server,
   XCircle,
 } from 'lucide-react'
-import { apiClient } from '@/lib/api'
 
 type ServiceStatus = 'operational' | 'degraded' | 'outage' | 'maintenance'
 
@@ -112,80 +111,47 @@ export default function StatusPage() {
   useEffect(() => {
     let isMounted = true
 
-    const now = new Date().toISOString()
-
-    const probe = async (name: string, description: string, request: () => Promise<unknown>) => {
-      try {
-        await request()
-        return { name, status: 'operational' as const, description, lastChecked: now }
-      } catch (error) {
-        return {
-          name,
-          status: 'degraded' as const,
-          description,
-          lastChecked: now,
-          details: error instanceof Error ? error.message : 'Probe failed',
-        }
-      }
-    }
-
     const load = async () => {
       setIsLoading(true)
       setPageWarning(null)
 
-      const results = await Promise.allSettled([
-        probe('Frontend Website', 'Public website at www.solariqapp.com', () =>
-          fetch('/healthz').then((res) => {
-            if (!res.ok) {
-              throw new Error(`Frontend probe failed with ${res.status}`)
-            }
-          })
-        ),
-        probe('Backend API', 'Core REST API health check', async () => {
-          const response = await fetch(
-            'https://solariq-api-269682189177.asia-southeast1.run.app/healthz'
-          )
-          if (!response.ok) {
-            throw new Error(`Backend probe failed with ${response.status}`)
-          }
-        }),
-        probe('LINE Messaging API', 'LINE webhook and message delivery health', async () => {
-          const response = await fetch(
-            'https://solariq-api-269682189177.asia-southeast1.run.app/webhook/line/health'
-          )
-          if (!response.ok) {
-            throw new Error(`LINE probe failed with ${response.status}`)
-          }
-        }),
-        probe('Billing & Checkout', 'Subscription status and checkout readiness', async () => {
-          await apiClient.get('/api/v1/billing/status')
-        }),
-        probe('Developer Sandbox', 'Developer API sandbox availability', async () => {
-          await apiClient.get('/api/v1/developers/sandbox/status')
-        }),
-      ])
+      try {
+        const response = await fetch('/api/status/services', {
+          cache: 'no-store',
+        })
 
-      if (!isMounted) {
-        return
-      }
+        if (!response.ok) {
+          throw new Error(`Status API failed with ${response.status}`)
+        }
 
-      const nextServices: Service[] = []
-      for (const result of results) {
-        if (result.status === 'fulfilled') {
-          nextServices.push(result.value)
+        const payload = (await response.json()) as { services?: Service[] }
+
+        if (!isMounted) {
+          return
+        }
+
+        const nextServices = Array.isArray(payload.services) ? payload.services : []
+        setServices(nextServices)
+
+        if (nextServices.some((service) => service.status !== 'operational')) {
+          setPageWarning(
+            'Some services are degraded. Details below come from live server-side probes.'
+          )
+        }
+      } catch (error) {
+        if (!isMounted) {
+          return
+        }
+
+        setServices([])
+        setPageWarning(
+          error instanceof Error ? error.message : 'Unable to load live status checks right now.'
+        )
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
         }
       }
-
-      setServices(nextServices)
-
-      const failedCount = results.filter((result) => result.status === 'rejected').length
-      if (failedCount > 0) {
-        setPageWarning(
-          'Some service probes could not be completed. Only live checks are shown here.'
-        )
-      }
-
-      setIsLoading(false)
     }
 
     void load()
