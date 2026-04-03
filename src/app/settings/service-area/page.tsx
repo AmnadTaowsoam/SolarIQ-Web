@@ -137,7 +137,7 @@ const DEFAULT_SETTINGS: RoutingSettings = {
 
 export default function ServiceAreaPage() {
   const t = useTranslations('serviceAreaPage')
-  const { user } = useAuth()
+  const { user, isLoading: isAuthLoading } = useAuth()
   const [settings, setSettings] = useState<RoutingSettings>(DEFAULT_SETTINGS)
   const [isLoadingSettings, setIsLoadingSettings] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -212,14 +212,14 @@ export default function ServiceAreaPage() {
       }
     }
 
-    if (user?.uid) {
-      loadSettings()
+    if (!isAuthLoading) {
+      void loadSettings()
     }
 
     return () => {
       isMounted = false
     }
-  }, [user?.uid])
+  }, [isAuthLoading])
 
   const handleSave = async () => {
     setIsSaving(true)

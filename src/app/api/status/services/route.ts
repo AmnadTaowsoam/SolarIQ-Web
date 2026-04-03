@@ -73,7 +73,7 @@ export async function GET(request: Request) {
 
   const services = await Promise.all([
     probe('Frontend Website', 'Public website at www.solariqapp.com', frontendHealthUrl),
-    probe('Backend API', 'Core REST API health check', `${API_BASE_URL}/healthz`),
+    probe('Backend API', 'Core REST API health check', `${API_BASE_URL}/health`),
     probe(
       'LINE Messaging API',
       'LINE webhook and message delivery health',
