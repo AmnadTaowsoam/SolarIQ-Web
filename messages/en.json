@@ -3260,6 +3260,27 @@
   },
   "quoteComparison": {
     "title": "Quote Comparison",
+    "heroEyebrow": "Shortlisted offers",
+    "heroDescription": "Review the strongest offers side by side, compare speed and value, then move forward with confidence.",
+    "quoteCount": "{count} quotes",
+    "cheapestOffer": "Lowest price",
+    "fastestInstall": "Fastest schedule",
+    "avgSavings": "Avg. monthly savings",
+    "loadErrorTitle": "Unable to load quotes",
+    "loadErrorDescription": "We could not fetch quote data right now. Please retry in a moment.",
+    "retry": "Retry",
+    "emptyTitle": "No quotes available",
+    "emptyDescription": "No contractor offers are ready for this request yet.",
+    "emptyHint": "When contractors submit proposals, they will appear here automatically.",
+    "acceptedEyebrow": "Selection confirmed",
+    "acceptedTitle": "Quote accepted",
+    "acceptedDescription": "Your selected contractor has been notified and will follow up to confirm the next step.",
+    "backHome": "Back to quote list",
+    "trackProgress": "Track progress",
+    "acceptError": "We could not accept this quote right now. Please try again.",
+    "sortPrice": "Best value",
+    "sortRating": "Top rated",
+    "sortFast": "Fastest",
     "feature": "Feature",
     "systemSize": "System Size",
     "panelBrand": "Panel Brand",
@@ -3287,7 +3308,29 @@
     "roi": "ROI",
     "installation": "Installation",
     "equipment": "Equipment",
-    "labor": "Labor"
+    "labor": "Labor",
+    "verified": "Verified",
+    "responseTime": "Replies in about {hours}h",
+    "recommendedMatch": "Recommended match",
+    "monthlySavings": "Monthly savings",
+    "installationWindow": "Installation window",
+    "daysCount": "{count} days",
+    "yearsCount": "{count} years",
+    "systemHighlights": "System highlights",
+    "highlightsSubtitle": "Core equipment and expected output at a glance.",
+    "batteryIncluded": "Battery included",
+    "financingAvailable": "Installment plan available",
+    "warrantyPanel": "Panel",
+    "warrantyInverter": "Inverter",
+    "warrantyInstall": "Install",
+    "reviewQuote": "Review details",
+    "declineQuote": "Decline",
+    "processing": "Processing...",
+    "declineTitle": "Decline this quote?",
+    "declineDescription": "You can leave a short note to help the contractor understand what needs to change.",
+    "declinePlaceholder": "Example: budget is too high, need a different panel brand, or installation window is too late.",
+    "cancel": "Cancel",
+    "confirmDecline": "Confirm decline"
   },
   "pricingCalculator": {
     "title": "Pricing Calculator",
@@ -4092,6 +4135,15 @@
     "years": "years"
   },
   "resultsPage": {
+    "heroEyebrow": "SolarIQ analysis",
+    "heroDescription": "A concise investment snapshot built for mobile viewing in LINE, with the key business case visible before the detail cards.",
+    "summaryBadge": "Latest report",
+    "summaryPaybackHint": "Estimated break-even",
+    "summaryInvestmentHint": "Estimated system cost",
+    "retry": "Retry",
+    "nextStepTitle": "Next step",
+    "nextStepDescription": "Open the proposal view to continue the sales conversation with a cleaner client-facing summary.",
+    "viewProposal": "Open proposal view",
     "actions": {
       "downloadPdf": "Download PDF",
       "generatingPdf": "Generating PDF...",
@@ -4102,7 +4154,8 @@
       "equivalentTrees": "Equivalent Trees",
       "title": "Environmental Impact",
       "tonsPerYear": "tons CO2/year",
-      "treesDescription": "equivalent trees planted per year"
+      "treesDescription": "equivalent trees planted per year",
+      "subtitle": "Translate the system recommendation into an environmental story the customer can understand immediately."
     },
     "empty": {
       "description": "No analysis results found",
@@ -4133,7 +4186,8 @@
       "savings25Years": "25-Year Savings",
       "title": "Return on Investment",
       "yearlySavings": "Yearly Savings",
-      "years": "years"
+      "years": "years",
+      "subtitle": "Focus on the headline numbers first, then drill into long-term savings."
     },
     "system": {
       "kwhPerYear": "kWh/year",
@@ -4141,7 +4195,8 @@
       "panelsCount": "{count} panels",
       "systemSize": "System Size",
       "title": "System Information",
-      "yearlyEnergy": "Yearly Energy"
+      "yearlyEnergy": "Yearly Energy",
+      "subtitle": "A compact breakdown of the proposed system size, output, and panel count."
     },
     "title": "Analysis Results"
   },
@@ -4353,13 +4408,20 @@
   },
   "quoteDetailPage": {
     "title": "Quote",
+    "heroDescription": "Review the contractor profile, price structure, warranty, and schedule in one polished client-facing view.",
+    "loading": "Loading quote...",
     "accepted": "Accepted!",
+    "acceptedEyebrow": "Confirmed",
+    "acceptedDescription": "The contractor has been notified. You can track the deal status from the next screen.",
     "trackProgress": "Track Progress",
     "notFound": "Quote not found",
+    "notFoundDescription": "This quote may have expired, been withdrawn, or is no longer available.",
     "goBack": "← Go back",
     "reviews": "reviews",
     "verified": "✓ Verified",
+    "unknownContractor": "Solar partner",
     "notes": "Notes",
+    "notesDescription": "Additional commercial notes, scope reminders, or special conditions from the contractor.",
     "validUntil": "This quote is valid until",
     "processing": "Processing...",
     "acceptQuote": "Accept this quote",
@@ -4367,6 +4429,23 @@
     "decline": "Decline",
     "declined": "This quote has been declined",
     "viewOtherQuotes": "View other quotes",
+    "overview": {
+      "systemSize": "System size",
+      "monthlySavings": "Monthly savings",
+      "payback": "Payback",
+      "installWindow": "Schedule",
+      "returnHint": "Expected return"
+    },
+    "sectionDescriptions": {
+      "systemSpecs": "Equipment specification and configuration proposed by the installer.",
+      "pricing": "A transparent cost breakdown with VAT and any discount applied.",
+      "timeline": "Delivery milestones from survey through installation completion.",
+      "warranty": "Coverage periods for panels, inverter, workmanship, and roof leak protection.",
+      "financing": "Installment and payment structures offered with this quote."
+    },
+    "actionBar": {
+      "title": "Ready to decide?"
+    },
     "sections": {
       "systemSpecs": "Solar System Details",
       "pricing": "Price Breakdown",
@@ -4397,7 +4476,8 @@
       "laborCost": "Labor & Installation",
       "permitCost": "Permit Cost",
       "discount": "Discount",
-      "grandTotal": "Grand Total"
+      "grandTotal": "Grand Total",
+      "perMonth": "per month"
     },
     "savings": {
       "monthlyProduction": "Monthly Production",

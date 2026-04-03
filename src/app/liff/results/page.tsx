@@ -6,11 +6,20 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { Download, Leaf, Send, SunMedium, Wallet } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useLIFF, useLIFFUser } from '../../../context/LIFFContext'
 import { sendFlexMessage, closeWindow, getAccessToken } from '../../../lib/liff'
 import { SolarAnalysisResult } from '../../../types'
-import { useTranslations } from 'next-intl'
+import {
+  LiffHeroCard,
+  LiffMetricStrip,
+  LiffPageFrame,
+  LiffPanel,
+  LiffPrimaryButton,
+} from '@/components/liff/LiffMobileUI'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
@@ -38,7 +47,6 @@ function calculateCarbonOffset(yearlyEnergyKwh: number, factorKgPerMwh: number):
 }
 
 function calculateEquivalentTrees(carbonOffsetTons: number): number {
-  // Average tree absorbs ~22kg CO2/year
   return Math.round((carbonOffsetTons * 1000) / 22)
 }
 
@@ -70,7 +78,7 @@ export default function ResultsPage(): React.ReactElement {
         'Content-Type': 'application/json',
       }
       if (token) {
-        headers['Authorization'] = `Bearer ${token}`
+        headers.Authorization = `Bearer ${token}`
       }
       if (user?.userId) {
         headers['X-LINE-User-Id'] = user.userId
@@ -110,7 +118,7 @@ export default function ResultsPage(): React.ReactElement {
       const token = await getAccessToken()
       const headers: Record<string, string> = {}
       if (token) {
-        headers['Authorization'] = `Bearer ${token}`
+        headers.Authorization = `Bearer ${token}`
       }
       if (user?.userId) {
         headers['X-LINE-User-Id'] = user.userId
@@ -235,66 +243,57 @@ export default function ResultsPage(): React.ReactElement {
     }
   }
 
-  // Loading state
   if (liffLoading || !isInitialized || isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-surface)]">
+      <LiffPageFrame className="flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-[var(--brand-text-secondary)]">{t('loading')}</p>
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-emerald-600" />
+          <p className="mt-4 text-sm text-slate-500">{t('loading')}</p>
         </div>
-      </div>
+      </LiffPageFrame>
     )
   }
 
-  // LIFF error state
   if (liffError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-500/10 p-4">
-        <div className="text-center">
-          <div className="text-4xl mb-4">&#9888;&#65039;</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.loadError')}</h1>
-          <p className="text-red-500">{liffError.message}</p>
-        </div>
-      </div>
+      <LiffPageFrame className="flex items-center justify-center">
+        <LiffPanel
+          title={t('errors.loadError')}
+          subtitle={liffError.message}
+          className="w-full max-w-sm"
+        />
+      </LiffPageFrame>
     )
   }
 
-  // Fetch error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-red-500/10 p-4">
-        <div className="text-center">
-          <div className="text-4xl mb-4">&#9888;&#65039;</div>
-          <h1 className="text-xl font-bold text-red-600 mb-2">{t('errors.loadError')}</h1>
-          <p className="text-red-500 mb-4">{error}</p>
-          <button
-            onClick={fetchResults}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
-          >
-            {t('empty.startAnalysis')}
+      <LiffPageFrame className="flex items-center justify-center">
+        <LiffPanel title={t('errors.loadError')} subtitle={error} className="w-full max-w-sm">
+          <button onClick={fetchResults} className="text-sm font-semibold text-emerald-700">
+            {t('retry')}
           </button>
-        </div>
-      </div>
+        </LiffPanel>
+      </LiffPageFrame>
     )
   }
 
-  // Empty state
   if (!analysis) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--brand-background)] p-4">
-        <div className="text-center">
-          <div className="text-6xl mb-4">&#9728;&#65039;</div>
-          <h1 className="text-xl font-bold text-[var(--brand-text)] mb-2">{t('empty.title')}</h1>
-          <p className="text-[var(--brand-text-secondary)] mb-6">{t('empty.description')}</p>
-          <a
+      <LiffPageFrame className="flex items-center justify-center">
+        <LiffPanel
+          title={t('empty.title')}
+          subtitle={t('empty.description')}
+          className="w-full max-w-sm"
+        >
+          <Link
             href="/liff/map-picker"
-            className="inline-block bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors"
+            className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
           >
             {t('empty.startAnalysis')}
-          </a>
-        </div>
-      </div>
+          </Link>
+        </LiffPanel>
+      </LiffPageFrame>
     )
   }
 
@@ -307,160 +306,181 @@ export default function ResultsPage(): React.ReactElement {
   const savings25Year = financialAnalysis.yearlySavings * 25
 
   return (
-    <div className="min-h-screen bg-[var(--brand-background)]">
-      {/* Header */}
-      <header className="bg-green-600 text-white p-4 shadow-md">
-        <h1 className="text-xl font-bold text-center">{t('title')}</h1>
-        {analysis.result.address && (
-          <p className="text-green-100 text-sm text-center mt-1 truncate">
+    <LiffPageFrame className="pb-32">
+      <LiffHeroCard
+        accent="green"
+        title={t('title')}
+        description={t('heroDescription')}
+        eyebrow={t('heroEyebrow')}
+        badge={analysis.result.address ? undefined : t('summaryBadge')}
+      >
+        {analysis.result.address ? (
+          <div className="mb-4 rounded-2xl border border-white/80 bg-white/80 px-4 py-3 text-sm text-slate-600 shadow-sm">
             {analysis.result.address}
-          </p>
-        )}
-      </header>
-
-      <div className="p-4 space-y-4 pb-32">
-        {/* System Size Card */}
-        <div className="bg-[var(--brand-surface)] rounded-2xl shadow-sm p-5">
-          <h2 className="text-sm font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wide mb-3">
-            {t('system.title')}
-          </h2>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <p className="text-2xl font-bold text-green-600">
-                {panelConfig.capacityKw.toFixed(1)}
-              </p>
-              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">kW</p>
-              <p className="text-xs text-[var(--brand-text-secondary)]">{t('system.systemSize')}</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-green-600">
-                {formatNumber(panelConfig.yearlyEnergyDcKwh)}
-              </p>
-              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
-                {t('system.kwhPerYear')}
-              </p>
-              <p className="text-xs text-[var(--brand-text-secondary)]">
-                {t('system.yearlyEnergy')}
-              </p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-green-600">{panelConfig.panelsCount}</p>
-              <p className="text-xs text-[var(--brand-text-secondary)] mt-1">
-                {t('system.panels')}
-              </p>
-              <p className="text-xs text-[var(--brand-text-secondary)]">
-                {t('system.panelsCount')}
-              </p>
-            </div>
           </div>
+        ) : null}
+        <LiffMetricStrip
+          accent="green"
+          items={[
+            {
+              label: t('system.systemSize'),
+              value: `${panelConfig.capacityKw.toFixed(1)} kW`,
+              hint: `${panelConfig.panelsCount} ${t('system.panels')}`,
+            },
+            {
+              label: t('roi.paybackPeriod'),
+              value: `${financialAnalysis.paybackYears.toFixed(1)} ${t('roi.years')}`,
+              hint: t('summaryPaybackHint'),
+            },
+            {
+              label: t('roi.monthlySavings'),
+              value: formatCurrency(financialAnalysis.monthlySavings),
+              hint: t('actions.shareResults'),
+            },
+          ]}
+        />
+      </LiffHeroCard>
+
+      <div className="mt-4 space-y-4">
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            {
+              label: t('system.yearlyEnergy'),
+              value: formatNumber(panelConfig.yearlyEnergyDcKwh),
+              hint: t('system.kwhPerYear'),
+              icon: <SunMedium className="h-4 w-4" />,
+            },
+            {
+              label: t('roi.estimatedCost'),
+              value: formatCurrency(financialAnalysis.installationCost),
+              hint: t('summaryInvestmentHint'),
+              icon: <Wallet className="h-4 w-4" />,
+            },
+            {
+              label: t('carbon.equivalentTrees'),
+              value: formatNumber(equivalentTrees),
+              hint: t('carbon.tonsPerYear'),
+              icon: <Leaf className="h-4 w-4" />,
+            },
+          ].map((item) => (
+            <div
+              key={item.label}
+              className="rounded-[24px] border border-white/75 bg-white/85 p-3 shadow-sm"
+            >
+              <div className="text-emerald-600">{item.icon}</div>
+              <p className="mt-3 text-[11px] uppercase tracking-[0.12em] text-slate-400">
+                {item.label}
+              </p>
+              <p className="mt-2 text-sm font-semibold text-slate-950">{item.value}</p>
+              <p className="mt-1 text-xs text-slate-500">{item.hint}</p>
+            </div>
+          ))}
         </div>
 
-        {/* ROI Summary Card */}
-        <div className="bg-[var(--brand-surface)] rounded-2xl shadow-sm p-5">
-          <h2 className="text-sm font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wide mb-3">
-            {t('roi.title')}
-          </h2>
+        <LiffPanel title={t('system.title')} subtitle={t('system.subtitle')}>
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="rounded-2xl bg-emerald-50 px-3 py-4 ring-1 ring-emerald-100">
+              <p className="text-2xl font-bold text-emerald-600">
+                {panelConfig.capacityKw.toFixed(1)}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">kW</p>
+              <p className="mt-1 text-xs text-slate-500">{t('system.systemSize')}</p>
+            </div>
+            <div className="rounded-2xl bg-white px-3 py-4 ring-1 ring-slate-200">
+              <p className="text-2xl font-bold text-slate-950">
+                {formatNumber(panelConfig.yearlyEnergyDcKwh)}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">{t('system.kwhPerYear')}</p>
+              <p className="mt-1 text-xs text-slate-500">{t('system.yearlyEnergy')}</p>
+            </div>
+            <div className="rounded-2xl bg-white px-3 py-4 ring-1 ring-slate-200">
+              <p className="text-2xl font-bold text-slate-950">{panelConfig.panelsCount}</p>
+              <p className="mt-1 text-xs text-slate-500">{t('system.panels')}</p>
+              <p className="mt-1 text-xs text-slate-500">{t('system.panelsCount')}</p>
+            </div>
+          </div>
+        </LiffPanel>
+
+        <LiffPanel title={t('roi.title')} subtitle={t('roi.subtitle')}>
           <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-[var(--brand-text-secondary)]">{t('roi.paybackPeriod')}</span>
-              <span className="text-lg font-bold text-green-600">
+            <div className="flex justify-between gap-3 rounded-2xl bg-emerald-50 px-4 py-3 ring-1 ring-emerald-100">
+              <span className="text-slate-600">{t('roi.paybackPeriod')}</span>
+              <span className="font-semibold text-emerald-700">
                 {financialAnalysis.paybackYears.toFixed(1)} {t('roi.years')}
               </span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[var(--brand-text-secondary)]">{t('roi.monthlySavings')}</span>
-              <span className="text-lg font-bold text-green-600">
+            <div className="flex justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+              <span className="text-slate-600">{t('roi.monthlySavings')}</span>
+              <span className="font-semibold text-slate-950">
                 {formatCurrency(financialAnalysis.monthlySavings)}
               </span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[var(--brand-text-secondary)]">{t('roi.yearlySavings')}</span>
-              <span className="font-semibold text-[var(--brand-text)]">
+            <div className="flex justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+              <span className="text-slate-600">{t('roi.yearlySavings')}</span>
+              <span className="font-semibold text-slate-950">
                 {formatCurrency(financialAnalysis.yearlySavings)}
               </span>
             </div>
-            <div className="border-t pt-3 flex justify-between items-center">
-              <span className="text-[var(--brand-text-secondary)]">{t('roi.savings25Years')}</span>
-              <span className="text-xl font-bold text-green-600">
-                {formatCurrency(savings25Year)}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[var(--brand-text-secondary)]">{t('roi.estimatedCost')}</span>
-              <span className="font-semibold text-[var(--brand-text)]">
-                {formatCurrency(financialAnalysis.installationCost)}
-              </span>
+            <div className="flex justify-between gap-3 rounded-2xl bg-slate-950 px-4 py-3 text-white">
+              <span>{t('roi.savings25Years')}</span>
+              <span className="font-semibold">{formatCurrency(savings25Year)}</span>
             </div>
           </div>
-        </div>
+        </LiffPanel>
 
-        {/* Carbon Offset Card */}
-        <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl shadow-sm p-5">
-          <h2 className="text-sm font-semibold text-[var(--brand-text-secondary)] uppercase tracking-wide mb-3">
-            {t('carbon.title')}
-          </h2>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div>
+        <LiffPanel title={t('carbon.title')} subtitle={t('carbon.subtitle')}>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-emerald-50 px-4 py-4 text-center ring-1 ring-emerald-100">
               <p className="text-3xl font-bold text-emerald-600">{carbonOffsetTons.toFixed(1)}</p>
-              <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
-                {t('carbon.tonsPerYear')}
-              </p>
+              <p className="mt-1 text-sm text-slate-500">{t('carbon.tonsPerYear')}</p>
             </div>
-            <div>
-              <p className="text-3xl font-bold text-emerald-600">{formatNumber(equivalentTrees)}</p>
-              <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
-                {t('carbon.equivalentTrees')}
-              </p>
+            <div className="rounded-2xl bg-white px-4 py-4 text-center ring-1 ring-slate-200">
+              <p className="text-3xl font-bold text-slate-950">{formatNumber(equivalentTrees)}</p>
+              <p className="mt-1 text-sm text-slate-500">{t('carbon.equivalentTrees')}</p>
             </div>
           </div>
-          <div className="mt-3 bg-[var(--brand-surface)]/60 rounded-lg p-3">
-            <p className="text-xs text-[var(--brand-text-secondary)] text-center">
-              {t('carbon.treesDescription').replace('{trees}', formatNumber(equivalentTrees))}
-            </p>
+          <div className="mt-3 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            {t('carbon.treesDescription').replace('{trees}', formatNumber(equivalentTrees))}
           </div>
-        </div>
+        </LiffPanel>
+
+        <LiffPanel title={t('nextStepTitle')} subtitle={t('nextStepDescription')}>
+          <Link
+            href="/liff/proposal"
+            className="inline-flex items-center rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
+          >
+            {t('viewProposal')}
+          </Link>
+        </LiffPanel>
       </div>
 
-      {/* Fixed Bottom Actions */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[var(--brand-surface)] border-t p-4 space-y-2">
-        <div className="flex gap-3">
+      <div className="fixed bottom-0 left-0 right-0 border-t border-white/70 bg-white/88 px-4 py-4 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-lg gap-3">
           <button
             onClick={handleDownloadPDF}
             disabled={isDownloading}
-            className="flex-1 bg-[var(--brand-surface)] border-2 border-green-600 text-green-600 py-3 rounded-xl font-bold transition-all hover:bg-green-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-50 disabled:opacity-50"
           >
-            {isDownloading ? (
-              <span className="flex items-center justify-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
-                {t('actions.generatingPdf')}
-              </span>
-            ) : (
-              t('actions.downloadPdf')
-            )}
+            <Download className="h-4 w-4" />
+            {isDownloading ? t('actions.generatingPdf') : t('actions.downloadPdf')}
           </button>
-          <button
+          <LiffPrimaryButton
+            accent="green"
+            className="flex-1 gap-2"
             onClick={handleShare}
             disabled={isSharing}
-            className="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold transition-all hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSharing ? (
-              <span className="flex items-center justify-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                {t('actions.sharing')}
-              </span>
-            ) : (
-              t('actions.shareResults')
-            )}
-          </button>
+            <Send className="h-4 w-4" />
+            {isSharing ? t('actions.sharing') : t('actions.shareResults')}
+          </LiffPrimaryButton>
         </div>
       </div>
 
-      {/* User badge */}
-      {user && (
-        <div className="fixed top-16 right-2 bg-[var(--brand-surface)]/90 backdrop-blur-sm rounded-full px-3 py-1 shadow text-xs text-[var(--brand-text-secondary)]">
+      {user ? (
+        <div className="fixed right-4 top-4 rounded-full border border-white/70 bg-white/88 px-3 py-1 text-xs text-slate-500 shadow-sm backdrop-blur-sm">
           {user.displayName}
         </div>
-      )}
-    </div>
+      ) : null}
+    </LiffPageFrame>
   )
 }

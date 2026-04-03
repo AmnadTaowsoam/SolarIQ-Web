@@ -1,21 +1,60 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { QuoteComparisonTable } from '@/components/quotes/QuoteComparisonTable'
+import {
+  LiffHeroCard,
+  LiffMetricStrip,
+  LiffPageFrame,
+  LiffPanel,
+  LiffPrimaryButton,
+} from '@/components/liff/LiffMobileUI'
+import { formatThb } from '@/lib/utils'
 import { useQuoteComparison, useAcceptQuote, useDeclineQuote } from '@/hooks/useQuotes'
 
 export default function QuoteComparePage() {
   const params = useParams()
   const router = useRouter()
+  const t = useTranslations('quoteComparison')
   const requestId = params.requestId as string
   const { data, isLoading, error } = useQuoteComparison(requestId)
-  const { accept, isLoading: _isAccepting } = useAcceptQuote()
+  const { accept } = useAcceptQuote()
   const { decline } = useDeclineQuote()
   const [acceptingId, setAcceptingId] = useState<string | null>(null)
   const [acceptedDealId, setAcceptedDealId] = useState<string | null>(null)
   const [localDeclined, setLocalDeclined] = useState<Set<string>>(new Set())
   const [errorMsg, setErrorMsg] = useState('')
+
+  const visibleQuotes = useMemo(() => {
+    return data?.quotes.filter((quote) => !localDeclined.has(quote.quoteId)) ?? []
+  }, [data?.quotes, localDeclined])
+
+  const summary = useMemo(() => {
+    if (visibleQuotes.length === 0) {
+      return null
+    }
+
+    const cheapest = [...visibleQuotes].sort(
+      (a, b) => a.pricing.totalPrice - b.pricing.totalPrice
+    )[0]
+    const fastest = [...visibleQuotes].sort(
+      (a, b) => a.timeline.totalDays - b.timeline.totalDays
+    )[0]
+    if (!cheapest || !fastest) {
+      return null
+    }
+    const avgSavings =
+      visibleQuotes.reduce((total, quote) => total + quote.savings.monthlySavingsThb, 0) /
+      visibleQuotes.length
+
+    return {
+      cheapest,
+      fastest,
+      avgSavings,
+    }
+  }, [visibleQuotes])
 
   const handleAccept = async (quoteId: string) => {
     setAcceptingId(quoteId)
@@ -24,7 +63,7 @@ export default function QuoteComparePage() {
       const result = await accept(quoteId)
       setAcceptedDealId(result.dealId)
     } catch {
-      setErrorMsg('ไม่สามารถยอมรับใบเสนอราคาได้ กรุณาลองใหม่')
+      setErrorMsg(t('acceptError'))
       setAcceptingId(null)
     }
   }
@@ -40,145 +79,132 @@ export default function QuoteComparePage() {
 
   if (acceptedDealId) {
     return (
-      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
-        <div className="text-center max-w-sm">
-          <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
-            <svg
-              className="w-10 h-10 text-green-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-[var(--brand-text)] mb-2">
-            ยอมรับใบเสนอราคาแล้ว!
-          </h2>
-          <p className="text-[var(--brand-text-secondary)] mb-6 text-sm">
-            ผู้รับเหมาได้รับการแจ้งเตือนแล้ว และจะติดต่อกลับเพื่อนัดสำรวจหน้างาน
-          </p>
-          <div className="space-y-3">
-            <button
+      <LiffPageFrame className="flex items-center justify-center">
+        <div className="w-full max-w-sm">
+          <LiffHeroCard
+            accent="green"
+            eyebrow={t('acceptedEyebrow')}
+            title={t('acceptedTitle')}
+            description={t('acceptedDescription')}
+            className="text-center"
+          >
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-sm">
+              <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </LiffHeroCard>
+          <div className="mt-4 space-y-3">
+            <LiffPrimaryButton
+              accent="green"
+              className="w-full"
               onClick={() => router.push(`/liff/quotes/deals/${acceptedDealId}`)}
-              className="w-full py-4 bg-orange-500 text-white rounded-2xl font-bold hover:bg-orange-600"
             >
-              ติดตามความคืบหน้า
-            </button>
+              {t('trackProgress')}
+            </LiffPrimaryButton>
             <button
               onClick={() => router.push('/liff/quotes')}
-              className="w-full py-3 border border-[var(--brand-border)] rounded-2xl text-sm text-[var(--brand-text-secondary)] hover:bg-[var(--brand-background)]"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
             >
-              กลับหน้าหลัก
+              {t('backHome')}
             </button>
           </div>
         </div>
-      </div>
+      </LiffPageFrame>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[var(--brand-background)] pb-6">
-      {/* Header */}
-      <div className="bg-orange-500 text-white px-4 py-5 safe-top">
-        <div className="flex items-center gap-3 mb-1">
-          <button
-            onClick={() => router.back()}
-            className="w-8 h-8 flex items-center justify-center"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <div>
-            <h1 className="text-lg font-bold">เปรียบเทียบใบเสนอราคา</h1>
-            {data && <p className="text-orange-100 text-xs">{data.quotes.length} ใบเสนอราคา</p>}
-          </div>
-        </div>
-      </div>
+    <LiffPageFrame className="pb-8">
+      <LiffHeroCard
+        title={t('title')}
+        description={t('heroDescription')}
+        eyebrow={t('heroEyebrow')}
+        badge={data ? t('quoteCount', { count: visibleQuotes.length }) : undefined}
+        onBack={() => router.back()}
+      >
+        {summary ? (
+          <LiffMetricStrip
+            items={[
+              {
+                label: t('cheapestOffer'),
+                value: formatThb(summary.cheapest.pricing.totalPrice),
+                hint: summary.cheapest.contractor.companyName,
+              },
+              {
+                label: t('fastestInstall'),
+                value: t('daysCount', { count: summary.fastest.timeline.totalDays }),
+                hint: summary.fastest.contractor.companyName,
+              },
+              {
+                label: t('avgSavings'),
+                value: formatThb(summary.avgSavings),
+                hint: t('perMonth'),
+              },
+            ]}
+          />
+        ) : null}
+      </LiffHeroCard>
 
-      <div className="px-4 py-5 max-w-lg mx-auto space-y-4">
+      <div className="mt-4 space-y-4">
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2].map((i) => (
               <div
                 key={i}
-                className="bg-[var(--brand-surface)] rounded-2xl p-5 animate-pulse space-y-3"
+                className="rounded-[26px] border border-white/80 bg-white/85 p-5 shadow-sm"
               >
-                <div className="flex gap-3">
-                  <div className="w-10 h-10 bg-[var(--brand-border)] rounded-full" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-3 bg-[var(--brand-border)] rounded w-1/2" />
-                    <div className="h-3 bg-[var(--brand-border)] rounded w-1/3" />
+                <div className="animate-pulse space-y-4">
+                  <div className="flex gap-3">
+                    <div className="h-12 w-12 rounded-2xl bg-slate-200" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 w-1/2 rounded bg-slate-200" />
+                      <div className="h-3 w-1/3 rounded bg-slate-200" />
+                    </div>
+                    <div className="h-10 w-24 rounded-xl bg-slate-200" />
                   </div>
-                </div>
-                <div className="h-12 bg-[var(--brand-border)] rounded-xl" />
-                <div className="grid grid-cols-3 gap-2">
-                  {[1, 2, 3].map((j) => (
-                    <div key={j} className="h-8 bg-[var(--brand-border)] rounded-lg" />
-                  ))}
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="h-10 bg-[var(--brand-border)] rounded-xl" />
-                  <div className="h-10 bg-orange-100 rounded-xl" />
+                  <div className="grid grid-cols-2 gap-3">
+                    {[1, 2, 3, 4].map((j) => (
+                      <div key={j} className="h-20 rounded-2xl bg-slate-100" />
+                    ))}
+                  </div>
+                  <div className="h-11 rounded-2xl bg-slate-100" />
                 </div>
               </div>
             ))}
           </div>
         ) : error ? (
-          <div className="bg-red-500/10 rounded-2xl p-5 text-center">
-            <p className="text-red-700 text-sm">ไม่สามารถโหลดข้อมูลได้</p>
+          <LiffPanel title={t('loadErrorTitle')} subtitle={t('loadErrorDescription')}>
             <button
               onClick={() => window.location.reload()}
-              className="mt-3 text-orange-500 text-sm hover:underline"
+              className="text-sm font-semibold text-orange-600"
             >
-              ลองใหม่
+              {t('retry')}
             </button>
-          </div>
-        ) : !data || data.quotes.length === 0 ? (
-          <div className="bg-[var(--brand-surface)] rounded-2xl p-8 text-center shadow-sm">
-            <div className="w-16 h-16 rounded-full bg-[var(--brand-background)] flex items-center justify-center mx-auto mb-3">
-              <svg
-                className="w-8 h-8 text-[var(--brand-text-secondary)]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
+          </LiffPanel>
+        ) : !data || visibleQuotes.length === 0 ? (
+          <LiffPanel title={t('emptyTitle')} subtitle={t('emptyDescription')}>
+            <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500">
+              {t('emptyHint')}
             </div>
-            <h3 className="font-semibold text-[var(--brand-text)] mb-1">ยังไม่มีใบเสนอราคา</h3>
-            <p className="text-[var(--brand-text-secondary)] text-sm">
-              กรุณารอผู้รับเหมาส่งใบเสนอราคา
-            </p>
-          </div>
+          </LiffPanel>
         ) : (
           <>
-            {errorMsg && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-700">
+            {errorMsg ? (
+              <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {errorMsg}
               </div>
-            )}
+            ) : null}
 
             <QuoteComparisonTable
               data={{
                 ...data,
-                quotes: data.quotes.filter((q) => !localDeclined.has(q.quoteId)),
+                quotes: visibleQuotes,
               }}
               onAccept={handleAccept}
               onDecline={handleDecline}
@@ -188,6 +214,6 @@ export default function QuoteComparePage() {
           </>
         )}
       </div>
-    </div>
+    </LiffPageFrame>
   )
 }

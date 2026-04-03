@@ -1,37 +1,52 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter, useParams, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import { BadgeCheck, CalendarRange, CircleDollarSign, ShieldCheck, SunMedium } from 'lucide-react'
+import {
+  LiffHeroCard,
+  LiffMetricStrip,
+  LiffPageFrame,
+  LiffPanel,
+  LiffPill,
+  LiffPrimaryButton,
+} from '@/components/liff/LiffMobileUI'
 import {
   useQuoteDetail,
   useAcceptQuote,
   useDeclineQuote,
   useRequestRevision,
 } from '@/hooks/useQuotes'
+import { formatThb } from '@/lib/utils'
 import { QUOTE_STATUS_LABELS, QUOTE_STATUS_COLORS } from '@/types/quotes'
 
-function formatThb(v: number) {
-  return `฿${v.toLocaleString('en-US')}`
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string
+  subtitle?: string
+  children: React.ReactNode
+}) {
   return (
-    <div className="bg-[var(--brand-surface)] rounded-2xl overflow-hidden shadow-sm border border-[var(--brand-border)]">
-      <div className="px-4 py-3 bg-[var(--brand-background)] border-b border-[var(--brand-border)]">
-        <h3 className="font-semibold text-[var(--brand-text)] text-sm">{title}</h3>
-      </div>
-      <div className="px-4 py-3 space-y-2">{children}</div>
-    </div>
+    <LiffPanel title={title} subtitle={subtitle}>
+      <div className="space-y-2.5">{children}</div>
+    </LiffPanel>
   )
 }
 
 function Row({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="flex justify-between text-sm">
-      <span className="text-[var(--brand-text-secondary)]">{label}</span>
+    <div className="flex items-start justify-between gap-4 rounded-2xl bg-slate-50/90 px-3 py-3 text-sm">
+      <span className="text-slate-500">{label}</span>
       <span
-        className={`font-medium ${highlight ? 'text-orange-600 font-bold' : 'text-[var(--brand-text)]'}`}
+        className={
+          highlight
+            ? 'text-right font-semibold text-orange-600'
+            : 'text-right font-medium text-slate-900'
+        }
       >
         {value}
       </span>
@@ -57,12 +72,36 @@ export default function QuoteDetailPage() {
   const [acceptedDealId, setAcceptedDealId] = useState<string | null>(null)
   const [declined, setDeclined] = useState(false)
 
+  const overviewMetrics = useMemo(() => {
+    if (!quote) {
+      return []
+    }
+
+    return [
+      {
+        label: t('overview.systemSize'),
+        value: `${quote.specifications.totalPanelKw} kW`,
+        hint: `${quote.specifications.panelCount} ${t('specs.panelsUnit')}`,
+      },
+      {
+        label: t('overview.monthlySavings'),
+        value: formatThb(quote.specifications.estimatedMonthlySavingsThb),
+        hint: t('pricing.perMonth'),
+      },
+      {
+        label: t('overview.payback'),
+        value: `${quote.specifications.estimatedPaybackYears} ${t('savings.years')}`,
+        hint: t('overview.returnHint'),
+      },
+    ]
+  }, [quote, t])
+
   const handleAccept = async () => {
     try {
       const result = await accept(quoteId)
       setAcceptedDealId(result.dealId)
     } catch {
-      // ignore
+      // handled in hook state elsewhere
     }
   }
 
@@ -78,127 +117,155 @@ export default function QuoteDetailPage() {
 
   if (acceptedDealId) {
     return (
-      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
-        <div className="text-center max-w-sm">
-          <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
-            <svg
-              className="w-10 h-10 text-green-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-          <h2 className="text-xl font-bold text-[var(--brand-text)] mb-2">{t('accepted')}</h2>
-          <button
-            onClick={() => router.push(`/liff/quotes/deals/${acceptedDealId}`)}
-            className="mt-4 w-full py-4 bg-orange-500 text-white rounded-2xl font-bold"
+      <LiffPageFrame className="flex items-center justify-center">
+        <div className="w-full max-w-sm">
+          <LiffHeroCard
+            accent="green"
+            eyebrow={t('acceptedEyebrow')}
+            title={t('accepted')}
+            description={t('acceptedDescription')}
+            className="text-center"
           >
-            {t('trackProgress')}
-          </button>
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-sm">
+              <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </LiffHeroCard>
+          <div className="mt-4">
+            <LiffPrimaryButton
+              accent="green"
+              className="w-full"
+              onClick={() => router.push(`/liff/quotes/deals/${acceptedDealId}`)}
+            >
+              {t('trackProgress')}
+            </LiffPrimaryButton>
+          </div>
         </div>
-      </div>
+      </LiffPageFrame>
     )
   }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500" />
-      </div>
+      <LiffPageFrame className="flex items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-orange-500" />
+          <p className="mt-4 text-sm text-slate-500">{t('loading')}</p>
+        </div>
+      </LiffPageFrame>
     )
   }
 
   if (!quote) {
     return (
-      <div className="min-h-screen bg-[var(--brand-background)] flex items-center justify-center p-4">
-        <div className="text-center">
-          <p className="text-[var(--brand-text-secondary)]">{t('notFound')}</p>
-          <button onClick={() => router.back()} className="mt-3 text-orange-500 text-sm">
+      <LiffPageFrame className="flex items-center justify-center">
+        <LiffPanel
+          title={t('notFound')}
+          subtitle={t('notFoundDescription')}
+          className="w-full max-w-sm"
+        >
+          <button onClick={() => router.back()} className="text-sm font-semibold text-orange-600">
             {t('goBack')}
           </button>
-        </div>
-      </div>
+        </LiffPanel>
+      </LiffPageFrame>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[var(--brand-background)] pb-28">
-      {/* Header */}
-      <div className="bg-orange-500 text-white px-4 py-5 safe-top">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.back()}
-            className="w-8 h-8 flex items-center justify-center"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <div className="flex-1">
-            <h1 className="text-lg font-bold">{t('title')}</h1>
-            <p className="text-orange-100 text-xs">{quote.quoteNumber}</p>
-          </div>
-          <span
-            className={`px-2 py-0.5 rounded-full text-xs font-medium ${QUOTE_STATUS_COLORS[quote.status]}`}
-          >
-            {QUOTE_STATUS_LABELS[quote.status]}
-          </span>
-        </div>
-      </div>
-
-      <div className="px-4 py-5 max-w-lg mx-auto space-y-4">
-        {/* Contractor card */}
-        {quote.contractor && (
-          <div className="bg-[var(--brand-surface)] rounded-2xl p-4 shadow-sm border border-[var(--brand-border)]">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-orange-600 font-bold">
-                  {quote.contractor.companyName.charAt(0)}
-                </span>
+    <LiffPageFrame className="pb-36">
+      <LiffHeroCard
+        title={t('title')}
+        description={t('heroDescription')}
+        eyebrow={quote.quoteNumber}
+        badge={QUOTE_STATUS_LABELS[quote.status]}
+        onBack={() => router.back()}
+      >
+        <div className="rounded-[24px] border border-white/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-base font-bold text-white shadow-sm">
+                {quote.contractor?.companyName?.charAt(0) ?? 'S'}
               </div>
-              <div className="flex-1">
-                <p className="font-semibold text-[var(--brand-text)]">
-                  {quote.contractor.companyName}
-                </p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-yellow-400 text-sm">★</span>
-                  <span className="text-sm font-medium text-[var(--brand-text)]">
-                    {quote.contractor.rating.toFixed(1)}
-                  </span>
-                  <span className="text-xs text-[var(--brand-text-secondary)]">
-                    ({quote.contractor.totalReviews} {t('reviews')})
-                  </span>
-                  {quote.contractor.verified && (
-                    <span className="text-xs text-blue-600 font-medium">{t('verified')}</span>
-                  )}
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="truncate font-semibold text-slate-950">
+                    {quote.contractor?.companyName ?? t('unknownContractor')}
+                  </p>
+                  {quote.contractor?.verified ? (
+                    <LiffPill tone="info">
+                      <BadgeCheck className="mr-1 h-3.5 w-3.5" />
+                      {t('verified')}
+                    </LiffPill>
+                  ) : null}
                 </div>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-orange-600">
-                  {formatThb(quote.pricing.totalPrice)}
-                </p>
-                <p className="text-xs text-[var(--brand-text-secondary)]">
-                  {formatThb(quote.pricing.pricePerKw)}/kW
-                </p>
+                {quote.contractor ? (
+                  <div className="mt-1 flex items-center gap-2 text-sm text-slate-500">
+                    <span className="text-amber-400">★</span>
+                    <span className="font-medium text-slate-900">
+                      {quote.contractor.rating.toFixed(1)}
+                    </span>
+                    <span>
+                      ({quote.contractor.totalReviews} {t('reviews')})
+                    </span>
+                  </div>
+                ) : null}
               </div>
             </div>
-          </div>
-        )}
 
-        {/* System specs */}
-        <Section title={t('sections.systemSpecs')}>
+            <div className="text-right">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-400">
+                {t('pricing.grandTotal')}
+              </p>
+              <p className="mt-1 text-2xl font-bold text-orange-600">
+                {formatThb(quote.pricing.totalPrice)}
+              </p>
+              <p className="text-xs text-slate-500">{formatThb(quote.pricing.pricePerKw)}/kW</p>
+            </div>
+          </div>
+        </div>
+        <LiffMetricStrip items={overviewMetrics} />
+      </LiffHeroCard>
+
+      <div className="mt-4 space-y-4">
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            {
+              label: t('savings.monthlyProduction'),
+              value: `${quote.specifications.estimatedMonthlyKwh.toLocaleString()} kWh`,
+              icon: <SunMedium className="h-4 w-4" />,
+            },
+            {
+              label: t('overview.monthlySavings'),
+              value: formatThb(quote.specifications.estimatedMonthlySavingsThb),
+              icon: <CircleDollarSign className="h-4 w-4" />,
+            },
+            {
+              label: t('overview.installWindow'),
+              value: `${quote.timeline.estimatedTotalDays} ${t('timeline.days')}`,
+              icon: <CalendarRange className="h-4 w-4" />,
+            },
+          ].map((item) => (
+            <div
+              key={item.label}
+              className="rounded-[24px] border border-white/75 bg-white/85 p-3 shadow-sm"
+            >
+              <div className="text-slate-400">{item.icon}</div>
+              <p className="mt-3 text-[11px] uppercase tracking-[0.12em] text-slate-400">
+                {item.label}
+              </p>
+              <p className="mt-2 text-sm font-semibold text-slate-950">{item.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <Section title={t('sections.systemSpecs')} subtitle={t('sectionDescriptions.systemSpecs')}>
           <Row
             label={t('specs.solarPanel')}
             value={`${quote.specifications.panelBrand} ${quote.specifications.panelModel}`}
@@ -216,12 +283,12 @@ export default function QuoteDetailPage() {
             label={t('specs.inverter')}
             value={`${quote.specifications.inverterBrand} ${quote.specifications.inverterModel}`}
           />
-          {quote.specifications.batteryBrand && (
+          {quote.specifications.batteryBrand ? (
             <Row
               label={t('specs.battery')}
               value={`${quote.specifications.batteryBrand} ${quote.specifications.batteryCapacityKwh} kWh`}
             />
-          )}
+          ) : null}
           <Row
             label={t('specs.mounting')}
             value={
@@ -244,13 +311,12 @@ export default function QuoteDetailPage() {
           />
         </Section>
 
-        {/* Pricing */}
-        <Section title={t('sections.pricing')}>
+        <Section title={t('sections.pricing')} subtitle={t('sectionDescriptions.pricing')}>
           <Row label={t('pricing.panelCost')} value={formatThb(quote.pricing.panelCost)} />
           <Row label={t('pricing.inverterCost')} value={formatThb(quote.pricing.inverterCost)} />
-          {quote.pricing.batteryCost && (
+          {quote.pricing.batteryCost ? (
             <Row label={t('pricing.batteryCost')} value={formatThb(quote.pricing.batteryCost)} />
-          )}
+          ) : null}
           <Row label={t('pricing.mountingCost')} value={formatThb(quote.pricing.mountingCost)} />
           <Row
             label={t('pricing.cableCost')}
@@ -258,55 +324,26 @@ export default function QuoteDetailPage() {
           />
           <Row label={t('pricing.laborCost')} value={formatThb(quote.pricing.laborCost)} />
           <Row label={t('pricing.permitCost')} value={formatThb(quote.pricing.permitCost)} />
-          {quote.pricing.discountAmount > 0 && (
-            <div className="flex justify-between text-sm text-green-700">
-              <span>{t('pricing.discount')}</span>
-              <span className="font-medium">-{formatThb(quote.pricing.discountAmount)}</span>
-            </div>
-          )}
-          <div className="border-t border-[var(--brand-border)] pt-2 mt-2">
+          {quote.pricing.discountAmount > 0 ? (
             <Row
-              label={`VAT ${quote.pricing.vatRate}%`}
-              value={formatThb(quote.pricing.vatAmount)}
+              label={t('pricing.discount')}
+              value={`-${formatThb(quote.pricing.discountAmount)}`}
+              highlight
             />
-            <div className="flex justify-between mt-1">
-              <span className="font-bold text-[var(--brand-text)]">{t('pricing.grandTotal')}</span>
-              <span className="font-bold text-orange-600 text-base">
+          ) : null}
+          <Row label={`VAT ${quote.pricing.vatRate}%`} value={formatThb(quote.pricing.vatAmount)} />
+          <div className="rounded-2xl bg-orange-50 px-4 py-3 text-sm ring-1 ring-orange-100">
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-semibold text-slate-900">{t('pricing.grandTotal')}</span>
+              <span className="text-lg font-bold text-orange-600">
                 {formatThb(quote.pricing.totalPrice)}
               </span>
             </div>
           </div>
         </Section>
 
-        {/* Savings estimate */}
-        <div className="grid grid-cols-3 gap-3">
-          {[
-            {
-              label: t('savings.monthlyProduction'),
-              value: `${quote.specifications.estimatedMonthlyKwh.toLocaleString()} kWh`,
-            },
-            {
-              label: t('savings.monthlySavings'),
-              value: formatThb(quote.specifications.estimatedMonthlySavingsThb),
-            },
-            {
-              label: t('savings.paybackIn'),
-              value: `${quote.specifications.estimatedPaybackYears} ${t('savings.years')}`,
-            },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="bg-orange-50 rounded-2xl p-3 text-center border border-orange-100"
-            >
-              <p className="text-xs text-[var(--brand-text-secondary)] mb-1">{item.label}</p>
-              <p className="text-sm font-bold text-orange-700">{item.value}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Timeline */}
-        <Section title={t('sections.timeline')}>
-          {quote.timeline.siteSurveyDate && (
+        <Section title={t('sections.timeline')} subtitle={t('sectionDescriptions.timeline')}>
+          {quote.timeline.siteSurveyDate ? (
             <Row
               label={t('timeline.siteSurvey')}
               value={new Date(quote.timeline.siteSurveyDate).toLocaleDateString('th-TH', {
@@ -315,7 +352,7 @@ export default function QuoteDetailPage() {
                 year: 'numeric',
               })}
             />
-          )}
+          ) : null}
           <Row
             label={t('timeline.installStart')}
             value={new Date(quote.timeline.installationStartDate).toLocaleDateString('th-TH', {
@@ -339,8 +376,7 @@ export default function QuoteDetailPage() {
           />
         </Section>
 
-        {/* Warranty */}
-        <Section title={t('sections.warranty')}>
+        <Section title={t('sections.warranty')} subtitle={t('sectionDescriptions.warranty')}>
           <Row
             label={t('warranty.panelPerformance')}
             value={`${quote.warranty.panelPerformanceYears} ${t('savings.years')}`}
@@ -357,63 +393,63 @@ export default function QuoteDetailPage() {
             label={t('warranty.installation')}
             value={`${quote.warranty.installationYears} ${t('savings.years')}`}
           />
-          {quote.warranty.roofLeakYears && (
+          {quote.warranty.roofLeakYears ? (
             <Row
               label={t('warranty.roofLeak')}
               value={`${quote.warranty.roofLeakYears} ${t('savings.years')}`}
             />
-          )}
+          ) : null}
         </Section>
 
-        {/* Financing */}
         {quote.financing &&
-          (quote.financing.installmentAvailable || quote.financing.leasingAvailable) && (
-            <Section title={t('sections.financing')}>
-              {quote.financing.cashDiscountPct && (
-                <Row
-                  label={t('financingDetail.cashDiscount')}
-                  value={`${quote.financing.cashDiscountPct}%`}
-                />
-              )}
-              {quote.financing.installmentAvailable && quote.financing.installmentMonths && (
-                <div>
-                  <p className="text-sm text-[var(--brand-text-secondary)] mb-2">
-                    {t('financingDetail.installment', {
-                      rate: quote.financing.installmentInterestRate || 0,
-                    })}
-                  </p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {quote.financing.installmentMonths.map((m) => {
-                      const monthly =
-                        quote.financing?.installmentMonthlyAmount?.[m] ||
-                        Math.round(quote.pricing.totalPrice / m)
-                      return (
-                        <div key={m} className="bg-blue-500/10 rounded-xl p-2 text-center">
-                          <p className="text-xs text-[var(--brand-text-secondary)]">
-                            {m} {t('financingDetail.months')}
-                          </p>
-                          <p className="text-sm font-bold text-blue-700">
-                            {formatThb(monthly)}/{t('financingDetail.perMonth')}
-                          </p>
-                        </div>
-                      )
-                    })}
-                  </div>
+        (quote.financing.installmentAvailable || quote.financing.leasingAvailable) ? (
+          <Section title={t('sections.financing')} subtitle={t('sectionDescriptions.financing')}>
+            {quote.financing.cashDiscountPct ? (
+              <Row
+                label={t('financingDetail.cashDiscount')}
+                value={`${quote.financing.cashDiscountPct}%`}
+              />
+            ) : null}
+            {quote.financing.installmentAvailable && quote.financing.installmentMonths ? (
+              <div className="space-y-3 rounded-2xl bg-sky-50 p-4 ring-1 ring-sky-100">
+                <p className="text-sm text-sky-800">
+                  {t('financingDetail.installment', {
+                    rate: quote.financing.installmentInterestRate || 0,
+                  })}
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {quote.financing.installmentMonths.map((months) => {
+                    const monthly =
+                      quote.financing?.installmentMonthlyAmount?.[months] ||
+                      Math.round(quote.pricing.totalPrice / months)
+
+                    return (
+                      <div
+                        key={months}
+                        className="rounded-2xl bg-white px-3 py-3 text-center shadow-sm"
+                      >
+                        <p className="text-[11px] uppercase tracking-[0.12em] text-slate-400">
+                          {months} {t('financingDetail.months')}
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-slate-950">
+                          {formatThb(monthly)}/{t('financingDetail.perMonth')}
+                        </p>
+                      </div>
+                    )
+                  })}
                 </div>
-              )}
-            </Section>
-          )}
+              </div>
+            ) : null}
+          </Section>
+        ) : null}
 
-        {/* Notes */}
-        {quote.notes && (
-          <div className="bg-yellow-500/10 rounded-2xl p-4 border border-yellow-100">
-            <h3 className="font-semibold text-[var(--brand-text)] text-sm mb-2">{t('notes')}</h3>
-            <p className="text-sm text-[var(--brand-text)] whitespace-pre-wrap">{quote.notes}</p>
-          </div>
-        )}
+        {quote.notes ? (
+          <LiffPanel title={t('notes')} subtitle={t('notesDescription')}>
+            <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">{quote.notes}</p>
+          </LiffPanel>
+        ) : null}
 
-        {/* Validity */}
-        <div className="text-center text-xs text-[var(--brand-text-secondary)]">
+        <div className="rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3 text-center text-xs text-amber-800">
           {t('validUntil')}{' '}
           {new Date(quote.validUntil).toLocaleDateString('th-TH', {
             day: 'numeric',
@@ -423,92 +459,95 @@ export default function QuoteDetailPage() {
         </div>
       </div>
 
-      {/* Fixed action buttons */}
-      {!declined && (quote.status === 'submitted' || quote.status === 'viewed') && (
-        <div className="fixed bottom-0 left-0 right-0 bg-[var(--brand-surface)] border-t border-[var(--brand-border)] px-4 py-4 safe-bottom">
-          <div className="max-w-lg mx-auto space-y-2">
-            <button
-              onClick={handleAccept}
-              disabled={isAccepting}
-              className="w-full py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-bold transition-colors disabled:opacity-50"
-            >
-              {isAccepting ? (
-                <span className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  {t('processing')}
-                </span>
-              ) : (
-                t('acceptQuote')
-              )}
-            </button>
+      {!declined && (quote.status === 'submitted' || quote.status === 'viewed') ? (
+        <div className="fixed bottom-0 left-0 right-0 border-t border-white/70 bg-white/88 px-4 py-4 backdrop-blur-xl">
+          <div className="mx-auto max-w-lg space-y-2">
+            <div className="flex items-center justify-between rounded-2xl bg-slate-950 px-4 py-3 text-white">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.14em] text-slate-300">
+                  {t('actionBar.title')}
+                </p>
+                <p className="mt-1 text-sm font-semibold">{formatThb(quote.pricing.totalPrice)}</p>
+              </div>
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-medium ${QUOTE_STATUS_COLORS[quote.status]}`}
+              >
+                {QUOTE_STATUS_LABELS[quote.status]}
+              </span>
+            </div>
+            <LiffPrimaryButton onClick={handleAccept} disabled={isAccepting} className="w-full">
+              {isAccepting ? t('processing') : t('acceptQuote')}
+            </LiffPrimaryButton>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowRevisionModal(true)}
-                className="flex-1 py-3 border border-[var(--brand-border)] rounded-xl text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-background)]"
+                className="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
               >
                 {t('requestRevision')}
               </button>
               <button
                 onClick={handleDecline}
                 disabled={isDeclining}
-                className="flex-1 py-3 border border-red-500/20 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 disabled:opacity-50"
+                className="flex-1 rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm font-semibold text-red-600"
               >
                 {isDeclining ? '...' : t('decline')}
               </button>
             </div>
           </div>
         </div>
-      )}
+      ) : null}
 
-      {declined && (
-        <div className="fixed bottom-0 left-0 right-0 bg-[var(--brand-surface)] border-t border-[var(--brand-border)] px-4 py-4 safe-bottom">
-          <div className="max-w-lg mx-auto text-center text-sm text-[var(--brand-text-secondary)]">
+      {declined ? (
+        <div className="fixed bottom-0 left-0 right-0 border-t border-white/70 bg-white/92 px-4 py-4 backdrop-blur-xl">
+          <div className="mx-auto max-w-lg rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm text-white">
             {t('declined')}
-            {requestId && (
+            {requestId ? (
               <button
                 onClick={() => router.push(`/liff/quotes/compare/${requestId}`)}
-                className="ml-2 text-orange-500 font-medium"
+                className="ml-2 font-semibold text-orange-300"
               >
                 {t('viewOtherQuotes')}
               </button>
-            )}
+            ) : null}
           </div>
         </div>
-      )}
+      ) : null}
 
-      {/* Revision modal */}
-      {showRevisionModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-end justify-center z-50">
-          <div className="bg-[var(--brand-surface)] rounded-t-2xl w-full max-w-lg p-5 space-y-4">
-            <h3 className="font-bold text-[var(--brand-text)]">{t('revisionModal.title')}</h3>
-            <p className="text-sm text-[var(--brand-text-secondary)]">
-              {t('revisionModal.subtitle')}
-            </p>
+      {showRevisionModal ? (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 px-4 pb-4 pt-10 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-[28px] border border-white/80 bg-white p-5 shadow-2xl">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-orange-500" />
+              <h3 className="font-[var(--brand-font-heading)] text-xl font-semibold text-slate-950">
+                {t('revisionModal.title')}
+              </h3>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-slate-500">{t('revisionModal.subtitle')}</p>
             <textarea
               value={revisionMessage}
               onChange={(e) => setRevisionMessage(e.target.value)}
               rows={4}
               placeholder={t('revisionModal.placeholder')}
-              className="w-full border border-[var(--brand-border)] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"
+              className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"
             />
-            <div className="flex gap-3">
+            <div className="mt-4 flex gap-3">
               <button
                 onClick={() => setShowRevisionModal(false)}
-                className="flex-1 py-3 border border-[var(--brand-border)] rounded-xl text-sm font-medium text-[var(--brand-text)]"
+                className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
               >
                 {t('revisionModal.cancel')}
               </button>
-              <button
+              <LiffPrimaryButton
                 onClick={handleRevision}
                 disabled={isRevising || !revisionMessage.trim()}
-                className="flex-1 py-3 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 disabled:opacity-50"
+                className="flex-1"
               >
-                {isRevising ? '...' : t('revisionModal.submit')}
-              </button>
+                {isRevising ? t('processing') : t('revisionModal.submit')}
+              </LiffPrimaryButton>
             </div>
           </div>
         </div>
-      )}
-    </div>
+      ) : null}
+    </LiffPageFrame>
   )
 }

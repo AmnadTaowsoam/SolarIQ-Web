@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { BadgeCheck, CalendarClock, CircleDollarSign, ShieldCheck, Zap } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { LiffPanel, LiffPill, LiffPrimaryButton } from '@/components/liff/LiffMobileUI'
+import { cn, formatThb } from '@/lib/utils'
 import { QuoteComparisonData, QuoteComparisonItem } from '@/types/quotes'
 
 interface QuoteComparisonTableProps {
@@ -14,27 +17,38 @@ interface QuoteComparisonTableProps {
 
 type SortKey = 'price' | 'rating' | 'fast'
 
-function formatThb(v: number) {
-  return `฿${v.toLocaleString('en-US')}`
-}
+const toneByBadgeLabel = ['success', 'warning', 'info'] as const
 
 function StarRating({ rating, count }: { rating: number; count: number }) {
   return (
-    <div className="flex items-center gap-1">
-      <span className="text-yellow-400 text-sm">★</span>
-      <span className="text-sm font-semibold text-[var(--brand-text)]">{rating.toFixed(1)}</span>
-      <span className="text-xs text-[var(--brand-text-secondary)]">({count})</span>
+    <div className="flex items-center gap-1.5 text-sm">
+      <span className="text-base leading-none text-amber-400">★</span>
+      <span className="font-semibold text-slate-900">{rating.toFixed(1)}</span>
+      <span className="text-slate-500">({count})</span>
     </div>
   )
 }
 
-function Badge({ children, color }: { children: React.ReactNode; color: string }) {
+function QuoteQuickMetric({
+  icon,
+  label,
+  value,
+  hint,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+  hint?: string
+}) {
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${color}`}
-    >
-      {children}
-    </span>
+    <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3">
+      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+        <span className="text-slate-500">{icon}</span>
+        <span>{label}</span>
+      </div>
+      <p className="mt-2 text-sm font-semibold text-slate-950">{value}</p>
+      {hint ? <p className="mt-1 text-xs text-slate-500">{hint}</p> : null}
+    </div>
   )
 }
 
@@ -50,288 +64,296 @@ export function QuoteComparisonTable({
   const [showDeclineModal, setShowDeclineModal] = useState<string | null>(null)
   const [declineReason, setDeclineReason] = useState('')
 
-  const sorted = [...data.quotes].sort((a, b) => {
-    if (sortKey === 'price') {
-      return a.pricing.totalPrice - b.pricing.totalPrice
-    }
-    if (sortKey === 'rating') {
-      return b.contractor.rating - a.contractor.rating
-    }
-    if (sortKey === 'fast') {
+  const sorted = useMemo(() => {
+    return [...data.quotes].sort((a, b) => {
+      if (sortKey === 'price') {
+        return a.pricing.totalPrice - b.pricing.totalPrice
+      }
+      if (sortKey === 'rating') {
+        return b.contractor.rating - a.contractor.rating
+      }
       return a.timeline.totalDays - b.timeline.totalDays
-    }
-    return 0
-  })
+    })
+  }, [data.quotes, sortKey])
 
-  const getBadges = (item: QuoteComparisonItem): Array<{ label: string; color: string }> => {
-    const badges: Array<{ label: string; color: string }> = []
+  const getBadges = (
+    item: QuoteComparisonItem
+  ): Array<{ label: string; tone: 'success' | 'warning' | 'info' }> => {
+    const badges: Array<{ label: string; tone: 'success' | 'warning' | 'info' }> = []
     if (data.analysis?.cheapest === item.quoteId) {
-      badges.push({ label: t('best'), color: 'bg-green-500/10 text-green-800' })
+      badges.push({ label: t('best'), tone: 'success' })
     }
     if (data.analysis?.highestRated === item.quoteId) {
-      badges.push({ label: t('premium'), color: 'bg-yellow-500/10 text-yellow-600' })
+      badges.push({ label: t('premium'), tone: 'warning' })
     }
     if (data.analysis?.fastest === item.quoteId) {
-      badges.push({ label: t('basic'), color: 'bg-blue-500/10 text-blue-800' })
+      badges.push({ label: t('basic'), tone: 'info' })
     }
     return badges
   }
 
   const handleDeclineConfirm = () => {
-    if (showDeclineModal) {
-      onDecline(showDeclineModal)
-      setShowDeclineModal(null)
-      setDeclineReason('')
+    if (!showDeclineModal) {
+      return
     }
+    onDecline(showDeclineModal)
+    setShowDeclineModal(null)
+    setDeclineReason('')
   }
 
   return (
     <div className="space-y-4">
-      {/* Sort tabs */}
-      <div className="flex gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {[
-          { key: 'price' as SortKey, label: t('totalCost') },
-          { key: 'rating' as SortKey, label: t('recommended') },
-          { key: 'fast' as SortKey, label: t('basic') },
+          { key: 'price' as const, label: t('sortPrice') },
+          { key: 'rating' as const, label: t('sortRating') },
+          { key: 'fast' as const, label: t('sortFast') },
         ].map((tab) => (
           <button
             key={tab.key}
             onClick={() => setSortKey(tab.key)}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
+            className={cn(
+              'rounded-2xl border px-3 py-3 text-sm font-semibold transition-all',
               sortKey === tab.key
-                ? 'bg-orange-500 text-white shadow-sm'
-                : 'bg-[var(--brand-surface)] text-[var(--brand-text-secondary)] border border-[var(--brand-border)]'
-            }`}
+                ? 'border-orange-500 bg-orange-500 text-white shadow-[0_16px_32px_-22px_rgba(249,115,22,0.75)]'
+                : 'border-white/70 bg-white/85 text-slate-600 shadow-sm backdrop-blur-sm hover:bg-white'
+            )}
           >
             {tab.label}
           </button>
         ))}
       </div>
 
-      {/* Quote cards */}
       {sorted.map((item, index) => {
         const badges = getBadges(item)
         const isAcceptingThis = isAccepting === item.quoteId
-        return (
-          <div
-            key={item.quoteId}
-            className={`bg-[var(--brand-surface)] rounded-2xl border-2 shadow-sm overflow-hidden transition-all ${
-              badges.some((b) => b.label === t('best'))
-                ? 'border-green-400'
-                : index === 0
-                  ? 'border-orange-400'
-                  : 'border-[var(--brand-border)]'
-            }`}
-          >
-            {/* Top banner for best options */}
-            {index === 0 && sortKey === 'price' && (
-              <div className="bg-orange-500 text-white text-xs font-bold text-center py-1.5">
-                {t('recommended')} —{' '}
-                {sortKey === 'price' ? t('best') : sortKey === 'rating' ? t('premium') : t('basic')}
-              </div>
-            )}
+        const isTopPick = index === 0
 
-            <div className="p-4 space-y-4">
-              {/* Contractor info */}
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-                    <span className="text-orange-600 font-bold text-sm">
-                      {item.contractor.companyName.charAt(0)}
-                    </span>
+        return (
+          <LiffPanel
+            key={item.quoteId}
+            className={cn(
+              'overflow-hidden border-2 p-0',
+              isTopPick
+                ? 'border-orange-300 shadow-[0_26px_70px_-40px_rgba(249,115,22,0.55)]'
+                : 'border-white/75'
+            )}
+          >
+            <div
+              className={cn(
+                'px-4 py-3',
+                isTopPick
+                  ? 'bg-[linear-gradient(135deg,#fff5eb_0%,#fff_52%,#ffedd5_100%)]'
+                  : 'bg-[linear-gradient(135deg,#fff_0%,#f8fafc_100%)]'
+              )}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-base font-bold text-white shadow-sm">
+                    {item.contractor.companyName.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="truncate text-base font-semibold text-slate-950">
+                        {item.contractor.companyName}
+                      </p>
+                      {item.contractor.verified ? (
+                        <LiffPill tone="info">
+                          <BadgeCheck className="mr-1 h-3.5 w-3.5" />
+                          {t('verified')}
+                        </LiffPill>
+                      ) : null}
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                      <StarRating
+                        rating={item.contractor.rating}
+                        count={item.contractor.totalReviews}
+                      />
+                      {typeof item.contractor.responseTimeHours === 'number' ? (
+                        <span className="text-xs text-slate-500">
+                          {t('responseTime', { hours: item.contractor.responseTimeHours })}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                    {t('totalCost')}
+                  </p>
+                  <p className="mt-1 text-2xl font-bold text-orange-600">
+                    {formatThb(item.pricing.totalPrice)}
+                  </p>
+                  <p className="text-xs text-slate-500">{formatThb(item.pricing.pricePerKw)}/kW</p>
+                </div>
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {isTopPick ? <LiffPill tone="warning">{t('recommendedMatch')}</LiffPill> : null}
+                {badges.map((badge, badgeIndex) => (
+                  <LiffPill
+                    key={`${badge.label}-${badgeIndex}`}
+                    tone={badge.tone ?? toneByBadgeLabel[badgeIndex] ?? 'default'}
+                  >
+                    {badge.label}
+                  </LiffPill>
+                ))}
+                {item.pricing.discountPct > 0 ? (
+                  <LiffPill tone="success">
+                    {t('saving')} {item.pricing.discountPct.toFixed(1)}%
+                  </LiffPill>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="space-y-4 px-4 py-4">
+              <div className="grid grid-cols-2 gap-3">
+                <QuoteQuickMetric
+                  icon={<CircleDollarSign className="h-3.5 w-3.5" />}
+                  label={t('monthlySavings')}
+                  value={formatThb(item.savings.monthlySavingsThb)}
+                  hint={t('perMonth')}
+                />
+                <QuoteQuickMetric
+                  icon={<CalendarClock className="h-3.5 w-3.5" />}
+                  label={t('installationWindow')}
+                  value={t('daysCount', { count: item.timeline.totalDays })}
+                  hint={new Date(item.timeline.installationEnd).toLocaleDateString('th-TH', {
+                    day: 'numeric',
+                    month: 'short',
+                  })}
+                />
+                <QuoteQuickMetric
+                  icon={<Zap className="h-3.5 w-3.5" />}
+                  label={t('systemSize')}
+                  value={`${item.system.totalKw.toFixed(2)} kW`}
+                  hint={`${item.system.panelBrand} ${item.system.panelWattage}W × ${item.system.panelCount}`}
+                />
+                <QuoteQuickMetric
+                  icon={<ShieldCheck className="h-3.5 w-3.5" />}
+                  label={t('payback')}
+                  value={t('yearsCount', { count: item.savings.paybackYears.toFixed(1) })}
+                  hint={`${item.warranty.panelYears}/${item.warranty.inverterYears}/${item.warranty.installationYears} ${t('years')}`}
+                />
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-950">{t('systemHighlights')}</p>
+                    <p className="mt-1 text-xs text-slate-500">{t('highlightsSubtitle')}</p>
+                  </div>
+                  {item.system.hasBattery ? (
+                    <LiffPill tone="success">{t('batteryIncluded')}</LiffPill>
+                  ) : null}
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.14em] text-slate-400">
+                      {t('panelBrand')}
+                    </p>
+                    <p className="mt-1 font-medium text-slate-900">{item.system.panelBrand}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-[var(--brand-text)] text-sm">
-                      {item.contractor.companyName}
+                    <p className="text-xs uppercase tracking-[0.14em] text-slate-400">
+                      {t('inverterBrand')}
                     </p>
-                    <StarRating
-                      rating={item.contractor.rating}
-                      count={item.contractor.totalReviews}
-                    />
+                    <p className="mt-1 font-medium text-slate-900">{item.system.inverterBrand}</p>
                   </div>
                 </div>
-                {item.contractor.verified && (
-                  <span className="text-xs bg-blue-500/10 text-blue-700 px-2 py-0.5 rounded-full font-medium border border-blue-100">
-                    ✓ {t('select')}
-                  </span>
-                )}
               </div>
 
-              {/* Badges */}
-              {badges.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {badges.map((b) => (
-                    <Badge key={b.label} color={b.color}>
-                      {b.label}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-
-              {/* Price */}
-              <div className="bg-[var(--brand-background)] rounded-xl p-3">
-                <div className="flex items-baseline justify-between mb-1">
-                  <span className="text-[var(--brand-text-secondary)] text-xs">
-                    {t('totalCost')}
-                  </span>
-                  {item.pricing.discountPct > 0 && (
-                    <span className="text-xs text-green-600 font-medium">
-                      {t('saving')} {item.pricing.discountPct.toFixed(1)}%
+              {item.pricing.hasFinancing && item.pricing.monthlyInstallment ? (
+                <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800 ring-1 ring-emerald-100">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-medium">{t('financingAvailable')}</span>
+                    <span className="font-semibold">
+                      {formatThb(item.pricing.monthlyInstallment)} {t('perMonth')}
                     </span>
-                  )}
-                </div>
-                <p className="text-2xl font-bold text-orange-600">
-                  {formatThb(item.pricing.totalPrice)}
-                </p>
-                <p className="text-xs text-[var(--brand-text-secondary)]">
-                  {formatThb(item.pricing.pricePerKw)}/kW
-                </p>
-                {item.pricing.hasFinancing && item.pricing.monthlyInstallment && (
-                  <p className="text-xs text-blue-600 mt-1 font-medium">
-                    {t('perMonth')}: {formatThb(item.pricing.monthlyInstallment)}
-                  </p>
-                )}
-              </div>
-
-              {/* System specs comparison rows */}
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-[var(--brand-text-secondary)]">{t('panelBrand')}</span>
-                  <span className="font-medium text-[var(--brand-text)] text-right">
-                    {item.system.panelBrand} {item.system.panelWattage}W × {item.system.panelCount}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[var(--brand-text-secondary)]">{t('systemSize')}</span>
-                  <span className="font-medium text-[var(--brand-text)]">
-                    {item.system.totalKw.toFixed(2)} kW
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[var(--brand-text-secondary)]">{t('inverterBrand')}</span>
-                  <span className="font-medium text-[var(--brand-text)]">
-                    {item.system.inverterBrand}
-                  </span>
-                </div>
-                {item.system.hasBattery && (
-                  <div className="flex justify-between">
-                    <span className="text-[var(--brand-text-secondary)]">{t('equipment')}</span>
-                    <span className="font-medium text-green-600">{t('equipment')}</span>
                   </div>
-                )}
+                </div>
+              ) : null}
+
+              <div className="grid grid-cols-3 gap-2 text-center">
+                {[
+                  {
+                    label: t('warrantyPanel'),
+                    value: t('yearsCount', { count: item.warranty.panelYears }),
+                  },
+                  {
+                    label: t('warrantyInverter'),
+                    value: t('yearsCount', { count: item.warranty.inverterYears }),
+                  },
+                  {
+                    label: t('warrantyInstall'),
+                    value: t('yearsCount', { count: item.warranty.installationYears }),
+                  },
+                ].map((warranty) => (
+                  <div
+                    key={warranty.label}
+                    className="rounded-2xl border border-slate-200 bg-white px-2 py-3"
+                  >
+                    <p className="text-[11px] uppercase tracking-[0.12em] text-slate-400">
+                      {warranty.label}
+                    </p>
+                    <p className="mt-2 text-sm font-semibold text-slate-900">{warranty.value}</p>
+                  </div>
+                ))}
               </div>
 
-              {/* Timeline */}
-              <div className="flex items-center justify-between text-sm bg-blue-500/10 rounded-xl px-3 py-2">
-                <div>
-                  <p className="text-[var(--brand-text-secondary)] text-xs">{t('installation')}</p>
-                  <p className="font-medium text-[var(--brand-text)]">
-                    {new Date(item.timeline.installationEnd).toLocaleDateString('th-TH', {
-                      day: 'numeric',
-                      month: 'short',
-                    })}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-[var(--brand-text-secondary)] text-xs">{t('vs')}</p>
-                  <p className="font-medium text-[var(--brand-text)]">
-                    {item.timeline.totalDays} {t('years')}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[var(--brand-text-secondary)] text-xs">{t('perMonth')}</p>
-                  <p className="font-medium text-green-700">
-                    {formatThb(item.savings.monthlySavingsThb)}
-                  </p>
-                </div>
-              </div>
-
-              {/* Warranty quick view */}
-              <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="bg-[var(--brand-background)] rounded-lg py-2">
-                  <p className="text-[var(--brand-text-secondary)]">{t('feature')}</p>
-                  <p className="font-bold text-[var(--brand-text)]">
-                    {item.warranty.panelYears} {t('years')}
-                  </p>
-                </div>
-                <div className="bg-[var(--brand-background)] rounded-lg py-2">
-                  <p className="text-[var(--brand-text-secondary)]">{t('inverterBrand')}</p>
-                  <p className="font-bold text-[var(--brand-text)]">
-                    {item.warranty.inverterYears} {t('years')}
-                  </p>
-                </div>
-                <div className="bg-[var(--brand-background)] rounded-lg py-2">
-                  <p className="text-[var(--brand-text-secondary)]">{t('installation')}</p>
-                  <p className="font-bold text-[var(--brand-text)]">
-                    {item.warranty.installationYears} {t('years')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Payback */}
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-[var(--brand-text-secondary)]">{t('payback')}</span>
-                <span className="font-bold text-orange-700">
-                  {item.savings.paybackYears.toFixed(1)} {t('years')}
-                </span>
-              </div>
-
-              {/* Action buttons */}
               <div className="flex gap-2 pt-1">
                 <button
                   onClick={() => onViewDetail(item.quoteId)}
-                  className="flex-1 py-2.5 border border-[var(--brand-border)] rounded-xl text-sm font-medium text-[var(--brand-text)] hover:bg-[var(--brand-background)] transition-colors"
+                  className="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
                 >
-                  {t('compare')}
+                  {t('reviewQuote')}
                 </button>
                 <button
                   onClick={() => setShowDeclineModal(item.quoteId)}
-                  className="py-2.5 px-3 border border-red-500/20 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors"
+                  className="rounded-2xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50"
                 >
-                  {t('close')}
+                  {t('declineQuote')}
                 </button>
-                <button
+                <LiffPrimaryButton
                   onClick={() => onAccept(item.quoteId)}
                   disabled={!!isAccepting}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors ${
-                    isAcceptingThis
-                      ? 'bg-orange-200 text-orange-400 cursor-wait'
-                      : 'bg-orange-500 text-white hover:bg-orange-600'
-                  }`}
+                  className="flex-1"
                 >
-                  {isAcceptingThis ? '...' : t('select')}
-                </button>
+                  {isAcceptingThis ? t('processing') : t('select')}
+                </LiffPrimaryButton>
               </div>
             </div>
-          </div>
+          </LiffPanel>
         )
       })}
 
-      {/* Decline modal */}
       {showDeclineModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-end justify-center z-50">
-          <div className="bg-[var(--brand-surface)] rounded-t-2xl w-full max-w-lg p-5 space-y-4">
-            <h3 className="font-bold text-[var(--brand-text)]">{t('title')}</h3>
-            <p className="text-sm text-[var(--brand-text-secondary)]">{t('noQuotes')}</p>
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 px-4 pb-4 pt-10 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-[28px] border border-white/80 bg-white p-5 shadow-2xl">
+            <h3 className="font-[var(--brand-font-heading)] text-xl font-semibold text-slate-950">
+              {t('declineTitle')}
+            </h3>
+            <p className="mt-2 text-sm leading-6 text-slate-500">{t('declineDescription')}</p>
             <textarea
               value={declineReason}
               onChange={(e) => setDeclineReason(e.target.value)}
-              rows={3}
-              placeholder="เช่น ราคาสูงเกินไป, ต้องการยี่ห้ออื่น..."
-              className="w-full border border-[var(--brand-border)] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+              rows={4}
+              placeholder={t('declinePlaceholder')}
+              className="mt-4 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"
             />
-            <div className="flex gap-3">
+            <div className="mt-4 flex gap-3">
               <button
                 onClick={() => setShowDeclineModal(null)}
-                className="flex-1 py-3 border border-[var(--brand-border)] rounded-xl text-sm font-medium text-[var(--brand-text)]"
+                className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
               >
-                {t('close')}
+                {t('cancel')}
               </button>
               <button
                 onClick={handleDeclineConfirm}
-                className="flex-1 py-3 bg-red-500 text-white rounded-xl text-sm font-bold hover:bg-red-600"
+                className="flex-1 rounded-2xl bg-red-500 px-4 py-3 text-sm font-semibold text-white hover:bg-red-600"
               >
-                {t('export')}
+                {t('confirmDecline')}
               </button>
             </div>
           </div>
