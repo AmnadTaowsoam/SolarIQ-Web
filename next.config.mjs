@@ -160,6 +160,7 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['recharts', 'lucide-react', '@heroicons/react', '@headlessui/react'],
+    globalNotFound: true,
   },
   serverExternalPackages: ['sharp'],
   // WK-109: Performance Optimization - Webpack configuration
