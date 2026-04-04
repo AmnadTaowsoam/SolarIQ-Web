@@ -145,8 +145,8 @@ export type OpnSourceType =
   | 'internet_banking_bbl'
 
 export interface CheckoutRequest {
-  plan_id: string
-  billing_cycle: string
+  plan: string
+  billing_period: string
   source_type: OpnSourceType
   return_uri: string
   promo_code?: string

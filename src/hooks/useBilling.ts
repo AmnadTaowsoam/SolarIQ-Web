@@ -254,8 +254,8 @@ export function useCreateCheckoutSession() {
 
   return useMutation({
     mutationFn: async (data: {
-      plan_id: string
-      billing_cycle: 'monthly' | 'annual'
+      plan: string
+      billing_period: 'monthly' | 'annual'
       source_type: OpnSourceType
       return_uri: string
       promo_code?: string

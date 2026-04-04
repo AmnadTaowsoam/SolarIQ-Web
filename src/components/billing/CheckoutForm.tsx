@@ -110,8 +110,8 @@ export function CheckoutForm({ plan, billingCycle, onSuccess, onError }: Checkou
       }
 
       const result = await checkoutMutation.mutateAsync({
-        plan_id: plan.id,
-        billing_cycle: billingCycle,
+        plan: plan.id,
+        billing_period: billingCycle,
         source_type: sourceType,
         return_uri: `${window.location.origin}/billing?checkout=success`,
       })

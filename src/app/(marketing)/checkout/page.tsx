@@ -140,7 +140,7 @@ export default function CheckoutPage() {
   const initialBilling: BillingCycle = requestedBilling === 'annual' ? 'annual' : 'monthly'
 
   const [billing, setBilling] = useState<BillingCycle>(initialBilling)
-  const [paymentMethod, setPaymentMethod] = useState<OpnSourceType>('credit_card')
+  const [paymentMethod, setPaymentMethod] = useState<OpnSourceType>('promptpay')
   const [promoCode, setPromoCode] = useState('')
   const [promoApplied, setPromoApplied] = useState(false)
   const [promoError, setPromoError] = useState('')
@@ -149,12 +149,17 @@ export default function CheckoutPage() {
   const [qrCodeUri, setQrCodeUri] = useState<string | null>(null)
   const [chargeId, setChargeId] = useState<string | null>(null)
 
-  const PAYMENT_METHODS: { id: OpnSourceType; label: string; icon: React.ElementType }[] = [
-    { id: 'credit_card', label: t('creditCard'), icon: CreditCard },
-    { id: 'promptpay', label: t('promptpay'), icon: QrCode },
-    { id: 'internet_banking_scb', label: 'SCB', icon: Landmark },
-    { id: 'internet_banking_kbank', label: 'KBANK', icon: Landmark },
-    { id: 'internet_banking_bbl', label: 'BBL', icon: Landmark },
+  const PAYMENT_METHODS: {
+    id: OpnSourceType
+    label: string
+    icon: React.ElementType
+    available: boolean
+  }[] = [
+    { id: 'credit_card', label: t('creditCard'), icon: CreditCard, available: false },
+    { id: 'promptpay', label: t('promptpay'), icon: QrCode, available: true },
+    { id: 'internet_banking_scb', label: 'SCB', icon: Landmark, available: true },
+    { id: 'internet_banking_kbank', label: 'KBANK', icon: Landmark, available: true },
+    { id: 'internet_banking_bbl', label: 'BBL', icon: Landmark, available: true },
   ]
 
   const rawPlan = PLANS[planId]
@@ -229,6 +234,13 @@ export default function CheckoutPage() {
   }
 
   const handleCheckout = async () => {
+    if (paymentMethod === 'credit_card') {
+      setError(
+        'Direct credit card checkout is not enabled in this deployment yet. Please use PromptPay or internet banking for now'
+      )
+      return
+    }
+
     setIsLoading(true)
     setError('')
     setQrCodeUri(null)
@@ -238,8 +250,8 @@ export default function CheckoutPage() {
       const response = await api.post<CheckoutResponse>(
         API_ENDPOINTS.BILLING?.CREATE_CHECKOUT_SESSION ?? '/api/v1/billing/create-checkout-session',
         {
-          plan_id: planId,
-          billing_cycle: billing,
+          plan: planId,
+          billing_period: billing,
           source_type: paymentMethod,
           return_uri: `${window.location.origin}/checkout/success`,
           promo_code: promoApplied ? promoCode : undefined,
@@ -457,19 +469,35 @@ export default function CheckoutPage() {
                       <button
                         key={method.id}
                         type="button"
-                        onClick={() => setPaymentMethod(method.id)}
+                        onClick={() => {
+                          if (!method.available) {
+                            return
+                          }
+                          setPaymentMethod(method.id)
+                          setError('')
+                        }}
+                        disabled={!method.available}
                         className={`flex items-center gap-2.5 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
                           paymentMethod === method.id
                             ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 shadow-sm'
                             : 'border-[var(--brand-border)] dark:border-gray-600 text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)] hover:border-[var(--brand-border)] hover:bg-[var(--brand-primary-light)] dark:hover:bg-gray-700'
-                        }`}
+                        } ${!method.available ? 'cursor-not-allowed opacity-50 grayscale' : ''}`}
                       >
                         <MethodIcon className="h-4 w-4 shrink-0" />
                         <span className="truncate">{method.label}</span>
+                        {!method.available && (
+                          <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                            Soon
+                          </span>
+                        )}
                       </button>
                     )
                   })}
                 </div>
+                <p className="mt-3 text-xs text-[var(--brand-text-secondary)] dark:text-[var(--brand-text-secondary)]">
+                  PromptPay and internet banking are available now. Credit card checkout will be
+                  re-enabled after the Opn tokenization flow is completed.
+                </p>
               </div>
 
               {/* Error message */}
